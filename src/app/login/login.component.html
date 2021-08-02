@@ -1,0 +1,18 @@
+<div fxLayout>
+    <mat-card fxFlex="30%">
+        <mat-card-title>Login</mat-card-title>
+        <mat-card-content fxLayout="column">
+            <mat-form-field>
+                <mat-label>Annotator ID</mat-label>
+                <input [(ngModel)]="annotatorID" type="number" matInput [formControl]="annotatorFormControl" min="1">
+                <mat-error *ngIf="annotatorFormControl.hasError('min')">
+                    Annotator ID must be <strong>greater</strong> than 0
+                </mat-error>
+                <mat-error *ngIf="annotatorFormControl.hasError('required')">
+                    Annotator ID is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </mat-card-content>
+        <button mat-raised-button color="primary" (click)='login()'>Login</button>
+    </mat-card>
+</div>
