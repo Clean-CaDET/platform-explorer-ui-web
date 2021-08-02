@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
+
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,11 +16,12 @@ export class LoginComponent implements OnInit {
     Validators.min(1),
   ]);
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   public login(){
     if (this.annotatorFormControl.valid){
       alert(this.annotatorID);
+      this.router.navigate(['/data-set']);
     }
   }
 

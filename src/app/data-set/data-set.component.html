@@ -1,0 +1,19 @@
+<button mat-raised-button (click)="addDataSet()" color="warn">Add projects</button>
+<table class="example-full-width" cellspacing="2">
+    <ng-container *ngFor="let dataSet of dataSets">
+        <tr>
+            <td>
+                <p>{{dataSet.id}}</p>
+            </td>
+            <td>
+                <p>{{dataSet.url}}</p>
+            </td>
+            <td>
+                <p>{{dataSet.state}}</p>
+            </td>
+            <td>
+                <mat-spinner></mat-spinner>
+            </td>
+        </tr>
+    </ng-container>
+</table>
