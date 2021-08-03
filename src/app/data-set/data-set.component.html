@@ -1,19 +1,31 @@
-<button mat-raised-button (click)="addDataSet()" color="warn">Add projects</button>
-<table class="example-full-width" cellspacing="2">
-    <ng-container *ngFor="let dataSet of dataSets">
-        <tr>
-            <td>
-                <p>{{dataSet.id}}</p>
-            </td>
-            <td>
-                <p>{{dataSet.url}}</p>
-            </td>
-            <td>
-                <p>{{dataSet.state}}</p>
-            </td>
-            <td>
-                <mat-spinner></mat-spinner>
-            </td>
-        </tr>
-    </ng-container>
-</table>
+<button mat-raised-button (click)="addDataSets()" color="warn">Add projects</button>
+
+<div class="example-container mat-elevation-z8">
+    <mat-table #table [dataSource]="dataSource">
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef> Id </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="url">
+            <mat-header-cell *matHeaderCellDef> URL </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.url}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="loading">
+            <mat-header-cell *matHeaderCellDef> Loading </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <ng-container *ngIf="element.state == 0">
+                    <mat-spinner class="example-margin" color="warn" diameter="20">
+                    </mat-spinner>
+                </ng-container>
+                <ng-container *ngIf="element.state == 1">
+                    <mat-icon>check_circle_outline</mat-icon>
+                </ng-container>
+            </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+    </mat-paginator>
+</div>

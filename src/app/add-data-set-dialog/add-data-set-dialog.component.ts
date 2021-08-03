@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { FormControl, Validators } from '@angular/forms';
 import { HttpHeaders } from '@angular/common/http';
 
 import { RequestService } from '../../app/request.service'

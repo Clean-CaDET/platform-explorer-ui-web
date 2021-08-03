@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit {
 
   public login(){
     if (this.annotatorFormControl.valid){
-      alert(this.annotatorID);
       this.router.navigate(['/data-set']);
     }
   }
