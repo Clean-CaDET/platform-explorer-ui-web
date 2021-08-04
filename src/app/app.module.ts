@@ -12,7 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { DataSetComponent } from './data-set/data-set.component';
 import { AddDataSetDialogComponent } from './add-data-set-dialog/add-data-set-dialog.component';
 
-import { RequestService } from './request.service';
+import { RequestService } from './request/request.service';
 
 
 @NgModule({

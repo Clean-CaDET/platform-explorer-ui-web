@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { HttpHeaders } from '@angular/common/http';
 
-import { RequestService } from '../../app/request.service'
+import { RequestService } from '../request/request.service'
 import { MatDialogRef} from "@angular/material/dialog";
 
 interface Project {
@@ -22,7 +22,7 @@ export class AddDataSetDialogComponent implements OnInit {
 
   constructor(private requestService: RequestService, private dialogRef: MatDialogRef<AddDataSetDialogComponent>) { }
 
-  public addEmptyProject(){
+  public addEmptyProject() {
     this.projects.push({name: '', url: ''});
   }
 
@@ -32,7 +32,7 @@ export class AddDataSetDialogComponent implements OnInit {
         headers: new HttpHeaders()
           .set('Content-Type', 'application/json')
       }
-      this.requestService.sendRequest('POST', 'http://localhost:51834/api/dataset', this.projects, header.headers).subscribe(res => this.dialogRef.close(res));
+      this.requestService.sendRequest('POST', 'dataset', this.projects, header.headers).subscribe(res => this.dialogRef.close(res));
     }
   }
 

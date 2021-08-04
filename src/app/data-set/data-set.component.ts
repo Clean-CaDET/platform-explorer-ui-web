@@ -8,9 +8,7 @@ import {ViewChild} from '@angular/core';
 import {MatPaginator, MatPaginatorIntl} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 
-import { RequestService } from '../../app/request.service'
-import { tap, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { RequestService } from '../request/request.service'
 
 interface DataSet {
   id: number;
@@ -67,7 +65,7 @@ export class DataSetComponent implements OnInit {
     await new Promise(resolve => setTimeout(resolve, 1000*i));
     while (dataSet.state != 1) {
       await new Promise(resolve => setTimeout(resolve, 10000));
-      dataSet = await this.requestService.sendRequestAsync('GET', 'http://localhost:51834/api/dataset/' + dataSet.id);
+      dataSet = await this.requestService.sendRequestAsync('GET', 'dataset/' + dataSet.id);
     }
     this.updateDataSets(dataSet);
   }

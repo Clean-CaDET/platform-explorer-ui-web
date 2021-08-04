@@ -3,16 +3,18 @@
 <div class="example-container mat-elevation-z8">
     <mat-table #table [dataSource]="dataSource">
         <ng-container matColumnDef="id">
-            <mat-header-cell *matHeaderCellDef> Id </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+            <th mat-header-cell *matHeaderCellDef width="10px"> Id </th>
+            <td mat-cell *matCellDef="let element" width="10px"> {{element.id}} </td>
         </ng-container>
         <ng-container matColumnDef="url">
-            <mat-header-cell *matHeaderCellDef> URL </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.url}} </mat-cell>
+            <th mat-header-cell *matHeaderCellDef width="60%"> URL </th>
+            <td mat-cell *matCellDef="let element" width="60%">
+                <a href="{{element.url}}">{{element.url}}</a>
+            </td>
         </ng-container>
         <ng-container matColumnDef="loading">
-            <mat-header-cell *matHeaderCellDef> Loading </mat-header-cell>
-            <mat-cell *matCellDef="let element">
+            <th mat-header-cell *matHeaderCellDef width="10px"> Loading </th>
+            <td mat-cell *matCellDef="let element" width="10px">
                 <ng-container *ngIf="element.state == 0">
                     <mat-spinner class="example-margin" color="warn" diameter="20">
                     </mat-spinner>
@@ -20,10 +22,10 @@
                 <ng-container *ngIf="element.state == 1">
                     <mat-icon>check_circle_outline</mat-icon>
                 </ng-container>
-            </mat-cell>
+            </td>
         </ng-container>
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </mat-table>
 
     <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">

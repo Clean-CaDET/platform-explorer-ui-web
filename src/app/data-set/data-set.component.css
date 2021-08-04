@@ -7,4 +7,10 @@
 .mat-table {
     overflow: auto;
     max-height: 600px;
+    width: 100%;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
 }
