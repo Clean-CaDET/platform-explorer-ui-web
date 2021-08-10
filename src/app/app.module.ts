@@ -5,14 +5,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './material/material.module';
+import { DataSetModule } from './modules/data-set/data-set.module';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
-import { DataSetComponent } from './data-set/data-set.component';
-import { AddDataSetDialogComponent } from './add-data-set-dialog/add-data-set-dialog.component';
 
-import { RequestService } from './request/request.service';
+import { ServerCommunicationService } from './server-communication/server-communication.service';
 
 
 @NgModule({
@@ -20,8 +19,6 @@ import { RequestService } from './request/request.service';
     AppComponent,
     LoginComponent,
     HomeComponent,
-    DataSetComponent,
-    AddDataSetDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,9 +29,10 @@ import { RequestService } from './request/request.service';
     AppRoutingModule,
     HttpClientModule,
     MaterialModule,
+    DataSetModule,
   ],
   providers: [
-    RequestService,
+    ServerCommunicationService,
   ],
   bootstrap: [AppComponent]
 })

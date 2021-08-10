@@ -4,7 +4,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'de-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -18,13 +18,13 @@ export class LoginComponent implements OnInit {
 
   constructor(private router: Router) { }
 
+  ngOnInit(): void {
+  }
+
   public login(){
     if (this.annotatorFormControl.valid){
       this.router.navigate(['/data-set']);
     }
-  }
-
-  ngOnInit(): void {
   }
 
 }
