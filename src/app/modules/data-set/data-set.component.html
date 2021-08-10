@@ -21,6 +21,8 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+    </mat-paginator>
 </div>
 
 <button mat-raised-button (click)="addProjectToDataSet()" color="warn" class="center-horizontally">Add project</button>

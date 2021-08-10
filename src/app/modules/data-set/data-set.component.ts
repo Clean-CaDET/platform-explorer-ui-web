@@ -1,7 +1,4 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-
-import { AddDataSetDialogComponent } from './dialogs/add-data-set-dialog/add-data-set-dialog.component';
-
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
@@ -9,8 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from "@angular/cdk/collections";
 
 import { DataSet } from './model/data-set/data-set.model';
-
-import { DataSetService } from './data-set.service'
+import { AddDataSetDialogComponent } from './dialogs/add-data-set-dialog/add-data-set-dialog.component';
 import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-project-dialog.component';
 import { DataSetProject } from './model/data-set-project/data-set-project.model';
 
@@ -35,7 +31,7 @@ export class DataSetComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dialog: MatDialog, private dataSetService: DataSetService) {}
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
   }
