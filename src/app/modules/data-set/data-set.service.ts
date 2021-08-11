@@ -15,6 +15,10 @@ export class DataSetService {
 
   constructor(private serverCommunicationService: ServerCommunicationService) { }
 
+  public async getAllDataSets(): Promise<DataSet[]> {
+    return await this.serverCommunicationService.getRequestAsync('dataset');
+  }
+
   public createDataSet(name: string): Observable<DataSet> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');

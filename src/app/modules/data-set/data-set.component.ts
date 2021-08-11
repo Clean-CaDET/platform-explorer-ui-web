@@ -1,14 +1,15 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from "@angular/cdk/collections";
 
 import { DataSet } from './model/data-set/data-set.model';
+import { DataSetProject } from './model/data-set-project/data-set-project.model';
 import { AddDataSetDialogComponent } from './dialogs/add-data-set-dialog/add-data-set-dialog.component';
 import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-project-dialog.component';
-import { DataSetProject } from './model/data-set-project/data-set-project.model';
+
+import { DataSetService } from './data-set.service';
 
 @Component({
   selector: 'de-data-set',
@@ -20,9 +21,9 @@ export class DataSetComponent implements OnInit {
 
   private dataSets: DataSet[] = [];
   public projectsToShow: DataSetProject[] = [];
-  displayedColumns = ['select', 'name', 'numOfProjects'];
-  selection = new SelectionModel<DataSet>(true, []);
-  dataSource = new MatTableDataSource<DataSet>(this.dataSets);
+  public displayedColumns = ['select', 'name', 'numOfProjects'];
+  public selection = new SelectionModel<DataSet>(true, []);
+  public dataSource = new MatTableDataSource<DataSet>(this.dataSets);
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
 
@@ -31,18 +32,21 @@ export class DataSetComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private dataSetService: DataSetService) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.dataSets = await this.dataSetService.getAllDataSets();
+    this.dataSource.data = this.dataSets;
   }
 
-  public selectionChanged(row: DataSet) {
-    if (!this.selection.isSelected(row)) {
+  public toggleDataSetSelection(selectedDataSet: DataSet) {
+    this.projectsToShow = [];
+    if (!this.selection.isSelected(selectedDataSet)) {
       this.selection.clear();
     }
-    this.selection.toggle(row);
-    if (this.selection.selected.length > 0) {
-      this.projectsToShow = this.selection.selected[0].projects;
+    this.selection.toggle(selectedDataSet);
+    if (this.selection.selected.length == 1) {
+      this.projectsToShow = selectedDataSet.projects;
     }
   }
 
@@ -52,7 +56,7 @@ export class DataSetComponent implements OnInit {
     dialogRef.afterClosed().subscribe((res: DataSet) => this.addEmptyDataSet(res));
   }
 
-  public addProjectToDataSet() {
+  public addProjectsToDataSet() {
     let selectedDataSet = this.selection.selected[0];
     if (selectedDataSet) {
       let dialogConfig = this.setDialogConfig('480px', '520px', selectedDataSet.id);
@@ -61,11 +65,11 @@ export class DataSetComponent implements OnInit {
     }
   }
 
-  private async showProjects(dataSetWithProjects: DataSet) {
-    if (dataSetWithProjects) {
-      this.updateDataSets(dataSetWithProjects);
-      this.selection.select(dataSetWithProjects);
-      this.projectsToShow = dataSetWithProjects.projects;
+  private showProjects(dataSet: DataSet) {
+    if (dataSet) {
+      this.updateDataSets(dataSet);
+      this.selection.select(dataSet);
+      this.projectsToShow = dataSet.projects;
     }
   }
 
@@ -73,7 +77,7 @@ export class DataSetComponent implements OnInit {
     for (let i in this.dataSets) {
       if (this.dataSets[i].id == dataSet.id) {
         this.dataSets[i] = dataSet;
-        this.dataSource = new MatTableDataSource(this.dataSets);
+        this.dataSource.data = this.dataSets;
         return;
       }
     }
@@ -82,7 +86,7 @@ export class DataSetComponent implements OnInit {
   private addEmptyDataSet(dataSet: DataSet) {
     if (dataSet) {
       this.dataSets.push(dataSet);
-      this.dataSource = new MatTableDataSource(this.dataSets);
+      this.dataSource.data = this.dataSets;
     }
   }
 

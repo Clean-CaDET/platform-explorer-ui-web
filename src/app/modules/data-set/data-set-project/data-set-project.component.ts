@@ -11,8 +11,8 @@ import { DataSetService } from '../data-set.service';
 export class DataSetProjectComponent implements OnInit {
 
   @Input() public projects: DataSetProject[] = [];
-  displayedColumns = ['name', 'url', 'numOfInstances', 'status'];
-  dataSource = new MatTableDataSource<DataSetProject>(this.projects);
+  public displayedColumns = ['name', 'url', 'numOfInstances', 'status'];
+  public dataSource = new MatTableDataSource<DataSetProject>(this.projects);
 
   constructor(private dataSetService: DataSetService) { }
 
@@ -20,7 +20,7 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   ngOnChanges() {
-    if (this.projects.length > 0) {
+    if (!this.isProjectsEmpty()) {
       this.dataSource = new MatTableDataSource<DataSetProject>(this.projects);
       this.startPolling();
     }

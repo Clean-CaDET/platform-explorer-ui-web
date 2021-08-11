@@ -10,9 +10,9 @@ import { DataSetProject } from '../../model/data-set-project/data-set-project.mo
 })
 export class AddProjectDialogComponent implements OnInit {
 
-  projects: DataSetProject[] = [];
+  public projects: DataSetProject[] = [];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public dataSetId: number, private dataSetService: DataSetService, private dialogRef: MatDialogRef<AddProjectDialogComponent>) { }
+  constructor(@Inject(MAT_DIALOG_DATA) private dataSetId: number, private dataSetService: DataSetService, private dialogRef: MatDialogRef<AddProjectDialogComponent>) { }
 
   ngOnInit(): void {
     if (!this.dataSetId) {
