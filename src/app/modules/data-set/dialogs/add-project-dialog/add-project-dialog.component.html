@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Add new projects</h2>
+<mat-dialog-content class="mat-typography">
+    <button mat-icon-button (click)="addEmptyProject()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    <form>
+        <table cellspacing="2">
+            <ng-container *ngFor="let project of projects; let i = index">
+                <tr>
+                    <td>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Project name</mat-label>
+                            <input [(ngModel)]="project.name" name="name" type="text" matInput>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field appearance="fill">
+                            <mat-label>URL</mat-label>
+                            <input [(ngModel)]="project.url" name="url" type="url" matInput>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <button mat-icon-button (click)="deleteProject(i)">
+                            <mat-icon>remove_circle_outline</mat-icon>
+                        </button>
+                    </td>
+                </tr>
+            </ng-container>
+        </table>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button (click)="addProjectsToDataSet()">Add</button>
+</mat-dialog-actions>
