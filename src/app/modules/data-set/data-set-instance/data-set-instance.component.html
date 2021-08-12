@@ -1,0 +1,29 @@
+<div *ngIf="!isInstancesEmpty()" class="data-set-instance-container">
+    <div class="instances-table mat-elevation-z8 container">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef width="10%"></th>
+                <td mat-cell *matCellDef="let instance" width="10%">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleInstanceSelection(instance)" [checked]="selection.isSelected(instance)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="codeSnippetId">
+                <th mat-header-cell *matHeaderCellDef width="80%"> Code snippet id </th>
+                <td mat-cell *matCellDef="let instance" width="80%">
+                    <a href="{{instance.link}}">{{instance.codeSnippetId}}</a>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef width="10%"> Type </th>
+                <td mat-cell *matCellDef="let instance" width="10%">{{instance.type}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+        </mat-paginator>
+    </div>
+    <iframe frameborder=0 class="code-snippet" id="snippet" scrolling="yes"></iframe>
+</div>

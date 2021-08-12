@@ -11,7 +11,6 @@ import { AppComponent } from './app.component';
 
 import { ServerCommunicationService } from './server-communication/server-communication.service';
 
-
 @NgModule({
   declarations: [
     AppComponent,

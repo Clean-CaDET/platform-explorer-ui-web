@@ -68,8 +68,7 @@ export class DataSetComponent implements OnInit {
   private showProjects(dataSet: DataSet) {
     if (dataSet) {
       this.updateDataSets(dataSet);
-      this.selection.select(dataSet);
-      this.projectsToShow = dataSet.projects;
+      this.toggleDataSetSelection(dataSet);
     }
   }
 
