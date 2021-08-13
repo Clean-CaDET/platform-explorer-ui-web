@@ -1,0 +1,5 @@
+.center-horizontally {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}

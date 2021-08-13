@@ -18,6 +18,7 @@ export class DataSetInstanceComponent implements OnInit {
   public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
+  private iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
@@ -30,9 +31,17 @@ export class DataSetInstanceComponent implements OnInit {
   }
 
   ngOnChanges() {
+    this.selection.clear();
     if (!this.isInstancesEmpty()) {
       this.dataSource.data = this.instances;
     }
+    if (this.iframe){
+      this.iframe.srcdoc = '';
+    }
+  }
+
+  ngAfterViewChecked() {
+    this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
   }
 
   public toggleInstanceSelection(selectedInstance: DataSetInstance) {
@@ -41,8 +50,7 @@ export class DataSetInstanceComponent implements OnInit {
     }
     this.selection.toggle(selectedInstance);
     if (this.selection.selected.length == 1) {
-      let snippetIFrame = document.getElementById('snippet');
-      (snippetIFrame as HTMLIFrameElement).srcdoc = this.createSrcdocFromGithubLink(selectedInstance.link)
+      this.iframe.srcdoc = this.createSrcdocFromGithubLink(selectedInstance.link);
     }
   }
 
@@ -50,11 +58,11 @@ export class DataSetInstanceComponent implements OnInit {
     return this.instances.length == 0;
   }
 
-  private createSrcdocFromGithubLink(githubLink: string): string{
+  private createSrcdocFromGithubLink(githubLink: string): string {
     let linkParts = githubLink.split('#');
     let lineNumbers = linkParts[1].split(/[L\-]/).filter(i => i);
     let completeLink = 'http://gist-it.appspot.com/' + linkParts[0] + '?slice=' + (+lineNumbers[0]-1) + ':' + lineNumbers[1];
-    return '<script src=\"'+completeLink+'\"></script>';
+    return '<script src=\"' + completeLink + '\"></script>';
   }
 
 }

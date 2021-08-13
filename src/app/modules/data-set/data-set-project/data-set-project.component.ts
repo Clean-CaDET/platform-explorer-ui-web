@@ -33,6 +33,8 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   ngOnChanges() {
+    this.selection.clear();
+    this.instancesToShow = [];
     if (!this.isProjectsEmpty()) {
       this.dataSource.data = this.projects;
       this.startPolling();
