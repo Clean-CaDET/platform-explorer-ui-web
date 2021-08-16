@@ -31,6 +31,6 @@
     </div>
 
     <div class="center" *ngIf="selection.selected.length == 1">
-        <de-annotation [instanceId]="selection.selected[0].id" [instanceType]="selection.selected[0].type"></de-annotation>
+        <de-annotation [instanceId]="selection.selected[0].id" [instanceType]="selection.selected[0].type" [previousAnnotation]="previousAnnotation"></de-annotation>
     </div>
 </div>

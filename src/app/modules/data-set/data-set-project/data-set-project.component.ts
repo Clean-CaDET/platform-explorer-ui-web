@@ -35,7 +35,7 @@ export class DataSetProjectComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.selection.clear();
     this.instancesToShow = [];
     if (!this.isProjectsEmpty()) {
@@ -44,25 +44,25 @@ export class DataSetProjectComponent implements OnInit {
     }
   }
 
-  public toggleProjectSelection(selectedProject: DataSetProject) {
+  public toggleProjectSelection(selectedProject: DataSetProject): void {
     this.selection.toggle(selectedProject);
     this.showProperInstances();
   }
 
-  public toggleAllProjectsSelection() {
+  public toggleAllProjectsSelection(): void {
     if (this.isAllProjectsSelected()) {
       this.instancesToShow = [];
       this.selection.clear();
       return;
     }
 
-    this.selection.select(...this.dataSource.data);
+    this.selection.select(...this.dataSource.data.filter(p => p.instances.length > 0));
     this.showProperInstances();
   }
 
-  public isAllProjectsSelected() {
+  public isAllProjectsSelected(): boolean {
     const numSelected = this.selection.selected.length;
-    const numProjects = this.dataSource.data.length;
+    const numProjects = this.dataSource.data.filter(p => p.instances.length > 0).length;
     return numSelected === numProjects;
   }
 
@@ -70,22 +70,22 @@ export class DataSetProjectComponent implements OnInit {
     return this.projects.length == 0;
   }
 
-  public showAllInstances() {
+  public showAllInstances(): void {
     this.instancesType = InstancesType.All;
     this.showProperInstances();
   }
 
-  public async showInstancesForAdditionalAnnotation() {
+  public async showInstancesForAdditionalAnnotation(): Promise<void> {
     this.instancesType = InstancesType.NeedAdditionalAnnotations;
     this.instancesToShow = await this.annotationService.requiringAdditionalAnnotation(this.selection.selected);
   }
 
-  public async showInstancesWithDisagreeingAnnotations() {
+  public async showInstancesWithDisagreeingAnnotations(): Promise<void> {
     this.instancesType = InstancesType.DisagreeingAnnotations;
     this.instancesToShow = await this.annotationService.disagreeingAnnotations(this.selection.selected);
   }
 
-  private showProperInstances() {
+  private showProperInstances(): void {
     this.instancesToShow = [];
     switch(this.instancesType) { 
       case InstancesType.All: {
@@ -106,13 +106,13 @@ export class DataSetProjectComponent implements OnInit {
    
   }
 
-  private startPolling() {
+  private startPolling(): void {
     for (let i in this.projects) {
       this.pollDataSetProjectAsync(this.projects[i], +i);
     }
   }
 
-  private async pollDataSetProjectAsync(dataSetProject: DataSetProject, secondsToWait: number) {
+  private async pollDataSetProjectAsync(dataSetProject: DataSetProject, secondsToWait: number): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, 1000*secondsToWait));
     while (dataSetProject.state == 0) {
       await new Promise(resolve => setTimeout(resolve, 10000));
@@ -121,7 +121,7 @@ export class DataSetProjectComponent implements OnInit {
     this.updateProjects(dataSetProject);
   }
 
-  private updateProjects(dataSetProject: DataSetProject) {
+  private updateProjects(dataSetProject: DataSetProject): void {
     for (let i in this.projects) {
       if (this.projects[i].id == dataSetProject.id) {
         this.projects[i] = dataSetProject;

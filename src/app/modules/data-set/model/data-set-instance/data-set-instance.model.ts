@@ -1,10 +1,12 @@
+import { DataSetAnnotation } from "../data-set-annotation/data-set-annotation.model"; 
+
 export class DataSetInstance {
     id: number = 0;
     codeSnippetId: string = '';
     link: string = '';
     projectLink: string = '';
     type: number = 0;
-    annotations: any[] = [];
+    annotations: DataSetAnnotation[] = [];
 
     constructor(obj?: any) {
         if (obj) {

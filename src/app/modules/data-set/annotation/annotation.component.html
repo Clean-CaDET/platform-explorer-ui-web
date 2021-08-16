@@ -27,7 +27,7 @@
         <ng-container *ngFor="let heuristic of heuristics.value">
             <mat-form-field appearance="fill">
                 <mat-label>Reason: {{heuristic}}</mat-label>
-                <input type="text" matInput (change)="addReasonForHeuristic($event.target!, heuristic)">
+                <input type="text" id="reason-{{heuristic}}" matInput (change)="addReasonForHeuristic($event.target!, heuristic)">
             </mat-form-field>
         </ng-container>
     </div>

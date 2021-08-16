@@ -2,6 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
 
@@ -14,6 +15,7 @@ export class DataSetInstanceComponent implements OnInit {
 
   @Input() public instances: DataSetInstance[] = [];
   @Input() public instancesType: string = '';
+  public previousAnnotation: DataSetAnnotation | null = null;
   public displayedColumns = ['select', 'codeSnippetId', 'type'];
   public selection = new SelectionModel<DataSetInstance>(true, []);
   public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
@@ -46,11 +48,19 @@ export class DataSetInstanceComponent implements OnInit {
   }
 
   public toggleInstanceSelection(selectedInstance: DataSetInstance) {
+    this.iframe.srcdoc = '';
+    this.previousAnnotation = null;
     if (!this.selection.isSelected(selectedInstance)) {
       this.selection.clear();
     }
     this.selection.toggle(selectedInstance);
     if (this.selection.selected.length == 1) {
+      for (let annotation of selectedInstance.annotations) {
+        if (annotation.annotator.id == +sessionStorage.getItem('annotatorID')!) {
+          this.previousAnnotation = annotation;
+          break;
+        }
+      }
       this.iframe.srcdoc = this.createSrcdocFromGithubLink(selectedInstance.link);
     }
   }
