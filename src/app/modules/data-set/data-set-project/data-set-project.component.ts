@@ -5,7 +5,9 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
+
 import { DataSetService } from '../data-set.service';
+import { AnnotationService } from '../annotation/annotation.service';
 
 @Component({
   selector: 'de-data-set-project',
@@ -19,6 +21,7 @@ export class DataSetProjectComponent implements OnInit {
   public displayedColumns = ['select', 'name', 'url', 'numOfInstances', 'status'];
   public selection = new SelectionModel<DataSetProject>(true, []);
   public dataSource = new MatTableDataSource<DataSetProject>(this.projects);
+  public instancesType: InstancesType = InstancesType.All;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
 
@@ -27,7 +30,7 @@ export class DataSetProjectComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dataSetService: DataSetService) { }
+  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService) { }
 
   ngOnInit(): void {
   }
@@ -41,19 +44,66 @@ export class DataSetProjectComponent implements OnInit {
     }
   }
 
-  public toggleDataSetSelection(selectedProject: DataSetProject) {
-    this.instancesToShow = [];
-    if (!this.selection.isSelected(selectedProject)) {
-      this.selection.clear();
-    }
+  public toggleProjectSelection(selectedProject: DataSetProject) {
     this.selection.toggle(selectedProject);
-    if (this.selection.selected.length == 1) {
-      this.instancesToShow = selectedProject.instances;
+    this.showProperInstances();
+  }
+
+  public toggleAllProjectsSelection() {
+    if (this.isAllProjectsSelected()) {
+      this.instancesToShow = [];
+      this.selection.clear();
+      return;
     }
+
+    this.selection.select(...this.dataSource.data);
+    this.showProperInstances();
+  }
+
+  public isAllProjectsSelected() {
+    const numSelected = this.selection.selected.length;
+    const numProjects = this.dataSource.data.length;
+    return numSelected === numProjects;
   }
 
   public isProjectsEmpty(): boolean {
     return this.projects.length == 0;
+  }
+
+  public showAllInstances() {
+    this.instancesType = InstancesType.All;
+    this.showProperInstances();
+  }
+
+  public async showInstancesForAdditionalAnnotation() {
+    this.instancesType = InstancesType.NeedAdditionalAnnotations;
+    this.instancesToShow = await this.annotationService.requiringAdditionalAnnotation(this.selection.selected);
+  }
+
+  public async showInstancesWithDisagreeingAnnotations() {
+    this.instancesType = InstancesType.DisagreeingAnnotations;
+    this.instancesToShow = await this.annotationService.disagreeingAnnotations(this.selection.selected);
+  }
+
+  private showProperInstances() {
+    this.instancesToShow = [];
+    switch(this.instancesType) { 
+      case InstancesType.All: {
+        for (let project of this.selection.selected) {
+          this.instancesToShow.push.apply(this.instancesToShow, project.instances);
+        }
+        break; 
+      }
+      case InstancesType.NeedAdditionalAnnotations: { 
+        this.showInstancesForAdditionalAnnotation();
+        break; 
+      } 
+      case InstancesType.DisagreeingAnnotations: { 
+        this.showInstancesWithDisagreeingAnnotations();
+        break; 
+      } 
+   }
+   
   }
 
   private startPolling() {
@@ -81,4 +131,10 @@ export class DataSetProjectComponent implements OnInit {
     }
   }
 
+}
+
+enum InstancesType {
+  All = 'All',
+  NeedAdditionalAnnotations = 'Need Additional Annotations',
+  DisagreeingAnnotations = 'Disagreeing Annotations'
 }

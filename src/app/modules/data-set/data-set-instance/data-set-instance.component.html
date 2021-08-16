@@ -1,10 +1,11 @@
 <div class="container" style="flex-direction: column;" *ngIf="!isInstancesEmpty()">
     <div class="data-set-instance-container">
         <div class="instances-table mat-elevation-z8 container">
+            <h3 class="center">{{instancesType}}</h3>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 <ng-container matColumnDef="select">
-                    <th mat-header-cell *matHeaderCellDef width="10%"></th>
-                    <td mat-cell *matCellDef="let instance" width="10%">
+                    <th mat-header-cell *matHeaderCellDef width="5%"></th>
+                    <td mat-cell *matCellDef="let instance" width="5%">
                         <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleInstanceSelection(instance)" [checked]="selection.isSelected(instance)">
                         </mat-checkbox>
                     </td>

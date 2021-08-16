@@ -23,8 +23,7 @@
     </table>
     <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
     </mat-paginator>
+    <button mat-raised-button (click)="addProjectsToDataSet()" color="warn" class="center-horizontally" *ngIf="selection.selected.length == 1">Add projects</button>
 </div>
-
-<button mat-raised-button (click)="addProjectsToDataSet()" color="warn" class="center-horizontally" *ngIf="selection.selected.length == 1">Add projects</button>
 
 <de-data-set-project [projects]="projectsToShow"></de-data-set-project>

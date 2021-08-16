@@ -62,8 +62,8 @@ export class AnnotationComponent implements OnInit {
   }
 
   public annotate() {
-    if (this.isValid()) {
-      this.annotationService.addAnnotation(this.getAnnotationFromInput()).subscribe(res => alert(res.message));
+    if (this.isValidInput()) {
+      this.annotationService.addAnnotation(this.getAnnotationFromInput()).subscribe(res => alert(res.message), error => alert("ERROR:\n" + error.error.message));
     }
   }
 
@@ -98,7 +98,7 @@ export class AnnotationComponent implements OnInit {
     }
   }
 
-  private isValid(): boolean {
+  private isValidInput(): boolean {
     return this.severityFormControl.valid && this.codeSmell != '' && this.heuristics.value.length != 0;
   }
 

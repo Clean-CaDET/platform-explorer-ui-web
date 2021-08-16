@@ -13,6 +13,7 @@ import { DataSetInstance } from '../model/data-set-instance/data-set-instance.mo
 export class DataSetInstanceComponent implements OnInit {
 
   @Input() public instances: DataSetInstance[] = [];
+  @Input() public instancesType: string = '';
   public displayedColumns = ['select', 'codeSnippetId', 'type'];
   public selection = new SelectionModel<DataSetInstance>(true, []);
   public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
@@ -27,7 +28,7 @@ export class DataSetInstanceComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
   }
 
   ngOnChanges() {
