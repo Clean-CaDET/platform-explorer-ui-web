@@ -17,6 +17,12 @@
     width: 40%;
 }
 
+.center-horizontally {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
 .mat-table {
     overflow: auto;
     max-height: 600px;

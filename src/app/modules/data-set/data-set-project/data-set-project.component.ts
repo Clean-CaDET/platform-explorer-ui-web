@@ -5,6 +5,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
+import { InstanceFilter } from '../model/enums/enums.model';
 
 import { DataSetService } from '../data-set.service';
 import { AnnotationService } from '../annotation/annotation.service';
@@ -21,7 +22,7 @@ export class DataSetProjectComponent implements OnInit {
   public displayedColumns = ['select', 'name', 'url', 'numOfInstances', 'status'];
   public selection = new SelectionModel<DataSetProject>(true, []);
   public dataSource = new MatTableDataSource<DataSetProject>(this.projects);
-  public instancesType: InstancesType = InstancesType.All;
+  public filter: InstanceFilter = InstanceFilter.All;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
 
@@ -32,10 +33,10 @@ export class DataSetProjectComponent implements OnInit {
 
   constructor(private dataSetService: DataSetService, private annotationService: AnnotationService) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
   }
 
-  ngOnChanges(): void {
+  public ngOnChanges(): void {
     this.selection.clear();
     this.instancesToShow = [];
     if (!this.isProjectsEmpty()) {
@@ -46,7 +47,7 @@ export class DataSetProjectComponent implements OnInit {
 
   public toggleProjectSelection(selectedProject: DataSetProject): void {
     this.selection.toggle(selectedProject);
-    this.showProperInstances();
+    this.showFilteredInstances();
   }
 
   public toggleAllProjectsSelection(): void {
@@ -57,7 +58,7 @@ export class DataSetProjectComponent implements OnInit {
     }
 
     this.selection.select(...this.dataSource.data.filter(p => p.instances.length > 0));
-    this.showProperInstances();
+    this.showFilteredInstances();
   }
 
   public isAllProjectsSelected(): boolean {
@@ -71,39 +72,38 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   public showAllInstances(): void {
-    this.instancesType = InstancesType.All;
-    this.showProperInstances();
+    this.filter = InstanceFilter.All;
+    this.showFilteredInstances();
   }
 
   public async showInstancesForAdditionalAnnotation(): Promise<void> {
-    this.instancesType = InstancesType.NeedAdditionalAnnotations;
+    this.filter = InstanceFilter.NeedAdditionalAnnotations;
     this.instancesToShow = await this.annotationService.requiringAdditionalAnnotation(this.selection.selected);
   }
 
   public async showInstancesWithDisagreeingAnnotations(): Promise<void> {
-    this.instancesType = InstancesType.DisagreeingAnnotations;
+    this.filter = InstanceFilter.DisagreeingAnnotations;
     this.instancesToShow = await this.annotationService.disagreeingAnnotations(this.selection.selected);
   }
 
-  private showProperInstances(): void {
+  private showFilteredInstances(): void {
     this.instancesToShow = [];
-    switch(this.instancesType) { 
-      case InstancesType.All: {
+    switch(this.filter) { 
+      case InstanceFilter.All: {
         for (let project of this.selection.selected) {
           this.instancesToShow.push.apply(this.instancesToShow, project.instances);
         }
         break; 
       }
-      case InstancesType.NeedAdditionalAnnotations: { 
+      case InstanceFilter.NeedAdditionalAnnotations: { 
         this.showInstancesForAdditionalAnnotation();
         break; 
       } 
-      case InstancesType.DisagreeingAnnotations: { 
+      case InstanceFilter.DisagreeingAnnotations: { 
         this.showInstancesWithDisagreeingAnnotations();
         break; 
       } 
-   }
-   
+    }
   }
 
   private startPolling(): void {
@@ -131,10 +131,4 @@ export class DataSetProjectComponent implements OnInit {
     }
   }
 
-}
-
-enum InstancesType {
-  All = 'All',
-  NeedAdditionalAnnotations = 'Need Additional Annotations',
-  DisagreeingAnnotations = 'Disagreeing Annotations'
 }

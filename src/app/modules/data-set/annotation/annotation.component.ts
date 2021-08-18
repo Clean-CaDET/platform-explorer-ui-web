@@ -38,13 +38,14 @@ export class AnnotationComponent implements OnInit {
   ]);
 
   public applicableHeuristics: Map<string, string> = new Map([]);
+  private isHeuristicReasonChanged: boolean = false;
 
   constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
   }
 
-  ngOnChanges(): void {
+  public ngOnChanges(): void {
     this.severityFormControl.setValue(0);
     this.codeSmell = '';
     this.heuristics.setValue([]);
@@ -52,18 +53,22 @@ export class AnnotationComponent implements OnInit {
     this.setupInputFromPreviousAnnotation();
   }
 
-  ngAfterViewChecked(): void {
-    for (let description of this.applicableHeuristics.keys()) {
-      let input = document.getElementById('reason-' + description) as HTMLInputElement;
-      if (input) {
-        input.value = this.applicableHeuristics.get(description)!;
+  public ngAfterViewChecked(): void {
+    if (this.isHeuristicReasonChanged) {
+      for (let description of this.applicableHeuristics.keys()) {
+        let input = document.getElementById('reason-' + description) as HTMLInputElement;
+        if (input) {
+          input.value = this.applicableHeuristics.get(description)!;
+        }
       }
+      this.changeDetector.detectChanges();
+      this.isHeuristicReasonChanged = false;
     }
-    this.changeDetector.detectChanges();
   }
 
   public addReasonForHeuristic(target: EventTarget, heuristic: string) {
     this.applicableHeuristics.set(heuristic, (target as HTMLInputElement).value);
+    this.isHeuristicReasonChanged = true;
   }
 
   public getAvailableCodeSmells(): string[] {
@@ -126,6 +131,7 @@ export class AnnotationComponent implements OnInit {
       this.previousAnnotation.applicableHeuristics.forEach( h => {
         previousHeuristics.push(h.description)
         this.applicableHeuristics.set(h.description, h.reasonForApplicability);
+        this.isHeuristicReasonChanged = true;
       });
       this.heuristics.setValue(previousHeuristics);
     }

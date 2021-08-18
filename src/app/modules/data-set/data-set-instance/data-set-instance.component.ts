@@ -2,9 +2,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 
+import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
+import { InstancesType } from '../model/enums/enums.model';
 
 @Component({
   selector: 'de-data-set-instance',
@@ -16,9 +17,11 @@ export class DataSetInstanceComponent implements OnInit {
   @Input() public instances: DataSetInstance[] = [];
   @Input() public instancesType: string = '';
   public previousAnnotation: DataSetAnnotation | null = null;
-  public displayedColumns = ['select', 'codeSnippetId', 'type'];
+  public displayedColumns = ['select', 'codeSnippetId', 'annotated'];
   public selection = new SelectionModel<DataSetInstance>(true, []);
   public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
+  public instanceTypes: string[] = Object.keys(InstancesType);
+  public selectedInstanceType: InstancesType = InstancesType.Method;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   private iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
@@ -30,20 +33,23 @@ export class DataSetInstanceComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
   }
 
-  ngOnChanges() {
+  public ngOnChanges() {
     this.selection.clear();
     if (!this.isInstancesEmpty()) {
+      let annotatorId: number = +sessionStorage.getItem('annotatorID')!;
+      this.instances.forEach((instance, index) => this.instances[index] = new DataSetInstance(instance, annotatorId));
       this.dataSource.data = this.instances;
+      this.selectedInstanceTypeChanged();
     }
-    if (this.iframe){
+    if (this.iframe) {
       this.iframe.srcdoc = '';
     }
   }
 
-  ngAfterViewChecked() {
+  public ngAfterViewChecked() {
     this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
   }
 
@@ -55,13 +61,26 @@ export class DataSetInstanceComponent implements OnInit {
     }
     this.selection.toggle(selectedInstance);
     if (this.selection.selected.length == 1) {
-      for (let annotation of selectedInstance.annotations) {
-        if (annotation.annotator.id == +sessionStorage.getItem('annotatorID')!) {
-          this.previousAnnotation = annotation;
-          break;
-        }
-      }
+      this.previousAnnotation = selectedInstance.annotationFromLoggedUser!;
       this.iframe.srcdoc = this.createSrcdocFromGithubLink(selectedInstance.link);
+    }
+  }
+
+  public selectedInstanceTypeChanged() {
+    this.selection.clear();
+    switch(this.selectedInstanceType) { 
+      case InstancesType.Class: {
+        this.dataSource.data = this.instances.filter(i => i.type == 0);
+        break;
+      }
+      case InstancesType.Method: { 
+        this.dataSource.data = this.instances.filter(i => i.type == 1);
+        break; 
+      } 
+      case InstancesType.All: { 
+        this.dataSource.data = this.instances;
+        break; 
+      } 
     }
   }
 
