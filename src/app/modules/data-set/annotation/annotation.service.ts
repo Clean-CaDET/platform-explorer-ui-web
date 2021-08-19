@@ -6,6 +6,7 @@ import { ServerCommunicationService } from 'src/app/server-communication/server-
 import { DataSetAnnotationDTO } from '../model/DTOs/data-set-annotation-dto/data-set-annotation-dto.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model'; 
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
+import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,19 +15,19 @@ export class AnnotationService {
 
   constructor(private serverCommunicationService: ServerCommunicationService) { }
 
-  public addAnnotation(annotation: DataSetAnnotationDTO): Observable<any> {
+  public addAnnotation(annotation: DataSetAnnotationDTO): Observable<DataSetAnnotation> {
     let annotatorID = sessionStorage.getItem('annotatorID')
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
-      .set('Authorization', annotatorID ? annotatorID! : "0")
+      .set('Authorization', annotatorID ? annotatorID! : '0')
     return this.serverCommunicationService.postRequest('annotation', annotation, headers);
   }
 
-  public updateAnnotation(annotationId: number, annotation: DataSetAnnotationDTO): Observable<any> {
+  public updateAnnotation(annotationId: number, annotation: DataSetAnnotationDTO): Observable<DataSetAnnotation> {
     let annotatorID = sessionStorage.getItem('annotatorID')
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
-      .set('Authorization', annotatorID ? annotatorID! : "0")
+      .set('Authorization', annotatorID ? annotatorID! : '0')
     return this.serverCommunicationService.putRequest('annotation/update/' + annotationId, annotation, headers);
   }
 

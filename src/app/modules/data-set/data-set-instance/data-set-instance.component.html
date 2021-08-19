@@ -48,6 +48,7 @@
     </div>
 
     <div class="center" *ngIf="selection.selected.length == 1">
-        <de-annotation [instanceId]="selection.selected[0].id" [instanceType]="selection.selected[0].type" [previousAnnotation]="previousAnnotation"></de-annotation>
+        <de-annotation (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)" [instanceId]="selection.selected[0].id" [instanceType]="selection.selected[0].type" [previousAnnotation]="previousAnnotation">
+        </de-annotation>
     </div>
 </div>

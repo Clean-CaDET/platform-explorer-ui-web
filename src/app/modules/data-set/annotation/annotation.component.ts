@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
@@ -40,6 +40,9 @@ export class AnnotationComponent implements OnInit {
 
   public applicableHeuristics: Map<string, string> = new Map([]);
   private isHeuristicReasonChanged: boolean = false;
+
+  @Output() newAnnotation = new EventEmitter<DataSetAnnotation>();
+  @Output() changedAnnotation = new EventEmitter<DataSetAnnotation>();
 
   constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
 
@@ -87,10 +90,30 @@ export class AnnotationComponent implements OnInit {
     }
     let annotation = this.getAnnotationFromInput();
     if (this.previousAnnotation) {
-      this.annotationService.updateAnnotation(this.previousAnnotation.id, annotation).subscribe(res => alert(res.message), error => alert("ERROR:\n" + error.error.message));
+      this.updateAnnotation(annotation);
       return;
     }
-    this.annotationService.addAnnotation(annotation).subscribe(res => alert(res.message), error => alert("ERROR:\n" + error.error.message));
+    this.addAnnotation(annotation);
+  }
+
+  private addAnnotation(annotation: DataSetAnnotationDTO) {
+    this.annotationService.addAnnotation(annotation).subscribe(
+      (res: DataSetAnnotation) => {
+        alert('Annotation added!');
+        this.newAnnotation.emit(new DataSetAnnotation(res));
+      },
+      error => alert('ERROR:\n' + error.error.message)
+    );
+  }
+
+  private updateAnnotation(annotation: DataSetAnnotationDTO) {
+    this.annotationService.updateAnnotation(this.previousAnnotation!.id, annotation).subscribe(
+      (res: DataSetAnnotation) => {
+        alert('Annotation changed!');
+        this.changedAnnotation.emit(new DataSetAnnotation(res));
+      },
+      error => alert('ERROR:\n' + error.error.message)
+    );
   }
 
   private getAnnotationFromInput(): DataSetAnnotationDTO {
@@ -130,7 +153,7 @@ export class AnnotationComponent implements OnInit {
       this.codeSmell = this.previousAnnotation.instanceSmell.value;
       let previousHeuristics: string[] = []
       this.previousAnnotation.applicableHeuristics.forEach( h => {
-        previousHeuristics.push(h.description)
+        previousHeuristics.push(h.description);
         this.applicableHeuristics.set(h.description, h.reasonForApplicability);
         this.isHeuristicReasonChanged = true;
       });

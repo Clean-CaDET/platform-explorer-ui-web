@@ -18,8 +18,8 @@ export class DataSetProject {
         }
     }
 
-    private setProjectState(state: number) {
-        switch(state) { 
+    private setProjectState(state: string) {
+        switch(+state) { 
             case 0: {
                 this.state = ProjectState.Processing;
                 break;
@@ -32,6 +32,10 @@ export class DataSetProject {
                 this.state = ProjectState.Failed;
                 break; 
             } 
+            default: {
+                this.state = (state as ProjectState);
+                break;
+            }
         }
     }
 }
