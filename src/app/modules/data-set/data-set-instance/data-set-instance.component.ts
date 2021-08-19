@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
-import { InstancesType } from '../model/enums/enums.model';
+import { InstanceType } from '../model/enums/enums.model';
 
 @Component({
   selector: 'de-data-set-instance',
@@ -20,8 +20,8 @@ export class DataSetInstanceComponent implements OnInit {
   public displayedColumns = ['select', 'codeSnippetId', 'annotated'];
   public selection = new SelectionModel<DataSetInstance>(true, []);
   public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
-  public instanceTypes: string[] = Object.keys(InstancesType);
-  public selectedInstanceType: InstancesType = InstancesType.Method;
+  public instanceTypes: string[] = Object.keys(InstanceType);
+  public selectedInstanceType: InstanceType = InstanceType.Method;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   private iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
@@ -69,15 +69,15 @@ export class DataSetInstanceComponent implements OnInit {
   public selectedInstanceTypeChanged() {
     this.selection.clear();
     switch(this.selectedInstanceType) { 
-      case InstancesType.Class: {
-        this.dataSource.data = this.instances.filter(i => i.type == 0);
+      case InstanceType.Class: {
+        this.dataSource.data = this.instances.filter(i => i.type == InstanceType.Class);
         break;
       }
-      case InstancesType.Method: { 
-        this.dataSource.data = this.instances.filter(i => i.type == 1);
+      case InstanceType.Method: { 
+        this.dataSource.data = this.instances.filter(i => i.type == InstanceType.Method);
         break; 
       } 
-      case InstancesType.All: { 
+      case InstanceType.All: { 
         this.dataSource.data = this.instances;
         break; 
       } 

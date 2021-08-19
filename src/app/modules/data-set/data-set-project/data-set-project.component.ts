@@ -5,7 +5,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
-import { InstanceFilter } from '../model/enums/enums.model';
+import { InstanceFilter, ProjectState } from '../model/enums/enums.model';
 
 import { DataSetService } from '../data-set.service';
 import { AnnotationService } from '../annotation/annotation.service';
@@ -23,6 +23,7 @@ export class DataSetProjectComponent implements OnInit {
   public selection = new SelectionModel<DataSetProject>(true, []);
   public dataSource = new MatTableDataSource<DataSetProject>(this.projects);
   public filter: InstanceFilter = InstanceFilter.All;
+  public projectState = ProjectState;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
 
@@ -40,6 +41,7 @@ export class DataSetProjectComponent implements OnInit {
     this.selection.clear();
     this.instancesToShow = [];
     if (!this.isProjectsEmpty()) {
+      this.projects.forEach((project, index) => this.projects[index] = new DataSetProject(project));
       this.dataSource.data = this.projects;
       this.startPolling();
     }
@@ -114,9 +116,9 @@ export class DataSetProjectComponent implements OnInit {
 
   private async pollDataSetProjectAsync(dataSetProject: DataSetProject, secondsToWait: number): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, 1000*secondsToWait));
-    while (dataSetProject.state == 0) {
+    while (dataSetProject.state == ProjectState.Processing) {
       await new Promise(resolve => setTimeout(resolve, 10000));
-      dataSetProject = await this.dataSetService.pollDataSetProject(dataSetProject.id);
+      dataSetProject = new DataSetProject(await this.dataSetService.pollDataSetProject(dataSetProject.id));
     }
     this.updateProjects(dataSetProject);
   }

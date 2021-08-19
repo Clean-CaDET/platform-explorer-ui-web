@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 import { DataSetAnnotationDTO } from '../model/DTOs/data-set-annotation-dto/data-set-annotation-dto.model';
+import { InstanceType } from '../model/enums/enums.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
 
 import { AnnotationService } from './annotation.service';
@@ -15,7 +16,7 @@ import { AnnotationService } from './annotation.service';
 export class AnnotationComponent implements OnInit {
 
   @Input() public instanceId: number = 0;
-  @Input() public instanceType: number = 0;
+  @Input() public instanceType: InstanceType = InstanceType.Method;
   @Input() public previousAnnotation: DataSetAnnotation | null = null;
   public severityFormControl = new FormControl('0', [
     Validators.required,
@@ -25,16 +26,16 @@ export class AnnotationComponent implements OnInit {
   public codeSmell: string = '';
   public heuristics = new FormControl();
 
-  private availableCodeSmells: Map<number, string[]> = new Map([
-    [0, ['Large Class']],
-    [1, ['Long Method']]
+  private availableCodeSmells: Map<InstanceType, string[]> = new Map([
+    [InstanceType.Class, ['Large Class']],
+    [InstanceType.Method, ['Long Method']]
   ]);
 
   private availableHeuristicsForClass = ['Class is too long.', 'Class is too complex.', 'Class has multiple concerns.'];
   private availableHeuristicsForMethod = ['Function is too long.', 'Function is too complex.', 'Function does multiple things.'];
-  private availableHeuristics: Map<number, string[]> = new Map([
-    [0, this.availableHeuristicsForClass],
-    [1, this.availableHeuristicsForMethod]
+  private availableHeuristics: Map<InstanceType, string[]> = new Map([
+    [InstanceType.Class, this.availableHeuristicsForClass],
+    [InstanceType.Method, this.availableHeuristicsForMethod]
   ]);
 
   public applicableHeuristics: Map<string, string> = new Map([]);

@@ -1,12 +1,12 @@
 import { DataSetAnnotation } from "../data-set-annotation/data-set-annotation.model"; 
-import { InstancesType } from "../enums/enums.model";
+import { InstanceType } from "../enums/enums.model";
 
 export class DataSetInstance {
     id: number = 0;
     codeSnippetId: string = '';
     link: string = '';
     projectLink: string = '';
-    type: number = 0;
+    type: InstanceType = InstanceType.Method;
     annotations: DataSetAnnotation[] = [];
     hasAnnotationFromLoggedUser: boolean = false;
     annotationFromLoggedUser: DataSetAnnotation | null = null;
@@ -17,8 +17,8 @@ export class DataSetInstance {
             this.codeSnippetId = obj.codeSnippetId;
             this.link = obj.link;
             this.projectLink = obj.projectLink;
-            this.type = obj.type;
             this.annotations = obj.annotations;
+            this.setType(obj.type);
             this.setAnnotationFromLoggedUser(annotatorId);
         }
     }
@@ -27,6 +27,19 @@ export class DataSetInstance {
         this.annotationFromLoggedUser = this.annotations.filter(a => a.annotator.id == annotatorId)[0];
         if (this.annotationFromLoggedUser) {
             this.hasAnnotationFromLoggedUser = true;
+        }
+    }
+
+    private setType(type: number) {
+        switch(type) { 
+            case 0: {
+                this.type = InstanceType.Class;
+                break;
+            }
+            case 1: { 
+                this.type = InstanceType.Method;
+                break; 
+            } 
         }
     }
 }
