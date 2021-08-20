@@ -1,6 +1,6 @@
 <div class="container" style="flex-direction: column;" *ngIf="!isInstancesEmpty()">
     <div>
-        <h3 class="center-horizontally">Filter: {{instancesType}}</h3>
+        <h3 class="center-horizontally">Filter: {{filter}}</h3>
         <mat-form-field appearance="fill" class="center-horizontally">
             <mat-label>Instances type</mat-label>
             <mat-select [(value)]="selectedInstanceType" (selectionChange)="selectedInstanceTypeChanged()">
@@ -36,6 +36,10 @@
                             </ng-container>
                         </ng-template>
                     </td>
+                </ng-container>
+                <ng-container matColumnDef="show-annotations" *ngIf="filter == instanceFilter.DisagreeingAnnotations">
+                    <th mat-header-cell *matHeaderCellDef width="5%"> # annotations </th>
+                    <td mat-cell *matCellDef="let instance" width="5%">{{instance.annotations.length}}</td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
-import { InstanceType } from '../model/enums/enums.model';
+import { InstanceFilter, InstanceType } from '../model/enums/enums.model';
 
 @Component({
   selector: 'de-data-set-instance',
@@ -15,9 +15,11 @@ import { InstanceType } from '../model/enums/enums.model';
 export class DataSetInstanceComponent implements OnInit {
 
   @Input() public instances: DataSetInstance[] = [];
-  @Input() public instancesType: string = '';
+  @Input() public filter: InstanceFilter = InstanceFilter.All;
+  public instanceFilter = InstanceFilter;
+  private initiallyDisplayedColumns: string[] = ['select', 'codeSnippetId', 'annotated'];
+  public displayedColumns: string[] = this.initiallyDisplayedColumns;
   public previousAnnotation: DataSetAnnotation | null = null;
-  public displayedColumns = ['select', 'codeSnippetId', 'annotated'];
   public selection = new SelectionModel<DataSetInstance>(true, []);
   public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
   public instanceTypes: string[] = Object.keys(InstanceType);
@@ -43,6 +45,7 @@ export class DataSetInstanceComponent implements OnInit {
       this.instances.forEach((instance, index) => this.instances[index] = new DataSetInstance(instance, annotatorId));
       this.dataSource.data = this.instances;
       this.selectedInstanceTypeChanged();
+      this.configureViewByFilter();
     }
     if (this.iframe) {
       this.iframe.srcdoc = '';
@@ -113,6 +116,13 @@ export class DataSetInstanceComponent implements OnInit {
 
   public isInstancesEmpty(): boolean {
     return this.instances.length == 0;
+  }
+
+  private configureViewByFilter(): void {
+    this.displayedColumns = this.initiallyDisplayedColumns.slice();
+    if (this.filter == InstanceFilter.DisagreeingAnnotations) {
+      this.displayedColumns.push('show-annotations');
+    }
   }
 
   private createSrcdocFromGithubLink(githubLink: string): string {
