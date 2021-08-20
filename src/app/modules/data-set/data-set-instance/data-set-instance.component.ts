@@ -20,6 +20,7 @@ export class DataSetInstanceComponent implements OnInit {
   public displayedColumns = ['select', 'codeSnippetId', 'annotated'];
   public selection = new SelectionModel<DataSetInstance>(true, []);
   public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
+  public searchInput: string = '';
 
   public instanceTypes: string[] = Object.keys(InstanceType);
   public selectedInstanceType: InstanceType = InstanceType.Method;
@@ -97,9 +98,9 @@ export class DataSetInstanceComponent implements OnInit {
     }
   }
 
-  public filtersChanged() {
+  public filtersChanged(): void {
     this.selection.clear();
-    this.dataSource.data = this.instances.filter(i => this.instanceHasSelectedInstanceType(i) && this.instanceHasSelectedAnnotationStatus(i));
+    this.showFilteredInstances();
   }
 
   public async addAnnotation(annotation: DataSetAnnotation) {
@@ -129,8 +130,23 @@ export class DataSetInstanceComponent implements OnInit {
     this.filtersChanged();
   }
 
+  public searchInstances(): void {
+    if (this.selection.selected.length == 1) {
+      this.toggleInstanceSelection(this.selection.selected[0]);
+    }
+    this.showFilteredInstances();
+  }
+
   public isInstancesEmpty(): boolean {
     return this.instances.length == 0;
+  }
+
+  private showFilteredInstances(): void {
+    this.dataSource.data = this.instances.filter(i => 
+      this.instanceHasSelectedInstanceType(i)
+      && this.instanceHasSelectedAnnotationStatus(i)
+      && i.codeSnippetId.toLowerCase().includes(this.searchInput.toLowerCase())
+    );
   }
 
   private createSrcdocFromGithubLink(githubLink: string): string {

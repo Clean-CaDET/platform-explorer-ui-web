@@ -88,6 +88,11 @@ export class DataSetProjectComponent implements OnInit {
     this.instancesToShow = await this.annotationService.disagreeingAnnotations(this.selection.selected);
   }
 
+  public searchProjects(event: Event): void {
+    const input = (event.target as HTMLInputElement).value;
+    this.dataSource.data = this.projects.filter(p => p.name.includes(input));
+  }
+
   private showFilteredInstances(): void {
     this.instancesToShow = [];
     switch(this.filter) { 

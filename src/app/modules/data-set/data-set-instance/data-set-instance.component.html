@@ -18,6 +18,10 @@
     </div>
     <div class="data-set-instance-container">
         <div class="instances-table mat-elevation-z8 container">
+            <mat-form-field appearance="standard">
+                <mat-label>Search by code snippet id</mat-label>
+                <input matInput (keyup)="searchInstances()" #input [(ngModel)]="searchInput">
+            </mat-form-field>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 <ng-container matColumnDef="select">
                     <th mat-header-cell *matHeaderCellDef width="5%"></th>
