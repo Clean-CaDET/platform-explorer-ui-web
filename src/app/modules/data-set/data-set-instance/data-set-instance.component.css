@@ -17,6 +17,12 @@
     width: 40%;
 }
 
+.filter-instances {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+}
+
 .center-horizontally {
     margin: 0 auto;
     display: flex;

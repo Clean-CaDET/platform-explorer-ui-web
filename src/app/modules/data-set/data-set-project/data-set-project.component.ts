@@ -43,7 +43,7 @@ export class DataSetProjectComponent implements OnInit {
     if (!this.isProjectsEmpty()) {
       this.projects.forEach((project, index) => this.projects[index] = new DataSetProject(project));
       this.dataSource.data = this.projects;
-      this.startPolling();
+      this.startPollingProjects();
     }
   }
 
@@ -108,7 +108,7 @@ export class DataSetProjectComponent implements OnInit {
     }
   }
 
-  private startPolling(): void {
+  private startPollingProjects(): void {
     for (let i in this.projects) {
       this.pollDataSetProjectAsync(this.projects[i], +i);
     }

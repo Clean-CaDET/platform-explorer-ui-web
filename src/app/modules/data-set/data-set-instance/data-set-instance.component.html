@@ -1,12 +1,20 @@
 <div class="container" style="flex-direction: column;" *ngIf="!isInstancesEmpty()">
-    <div>
+    <div style="flex-direction: column; display: flex;">
         <h3 class="center-horizontally">Filter: {{instancesType}}</h3>
-        <mat-form-field appearance="fill" class="center-horizontally">
-            <mat-label>Instances type</mat-label>
-            <mat-select [(value)]="selectedInstanceType" (selectionChange)="selectedInstanceTypeChanged()">
-                <mat-option [value]="type" *ngFor="let type of instanceTypes">{{type}}</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <div class="filter-instances">
+            <mat-form-field appearance="fill" class="center-horizontally">
+                <mat-label>Instances type</mat-label>
+                <mat-select [(value)]="selectedInstanceType" (selectionChange)="filtersChanged()">
+                    <mat-option [value]="type" *ngFor="let type of instanceTypes">{{type}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="center-horizontally">
+                <mat-label>Annotation status</mat-label>
+                <mat-select [(value)]="selectedAnnotationStatus" (selectionChange)="filtersChanged()">
+                    <mat-option [value]="type" *ngFor="let type of annotationStatuses">{{type}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
     <div class="data-set-instance-container">
         <div class="instances-table mat-elevation-z8 container">

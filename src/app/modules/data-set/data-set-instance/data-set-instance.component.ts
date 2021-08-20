@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
-import { InstanceType } from '../model/enums/enums.model';
+import { AnnotationStatus, InstanceType } from '../model/enums/enums.model';
 
 @Component({
   selector: 'de-data-set-instance',
@@ -20,8 +20,12 @@ export class DataSetInstanceComponent implements OnInit {
   public displayedColumns = ['select', 'codeSnippetId', 'annotated'];
   public selection = new SelectionModel<DataSetInstance>(true, []);
   public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
+
   public instanceTypes: string[] = Object.keys(InstanceType);
   public selectedInstanceType: InstanceType = InstanceType.Method;
+
+  public annotationStatuses: string[] = Object.keys(AnnotationStatus);
+  public selectedAnnotationStatus: AnnotationStatus = AnnotationStatus.Not_Annotated;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   private iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
@@ -41,8 +45,7 @@ export class DataSetInstanceComponent implements OnInit {
     if (!this.isInstancesEmpty()) {
       let annotatorId: number = +sessionStorage.getItem('annotatorID')!;
       this.instances.forEach((instance, index) => this.instances[index] = new DataSetInstance(instance, annotatorId));
-      this.dataSource.data = this.instances;
-      this.selectedInstanceTypeChanged();
+      this.filtersChanged();
     }
     if (this.iframe) {
       this.iframe.srcdoc = '';
@@ -66,22 +69,37 @@ export class DataSetInstanceComponent implements OnInit {
     }
   }
 
-  public selectedInstanceTypeChanged() {
-    this.selection.clear();
+  private instanceHasSelectedInstanceType(instance: DataSetInstance): boolean {
     switch (this.selectedInstanceType) {
       case InstanceType.Class: {
-        this.dataSource.data = this.instances.filter(i => i.type == InstanceType.Class);
-        break;
+        return instance.type == InstanceType.Class;
       }
       case InstanceType.Method: { 
-        this.dataSource.data = this.instances.filter(i => i.type == InstanceType.Method);
-        break; 
+        return instance.type == InstanceType.Method;
       } 
       case InstanceType.All: { 
-        this.dataSource.data = this.instances;
-        break; 
+        return true;
       } 
     }
+  }
+
+  private instanceHasSelectedAnnotationStatus(instance: DataSetInstance): boolean {
+    switch (this.selectedAnnotationStatus) {
+      case AnnotationStatus.Annotated: {
+        return instance.hasAnnotationFromLoggedUser;
+      }
+      case AnnotationStatus.Not_Annotated: { 
+        return !instance.hasAnnotationFromLoggedUser;
+      } 
+      case AnnotationStatus.All: { 
+        return true;
+      } 
+    }
+  }
+
+  public filtersChanged() {
+    this.selection.clear();
+    this.dataSource.data = this.instances.filter(i => this.instanceHasSelectedInstanceType(i) && this.instanceHasSelectedAnnotationStatus(i));
   }
 
   public async addAnnotation(annotation: DataSetAnnotation) {
@@ -92,7 +110,7 @@ export class DataSetInstanceComponent implements OnInit {
         break;
       }
     }
-    this.selectedInstanceTypeChanged();
+    this.filtersChanged();
   }
 
   public async changeAnnotation(annotation: DataSetAnnotation) {
@@ -108,7 +126,7 @@ export class DataSetInstanceComponent implements OnInit {
         break;
       }
     }
-    this.selectedInstanceTypeChanged();
+    this.filtersChanged();
   }
 
   public isInstancesEmpty(): boolean {
