@@ -33,7 +33,7 @@ export class DataSetProject {
                 break; 
             } 
             default: {
-                this.state = (state as ProjectState);
+                this.state = state as ProjectState;
                 break;
             }
         }

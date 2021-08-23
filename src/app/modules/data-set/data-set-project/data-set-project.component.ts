@@ -43,7 +43,7 @@ export class DataSetProjectComponent implements OnInit {
     if (!this.isProjectsEmpty()) {
       this.projects.forEach((project, index) => this.projects[index] = new DataSetProject(project));
       this.dataSource.data = this.projects;
-      this.startPolling();
+      this.startPollingProjects();
     }
   }
 
@@ -88,6 +88,11 @@ export class DataSetProjectComponent implements OnInit {
     this.instancesToShow = await this.annotationService.disagreeingAnnotations(this.selection.selected);
   }
 
+  public searchProjects(event: Event): void {
+    const input = (event.target as HTMLInputElement).value;
+    this.dataSource.data = this.projects.filter(p => p.name.includes(input));
+  }
+
   private showFilteredInstances(): void {
     this.instancesToShow = [];
     switch(this.filter) { 
@@ -108,7 +113,7 @@ export class DataSetProjectComponent implements OnInit {
     }
   }
 
-  private startPolling(): void {
+  private startPollingProjects(): void {
     for (let i in this.projects) {
       this.pollDataSetProjectAsync(this.projects[i], +i);
     }

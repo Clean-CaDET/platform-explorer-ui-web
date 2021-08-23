@@ -1,4 +1,8 @@
 <div class="data-set-project-container mat-elevation-z8 center-horizontally container" *ngIf="!isProjectsEmpty()">
+    <mat-form-field appearance="standard">
+        <mat-label>Search by name</mat-label>
+        <input matInput (keyup)="searchProjects($event)" #input>
+    </mat-form-field>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef width="5%">

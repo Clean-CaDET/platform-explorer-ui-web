@@ -1,15 +1,27 @@
 <div class="container" style="flex-direction: column;" *ngIf="!isInstancesEmpty()">
-    <div>
-        <h3 class="center-horizontally">Filter: {{filter}}</h3>
-        <mat-form-field appearance="fill" class="center-horizontally">
-            <mat-label>Instances type</mat-label>
-            <mat-select [(value)]="selectedInstanceType" (selectionChange)="selectedInstanceTypeChanged()">
-                <mat-option [value]="type" *ngFor="let type of instanceTypes">{{type}}</mat-option>
-            </mat-select>
-        </mat-form-field>
+    <div style="flex-direction: column; display: flex;">
+        <h3 class="center-horizontally">Filter: {{instancesType}}</h3>
+        <div class="filter-instances">
+            <mat-form-field appearance="fill" class="center-horizontally">
+                <mat-label>Instances type</mat-label>
+                <mat-select [(value)]="selectedInstanceType" (selectionChange)="filtersChanged()">
+                    <mat-option [value]="type" *ngFor="let type of instanceTypes">{{type}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="center-horizontally">
+                <mat-label>Annotation status</mat-label>
+                <mat-select [(value)]="selectedAnnotationStatus" (selectionChange)="filtersChanged()">
+                    <mat-option [value]="type" *ngFor="let type of annotationStatuses">{{type}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
     <div class="data-set-instance-container">
         <div class="instances-table mat-elevation-z8 container">
+            <mat-form-field appearance="standard">
+                <mat-label>Search by code snippet id</mat-label>
+                <input matInput (keyup)="searchInstances()" #input [(ngModel)]="searchInput">
+            </mat-form-field>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 <ng-container matColumnDef="select">
                     <th mat-header-cell *matHeaderCellDef width="5%"></th>

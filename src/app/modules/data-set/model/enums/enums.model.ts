@@ -15,3 +15,9 @@ export enum ProjectState {
     Built = 'Built',
     Failed = 'Failed'
 }
+
+export enum AnnotationStatus {
+    Annotated = 'Annotated',
+    Not_Annotated = 'Not_Annotated',
+    All = 'All'
+}

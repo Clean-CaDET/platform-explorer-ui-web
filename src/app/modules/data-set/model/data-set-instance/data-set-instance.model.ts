@@ -30,8 +30,8 @@ export class DataSetInstance {
         }
     }
 
-    private setType(type: number) {
-        switch(type) { 
+    private setType(type: string) {
+        switch(+type) { 
             case 0: {
                 this.type = InstanceType.Class;
                 break;
@@ -40,6 +40,10 @@ export class DataSetInstance {
                 this.type = InstanceType.Method;
                 break; 
             } 
+            default: {
+                this.type = type as InstanceType;
+                break;
+            }
         }
     }
 }
