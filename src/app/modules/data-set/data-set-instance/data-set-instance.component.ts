@@ -104,29 +104,17 @@ export class DataSetInstanceComponent implements OnInit {
   }
 
   public async addAnnotation(annotation: DataSetAnnotation) {
-    for (let i = 0; i < this.instances.length; i++) {
-      if (this.instances[i].id == this.selection.selected[0].id) {
-        this.instances[i].annotations.push(annotation);
-        this.instances[i] = new DataSetInstance(this.instances[i]);
-        break;
-      }
-    }
+    let i = this.instances.findIndex(i => i.id == this.selection.selected[0].id);
+    this.instances[i].annotations.push(annotation);
+    this.instances[i] = new DataSetInstance(this.instances[i]);
     this.filtersChanged();
   }
 
   public async changeAnnotation(annotation: DataSetAnnotation) {
-    for (let i = 0; i < this.instances.length; i++) {
-      if (this.instances[i].id == this.selection.selected[0].id) {
-        for (let j = 0; j < this.instances[i].annotations.length; j++) {
-          if (this.instances[i].annotations[j].id == annotation.id) {
-            this.instances[i].annotations[j] = annotation;
-            break;
-          }
-        }
-        this.instances[i] = new DataSetInstance(this.instances[i]);
-        break;
-      }
-    }
+    let i = this.instances.findIndex(i => i.id == this.selection.selected[0].id);
+    let j = this.instances[i].annotations.findIndex(a => a.id == annotation.id);
+    this.instances[i].annotations[j] = annotation;
+    this.instances[i] = new DataSetInstance(this.instances[i]);
     this.filtersChanged();
   }
 
