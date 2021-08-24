@@ -42,7 +42,7 @@ export class DataSetInstanceComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dialog: MatDialog, private utilService: UtilService) { }
+  constructor(private dialog: MatDialog) { }
 
   public ngOnInit(): void {
   }
@@ -50,7 +50,7 @@ export class DataSetInstanceComponent implements OnInit {
   public ngOnChanges() {
     this.selection.clear();
     if (!this.isInstancesEmpty()) {
-      let annotatorId: number = +sessionStorage.getItem('annotatorID')!;
+      let annotatorId: number = UtilService.getAnnotatorId();
       this.instances.forEach((instance, index) => this.instances[index] = new DataSetInstance(instance, annotatorId));
       this.filtersChanged();
     }
@@ -144,7 +144,7 @@ export class DataSetInstanceComponent implements OnInit {
   }
 
   public showAllAnnotations(annotations: DataSetAnnotation[], instanceId: number): void {
-    let dialogConfig = this.utilService.setDialogConfig('550px', '700px', {annotations: annotations, instanceId: instanceId});
+    let dialogConfig = UtilService.setDialogConfig('550px', '700px', {annotations: annotations, instanceId: instanceId});
     this.dialog.open(DisagreeingAnnotationsDialogComponent, dialogConfig);
   }
 

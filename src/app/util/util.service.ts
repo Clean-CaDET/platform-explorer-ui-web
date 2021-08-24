@@ -8,7 +8,16 @@ export class UtilService {
 
   constructor() { }
 
-  public setDialogConfig(height: string, width: string, data?: any): MatDialogConfig<any> {
+  public static setAnnotatorId(annotatorId: number) {
+    sessionStorage.setItem('annotatorId', annotatorId.toString());
+  }
+
+  public static getAnnotatorId(): number {
+    let annotatorId = sessionStorage.getItem('annotatorId');
+    return annotatorId ? +annotatorId! : 0;
+  }
+
+  public static setDialogConfig(height: string, width: string, data?: any): MatDialogConfig<any> {
     let dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;

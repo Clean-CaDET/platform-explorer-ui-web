@@ -4,7 +4,7 @@
         <mat-card-content fxLayout="column">
             <mat-form-field>
                 <mat-label>Annotator ID</mat-label>
-                <input [(ngModel)]="annotatorID" type="number" matInput [formControl]="annotatorFormControl" min="1">
+                <input type="number" matInput [formControl]="annotatorFormControl" min="1">
                 <mat-error *ngIf="annotatorFormControl.hasError('min')">
                     Annotator ID must be <strong>greater</strong> than 0
                 </mat-error>

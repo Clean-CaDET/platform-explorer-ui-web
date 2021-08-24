@@ -33,7 +33,7 @@ export class DataSetComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dialog: MatDialog, private dataSetService: DataSetService, private utilService: UtilService) {}
+  constructor(private dialog: MatDialog, private dataSetService: DataSetService) {}
 
   public async ngOnInit(): Promise<void> {
     this.dataSets = await this.dataSetService.getAllDataSets();
@@ -52,7 +52,7 @@ export class DataSetComponent implements OnInit {
   }
 
   public addDataSet(): void {
-    let dialogConfig = this.utilService.setDialogConfig('250px', '250px');
+    let dialogConfig = UtilService.setDialogConfig('250px', '250px');
     let dialogRef = this.dialog.open(AddDataSetDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((res: DataSet) => this.addEmptyDataSet(res));
   }
@@ -60,7 +60,7 @@ export class DataSetComponent implements OnInit {
   public addProjectsToDataSet(): void {
     let selectedDataSet = this.selection.selected[0];
     if (selectedDataSet) {
-      let dialogConfig = this.utilService.setDialogConfig('480px', '520px', selectedDataSet.id);
+      let dialogConfig = UtilService.setDialogConfig('480px', '520px', selectedDataSet.id);
       let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
       dialogRef.afterClosed().subscribe((res: DataSet) => this.showProjects(res));
     }
