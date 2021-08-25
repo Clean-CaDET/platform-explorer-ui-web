@@ -138,9 +138,7 @@ export class DataSetInstanceComponent implements OnInit {
   }
 
   private createSrcdocFromGithubLink(githubLink: string): string {
-    let linkParts = githubLink.split('#');
-    let lineNumbers = linkParts[1].split(/[L\-]/).filter(i => i);
-    let completeLink = 'http://gist-it.appspot.com/' + linkParts[0] + '?slice=' + (+lineNumbers[0]-1) + ':' + lineNumbers[1];
+    let completeLink = 'https://emgithub.com/embed.js?target=' + encodeURIComponent(githubLink) + '&style=github&showBorder=on&showLineNumbers=on&showFileMeta=on&showCopy=on';
     return '<script src=\"' + completeLink + '\"></script>';
   }
 
