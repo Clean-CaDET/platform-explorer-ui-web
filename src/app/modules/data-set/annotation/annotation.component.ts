@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { FormControl, Validators } from '@angular/forms';
 
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
+import { CodeSmellDTO } from '../model/DTOs/code-smell-dto/code-smell-dto.model';
 import { DataSetAnnotationDTO } from '../model/DTOs/data-set-annotation-dto/data-set-annotation-dto.model';
 import { InstanceType } from '../model/enums/enums.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
@@ -27,8 +28,8 @@ export class AnnotationComponent implements OnInit {
   public heuristics = new FormControl();
 
   private availableCodeSmells: Map<InstanceType, string[]> = new Map([
-    [InstanceType.Class, ['Large Class']],
-    [InstanceType.Method, ['Long Method']]
+    [InstanceType.Class, []],
+    [InstanceType.Method, []]
   ]);
 
   private availableHeuristicsForClass = ['Class is too long.', 'Class is too complex.', 'Class has multiple concerns.'];
@@ -47,6 +48,7 @@ export class AnnotationComponent implements OnInit {
   constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
 
   public ngOnInit(): void {
+    this.annotationService.getAllCodeSmells().subscribe((res: CodeSmellDTO[]) => this.initializeCodeSmells(res));
   }
 
   public ngOnChanges(): void {
@@ -94,6 +96,13 @@ export class AnnotationComponent implements OnInit {
       return;
     }
     this.addAnnotation(annotation);
+  }
+
+  private initializeCodeSmells(codeSmells: CodeSmellDTO[]) {
+    codeSmells.forEach(smell => {
+      smell = new CodeSmellDTO(smell);
+      smell.snippetTypes.forEach(t => this.availableCodeSmells.get(t)?.push(smell.value));
+    });
   }
 
   private addAnnotation(annotation: DataSetAnnotationDTO) {
