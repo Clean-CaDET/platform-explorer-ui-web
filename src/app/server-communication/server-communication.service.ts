@@ -22,6 +22,10 @@ export class ServerCommunicationService {
     return this.sendRequest('POST', path, body, headers);
   }
 
+  public putRequest(path: string, body: any, headers: HttpHeaders): Observable<any> {
+    return this.sendRequest('PUT', path, body, headers);
+  }
+
   private sendRequest(method: string, path: string, body?: any, headers?: HttpHeaders): Observable<any> {
     return this.http.request<any>(method, environment.apiHost + path, {
       headers : headers,

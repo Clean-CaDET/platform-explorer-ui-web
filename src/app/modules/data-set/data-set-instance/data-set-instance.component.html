@@ -1,0 +1,66 @@
+<div class="container" style="flex-direction: column;" *ngIf="!isInstancesEmpty()">
+    <div style="flex-direction: column; display: flex;">
+        <h3 class="center-horizontally">Filter: {{instancesType}}</h3>
+        <div class="filter-instances">
+            <mat-form-field appearance="fill" class="center-horizontally">
+                <mat-label>Instances type</mat-label>
+                <mat-select [(value)]="selectedInstanceType" (selectionChange)="filtersChanged()">
+                    <mat-option [value]="type" *ngFor="let type of instanceTypes">{{type}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="center-horizontally">
+                <mat-label>Annotation status</mat-label>
+                <mat-select [(value)]="selectedAnnotationStatus" (selectionChange)="filtersChanged()">
+                    <mat-option [value]="type" *ngFor="let type of annotationStatuses">{{type}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="data-set-instance-container">
+        <div class="instances-table mat-elevation-z8 container">
+            <mat-form-field appearance="standard">
+                <mat-label>Search by code snippet id</mat-label>
+                <input matInput (keyup)="searchInstances()" #input [(ngModel)]="searchInput">
+            </mat-form-field>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef width="5%"></th>
+                    <td mat-cell *matCellDef="let instance" width="5%">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleInstanceSelection(instance)" [checked]="selection.isSelected(instance)">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="codeSnippetId">
+                    <th mat-header-cell *matHeaderCellDef width="90%"> Code snippet id </th>
+                    <td mat-cell *matCellDef="let instance" width="90%">
+                        <a href="{{instance.link}}">{{instance.codeSnippetId}}</a>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="annotated">
+                    <th mat-header-cell *matHeaderCellDef width="5%"> Annotated </th>
+                    <td mat-cell *matCellDef="let instance" width="5%">
+                        <ng-container *ngIf="instance.hasAnnotationFromLoggedUser; else not_annotated">
+                            <mat-icon>check_circle_outline</mat-icon>
+                        </ng-container>
+                        <ng-template #not_annotated>
+                            <ng-container #not_annotated>
+                                <mat-icon>highlight_off</mat-icon>
+                            </ng-container>
+                        </ng-template>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+            </mat-paginator>
+        </div>
+        <iframe frameborder=0 class="code-snippet" id="snippet" scrolling="yes"></iframe>
+    </div>
+
+    <div class="center" *ngIf="selection.selected.length == 1">
+        <de-annotation (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)" [instanceId]="selection.selected[0].id" [instanceType]="selection.selected[0].type" [previousAnnotation]="previousAnnotation">
+        </de-annotation>
+    </div>
+</div>

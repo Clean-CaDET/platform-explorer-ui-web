@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
 
   public login(){
     if (this.annotatorFormControl.valid){
+      sessionStorage.setItem('annotatorID', this.annotatorID.toString());
       this.router.navigate(['/data-set']);
     }
   }

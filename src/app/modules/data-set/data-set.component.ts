@@ -34,12 +34,12 @@ export class DataSetComponent implements OnInit {
 
   constructor(private dialog: MatDialog, private dataSetService: DataSetService) {}
 
-  async ngOnInit() {
+  public async ngOnInit(): Promise<void> {
     this.dataSets = await this.dataSetService.getAllDataSets();
     this.dataSource.data = this.dataSets;
   }
 
-  public toggleDataSetSelection(selectedDataSet: DataSet) {
+  public toggleDataSetSelection(selectedDataSet: DataSet): void {
     this.projectsToShow = [];
     if (!this.selection.isSelected(selectedDataSet)) {
       this.selection.clear();
@@ -50,13 +50,13 @@ export class DataSetComponent implements OnInit {
     }
   }
 
-  public addDataSet(){
+  public addDataSet(): void {
     let dialogConfig = this.setDialogConfig('250px', '250px');
     let dialogRef = this.dialog.open(AddDataSetDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((res: DataSet) => this.addEmptyDataSet(res));
   }
 
-  public addProjectsToDataSet() {
+  public addProjectsToDataSet(): void {
     let selectedDataSet = this.selection.selected[0];
     if (selectedDataSet) {
       let dialogConfig = this.setDialogConfig('480px', '520px', selectedDataSet.id);
@@ -65,15 +65,22 @@ export class DataSetComponent implements OnInit {
     }
   }
 
-  private showProjects(dataSet: DataSet) {
+  public searchDataSets(event: Event): void {
+    if (this.selection.selected.length == 1) {
+      this.toggleDataSetSelection(this.selection.selected[0]);
+    }
+    const input = (event.target as HTMLInputElement).value;
+    this.dataSource.data = this.dataSets.filter(s => s.name.includes(input));
+  }
+
+  private showProjects(dataSet: DataSet): void {
     if (dataSet) {
       this.updateDataSets(dataSet);
-      this.selection.select(dataSet);
-      this.projectsToShow = dataSet.projects;
+      this.toggleDataSetSelection(dataSet);
     }
   }
 
-  private updateDataSets(dataSet: DataSet) {
+  private updateDataSets(dataSet: DataSet): void {
     for (let i in this.dataSets) {
       if (this.dataSets[i].id == dataSet.id) {
         this.dataSets[i] = dataSet;
@@ -83,14 +90,14 @@ export class DataSetComponent implements OnInit {
     }
   }
 
-  private addEmptyDataSet(dataSet: DataSet) {
+  private addEmptyDataSet(dataSet: DataSet): void {
     if (dataSet) {
       this.dataSets.push(dataSet);
       this.dataSource.data = this.dataSets;
     }
   }
 
-  private setDialogConfig(height: string, width: string, data?: any) {
+  private setDialogConfig(height: string, width: string, data?: any): MatDialogConfig<any> {
     let dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;

@@ -1,5 +1,21 @@
 <div class="data-set-project-container mat-elevation-z8 center-horizontally container" *ngIf="!isProjectsEmpty()">
+    <mat-form-field appearance="standard">
+        <mat-label>Search by name</mat-label>
+        <input matInput (keyup)="searchProjects($event)" #input>
+    </mat-form-field>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef width="5%">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleAllProjectsSelection()" [checked]="selection.hasValue() && isAllProjectsSelected()">
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let project" width="5%">
+                <ng-container *ngIf="project.instances?.length">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleProjectSelection(project)" [checked]="selection.isSelected(project)">
+                    </mat-checkbox>
+                </ng-container>
+            </td>
+        </ng-container>
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef width="20%"> Name </th>
             <td mat-cell *matCellDef="let project" width="20%"> {{project.name}} </td>
@@ -11,20 +27,20 @@
             </td>
         </ng-container>
         <ng-container matColumnDef="numOfInstances">
-            <th mat-header-cell *matHeaderCellDef width="30%"> Number of instances </th>
-            <td mat-cell *matCellDef="let project" width="30%">{{project.instances?.length || '-'}}</td>
+            <th mat-header-cell *matHeaderCellDef width="10%"> Number of instances </th>
+            <td mat-cell *matCellDef="let project" width="10%">{{project.instances?.length || '-'}}</td>
         </ng-container>
         <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef width="20%"> Status </th>
-            <td mat-cell *matCellDef="let project" width="20%">
-                <ng-container *ngIf="project.state == 0">
+            <th mat-header-cell *matHeaderCellDef width="5%"> Status </th>
+            <td mat-cell *matCellDef="let project" width="5%">
+                <ng-container *ngIf="project.state == projectState.Processing">
                     <mat-spinner color="warn" diameter="20">
                     </mat-spinner>
                 </ng-container>
-                <ng-container *ngIf="project.state == 1">
+                <ng-container *ngIf="project.state == projectState.Built">
                     <mat-icon>check_circle_outline</mat-icon>
                 </ng-container>
-                <ng-container *ngIf="project.state == 2">
+                <ng-container *ngIf="project.state == projectState.Failed">
                     <mat-icon>highlight_off</mat-icon>
                 </ng-container>
             </td>
@@ -33,4 +49,13 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+    </mat-paginator>
+    <div class="find-annotations" *ngIf="!isProjectsEmpty() && selection.selected.length">
+        <button mat-raised-button color="warn" (click)="showAllInstances()">All</button>
+        <button mat-raised-button color="warn" (click)="showInstancesForAdditionalAnnotation()">Need additional annotations</button>
+        <button mat-raised-button color="warn" (click)="showInstancesWithDisagreeingAnnotations()">Disagreeing annotations</button>
+    </div>
 </div>
+
+<de-data-set-instance [instances]="instancesToShow" [instancesType]="filter.toString()"></de-data-set-instance>
