@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Disagreeing annotations</h2>
+<mat-dialog-content class="mat-typography">
+    <form>
+        <table cellspacing="2">
+            <ng-container *ngFor="let annotation of instanceWithDisagreeingAnnotations.annotations">
+                <tr>
+                    <th *ngIf="annotation.annotator.id == loggedAnnotatorId">
+                        Annotated by you
+                    </th>
+                    <th *ngIf="annotation.annotator.id != loggedAnnotatorId">
+                        Annotated by {{annotation.annotator.id}}
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <de-annotation [instanceId]="instanceWithDisagreeingAnnotations.instanceId" [previousAnnotation]="annotation" [disableEdit]="true">
+                        </de-annotation>
+                    </td>
+                </tr>
+            </ng-container>
+        </table>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

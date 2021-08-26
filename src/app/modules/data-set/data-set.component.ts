@@ -10,6 +10,7 @@ import { AddDataSetDialogComponent } from './dialogs/add-data-set-dialog/add-dat
 import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-project-dialog.component';
 
 import { DataSetService } from './data-set.service';
+import { UtilService } from 'src/app/util/util.service';
 
 @Component({
   selector: 'de-data-set',
@@ -51,7 +52,7 @@ export class DataSetComponent implements OnInit {
   }
 
   public addDataSet(): void {
-    let dialogConfig = this.setDialogConfig('250px', '250px');
+    let dialogConfig = UtilService.setDialogConfig('250px', '250px');
     let dialogRef = this.dialog.open(AddDataSetDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((res: DataSet) => this.addEmptyDataSet(res));
   }
@@ -59,7 +60,7 @@ export class DataSetComponent implements OnInit {
   public addProjectsToDataSet(): void {
     let selectedDataSet = this.selection.selected[0];
     if (selectedDataSet) {
-      let dialogConfig = this.setDialogConfig('480px', '520px', selectedDataSet.id);
+      let dialogConfig = UtilService.setDialogConfig('480px', '520px', selectedDataSet.id);
       let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
       dialogRef.afterClosed().subscribe((res: DataSet) => this.showProjects(res));
     }
@@ -95,16 +96,6 @@ export class DataSetComponent implements OnInit {
       this.dataSets.push(dataSet);
       this.dataSource.data = this.dataSets;
     }
-  }
-
-  private setDialogConfig(height: string, width: string, data?: any): MatDialogConfig<any> {
-    let dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.height = height;
-    dialogConfig.width = width;
-    dialogConfig.data = data;
-    return dialogConfig;
   }
 
 }
