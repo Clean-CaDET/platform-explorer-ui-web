@@ -1,3 +1,4 @@
+import { UtilService } from "src/app/util/util.service";
 import { DataSetAnnotation } from "../data-set-annotation/data-set-annotation.model"; 
 import { InstanceType } from "../enums/enums.model";
 
@@ -23,7 +24,7 @@ export class DataSetInstance {
         }
     }
 
-    private setAnnotationFromLoggedUser(annotatorId: number = +sessionStorage.getItem('annotatorID')!): void {
+    private setAnnotationFromLoggedUser(annotatorId: number = UtilService.getAnnotatorId()): void {
         this.annotationFromLoggedUser = this.annotations.filter(a => a.annotator.id == annotatorId)[0];
         if (this.annotationFromLoggedUser) {
             this.hasAnnotationFromLoggedUser = true;

@@ -2,10 +2,14 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
-import { AnnotationStatus, InstanceType } from '../model/enums/enums.model';
+import { AnnotationStatus, InstanceFilter, InstanceType } from '../model/enums/enums.model';
+
+import { UtilService } from 'src/app/util/util.service';
+import { DisagreeingAnnotationsDialogComponent } from '../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
 
 @Component({
   selector: 'de-data-set-instance',
@@ -15,9 +19,11 @@ import { AnnotationStatus, InstanceType } from '../model/enums/enums.model';
 export class DataSetInstanceComponent implements OnInit {
 
   @Input() public instances: DataSetInstance[] = [];
-  @Input() public instancesType: string = '';
+  @Input() public filter: InstanceFilter = InstanceFilter.All;
+  public instanceFilter = InstanceFilter;
+  private initiallyDisplayedColumns: string[] = ['select', 'codeSnippetId', 'annotated'];
+  public displayedColumns: string[] = this.initiallyDisplayedColumns;
   public previousAnnotation: DataSetAnnotation | null = null;
-  public displayedColumns = ['select', 'codeSnippetId', 'annotated'];
   public selection = new SelectionModel<DataSetInstance>(true, []);
   public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
   public searchInput: string = '';
@@ -36,7 +42,7 @@ export class DataSetInstanceComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor() { }
+  constructor(private dialog: MatDialog) { }
 
   public ngOnInit(): void {
   }
@@ -44,7 +50,7 @@ export class DataSetInstanceComponent implements OnInit {
   public ngOnChanges() {
     this.selection.clear();
     if (!this.isInstancesEmpty()) {
-      let annotatorId: number = +sessionStorage.getItem('annotatorID')!;
+      let annotatorId: number = UtilService.getAnnotatorId();
       this.instances.forEach((instance, index) => this.instances[index] = new DataSetInstance(instance, annotatorId));
       this.filtersChanged();
     }
@@ -125,11 +131,20 @@ export class DataSetInstanceComponent implements OnInit {
     this.showFilteredInstances();
   }
 
+  public showAllAnnotations(annotations: DataSetAnnotation[], instanceId: number): void {
+    let dialogConfig = UtilService.setDialogConfig('550px', '700px', {annotations: annotations, instanceId: instanceId});
+    this.dialog.open(DisagreeingAnnotationsDialogComponent, dialogConfig);
+  }
+
   public isInstancesEmpty(): boolean {
     return this.instances.length == 0;
   }
 
   private showFilteredInstances(): void {
+    this.displayedColumns = this.initiallyDisplayedColumns.slice();
+    if (this.filter == InstanceFilter.DisagreeingAnnotations) {
+      this.displayedColumns.push('show-annotations');
+    }
     this.dataSource.data = this.instances.filter(i => 
       this.instanceHasSelectedInstanceType(i)
       && this.instanceHasSelectedAnnotationStatus(i)

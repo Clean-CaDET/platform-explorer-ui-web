@@ -18,6 +18,8 @@ export class AnnotationComponent implements OnInit {
   @Input() public instanceId: number = 0;
   @Input() public instanceType: InstanceType = InstanceType.Method;
   @Input() public previousAnnotation: DataSetAnnotation | null = null;
+  @Input() public disableEdit: boolean = false;
+
   public severityFormControl = new FormControl('0', [
     Validators.required,
     Validators.min(0),
@@ -39,6 +41,7 @@ export class AnnotationComponent implements OnInit {
   ]);
 
   public applicableHeuristics: Map<string, string> = new Map([]);
+  public annotatorId: string = '';
   private isHeuristicReasonChanged: boolean = false;
 
   @Output() newAnnotation = new EventEmitter<DataSetAnnotation>();
@@ -47,10 +50,15 @@ export class AnnotationComponent implements OnInit {
   constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
 
   public ngOnInit(): void {
+    this.annotatorId = this.previousAnnotation?.annotator.id + '';
   }
 
   public ngOnChanges(): void {
     this.severityFormControl.setValue(0);
+    if (this.disableEdit) {
+      this.severityFormControl.disable();
+      this.heuristics.disable();
+    }
     this.codeSmell = '';
     this.heuristics.setValue([]);
     this.resetApplicableHeuristics();
@@ -60,9 +68,9 @@ export class AnnotationComponent implements OnInit {
   public ngAfterViewChecked(): void {
     if (this.isHeuristicReasonChanged) {
       for (let description of this.applicableHeuristics.keys()) {
-        let input = document.getElementById('reason-' + description) as HTMLInputElement;
-        if (input) {
-          input.value = this.applicableHeuristics.get(description)!;
+        let reasonInput = document.getElementById('reason-' + description + '-' + this.annotatorId) as HTMLInputElement;
+        if (reasonInput) {
+          reasonInput.value = this.applicableHeuristics.get(description)!;
         }
       }
       this.changeDetector.detectChanges();
