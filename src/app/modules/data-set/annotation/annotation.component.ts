@@ -28,19 +28,10 @@ export class AnnotationComponent implements OnInit {
   public codeSmell: string = '';
   public heuristics = new FormControl();
 
-  private availableCodeSmells: Map<InstanceType, string[]> = new Map([
-    [InstanceType.Class, []],
-    [InstanceType.Method, []]
-  ]);
+  private availableCodeSmells: Map<InstanceType, string[]> = new Map();
+  private availableHeuristics: Map<InstanceType, string[]> = new Map();
 
-  private availableHeuristicsForClass = [];
-  private availableHeuristicsForMethod = [];
-  private availableHeuristics: Map<InstanceType, string[]> = new Map([
-    [InstanceType.Class, this.availableHeuristicsForClass],
-    [InstanceType.Method, this.availableHeuristicsForMethod]
-  ]);
-
-  public applicableHeuristics: Map<string, string> = new Map([]);
+  public applicableHeuristics: Map<string, string> = new Map();
   public annotatorId: string = '';
   private isHeuristicReasonChanged: boolean = false;
 
@@ -50,8 +41,10 @@ export class AnnotationComponent implements OnInit {
   constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
 
   public ngOnInit(): void {
-    this.annotationService.getAvailableCodeSmells().subscribe(res => this.initSmellsOrHeuristics(res, this.availableCodeSmells));
-    this.annotationService.getAvailableHeuristics().subscribe(res => this.initSmellsOrHeuristics(res, this.availableHeuristics));
+    if (!this.disableEdit) {
+      this.annotationService.getAvailableCodeSmells().subscribe(res => this.initSmellsOrHeuristics(res, this.availableCodeSmells));
+      this.annotationService.getAvailableHeuristics().subscribe(res => this.initSmellsOrHeuristics(res, this.availableHeuristics));
+    }
     this.annotatorId = this.previousAnnotation?.annotator.id + '';
   }
 
@@ -63,7 +56,7 @@ export class AnnotationComponent implements OnInit {
     }
     this.codeSmell = '';
     this.heuristics.setValue([]);
-    this.resetApplicableHeuristics();
+    this.applicableHeuristics = new Map();
     this.setupInputFromPreviousAnnotation();
   }
 
@@ -80,7 +73,7 @@ export class AnnotationComponent implements OnInit {
     }
   }
 
-  public addReasonForHeuristic(target: EventTarget, heuristic: string) {
+  public addReasonForHeuristic(target: EventTarget, heuristic: string): void {
     this.applicableHeuristics.set(heuristic, (target as HTMLInputElement).value);
     this.isHeuristicReasonChanged = true;
   }
@@ -112,7 +105,7 @@ export class AnnotationComponent implements OnInit {
     }
   }
 
-  private addAnnotation(annotation: DataSetAnnotationDTO) {
+  private addAnnotation(annotation: DataSetAnnotationDTO): void {
     this.annotationService.addAnnotation(annotation).subscribe(
       (res: DataSetAnnotation) => {
         alert('Annotation added!');
@@ -122,7 +115,7 @@ export class AnnotationComponent implements OnInit {
     );
   }
 
-  private updateAnnotation(annotation: DataSetAnnotationDTO) {
+  private updateAnnotation(annotation: DataSetAnnotationDTO): void {
     this.annotationService.updateAnnotation(this.previousAnnotation!.id, annotation).subscribe(
       (res: DataSetAnnotation) => {
         alert('Annotation changed!');
@@ -153,16 +146,6 @@ export class AnnotationComponent implements OnInit {
     return ret;
   }
 
-  private resetApplicableHeuristics(): void {
-    for (let classHeuristic of this.availableHeuristicsForClass){
-      this.applicableHeuristics.set(classHeuristic, '');
-    }
-    
-    for (let methodHeuristic of this.availableHeuristicsForMethod){
-      this.applicableHeuristics.set(methodHeuristic, '');
-    }
-  }
-
   private setupInputFromPreviousAnnotation(): void {
     if (this.previousAnnotation) {
       this.severityFormControl.setValue(this.previousAnnotation.severity);
@@ -171,9 +154,9 @@ export class AnnotationComponent implements OnInit {
       this.previousAnnotation.applicableHeuristics.forEach( h => {
         previousHeuristics.push(h.description);
         this.applicableHeuristics.set(h.description, h.reasonForApplicability);
-        this.isHeuristicReasonChanged = true;
       });
       this.heuristics.setValue(previousHeuristics);
+      this.isHeuristicReasonChanged = true;
     }
   }
 

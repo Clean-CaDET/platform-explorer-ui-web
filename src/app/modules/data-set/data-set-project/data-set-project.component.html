@@ -58,4 +58,4 @@
     </div>
 </div>
 
-<de-data-set-instance [instances]="instancesToShow" [filter]="filter"></de-data-set-instance>
+<de-data-set-instance [instances]="instancesToShow" [filter]="filter" (changedInstance)="changedInstance($event)"></de-data-set-instance>
