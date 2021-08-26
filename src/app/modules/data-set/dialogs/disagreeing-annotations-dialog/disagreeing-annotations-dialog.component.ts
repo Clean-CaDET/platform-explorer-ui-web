@@ -14,14 +14,14 @@ export class DisagreeingAnnotationsDialogComponent implements OnInit {
 
   public loggedAnnotatorId: number = UtilService.getAnnotatorId();
 
-  constructor(@Inject(MAT_DIALOG_DATA) public annotationsWithInstanceId: AnnotationsWithInstanceId) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public instanceWithDisagreeingAnnotations: InstanceWithDisagreeingAnnotations) { }
 
   ngOnInit(): void {
   }
 
 }
 
-interface AnnotationsWithInstanceId {
+interface InstanceWithDisagreeingAnnotations {
   annotations: DataSetAnnotation[],
   instanceId: number
 }

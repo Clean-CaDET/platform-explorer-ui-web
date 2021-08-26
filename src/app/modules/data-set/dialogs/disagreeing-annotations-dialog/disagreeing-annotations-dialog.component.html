@@ -2,7 +2,7 @@
 <mat-dialog-content class="mat-typography">
     <form>
         <table cellspacing="2">
-            <ng-container *ngFor="let annotation of annotationsWithInstanceId.annotations">
+            <ng-container *ngFor="let annotation of instanceWithDisagreeingAnnotations.annotations">
                 <tr>
                     <th *ngIf="annotation.annotator.id == loggedAnnotatorId">
                         Annotated by you
@@ -13,7 +13,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <de-annotation [instanceId]="annotationsWithInstanceId.instanceId" [previousAnnotation]="annotation" [disableEdit]="true">
+                        <de-annotation [instanceId]="instanceWithDisagreeingAnnotations.instanceId" [previousAnnotation]="annotation" [disableEdit]="true">
                         </de-annotation>
                     </td>
                 </tr>
