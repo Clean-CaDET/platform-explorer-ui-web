@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { FormControl, Validators } from '@angular/forms';
 
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
-import { CodeSmellDTO } from '../model/DTOs/code-smell-dto/code-smell-dto.model';
 import { DataSetAnnotationDTO } from '../model/DTOs/data-set-annotation-dto/data-set-annotation-dto.model';
 import { InstanceType } from '../model/enums/enums.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
@@ -32,8 +31,8 @@ export class AnnotationComponent implements OnInit {
     [InstanceType.Method, []]
   ]);
 
-  private availableHeuristicsForClass = ['Class is too long.', 'Class is too complex.', 'Class has multiple concerns.'];
-  private availableHeuristicsForMethod = ['Function is too long.', 'Function is too complex.', 'Function does multiple things.'];
+  private availableHeuristicsForClass = [];
+  private availableHeuristicsForMethod = [];
   private availableHeuristics: Map<InstanceType, string[]> = new Map([
     [InstanceType.Class, this.availableHeuristicsForClass],
     [InstanceType.Method, this.availableHeuristicsForMethod]
@@ -48,7 +47,8 @@ export class AnnotationComponent implements OnInit {
   constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
 
   public ngOnInit(): void {
-    this.annotationService.getAllCodeSmells().subscribe((res: CodeSmellDTO[]) => this.initializeCodeSmells(res));
+    this.annotationService.getAvailableCodeSmells().subscribe(res => this.initSmellsOrHeuristics(res, this.availableCodeSmells));
+    this.annotationService.getAvailableHeuristics().subscribe(res => this.initSmellsOrHeuristics(res, this.availableHeuristics));
   }
 
   public ngOnChanges(): void {
@@ -98,11 +98,10 @@ export class AnnotationComponent implements OnInit {
     this.addAnnotation(annotation);
   }
 
-  private initializeCodeSmells(codeSmells: CodeSmellDTO[]) {
-    codeSmells.forEach(smell => {
-      smell = new CodeSmellDTO(smell);
-      smell.snippetTypes.forEach(t => this.availableCodeSmells.get(t)?.push(smell.value));
-    });
+  private initSmellsOrHeuristics(input: Map<string, string[]>, smellsOrHeuristics: Map<InstanceType, string[]>): void {
+    for (let keyValue of Object.entries(input)) {
+      smellsOrHeuristics.set(keyValue[0] as InstanceType, keyValue[1]);
+    }
   }
 
   private addAnnotation(annotation: DataSetAnnotationDTO) {

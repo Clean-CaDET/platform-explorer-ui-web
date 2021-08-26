@@ -7,7 +7,6 @@ import { DataSetAnnotationDTO } from '../model/DTOs/data-set-annotation-dto/data
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model'; 
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
-import { CodeSmellDTO } from '../model/DTOs/code-smell-dto/code-smell-dto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +15,12 @@ export class AnnotationService {
 
   constructor(private serverCommunicationService: ServerCommunicationService) { }
 
-  public getAllCodeSmells(): Observable<CodeSmellDTO[]> {
-    return this.serverCommunicationService.getRequest('annotation/code-smells');
+  public getAvailableCodeSmells(): Observable<Map<string, string[]>> {
+    return this.serverCommunicationService.getRequest('annotation/available-code-smells');
+  }
+
+  public getAvailableHeuristics(): Observable<Map<string, string[]>> {
+    return this.serverCommunicationService.getRequest('annotation/available-heuristics');
   }
 
   public addAnnotation(annotation: DataSetAnnotationDTO): Observable<DataSetAnnotation> {

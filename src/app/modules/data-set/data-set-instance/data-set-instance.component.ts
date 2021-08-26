@@ -48,9 +48,6 @@ export class DataSetInstanceComponent implements OnInit {
       this.instances.forEach((instance, index) => this.instances[index] = new DataSetInstance(instance, annotatorId));
       this.filtersChanged();
     }
-    if (this.iframe) {
-      this.iframe.srcdoc = '';
-    }
   }
 
   public ngAfterViewChecked() {
@@ -100,6 +97,9 @@ export class DataSetInstanceComponent implements OnInit {
 
   public filtersChanged(): void {
     this.selection.clear();
+    if (this.iframe) {
+      this.iframe.srcdoc = '';
+    }
     this.showFilteredInstances();
   }
 
