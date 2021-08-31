@@ -1,9 +1,9 @@
 export class CodeSmell {
-    value: string = '';
+    name: string = '';
 
     constructor(obj?: any) {
         if (obj) {
-            this.value = obj.value;
+            this.name = obj.name;
         }
     }
 }

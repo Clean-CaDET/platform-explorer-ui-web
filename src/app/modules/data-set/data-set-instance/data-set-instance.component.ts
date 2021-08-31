@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,6 +42,8 @@ export class DataSetInstanceComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
+  @Output() changedInstance = new EventEmitter<DataSetInstance>();
+
   constructor(private dialog: MatDialog) { }
 
   public ngOnInit(): void {
@@ -53,9 +55,6 @@ export class DataSetInstanceComponent implements OnInit {
       let annotatorId: number = UtilService.getAnnotatorId();
       this.instances.forEach((instance, index) => this.instances[index] = new DataSetInstance(instance, annotatorId));
       this.filtersChanged();
-    }
-    if (this.iframe) {
-      this.iframe.srcdoc = '';
     }
   }
 
@@ -106,6 +105,9 @@ export class DataSetInstanceComponent implements OnInit {
 
   public filtersChanged(): void {
     this.selection.clear();
+    if (this.iframe) {
+      this.iframe.srcdoc = '';
+    }
     this.showFilteredInstances();
   }
 
@@ -113,6 +115,7 @@ export class DataSetInstanceComponent implements OnInit {
     let i = this.instances.findIndex(i => i.id == this.selection.selected[0].id);
     this.instances[i].annotations.push(annotation);
     this.instances[i] = new DataSetInstance(this.instances[i]);
+    this.changedInstance.emit(this.instances[i]);
     this.filtersChanged();
   }
 
@@ -121,6 +124,7 @@ export class DataSetInstanceComponent implements OnInit {
     let j = this.instances[i].annotations.findIndex(a => a.id == annotation.id);
     this.instances[i].annotations[j] = annotation;
     this.instances[i] = new DataSetInstance(this.instances[i]);
+    this.changedInstance.emit(this.instances[i]);
     this.filtersChanged();
   }
 

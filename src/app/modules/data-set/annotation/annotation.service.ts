@@ -17,6 +17,14 @@ export class AnnotationService {
 
   constructor(private serverCommunicationService: ServerCommunicationService) { }
 
+  public getAvailableCodeSmells(): Observable<Map<string, string[]>> {
+    return this.serverCommunicationService.getRequest('annotation/available-code-smells');
+  }
+
+  public getAvailableHeuristics(): Observable<Map<string, string[]>> {
+    return this.serverCommunicationService.getRequest('annotation/available-heuristics');
+  }
+
   public addAnnotation(annotation: DataSetAnnotationDTO): Observable<DataSetAnnotation> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json')

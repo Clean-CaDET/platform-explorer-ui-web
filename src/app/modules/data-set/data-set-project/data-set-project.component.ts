@@ -93,6 +93,15 @@ export class DataSetProjectComponent implements OnInit {
     this.dataSource.data = this.projects.filter(p => p.name.includes(input));
   }
 
+  public async changedInstance(instance: DataSetInstance): Promise<void> {
+    this.selection.selected.forEach(project => {
+      let i = project.instances.findIndex(i => i.id == instance.id);
+      if (i != -1) {
+        project.instances[i] = instance;
+      }
+    });
+  }
+
   private showFilteredInstances(): void {
     this.instancesToShow = [];
     switch(this.filter) { 
