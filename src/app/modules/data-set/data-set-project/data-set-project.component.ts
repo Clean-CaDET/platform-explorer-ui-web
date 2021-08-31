@@ -94,10 +94,10 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   public async changedInstance(instance: DataSetInstance): Promise<void> {
-    this.selection.selected.forEach(p => {
-      let i = p.instances.findIndex(i => i.id == instance.id);
+    this.selection.selected.forEach(project => {
+      let i = project.instances.findIndex(i => i.id == instance.id);
       if (i != -1) {
-        p.instances[i] = instance;
+        project.instances[i] = instance;
       }
     });
   }

@@ -149,7 +149,7 @@ export class AnnotationComponent implements OnInit {
   private setupInputFromPreviousAnnotation(): void {
     if (this.previousAnnotation) {
       this.severityFormControl.setValue(this.previousAnnotation.severity);
-      this.codeSmell = this.previousAnnotation.instanceSmell.value;
+      this.codeSmell = this.previousAnnotation.instanceSmell.name;
       let previousHeuristics: string[] = []
       this.previousAnnotation.applicableHeuristics.forEach( h => {
         previousHeuristics.push(h.description);
