@@ -9,6 +9,7 @@ export class DataSetInstance {
     projectLink: string = '';
     type: InstanceType = InstanceType.Method;
     annotations: DataSetAnnotation[] = [];
+    metricFeatures: Map<string, number> = new Map();
     hasAnnotationFromLoggedUser: boolean = false;
     annotationFromLoggedUser: DataSetAnnotation | null = null;
 
@@ -19,8 +20,15 @@ export class DataSetInstance {
             this.link = obj.link;
             this.projectLink = obj.projectLink;
             this.annotations = obj.annotations;
+            this.setMetricFeatures(obj.metricFeatures);
             this.setType(obj.type);
             this.setAnnotationFromLoggedUser(annotatorId);
+        }
+    }
+
+    private setMetricFeatures(metricFeatures: Map<string, number>): void {
+        for (let keyValue of Object.entries(metricFeatures)) {
+            this.metricFeatures.set(keyValue[0], keyValue[1]);
         }
     }
 
@@ -31,7 +39,7 @@ export class DataSetInstance {
         }
     }
 
-    private setType(type: string) {
+    private setType(type: string): void {
         switch(+type) { 
             case 0: {
                 this.type = InstanceType.Class;

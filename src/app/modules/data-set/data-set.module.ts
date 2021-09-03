@@ -10,6 +10,7 @@ import { DataSetProjectComponent } from './data-set-project/data-set-project.com
 import { DataSetInstanceComponent } from './data-set-instance/data-set-instance.component';
 import { AnnotationComponent } from './annotation/annotation.component';
 import { DisagreeingAnnotationsDialogComponent } from './dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
+import { AnnotationConsistencyDialogComponent } from './dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { DisagreeingAnnotationsDialogComponent } from './dialogs/disagreeing-ann
     DataSetInstanceComponent,
     AnnotationComponent,
     DisagreeingAnnotationsDialogComponent,
+    AnnotationConsistencyDialogComponent,
   ],
   imports: [
     CommonModule,

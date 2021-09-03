@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Consistency between annotations</h2>
+<mat-dialog-content class="mat-typography">
+    <form>
+        <table cellspacing="2">
+            <tr>
+                <mat-form-field appearance="fill" floatLabel="always">
+                    <mat-label>Heuristics</mat-label>
+                    <mat-select name="consistencies" [(ngModel)]="selectedConsistency" (selectionChange)="consistencyTypeChanged()">
+                        <mat-option *ngFor="let type of consistencyTypes" [value]="type">{{type}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </tr>
+            <tr>
+                <mat-form-field appearance="fill" floatLabel="always" *ngIf="severityNeeded">
+                    <mat-label>Severity</mat-label>
+                    <input type="number" matInput [formControl]="severityFormControl">
+                    <mat-error *ngIf="severityFormControl.hasError('required')">
+                        Severity is <strong>required</strong>
+                    </mat-error>
+                    <mat-error *ngIf="severityFormControl.hasError('min') || severityFormControl.hasError('max')">
+                        Severity must be between 0 and 3
+                    </mat-error>
+                </mat-form-field>
+                <p *ngIf="annotatorNeeded">annotator</p>
+            </tr>
+        </table>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button (click)="checkConsistency()">Check</button>
+</mat-dialog-actions>
