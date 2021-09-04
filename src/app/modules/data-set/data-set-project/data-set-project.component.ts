@@ -106,7 +106,7 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   public checkConsistency(projectId: number): void {
-    let dialogConfig = UtilService.setDialogConfig('300px', '400px', projectId);
+    let dialogConfig = UtilService.setDialogConfig('420px', '500px', projectId);
     this.dialog.open(AnnotationConsistencyDialogComponent, dialogConfig);
   }
 

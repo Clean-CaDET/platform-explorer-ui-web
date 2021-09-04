@@ -63,11 +63,11 @@ export class AnnotationService {
     return this.serverCommunicationService.getRequest('annotation/consistency/annotators/' + projectId + '/' + severity);
   }
 
-  public getMetricsSignificanceInAnnotationsForAnnotator(projectId: number, annotatorId: number): any {
+  public getMetricsSignificanceInAnnotationsForAnnotator(projectId: number, annotatorId: number): Observable<Map<string, Map<string, string>>> {
     return this.serverCommunicationService.getRequest('annotation/consistency/metrics/annotator/' + projectId + '/' + annotatorId);
   }
 
-  public getMetricsSignificanceBetweenAnnotatorsForSeverity(projectId: number, severity: number): any {
+  public getMetricsSignificanceBetweenAnnotatorsForSeverity(projectId: number, severity: number): Observable<Map<string, Map<string, string>>> {
     return this.serverCommunicationService.getRequest('annotation/consistency/metrics/annotators/' + projectId + '/' + severity);
   }
 

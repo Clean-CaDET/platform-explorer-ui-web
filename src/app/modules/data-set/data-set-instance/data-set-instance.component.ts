@@ -49,7 +49,7 @@ export class DataSetInstanceComponent implements OnInit {
   public ngOnInit(): void {
   }
 
-  public ngOnChanges() {
+  public ngOnChanges(): void {
     this.selection.clear();
     if (!this.isInstancesEmpty()) {
       let annotatorId: number = UtilService.getAnnotatorId();
@@ -58,11 +58,11 @@ export class DataSetInstanceComponent implements OnInit {
     }
   }
 
-  public ngAfterViewChecked() {
+  public ngAfterViewChecked(): void {
     this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
   }
 
-  public toggleInstanceSelection(selectedInstance: DataSetInstance) {
+  public toggleInstanceSelection(selectedInstance: DataSetInstance): void {
     this.iframe.srcdoc = '';
     this.previousAnnotation = null;
     if (!this.selection.isSelected(selectedInstance)) {
@@ -111,7 +111,7 @@ export class DataSetInstanceComponent implements OnInit {
     this.showFilteredInstances();
   }
 
-  public async addAnnotation(annotation: DataSetAnnotation) {
+  public async addAnnotation(annotation: DataSetAnnotation): Promise<void> {
     let i = this.instances.findIndex(i => i.id == this.selection.selected[0].id);
     this.instances[i].annotations.push(annotation);
     this.instances[i] = new DataSetInstance(this.instances[i]);
