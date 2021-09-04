@@ -3,9 +3,9 @@
     <form>
         <table cellspacing="2">
             <tr>
-                <mat-form-field appearance="fill" floatLabel="always">
+                <mat-form-field appearance="fill" floatLabel="always" style="width: 300px;">
                     <mat-label>Heuristics</mat-label>
-                    <mat-select name="consistencies" [(ngModel)]="selectedConsistency" (selectionChange)="consistencyTypeChanged()">
+                    <mat-select name="consistencies" [(ngModel)]="selectedConsistencyType" (selectionChange)="consistencyTypeChanged()" required>
                         <mat-option *ngFor="let type of consistencyTypes" [value]="type">{{type}}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -21,12 +21,11 @@
                         Severity must be between 0 and 3
                     </mat-error>
                 </mat-form-field>
-                <p *ngIf="annotatorNeeded">annotator</p>
             </tr>
         </table>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button (click)="checkConsistency()">Check</button>
+    <button mat-button (click)="getConsistencyResults()">Get results</button>
 </mat-dialog-actions>
