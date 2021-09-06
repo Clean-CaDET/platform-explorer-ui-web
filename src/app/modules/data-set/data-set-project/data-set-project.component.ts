@@ -12,6 +12,7 @@ import { AnnotationService } from '../annotation/annotation.service';
 import { UtilService } from 'src/app/util/util.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AnnotationConsistencyDialogComponent } from '../dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'de-data-set-project',
@@ -29,15 +30,17 @@ export class DataSetProjectComponent implements OnInit {
   public projectState = ProjectState;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
+  private pollingCycleDurationInSeconds: number = 10;
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog) { }
+  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog, private httpClient: HttpClient) { }
 
   public ngOnInit(): void {
+    this.httpClient.get('assets/appsettings.json').subscribe((data: any) => this.pollingCycleDurationInSeconds = data.pollingCycleDuration);
   }
 
   public ngOnChanges(): void {
@@ -137,9 +140,9 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   private async pollDataSetProjectAsync(dataSetProject: DataSetProject, secondsToWait: number): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 1000*secondsToWait));
+    await new Promise(resolve => setTimeout(resolve, 1000 * secondsToWait));
     while (dataSetProject.state == ProjectState.Processing) {
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      await new Promise(resolve => setTimeout(resolve, 1000 * this.pollingCycleDurationInSeconds));
       dataSetProject = new DataSetProject(await this.dataSetService.pollDataSetProject(dataSetProject.id));
     }
     this.updateProjects(dataSetProject);
