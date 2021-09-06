@@ -11,7 +11,7 @@
                 </mat-form-field>
             </tr>
             <tr>
-                <mat-form-field appearance="fill" floatLabel="always" *ngIf="severityNeeded">
+                <mat-form-field appearance="fill" floatLabel="always" *ngIf="severityNeeded" style="padding-right: 10px;">
                     <mat-label>Severity</mat-label>
                     <input type="number" matInput [formControl]="severityFormControl">
                     <mat-error *ngIf="severityFormControl.hasError('required')">
@@ -21,7 +21,7 @@
                         Severity must be between 0 and 3
                     </mat-error>
                 </mat-form-field>
-                <button mat-raised-button (click)="getConsistencyResults()" color="warn">Get results</button>
+                <button mat-raised-button (click)="getConsistencyResults()" color="primary">Get results</button>
             </tr>
         </table>
     </form>
@@ -29,7 +29,9 @@
         <h4>Results:</h4>
         <ng-container *ngFor="let resultDescription of results.keys()">
             <tr>
-                <button mat-raised-button color="warn" (click)="showResult(resultDescription)">{{resultDescription}}</button>
+                <div style="padding: 0px 0px 5px 0px;">
+                    <button mat-raised-button color="primary" (click)="showResult(resultDescription)">{{resultDescription}}</button>
+                </div>
             </tr>
         </ng-container>
         <mat-form-field appearance="fill" style="width: 400px;">
@@ -39,5 +41,5 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button mat-dialog-close>Close</button>
+    <button mat-button mat-dialog-close color="warn">Close</button>
 </mat-dialog-actions>

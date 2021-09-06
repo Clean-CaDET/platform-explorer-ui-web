@@ -1,6 +1,6 @@
 <form *ngIf="instanceId">
     <div class="container" style="flex-direction: column;">
-        <mat-form-field appearance="fill" floatLabel="always">
+        <mat-form-field appearance="fill" floatLabel="always" style="padding: 0px 5px 0px 5px;">
             <mat-label>Severity</mat-label>
             <input type="number" matInput [formControl]="severityFormControl">
             <mat-error *ngIf="severityFormControl.hasError('required')">
@@ -10,13 +10,13 @@
                 Severity must be between 0 and 3
             </mat-error>
         </mat-form-field>
-        <mat-form-field appearance="fill" floatLabel="always">
+        <mat-form-field appearance="fill" floatLabel="always" style="padding: 0px 5px 0px 5px;">
             <mat-label>Select a code smell</mat-label>
             <mat-select [(ngModel)]="codeSmell" name="codeSmell" id="codeSmell" [disabled]="disableEdit">
                 <mat-option *ngFor="let smell of getAvailableCodeSmells()" [value]="smell">{{smell}}</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="fill" floatLabel="always">
+        <mat-form-field appearance="fill" floatLabel="always" style="padding: 0px 5px 0px 5px;">
             <mat-label>Heuristics</mat-label>
             <mat-select [formControl]="heuristics" multiple name="heuristics">
                 <mat-option *ngFor="let heuristic of getAvailableHeuristics()" [value]="heuristic">{{heuristic}}</mat-option>
@@ -25,11 +25,13 @@
     </div>
     <div style="flex-direction: row;">
         <ng-container *ngFor="let heuristic of heuristics.value">
-            <mat-form-field appearance="fill" floatLabel="always">
+            <mat-form-field appearance="fill" floatLabel="always" style="padding: 0px 5px 0px 5px;">
                 <mat-label>Reason: {{heuristic}}</mat-label>
                 <input type="text" id="reason-{{heuristic}}-{{annotatorId}}" matInput (change)="addReasonForHeuristic($event.target!, heuristic)" [disabled]="disableEdit">
             </mat-form-field>
         </ng-container>
     </div>
-    <button class="center-horizontally" mat-raised-button color="primary" (click)="annotate()" *ngIf="!disableEdit">Annotate</button>
+    <div style="padding-bottom: 10px;">
+        <button class="center-horizontally" mat-raised-button color="primary" (click)="annotate()" *ngIf="!disableEdit">Annotate</button>
+    </div>
 </form>

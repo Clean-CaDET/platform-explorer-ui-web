@@ -1,8 +1,8 @@
-<div class="container" style="flex-direction: column;" *ngIf="!isInstancesEmpty()">
-    <div style="flex-direction: column; display: flex;">
-        <h3 class="center-horizontally">Filter: {{filter}}</h3>
+<div class="container" style="flex-direction: column; padding: 0px 20px 0px 20px;" *ngIf="!isInstancesEmpty()">
+    <div class="filters">
+        <h2 class="center-horizontally" style="padding-bottom: 10px;">Instances: {{filter}}</h2>
         <div class="filter-instances">
-            <mat-form-field appearance="fill" class="center-horizontally">
+            <mat-form-field appearance="fill" class="center-horizontally" style="padding-right: 10px;">
                 <mat-label>Instances type</mat-label>
                 <mat-select [(value)]="selectedInstanceType" (selectionChange)="filtersChanged()">
                     <mat-option [value]="type" *ngFor="let type of instanceTypes">{{type}}</mat-option>
@@ -18,9 +18,9 @@
     </div>
     <div class="data-set-instance-container">
         <div class="instances-table mat-elevation-z8 container">
-            <mat-form-field appearance="standard">
+            <mat-form-field appearance="standard" class="search">
                 <mat-label>Search by code snippet id</mat-label>
-                <input matInput (keyup)="searchInstances()" #input [(ngModel)]="searchInput">
+                <input matInput (keyup)="searchInstances()" [(ngModel)]="searchInput">
             </mat-form-field>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 <ng-container matColumnDef="select">
@@ -43,7 +43,7 @@
                             <mat-icon>check_circle_outline</mat-icon>
                         </ng-container>
                         <ng-template #not_annotated>
-                            <ng-container #not_annotated>
+                            <ng-container>
                                 <mat-icon>highlight_off</mat-icon>
                             </ng-container>
                         </ng-template>
@@ -61,13 +61,13 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-            <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+            <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
             </mat-paginator>
         </div>
         <iframe frameborder=0 class="code-snippet" id="snippet" scrolling="yes"></iframe>
     </div>
 
-    <div class="center" *ngIf="selection.selected.length == 1">
+    <div class="center top-padding" *ngIf="selection.selected.length == 1">
         <de-annotation (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)" [instanceId]="selection.selected[0].id" [instanceType]="selection.selected[0].type" [previousAnnotation]="previousAnnotation">
         </de-annotation>
     </div>
