@@ -2,8 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { ConsistencyType } from '../../model/enums/enums.model';
+
 import { UtilService } from 'src/app/util/util.service';
-import { AnnotationService } from '../../annotation/annotation.service';
+import { AnnotationConsistencyService } from '../../annotation-consistency/annotation-consistency.service';
 
 @Component({
   selector: 'de-annotation-consistency-dialog',
@@ -26,7 +28,7 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   public selectedResult: string = '';
   public resultDescription: string = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) private projectId: number, private annotationService: AnnotationService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) private projectId: number, private annotationConsistencyService: AnnotationConsistencyService) { }
 
   public ngOnInit(): void {
   }
@@ -45,12 +47,26 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
     if (!this.isValidInput()) {
       return;
     }
-    this.getProperConsistencyResults();
+    switch(this.selectedConsistencyType) {
+      case ConsistencyType.ConsistencyForAnnotator: {
+        return this.getAnnotationConsistencyForAnnotator();
+      }
+      case ConsistencyType.ConsistencyBetweenAnnotators: {
+        return this.getAnnotationConsistencyBetweenAnnotatorsForSeverity();
+      }
+      case ConsistencyType.MetricsSignificanceForAnnotator: {
+        return this.getMetricsSignificanceInAnnotationsForAnnotator();
+      }
+      case ConsistencyType.MetricsSignificanceBetweenAnnotators: {
+        return this.getMetricsSignificanceBetweenAnnotatorsForSeverity();
+      }
+    }
   }
 
   public showResult(resultDescription: string): void {
     this.resultDescription = resultDescription;
-    this.selectedResult = this.getMessage(this.results.get(resultDescription)).trim();
+    let message = this.getMessage(this.results.get(resultDescription)).trim();
+    this.selectedResult = message != '' ? message : 'No results!';
   }
 
   private getMessage(map: Map<string, string | Map<string, string>>): string {
@@ -65,31 +81,26 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
     return messages.join('');
   }
 
-  private getProperConsistencyResults(): void {
-    switch(this.selectedConsistencyType) {
-      case ConsistencyType.ConsistencyForAnnotator: {
-        this.annotationService.getAnnotationConsistencyForAnnotator(this.projectId, UtilService.getAnnotatorId()).subscribe((res: Map<string, string>) => 
-          this.results.set('My consistency', res));
-        break;
-      }
-      case ConsistencyType.ConsistencyBetweenAnnotators: {
-        let severity = this.severityFormControl.value;
-        this.annotationService.getAnnotationConsistencyBetweenAnnotatorsForSeverity(this.projectId, severity).subscribe((res: Map<string, string>) => 
-          this.results.set('Consistency for severity ' + severity, res));
-        break;
-      }
-      case ConsistencyType.MetricsSignificanceForAnnotator: {
-        this.annotationService.getMetricsSignificanceInAnnotationsForAnnotator(this.projectId, UtilService.getAnnotatorId()).subscribe((res: Map<string, Map<string, string>>) => 
-          this.results.set('My metrics significance', res));
-        break;
-      }
-      case ConsistencyType.MetricsSignificanceBetweenAnnotators: {
-        let severity = this.severityFormControl.value;
-        this.annotationService.getMetricsSignificanceBetweenAnnotatorsForSeverity(this.projectId, severity).subscribe((res: Map<string, Map<string, string>>) => 
-          this.results.set('Metrics significance for severity ' + severity, res));
-        break;
-      }
-    }
+  private getAnnotationConsistencyForAnnotator(): void {
+    this.annotationConsistencyService.getAnnotationConsistencyForAnnotator(this.projectId, UtilService.getAnnotatorId()).subscribe((res: Map<string, string>) => 
+      this.results.set('My consistency', res));
+  }
+
+  private getAnnotationConsistencyBetweenAnnotatorsForSeverity(): void {
+    let severity = this.severityFormControl.value;
+    this.annotationConsistencyService.getAnnotationConsistencyBetweenAnnotatorsForSeverity(this.projectId, severity).subscribe((res: Map<string, string>) => 
+      this.results.set('Consistency for severity ' + severity, res));
+  }
+
+  private getMetricsSignificanceInAnnotationsForAnnotator(): void {
+    this.annotationConsistencyService.getMetricsSignificanceInAnnotationsForAnnotator(this.projectId, UtilService.getAnnotatorId()).subscribe((res: Map<string, Map<string, string>>) => 
+      this.results.set('My metrics significance', res));
+  }
+
+  private getMetricsSignificanceBetweenAnnotatorsForSeverity(): void {
+    let severity = this.severityFormControl.value;
+    this.annotationConsistencyService.getMetricsSignificanceBetweenAnnotatorsForSeverity(this.projectId, severity).subscribe((res: Map<string, Map<string, string>>) => 
+      this.results.set('Metrics significance for severity ' + severity, res));
   }
 
   private isValidInput(): boolean {
@@ -97,11 +108,4 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
       && (this.annotatorNeeded || (this.severityNeeded && this.severityFormControl.valid));
   }
 
-}
-
-enum ConsistencyType {
-  ConsistencyForAnnotator = 'Consistency for my annotations',
-  ConsistencyBetweenAnnotators = 'Consistency between annotators',
-  MetricsSignificanceForAnnotator = 'Metrics significance for my annotations',
-  MetricsSignificanceBetweenAnnotators = 'Metrics significance between annotators'
 }

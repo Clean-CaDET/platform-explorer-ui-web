@@ -28,14 +28,14 @@ export class AnnotationService {
   public addAnnotation(annotation: DataSetAnnotationDTO): Observable<DataSetAnnotation> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
-      .set('Authorization', UtilService.getAnnotatorId().toString())
+      .set('Authorization', UtilService.getAnnotatorId().toString());
     return this.serverCommunicationService.postRequest('annotation', annotation, headers);
   }
 
   public updateAnnotation(annotationId: number, annotation: DataSetAnnotationDTO): Observable<DataSetAnnotation> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
-      .set('Authorization', UtilService.getAnnotatorId().toString())
+      .set('Authorization', UtilService.getAnnotatorId().toString());
     return this.serverCommunicationService.putRequest('annotation/update/' + annotationId, annotation, headers);
   }
 
@@ -53,22 +53,6 @@ export class AnnotationService {
       return await this.serverCommunicationService.getRequestAsync('annotation/disagreeing-annotations?projectIds=' + ids);
     }
     return [];
-  }
-
-  public getAnnotationConsistencyForAnnotator(projectId: number, annotatorId: number): Observable<Map<string, string>> {
-    return this.serverCommunicationService.getRequest('annotation/consistency/annotator/' + projectId + '/' + annotatorId);
-  }
-
-  public getAnnotationConsistencyBetweenAnnotatorsForSeverity(projectId: number, severity: number): Observable<Map<string, string>> {
-    return this.serverCommunicationService.getRequest('annotation/consistency/annotators/' + projectId + '/' + severity);
-  }
-
-  public getMetricsSignificanceInAnnotationsForAnnotator(projectId: number, annotatorId: number): Observable<Map<string, Map<string, string>>> {
-    return this.serverCommunicationService.getRequest('annotation/consistency/metrics/annotator/' + projectId + '/' + annotatorId);
-  }
-
-  public getMetricsSignificanceBetweenAnnotatorsForSeverity(projectId: number, severity: number): Observable<Map<string, Map<string, string>>> {
-    return this.serverCommunicationService.getRequest('annotation/consistency/metrics/annotators/' + projectId + '/' + severity);
   }
 
   private getProjectIdsAsString(projects: DataSetProject[]): string {
