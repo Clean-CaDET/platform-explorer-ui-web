@@ -161,4 +161,9 @@ export class DataSetInstanceComponent implements OnInit {
     return '<script src=\"' + completeLink + '\"></script>';
   }
 
+  public formatUrl(url: string): string {
+    url = url.split('_').join('_ ');
+    return url.split('.').join('. ');
+  }
+
 }

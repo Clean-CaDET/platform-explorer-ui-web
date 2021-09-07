@@ -22,6 +22,10 @@
     height: 40%;
 }
 
+.snippet-name {
+    font-size: 13px;
+}
+
 .code-snippet {
     display: flex;
     flex-direction: column;
