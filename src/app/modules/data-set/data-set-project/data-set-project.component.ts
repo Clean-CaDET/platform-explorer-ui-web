@@ -9,6 +9,9 @@ import { InstanceFilter, ProjectState } from '../model/enums/enums.model';
 
 import { DataSetService } from '../data-set.service';
 import { AnnotationService } from '../annotation/annotation.service';
+import { UtilService } from 'src/app/util/util.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AnnotationConsistencyDialogComponent } from '../dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
 
 @Component({
   selector: 'de-data-set-project',
@@ -19,7 +22,7 @@ export class DataSetProjectComponent implements OnInit {
 
   @Input() public projects: DataSetProject[] = [];
   public instancesToShow: DataSetInstance[] = [];
-  public displayedColumns = ['select', 'name', 'url', 'numOfInstances', 'status'];
+  public displayedColumns = ['select', 'name', 'url', 'numOfInstances', 'status', 'consistency'];
   public selection = new SelectionModel<DataSetProject>(true, []);
   public dataSource = new MatTableDataSource<DataSetProject>(this.projects);
   public filter: InstanceFilter = InstanceFilter.All;
@@ -32,7 +35,7 @@ export class DataSetProjectComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService) { }
+  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog) { }
 
   public ngOnInit(): void {
   }
@@ -100,6 +103,11 @@ export class DataSetProjectComponent implements OnInit {
         project.instances[i] = instance;
       }
     });
+  }
+
+  public checkConsistency(projectId: number): void {
+    let dialogConfig = UtilService.setDialogConfig('420px', '500px', projectId);
+    this.dialog.open(AnnotationConsistencyDialogComponent, dialogConfig);
   }
 
   private showFilteredInstances(): void {

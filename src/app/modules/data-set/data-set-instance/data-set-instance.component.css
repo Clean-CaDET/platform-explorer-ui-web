@@ -7,14 +7,14 @@
 .instances-table {
     display: flex;
     flex-direction: column;
-    width: 60%;
+    width: 65%;
     height: 40%;
 }
 
 .code-snippet {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 35%;
 }
 
 .filter-instances {

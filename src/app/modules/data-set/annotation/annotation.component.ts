@@ -41,11 +41,15 @@ export class AnnotationComponent implements OnInit {
   constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
 
   public ngOnInit(): void {
+    this.annotatorId = this.previousAnnotation?.annotator.id + '';
     if (!this.disableEdit) {
       this.annotationService.getAvailableCodeSmells().subscribe(res => this.initSmellsOrHeuristics(res, this.availableCodeSmells));
       this.annotationService.getAvailableHeuristics().subscribe(res => this.initSmellsOrHeuristics(res, this.availableHeuristics));
+    } else if (this.previousAnnotation) {
+      this.availableCodeSmells.set(this.instanceType, [this.previousAnnotation.instanceSmell.name]);
+      let previousHeristics = this.previousAnnotation.applicableHeuristics.map(h => h.description);
+      this.availableHeuristics.set(this.instanceType, previousHeristics);
     }
-    this.annotatorId = this.previousAnnotation?.annotator.id + '';
   }
 
   public ngOnChanges(): void {

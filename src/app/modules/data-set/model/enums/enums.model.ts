@@ -21,3 +21,10 @@ export enum AnnotationStatus {
     Not_Annotated = 'Not_Annotated',
     All = 'All'
 }
+
+export enum ConsistencyType {
+    ConsistencyForAnnotator = 'Consistency for my annotations',
+    ConsistencyBetweenAnnotators = 'Consistency between annotators',
+    MetricsSignificanceForAnnotator = 'Metrics significance for my annotations',
+    MetricsSignificanceBetweenAnnotators = 'Metrics significance between annotators'
+}

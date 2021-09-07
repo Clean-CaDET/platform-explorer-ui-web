@@ -28,14 +28,14 @@ export class AnnotationService {
   public addAnnotation(annotation: DataSetAnnotationDTO): Observable<DataSetAnnotation> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
-      .set('Authorization', UtilService.getAnnotatorId().toString())
+      .set('Authorization', UtilService.getAnnotatorId().toString());
     return this.serverCommunicationService.postRequest('annotation', annotation, headers);
   }
 
   public updateAnnotation(annotationId: number, annotation: DataSetAnnotationDTO): Observable<DataSetAnnotation> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
-      .set('Authorization', UtilService.getAnnotatorId().toString())
+      .set('Authorization', UtilService.getAnnotatorId().toString());
     return this.serverCommunicationService.putRequest('annotation/update/' + annotationId, annotation, headers);
   }
 
