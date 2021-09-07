@@ -20,29 +20,25 @@ export class AddProjectDialogComponent implements OnInit {
     }
   }
 
-  public addEmptyProject() {
+  public addEmptyProject(): void {
     this.projects.push(new DataSetProject({name: '', url: ''}));
   }
 
-  public addProjectsToDataSet(){
+  public addProjectsToDataSet(): void {
     if (this.isValidInput()) {
       this.dataSetService.addProjectsToDataSet(this.projects, this.dataSetId).subscribe(res => this.dialogRef.close(res));
     }
   }
 
-  public deleteProject(index: number){
+  public deleteProject(index: number): void {
     this.projects.splice(index, 1);
   }
 
   private isValidInput(): boolean {
-    if (this.projects.length == 0){
+    if (this.projects.length == 0) {
       return false;
     }
-    for (let project of this.projects){
-      if (project.name.trim() == '' || project.url.trim() == '') {
-        return false;
-      }
-    }
-    return true;
+    let indexOfEmptyProject = this.projects.findIndex(p => p.name.trim() == '' || p.url.trim() == '');
+    return indexOfEmptyProject == -1;
   }
 }

@@ -23,9 +23,9 @@ export class DataSetProjectComponent implements OnInit {
 
   @Input() public projects: DataSetProject[] = [];
   public instancesToShow: DataSetInstance[] = [];
-  public displayedColumns = ['select', 'name', 'url', 'numOfInstances', 'status', 'consistency'];
-  public selection = new SelectionModel<DataSetProject>(true, []);
-  public dataSource = new MatTableDataSource<DataSetProject>(this.projects);
+  public displayedColumns: string[] = ['select', 'name', 'url', 'numOfInstances', 'status', 'consistency'];
+  public selection: SelectionModel<DataSetProject> = new SelectionModel<DataSetProject>(true, []);
+  public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.projects);
   public filter: InstanceFilter = InstanceFilter.All;
   public projectState = ProjectState;
 
@@ -71,8 +71,8 @@ export class DataSetProjectComponent implements OnInit {
 
   public isAllProjectsSelected(): boolean {
     const numSelected = this.selection.selected.length;
-    const numProjects = this.dataSource.data.filter(p => p.instances.length > 0).length;
-    return numSelected === numProjects;
+    const numProjectsWithInstances = this.dataSource.data.filter(p => p.instances.length > 0).length;
+    return numSelected === numProjectsWithInstances;
   }
 
   public isProjectsEmpty(): boolean {
@@ -134,8 +134,9 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   private startPollingProjects(): void {
-    for (let i in this.projects) {
-      this.pollDataSetProjectAsync(this.projects[i], +i);
+    let secondsToWait: number = 0;
+    for (let project of this.projects.filter(p => p.state == ProjectState.Processing)) {
+      this.pollDataSetProjectAsync(project, secondsToWait++);
     }
   }
 
@@ -149,13 +150,9 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   private updateProjects(dataSetProject: DataSetProject): void {
-    for (let i in this.projects) {
-      if (this.projects[i].id == dataSetProject.id) {
-        this.projects[i] = dataSetProject;
-        this.dataSource.data = this.projects;
-        return;
-      }
-    }
+    let i = this.projects.findIndex(p => p.id == dataSetProject.id);
+    this.projects[i] = dataSetProject;
+    this.dataSource.data = this.projects;
   }
 
 }

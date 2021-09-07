@@ -18,7 +18,7 @@ export class DataSetProject {
         }
     }
 
-    private setProjectState(state: string) {
+    private setProjectState(state: string): void {
         switch(+state) { 
             case 0: {
                 this.state = ProjectState.Processing;

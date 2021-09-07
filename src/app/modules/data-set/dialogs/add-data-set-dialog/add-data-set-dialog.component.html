@@ -4,10 +4,7 @@
         <mat-card-content fxLayout="column">
             <mat-form-field>
                 <mat-label>Name</mat-label>
-                <input [(ngModel)]="name" type="text" matInput [formControl]="dataSetFormControl" min="1">
-                <mat-error *ngIf="dataSetFormControl.hasError('required')">
-                    Name is <strong>required</strong>
-                </mat-error>
+                <input [(ngModel)]="name" type="text" matInput required>
             </mat-form-field>
         </mat-card-content>
     </mat-card>

@@ -18,7 +18,7 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   public selectedConsistencyType: string = '';
   public annotatorNeeded: boolean = false;
   public severityNeeded: boolean = false;
-  public severityFormControl = new FormControl('0', [
+  public severityFormControl: FormControl = new FormControl('0', [
     Validators.required,
     Validators.min(0),
     Validators.max(3),

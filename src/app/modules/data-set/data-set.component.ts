@@ -82,13 +82,9 @@ export class DataSetComponent implements OnInit {
   }
 
   private updateDataSets(dataSet: DataSet): void {
-    for (let i in this.dataSets) {
-      if (this.dataSets[i].id == dataSet.id) {
-        this.dataSets[i] = dataSet;
-        this.dataSource.data = this.dataSets;
-        return;
-      }
-    }
+    let i = this.dataSets.findIndex(s => s.id == dataSet.id);
+    this.dataSets[i] = dataSet;
+    this.dataSource.data = this.dataSets;
   }
 
   private addEmptyDataSet(dataSet: DataSet): void {

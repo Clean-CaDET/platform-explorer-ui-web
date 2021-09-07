@@ -24,8 +24,8 @@ export class DataSetInstanceComponent implements OnInit {
   private initiallyDisplayedColumns: string[] = ['select', 'codeSnippetId', 'annotated'];
   public displayedColumns: string[] = this.initiallyDisplayedColumns;
   public previousAnnotation: DataSetAnnotation | null = null;
-  public selection = new SelectionModel<DataSetInstance>(true, []);
-  public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
+  public selection: SelectionModel<DataSetInstance> = new SelectionModel<DataSetInstance>(true, []);
+  public dataSource: MatTableDataSource<DataSetInstance> = new MatTableDataSource<DataSetInstance>(this.instances);
   public searchInput: string = '';
 
   public instanceTypes: string[] = Object.keys(InstanceType);
