@@ -144,6 +144,12 @@ export class DataSetInstanceComponent implements OnInit {
     return this.instances.length == 0;
   }
 
+  public formatUrl(url: string): string {
+    const hairSpace: string = '\u200a';
+    url = url.split('_').join(`_${hairSpace}`);
+    return url.split('.').join(`.${hairSpace}`);
+  }
+
   private showFilteredInstances(): void {
     this.displayedColumns = this.initiallyDisplayedColumns.slice();
     if (this.filter == InstanceFilter.DisagreeingAnnotations) {
@@ -159,11 +165,6 @@ export class DataSetInstanceComponent implements OnInit {
   private createSrcdocFromGithubLink(githubLink: string): string {
     let completeLink = 'https://emgithub.com/embed.js?target=' + encodeURIComponent(githubLink) + '&style=github&showBorder=on&showLineNumbers=on&showFileMeta=on&showCopy=on';
     return '<script src=\"' + completeLink + '\"></script>';
-  }
-
-  public formatUrl(url: string): string {
-    url = url.split('_').join('_ ');
-    return url.split('.').join('. ');
   }
 
 }

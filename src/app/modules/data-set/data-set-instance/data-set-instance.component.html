@@ -33,7 +33,7 @@
                 <ng-container matColumnDef="codeSnippetId">
                     <th mat-header-cell *matHeaderCellDef width="90%"> Code snippet id </th>
                     <td mat-cell *matCellDef="let instance" width="90%">
-                        <a href="{{instance.link}}" class="snippet-name">{{formatUrl(instance.codeSnippetId)}}</a>
+                        <a href="{{instance.link}}">{{formatUrl(instance.codeSnippetId)}}</a>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="annotated">
