@@ -23,7 +23,7 @@
         <ng-container matColumnDef="url">
             <th mat-header-cell *matHeaderCellDef width="60%"> URL </th>
             <td mat-cell *matCellDef="let project" width="60%">
-                <a href="{{project.url}}">{{project.url}}</a>
+                <a href="{{project.url}}" target="_blank">{{project.url}}</a>
             </td>
         </ng-container>
         <ng-container matColumnDef="numOfInstances">

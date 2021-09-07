@@ -10,13 +10,13 @@
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>Project name</mat-label>
-                            <input [(ngModel)]="project.name" name="name" type="text" matInput>
+                            <input [(ngModel)]="projects[i].name" name="name-{{i}}" type="text" matInput>
                         </mat-form-field>
                     </td>
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>URL</mat-label>
-                            <input [(ngModel)]="project.url" name="url" type="url" matInput>
+                            <input [(ngModel)]="projects[i].url" name="url-{{i}}" type="url" matInput>
                         </mat-form-field>
                     </td>
                     <td>
