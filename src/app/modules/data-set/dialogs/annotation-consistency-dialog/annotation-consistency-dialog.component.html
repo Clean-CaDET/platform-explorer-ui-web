@@ -3,15 +3,15 @@
     <form>
         <table cellspacing="2">
             <tr>
-                <mat-form-field appearance="fill" floatLabel="always" style="width: 300px;">
-                    <mat-label>Heuristics</mat-label>
+                <mat-form-field appearance="fill" floatLabel="always" class="consistency-type-select">
+                    <mat-label>Consistency type</mat-label>
                     <mat-select name="consistencies" [(ngModel)]="selectedConsistencyType" (selectionChange)="consistencyTypeChanged()" required>
                         <mat-option *ngFor="let type of consistencyTypes" [value]="type">{{type}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </tr>
             <tr>
-                <mat-form-field appearance="fill" floatLabel="always" *ngIf="severityNeeded" style="padding-right: 10px;">
+                <mat-form-field appearance="fill" floatLabel="always" *ngIf="severityNeeded" class="severity">
                     <mat-label>Severity</mat-label>
                     <input type="number" matInput [formControl]="severityFormControl">
                     <mat-error *ngIf="severityFormControl.hasError('required')">
@@ -29,14 +29,14 @@
         <h4>Results:</h4>
         <ng-container *ngFor="let resultDescription of results.keys()">
             <tr>
-                <div style="padding: 0px 0px 5px 0px;">
+                <div class="show-result">
                     <button mat-raised-button color="primary" (click)="showResult(resultDescription)">{{resultDescription}}</button>
                 </div>
             </tr>
         </ng-container>
-        <mat-form-field appearance="fill" style="width: 400px;">
+        <mat-form-field appearance="fill" class="result">
             <mat-label>{{resultDescription}}</mat-label>
-            <textarea matInput [(ngModel)]="selectedResult" style="height: 250px;"></textarea>
+            <textarea matInput [(ngModel)]="selectedResult" class="result"></textarea>
         </mat-form-field>
     </div>
 </mat-dialog-content>

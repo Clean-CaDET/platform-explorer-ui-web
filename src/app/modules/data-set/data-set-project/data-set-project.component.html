@@ -60,11 +60,15 @@
     <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
     </mat-paginator>
     <div class="find-annotations">
-        <button mat-raised-button color="primary" (click)="showAllInstances()" [disabled]="selection.selected.length == 0">All</button>
-        <div style="padding: 0px 5px 0px 5px">
+        <div class="instance-filter">
+            <button mat-raised-button color="primary" (click)="showAllInstances()" [disabled]="selection.selected.length == 0">All</button>
+        </div>
+        <div class="instance-filter">
             <button mat-raised-button color="primary" (click)="showInstancesForAdditionalAnnotation()" [disabled]="selection.selected.length == 0">Need additional annotations</button>
         </div>
-        <button mat-raised-button color="primary" (click)="showInstancesWithDisagreeingAnnotations()" [disabled]="selection.selected.length == 0">Disagreeing annotations</button>
+        <div class="instance-filter">
+            <button mat-raised-button color="primary" (click)="showInstancesWithDisagreeingAnnotations()" [disabled]="selection.selected.length == 0">Disagreeing annotations</button>
+        </div>
     </div>
 </div>
 

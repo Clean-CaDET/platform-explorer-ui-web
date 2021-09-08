@@ -71,7 +71,7 @@ export class DataSetComponent implements OnInit {
       this.toggleDataSetSelection(this.selection.selected[0]);
     }
     const input = (event.target as HTMLInputElement).value;
-    this.dataSource.data = this.dataSets.filter(s => s.name.includes(input));
+    this.dataSource.data = this.dataSets.filter(s => UtilService.includesNoCase(s.name, input));
   }
 
   private showProjects(dataSet: DataSet): void {

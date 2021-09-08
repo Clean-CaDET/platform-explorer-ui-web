@@ -4,12 +4,13 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
+import { DisagreeingAnnotationsDialogComponent } from '../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
+
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
 import { AnnotationStatus, InstanceFilter, InstanceType } from '../model/enums/enums.model';
 
 import { UtilService } from 'src/app/util/util.service';
-import { DisagreeingAnnotationsDialogComponent } from '../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
 
 @Component({
   selector: 'de-data-set-instance',
@@ -158,7 +159,7 @@ export class DataSetInstanceComponent implements OnInit {
     this.dataSource.data = this.instances.filter(i => 
       this.instanceHasSelectedInstanceType(i)
       && this.instanceHasSelectedAnnotationStatus(i)
-      && i.codeSnippetId.toLowerCase().includes(this.searchInput.toLowerCase())
+      && UtilService.includesNoCase(i.codeSnippetId, this.searchInput)
     );
   }
 

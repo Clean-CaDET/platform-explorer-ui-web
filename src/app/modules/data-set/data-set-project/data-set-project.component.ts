@@ -1,7 +1,11 @@
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { HttpClient } from '@angular/common/http';
+
+import { AnnotationConsistencyDialogComponent } from '../dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
 
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
@@ -10,9 +14,6 @@ import { InstanceFilter, ProjectState } from '../model/enums/enums.model';
 import { DataSetService } from '../data-set.service';
 import { AnnotationService } from '../annotation/annotation.service';
 import { UtilService } from 'src/app/util/util.service';
-import { MatDialog } from '@angular/material/dialog';
-import { AnnotationConsistencyDialogComponent } from '../dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'de-data-set-project',
@@ -96,7 +97,7 @@ export class DataSetProjectComponent implements OnInit {
 
   public searchProjects(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
-    this.dataSource.data = this.projects.filter(p => p.name.includes(input));
+    this.dataSource.data = this.projects.filter(p => UtilService.includesNoCase(p.name, input));
   }
 
   public async changedInstance(instance: DataSetInstance): Promise<void> {
