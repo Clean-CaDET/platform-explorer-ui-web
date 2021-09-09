@@ -1,1 +1,16 @@
+.consistency-type-select {
+    width: 300px;
+}
 
+.severity {
+    padding-right: 10px;
+}
+
+.show-result {
+    padding: 0px 0px 5px 0px;
+}
+
+.result {
+    height: 250px;
+    width: 400px;
+}

@@ -20,7 +20,7 @@ export class AnnotationComponent implements OnInit {
   @Input() public previousAnnotation: DataSetAnnotation | null = null;
   @Input() public disableEdit: boolean = false;
 
-  public severityFormControl = new FormControl('0', [
+  public severityFormControl: FormControl = new FormControl('0', [
     Validators.required,
     Validators.min(0),
     Validators.max(3),
@@ -35,8 +35,8 @@ export class AnnotationComponent implements OnInit {
   public annotatorId: string = '';
   private isHeuristicReasonChanged: boolean = false;
 
-  @Output() newAnnotation = new EventEmitter<DataSetAnnotation>();
-  @Output() changedAnnotation = new EventEmitter<DataSetAnnotation>();
+  @Output() newAnnotation: EventEmitter<DataSetAnnotation> = new EventEmitter<DataSetAnnotation>();
+  @Output() changedAnnotation: EventEmitter<DataSetAnnotation> = new EventEmitter<DataSetAnnotation>();
 
   constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
 

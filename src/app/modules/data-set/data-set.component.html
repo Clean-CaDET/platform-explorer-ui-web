@@ -1,9 +1,10 @@
-<button mat-raised-button (click)="addDataSet()" color="warn" class="center-horizontally">Add data set</button>
-
+<div class="add-data-set">
+    <button mat-raised-button (click)="addDataSet()" color="primary" class="center-horizontally">Add data set</button>
+</div>
 <div class="data-set-container mat-elevation-z8 center-horizontally container">
-    <mat-form-field appearance="standard">
+    <mat-form-field appearance="standard" class="search">
         <mat-label>Search by name</mat-label>
-        <input matInput (keyup)="searchDataSets($event)" placeholder="Clean Cadet" #input>
+        <input matInput (keyup)="searchDataSets($event)" placeholder="Clean CaDET">
     </mat-form-field>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="select">
@@ -25,9 +26,11 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
     </mat-paginator>
-    <button mat-raised-button (click)="addProjectsToDataSet()" color="warn" class="center-horizontally" *ngIf="selection.selected.length == 1">Add projects</button>
+    <button mat-raised-button (click)="addProjectsToDataSet()" color="primary" class="center-horizontally" [disabled]="selection.selected.length == 0">Add projects</button>
 </div>
 
-<de-data-set-project [projects]="projectsToShow"></de-data-set-project>
+<div class="top-padding">
+    <de-data-set-project [projects]="projectsToShow"></de-data-set-project>
+</div>

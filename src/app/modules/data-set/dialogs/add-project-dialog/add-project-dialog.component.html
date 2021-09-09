@@ -10,13 +10,13 @@
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>Project name</mat-label>
-                            <input [(ngModel)]="project.name" name="name" type="text" matInput>
+                            <input [(ngModel)]="projects[i].name" name="name-{{i}}" type="text" matInput>
                         </mat-form-field>
                     </td>
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>URL</mat-label>
-                            <input [(ngModel)]="project.url" name="url" type="url" matInput>
+                            <input [(ngModel)]="projects[i].url" name="url-{{i}}" type="url" matInput>
                         </mat-form-field>
                     </td>
                     <td>
@@ -30,6 +30,6 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button (click)="addProjectsToDataSet()">Add</button>
+    <button mat-button mat-dialog-close color="warn">Close</button>
+    <button mat-button color="success" (click)="addProjectsToDataSet()">Add</button>
 </mat-dialog-actions>

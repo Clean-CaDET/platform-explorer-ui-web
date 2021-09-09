@@ -26,4 +26,8 @@ export class UtilService {
     dialogConfig.data = data;
     return dialogConfig;
   }
+
+  public static includesNoCase(includes: string, included: string): boolean {
+    return includes.toLowerCase().includes(included.toLowerCase());
+  }
 }

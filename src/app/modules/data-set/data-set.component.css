@@ -1,13 +1,22 @@
+.add-data-set {
+    padding: 10px 0px 10px 0px;
+}
+
 .data-set-container {
     display: flex;
     flex-direction: column;
     max-width: 75%;
+    padding: 0px 0px 10px 0px;
 }
 
 .center-horizontally {
     margin: 0 auto;
     display: flex;
     justify-content: center;
+}
+
+button:disabled {
+    background-color: #808080 !important;
 }
 
 .mat-table {

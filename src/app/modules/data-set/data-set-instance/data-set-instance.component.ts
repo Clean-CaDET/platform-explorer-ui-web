@@ -4,12 +4,13 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
+import { DisagreeingAnnotationsDialogComponent } from '../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
+
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
 import { AnnotationStatus, InstanceFilter, InstanceType } from '../model/enums/enums.model';
 
 import { UtilService } from 'src/app/util/util.service';
-import { DisagreeingAnnotationsDialogComponent } from '../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
 
 @Component({
   selector: 'de-data-set-instance',
@@ -24,8 +25,8 @@ export class DataSetInstanceComponent implements OnInit {
   private initiallyDisplayedColumns: string[] = ['select', 'codeSnippetId', 'annotated'];
   public displayedColumns: string[] = this.initiallyDisplayedColumns;
   public previousAnnotation: DataSetAnnotation | null = null;
-  public selection = new SelectionModel<DataSetInstance>(true, []);
-  public dataSource = new MatTableDataSource<DataSetInstance>(this.instances);
+  public selection: SelectionModel<DataSetInstance> = new SelectionModel<DataSetInstance>(true, []);
+  public dataSource: MatTableDataSource<DataSetInstance> = new MatTableDataSource<DataSetInstance>(this.instances);
   public searchInput: string = '';
 
   public instanceTypes: string[] = Object.keys(InstanceType);
@@ -144,6 +145,12 @@ export class DataSetInstanceComponent implements OnInit {
     return this.instances.length == 0;
   }
 
+  public formatUrl(url: string): string {
+    const hairSpace: string = '\u200a';
+    url = url.split('_').join(`_${hairSpace}`);
+    return url.split('.').join(`.${hairSpace}`);
+  }
+
   private showFilteredInstances(): void {
     this.displayedColumns = this.initiallyDisplayedColumns.slice();
     if (this.filter == InstanceFilter.DisagreeingAnnotations) {
@@ -152,7 +159,7 @@ export class DataSetInstanceComponent implements OnInit {
     this.dataSource.data = this.instances.filter(i => 
       this.instanceHasSelectedInstanceType(i)
       && this.instanceHasSelectedAnnotationStatus(i)
-      && i.codeSnippetId.toLowerCase().includes(this.searchInput.toLowerCase())
+      && UtilService.includesNoCase(i.codeSnippetId, this.searchInput)
     );
   }
 

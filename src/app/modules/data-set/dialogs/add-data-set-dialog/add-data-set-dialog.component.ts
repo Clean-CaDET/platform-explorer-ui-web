@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
 
 import { MatDialogRef } from "@angular/material/dialog";
+
+import { DataSet } from '../../model/data-set/data-set.model';
 
 import { DataSetService } from '../../data-set.service'; 
 
@@ -14,18 +15,15 @@ import { DataSetService } from '../../data-set.service';
 export class AddDataSetDialogComponent implements OnInit {
 
   public name: string = '';
-  dataSetFormControl = new FormControl('', [
-    Validators.required,
-  ]);
 
   constructor(private dataSetService: DataSetService, private dialogRef: MatDialogRef<AddDataSetDialogComponent>) { }
 
   ngOnInit(): void {
   }
 
-  public createDataSet(){
-    if (this.dataSetFormControl.valid) {
-      this.dataSetService.createDataSet(this.name).subscribe(res => this.dialogRef.close(res));
+  public createDataSet(): void {
+    if (this.name != '') {
+      this.dataSetService.createDataSet(this.name).subscribe((res: DataSet) => this.dialogRef.close(res));
     }
   }
 

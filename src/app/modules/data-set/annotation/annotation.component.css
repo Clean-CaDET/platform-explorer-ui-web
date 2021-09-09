@@ -3,3 +3,19 @@
     display: flex;
     justify-content: center;
 }
+
+.annotation-data {
+    flex-direction: column;
+}
+
+.form-field {
+    padding: 0px 5px 0px 5px;
+}
+
+.heuristic-reasons {
+    flex-direction: row;
+}
+
+.annotate {
+    padding-bottom: 10px;
+}

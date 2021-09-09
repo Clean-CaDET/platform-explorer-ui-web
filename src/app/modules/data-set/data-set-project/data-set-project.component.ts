@@ -1,7 +1,11 @@
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { HttpClient } from '@angular/common/http';
+
+import { AnnotationConsistencyDialogComponent } from '../dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
 
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
@@ -10,8 +14,6 @@ import { InstanceFilter, ProjectState } from '../model/enums/enums.model';
 import { DataSetService } from '../data-set.service';
 import { AnnotationService } from '../annotation/annotation.service';
 import { UtilService } from 'src/app/util/util.service';
-import { MatDialog } from '@angular/material/dialog';
-import { AnnotationConsistencyDialogComponent } from '../dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
 
 @Component({
   selector: 'de-data-set-project',
@@ -22,22 +24,24 @@ export class DataSetProjectComponent implements OnInit {
 
   @Input() public projects: DataSetProject[] = [];
   public instancesToShow: DataSetInstance[] = [];
-  public displayedColumns = ['select', 'name', 'url', 'numOfInstances', 'status', 'consistency'];
-  public selection = new SelectionModel<DataSetProject>(true, []);
-  public dataSource = new MatTableDataSource<DataSetProject>(this.projects);
+  public displayedColumns: string[] = ['select', 'name', 'url', 'numOfInstances', 'status', 'consistency'];
+  public selection: SelectionModel<DataSetProject> = new SelectionModel<DataSetProject>(true, []);
+  public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.projects);
   public filter: InstanceFilter = InstanceFilter.All;
   public projectState = ProjectState;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
+  private pollingCycleDurationInSeconds: number = 10;
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog) { }
+  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog, private httpClient: HttpClient) { }
 
   public ngOnInit(): void {
+    this.httpClient.get('assets/appsettings.json').subscribe((data: any) => this.pollingCycleDurationInSeconds = data.pollingCycleDuration);
   }
 
   public ngOnChanges(): void {
@@ -68,8 +72,8 @@ export class DataSetProjectComponent implements OnInit {
 
   public isAllProjectsSelected(): boolean {
     const numSelected = this.selection.selected.length;
-    const numProjects = this.dataSource.data.filter(p => p.instances.length > 0).length;
-    return numSelected === numProjects;
+    const numProjectsWithInstances = this.dataSource.data.filter(p => p.instances.length > 0).length;
+    return numSelected === numProjectsWithInstances;
   }
 
   public isProjectsEmpty(): boolean {
@@ -93,7 +97,7 @@ export class DataSetProjectComponent implements OnInit {
 
   public searchProjects(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
-    this.dataSource.data = this.projects.filter(p => p.name.includes(input));
+    this.dataSource.data = this.projects.filter(p => UtilService.includesNoCase(p.name, input));
   }
 
   public async changedInstance(instance: DataSetInstance): Promise<void> {
@@ -131,28 +135,25 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   private startPollingProjects(): void {
-    for (let i in this.projects) {
-      this.pollDataSetProjectAsync(this.projects[i], +i);
+    let secondsToWait: number = 0;
+    for (let project of this.projects.filter(p => p.state == ProjectState.Processing)) {
+      this.pollDataSetProjectAsync(project, secondsToWait++);
     }
   }
 
   private async pollDataSetProjectAsync(dataSetProject: DataSetProject, secondsToWait: number): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 1000*secondsToWait));
+    await new Promise(resolve => setTimeout(resolve, 1000 * secondsToWait));
     while (dataSetProject.state == ProjectState.Processing) {
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      await new Promise(resolve => setTimeout(resolve, 1000 * this.pollingCycleDurationInSeconds));
       dataSetProject = new DataSetProject(await this.dataSetService.pollDataSetProject(dataSetProject.id));
     }
     this.updateProjects(dataSetProject);
   }
 
   private updateProjects(dataSetProject: DataSetProject): void {
-    for (let i in this.projects) {
-      if (this.projects[i].id == dataSetProject.id) {
-        this.projects[i] = dataSetProject;
-        this.dataSource.data = this.projects;
-        return;
-      }
-    }
+    let i = this.projects.findIndex(p => p.id == dataSetProject.id);
+    this.projects[i] = dataSetProject;
+    this.dataSource.data = this.projects;
   }
 
 }
