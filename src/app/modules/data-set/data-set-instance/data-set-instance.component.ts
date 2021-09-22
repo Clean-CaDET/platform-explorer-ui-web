@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import { DataSetInstance } from '../model/data-set-instance/data-set-instance.mo
 import { AnnotationStatus, InstanceFilter, InstanceType } from '../model/enums/enums.model';
 
 import { UtilService } from 'src/app/util/util.service';
+import { CandidateDataSetInstance } from '../model/candidate-data-set-instance/candidate-data-set-instance.model';
 
 @Component({
   selector: 'de-data-set-instance',
@@ -19,8 +20,9 @@ import { UtilService } from 'src/app/util/util.service';
 })
 export class DataSetInstanceComponent implements OnInit {
 
-  @Input() public instances: DataSetInstance[] = [];
+  public instances: DataSetInstance[] = [];
   @Input() public filter: InstanceFilter = InstanceFilter.All;
+  @Input() public candidateInstances: CandidateDataSetInstance[] = [];
   public instanceFilter = InstanceFilter;
   private initiallyDisplayedColumns: string[] = ['select', 'codeSnippetId', 'annotated'];
   public displayedColumns: string[] = this.initiallyDisplayedColumns;
@@ -29,11 +31,11 @@ export class DataSetInstanceComponent implements OnInit {
   public dataSource: MatTableDataSource<DataSetInstance> = new MatTableDataSource<DataSetInstance>(this.instances);
   public searchInput: string = '';
 
-  public instanceTypes: string[] = Object.keys(InstanceType);
-  public selectedInstanceType: InstanceType = InstanceType.Method;
-
   public annotationStatuses: string[] = Object.keys(AnnotationStatus);
-  public selectedAnnotationStatus: AnnotationStatus = AnnotationStatus.Not_Annotated;
+  public selectedAnnotationStatus: AnnotationStatus = AnnotationStatus.All;
+
+  public codeSmells: string[] = [];
+  public selectedCodeSmell: string = '';
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   private iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
@@ -43,20 +45,17 @@ export class DataSetInstanceComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  @Output() changedInstance = new EventEmitter<DataSetInstance>();
-
   constructor(private dialog: MatDialog) { }
 
   public ngOnInit(): void {
   }
 
   public ngOnChanges(): void {
+    this.selectedCodeSmell = '';
+    this.dataSource.data = [];
+    this.codeSmells = [];
+    this.candidateInstances.forEach(instances => this.codeSmells.push(instances.codeSmell?.name!));
     this.selection.clear();
-    if (!this.isInstancesEmpty()) {
-      let annotatorId: number = UtilService.getAnnotatorId();
-      this.instances.forEach((instance, index) => this.instances[index] = new DataSetInstance(instance, annotatorId));
-      this.filtersChanged();
-    }
   }
 
   public ngAfterViewChecked(): void {
@@ -71,22 +70,8 @@ export class DataSetInstanceComponent implements OnInit {
     }
     this.selection.toggle(selectedInstance);
     if (this.selection.selected.length == 1) {
-      this.previousAnnotation = selectedInstance.annotationFromLoggedUser!;
+      this.previousAnnotation = selectedInstance.annotationFromLoggedUser;
       this.iframe.srcdoc = this.createSrcdocFromGithubLink(selectedInstance.link);
-    }
-  }
-
-  private instanceHasSelectedInstanceType(instance: DataSetInstance): boolean {
-    switch (this.selectedInstanceType) {
-      case InstanceType.Class: {
-        return instance.type == InstanceType.Class;
-      }
-      case InstanceType.Method: { 
-        return instance.type == InstanceType.Method;
-      } 
-      case InstanceType.All: { 
-        return true;
-      } 
     }
   }
 
@@ -104,6 +89,20 @@ export class DataSetInstanceComponent implements OnInit {
     }
   }
 
+  private filterForCodeSmell(): DataSetInstance[] {
+    for (let candidate of this.candidateInstances) {
+      if (candidate.codeSmell?.name == this.selectedCodeSmell) {
+        return this.setAnnotatorForInstances(candidate.instances);
+      }
+    }
+    return [];
+  }
+
+  private setAnnotatorForInstances(instances: DataSetInstance[]): DataSetInstance[] {
+    instances.forEach((instance, index) => instances[index] = new DataSetInstance(instance));
+    return instances;
+  }
+
   public filtersChanged(): void {
     this.selection.clear();
     if (this.iframe) {
@@ -115,8 +114,6 @@ export class DataSetInstanceComponent implements OnInit {
   public async addAnnotation(annotation: DataSetAnnotation): Promise<void> {
     let i = this.instances.findIndex(i => i.id == this.selection.selected[0].id);
     this.instances[i].annotations.push(annotation);
-    this.instances[i] = new DataSetInstance(this.instances[i]);
-    this.changedInstance.emit(this.instances[i]);
     this.filtersChanged();
   }
 
@@ -124,8 +121,6 @@ export class DataSetInstanceComponent implements OnInit {
     let i = this.instances.findIndex(i => i.id == this.selection.selected[0].id);
     let j = this.instances[i].annotations.findIndex(a => a.id == annotation.id);
     this.instances[i].annotations[j] = annotation;
-    this.instances[i] = new DataSetInstance(this.instances[i]);
-    this.changedInstance.emit(this.instances[i]);
     this.filtersChanged();
   }
 
@@ -141,10 +136,6 @@ export class DataSetInstanceComponent implements OnInit {
     this.dialog.open(DisagreeingAnnotationsDialogComponent, dialogConfig);
   }
 
-  public isInstancesEmpty(): boolean {
-    return this.instances.length == 0;
-  }
-
   public formatUrl(url: string): string {
     const hairSpace: string = '\u200a';
     url = url.split('_').join(`_${hairSpace}`);
@@ -156,9 +147,9 @@ export class DataSetInstanceComponent implements OnInit {
     if (this.filter == InstanceFilter.DisagreeingAnnotations) {
       this.displayedColumns.push('show-annotations');
     }
-    this.dataSource.data = this.instances.filter(i => 
-      this.instanceHasSelectedInstanceType(i)
-      && this.instanceHasSelectedAnnotationStatus(i)
+    this.instances = this.filterForCodeSmell();
+    this.dataSource.data = this.instances.filter(i =>
+      this.instanceHasSelectedAnnotationStatus(i)
       && UtilService.includesNoCase(i.codeSnippetId, this.searchInput)
     );
   }

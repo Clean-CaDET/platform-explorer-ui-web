@@ -9,6 +9,7 @@ import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotat
 
 import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service'; 
 import { UtilService } from 'src/app/util/util.service';
+import { CandidateDataSetInstance } from '../model/candidate-data-set-instance/candidate-data-set-instance.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class AnnotationService {
     return this.serverCommunicationService.putRequest('annotation/update/' + annotationId, annotation, headers);
   }
 
-  public async requiringAdditionalAnnotation(projects: DataSetProject[]): Promise<DataSetInstance[]> {
+  public async requiringAdditionalAnnotation(projects: DataSetProject[]): Promise<CandidateDataSetInstance[]> {
     let ids = this.getProjectIdsAsString(projects);
     if (ids != '') {
       return await this.serverCommunicationService.getRequestAsync('annotation/requiring-additional-annotation?projectIds=' + ids);
@@ -47,7 +48,7 @@ export class AnnotationService {
     return [];
   }
 
-  public async disagreeingAnnotations(projects: DataSetProject[]): Promise<DataSetInstance[]> {
+  public async disagreeingAnnotations(projects: DataSetProject[]): Promise<CandidateDataSetInstance[]> {
     let ids = this.getProjectIdsAsString(projects);
     if (ids != '') {
       return await this.serverCommunicationService.getRequestAsync('annotation/disagreeing-annotations?projectIds=' + ids);

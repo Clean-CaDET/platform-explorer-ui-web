@@ -13,7 +13,7 @@ export class DataSetInstance {
     hasAnnotationFromLoggedUser: boolean = false;
     annotationFromLoggedUser: DataSetAnnotation | null = null;
 
-    constructor(obj?: any, annotatorId?: number) {
+    constructor(obj?: any) {
         if (obj) {
             this.id = obj.id;
             this.codeSnippetId = obj.codeSnippetId;
@@ -22,7 +22,7 @@ export class DataSetInstance {
             this.annotations = obj.annotations;
             this.setMetricFeatures(obj.metricFeatures);
             this.setType(obj.type);
-            this.setAnnotationFromLoggedUser(annotatorId);
+            this.setAnnotationFromLoggedUser();
         }
     }
 

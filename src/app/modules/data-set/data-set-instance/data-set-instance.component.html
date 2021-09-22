@@ -1,11 +1,11 @@
-<div class="container component-container" *ngIf="!isInstancesEmpty()">
+<div class="container component-container" *ngIf="candidateInstances.length > 0">
     <div class="filters">
         <h2 class="center-horizontally instance-type-heading">Instances: {{filter}}</h2>
         <div class="filter-instances">
-            <mat-form-field appearance="fill" class="center-horizontally instance-type-select">
-                <mat-label>Instances type</mat-label>
-                <mat-select [(value)]="selectedInstanceType" (selectionChange)="filtersChanged()">
-                    <mat-option [value]="type" *ngFor="let type of instanceTypes">{{type}}</mat-option>
+            <mat-form-field appearance="fill" class="center-horizontally code-smell-select">
+                <mat-label>Code smell</mat-label>
+                <mat-select [(value)]="selectedCodeSmell" (selectionChange)="filtersChanged()">
+                    <mat-option [value]="type" *ngFor="let type of codeSmells">{{type}}</mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill" class="center-horizontally">
@@ -67,7 +67,7 @@
         <iframe frameborder=0 class="code-snippet" id="snippet" scrolling="yes"></iframe>
     </div>
     <div class="center top-padding" *ngIf="selection.selected.length == 1">
-        <de-annotation (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)" [instanceId]="selection.selected[0].id" [instanceType]="selection.selected[0].type" [previousAnnotation]="previousAnnotation">
+        <de-annotation (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)" [codeSmell]="selectedCodeSmell" [instanceId]="selection.selected[0].id" [previousAnnotation]="previousAnnotation">
         </de-annotation>
     </div>
 </div>

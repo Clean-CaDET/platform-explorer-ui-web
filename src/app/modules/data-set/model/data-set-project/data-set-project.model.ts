@@ -1,11 +1,11 @@
-import { DataSetInstance } from "../data-set-instance/data-set-instance.model";
+import { CandidateDataSetInstance } from "../candidate-data-set-instance/candidate-data-set-instance.model";
 import { ProjectState } from "../enums/enums.model";
 
 export class DataSetProject {
     id: number = 0;
     name: string = '';
     url: string = '';
-    instances: DataSetInstance[] = [];
+    candidateInstances: CandidateDataSetInstance[] = [];
     state: ProjectState = ProjectState.Processing
 
     constructor(obj?: any) {
@@ -13,7 +13,7 @@ export class DataSetProject {
             this.id = obj.id;
             this.name = obj.name;
             this.url = obj.url;
-            this.instances = obj.instances;
+            this.candidateInstances = obj.candidateInstances;
             this.setProjectState(obj.state);
         }
     }
@@ -37,5 +37,14 @@ export class DataSetProject {
                 break;
             }
         }
+    }
+
+    public getTotalNumOfInstances(): number {
+        if (this.candidateInstances == undefined) return 0;
+        let total = 0;
+        this.candidateInstances.forEach(candidate => {
+            total += candidate.instances.length;
+        });
+        return total;
     }
 }

@@ -3,7 +3,6 @@ import { FormControl, Validators } from '@angular/forms';
 
 import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
 import { DataSetAnnotationDTO } from '../model/DTOs/data-set-annotation-dto/data-set-annotation-dto.model';
-import { InstanceType } from '../model/enums/enums.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
 
 import { AnnotationService } from './annotation.service';
@@ -15,8 +14,8 @@ import { AnnotationService } from './annotation.service';
 })
 export class AnnotationComponent implements OnInit {
 
+  @Input() public codeSmell: string = '';
   @Input() public instanceId: number = 0;
-  @Input() public instanceType: InstanceType = InstanceType.Method;
   @Input() public previousAnnotation: DataSetAnnotation | null = null;
   @Input() public disableEdit: boolean = false;
 
@@ -25,11 +24,9 @@ export class AnnotationComponent implements OnInit {
     Validators.min(0),
     Validators.max(3),
   ]);
-  public codeSmell: string = '';
   public heuristics = new FormControl();
 
-  private availableCodeSmells: Map<InstanceType, string[]> = new Map();
-  private availableHeuristics: Map<InstanceType, string[]> = new Map();
+  private availableHeuristics: Map<string, string[]> = new Map();
 
   public applicableHeuristics: Map<string, string> = new Map();
   public annotatorId: string = '';
@@ -43,12 +40,10 @@ export class AnnotationComponent implements OnInit {
   public ngOnInit(): void {
     this.annotatorId = this.previousAnnotation?.annotator.id + '';
     if (!this.disableEdit) {
-      this.annotationService.getAvailableCodeSmells().subscribe(res => this.initSmellsOrHeuristics(res, this.availableCodeSmells));
-      this.annotationService.getAvailableHeuristics().subscribe(res => this.initSmellsOrHeuristics(res, this.availableHeuristics));
+      this.annotationService.getAvailableHeuristics().subscribe(res => this.initHeuristics(res, this.availableHeuristics));
     } else if (this.previousAnnotation) {
-      this.availableCodeSmells.set(this.instanceType, [this.previousAnnotation.instanceSmell.name]);
       let previousHeristics = this.previousAnnotation.applicableHeuristics.map(h => h.description);
-      this.availableHeuristics.set(this.instanceType, previousHeristics);
+      this.availableHeuristics.set(this.codeSmell, previousHeristics);
     }
   }
 
@@ -58,7 +53,6 @@ export class AnnotationComponent implements OnInit {
       this.severityFormControl.disable();
       this.heuristics.disable();
     }
-    this.codeSmell = '';
     this.heuristics.setValue([]);
     this.applicableHeuristics = new Map();
     this.setupInputFromPreviousAnnotation();
@@ -82,12 +76,8 @@ export class AnnotationComponent implements OnInit {
     this.isHeuristicReasonChanged = true;
   }
 
-  public getAvailableCodeSmells(): string[] {
-    return this.availableCodeSmells.get(this.instanceType)!;
-  }
-
   public getAvailableHeuristics(): string[] {
-    return this.availableHeuristics.get(this.instanceType)!;
+    return this.availableHeuristics.get(this.codeSmell)!;
   }
 
   public annotate(): void {
@@ -103,9 +93,9 @@ export class AnnotationComponent implements OnInit {
     this.addAnnotation(annotation);
   }
 
-  private initSmellsOrHeuristics(input: Map<string, string[]>, smellsOrHeuristics: Map<InstanceType, string[]>): void {
+  private initHeuristics(input: Map<string, string[]>, heuristics: Map<string, string[]>): void {
     for (let keyValue of Object.entries(input)) {
-      smellsOrHeuristics.set(keyValue[0] as InstanceType, keyValue[1]);
+      heuristics.set(keyValue[0], keyValue[1]);
     }
   }
 
@@ -166,7 +156,6 @@ export class AnnotationComponent implements OnInit {
 
   private isValidInput(): boolean {
     return this.severityFormControl.valid 
-      && this.codeSmell != '' 
       && !(this.heuristics.value.length == 0 && this.severityFormControl.value > 0);
   }
 
@@ -174,9 +163,6 @@ export class AnnotationComponent implements OnInit {
     let message = 'Invalid input:';
     if (!this.severityFormControl.valid) {
       message += '\n- Severity must be between 0 and 3';
-    }
-    if (!this.codeSmell) {
-      message += '\n- Must enter a code smell'
     }
     if (this.heuristics.value.length == 0 && this.severityFormControl.value > 0) {
       message += '\n- For severity greater than 0 you must add heuristic'

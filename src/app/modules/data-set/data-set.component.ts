@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from "@angular/cdk/collections";
@@ -52,7 +52,7 @@ export class DataSetComponent implements OnInit {
   }
 
   public addDataSet(): void {
-    let dialogConfig = UtilService.setDialogConfig('250px', '250px');
+    let dialogConfig = UtilService.setDialogConfig('300px', '300px');
     let dialogRef = this.dialog.open(AddDataSetDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((res: DataSet) => this.addEmptyDataSet(res));
   }
