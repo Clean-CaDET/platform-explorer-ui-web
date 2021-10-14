@@ -1,35 +1,52 @@
 <h2 mat-dialog-title>Add new projects</h2>
 <mat-dialog-content class="mat-typography">
-    <button mat-icon-button (click)="addEmptyProject()">
-        <mat-icon>add_circle</mat-icon>
-      </button>
     <form>
         <table cellspacing="2">
-            <ng-container *ngFor="let project of projects; let i = index">
                 <tr>
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>Project name</mat-label>
-                            <input [(ngModel)]="projects[i].name" name="name-{{i}}" type="text" matInput>
+                            <input [(ngModel)]="project.name" name="name" type="text" matInput>
                         </mat-form-field>
                     </td>
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>URL</mat-label>
-                            <input [(ngModel)]="projects[i].url" name="url-{{i}}" type="url" matInput>
+                            <input [(ngModel)]="project.url" name="url" type="url" matInput>
                         </mat-form-field>
                     </td>
-                    <td>
-                        <button mat-icon-button (click)="deleteProject(i)">
-                            <mat-icon>remove_circle_outline</mat-icon>
-                        </button>
-                    </td>
                 </tr>
-            </ng-container>
+                <tr>
+                    <button mat-stroked-button (click)="setMetricsThresholds()">
+                        Set metrics filters
+                    </button>
+                </tr>
+                <tr>
+                    <ng-container *ngFor="let metrics of metricsForSmells | keyvalue; let i = index;">
+                        <mat-form-field appearance="fill" >
+                            <mat-label>{{metrics.key}}</mat-label>
+                            <mat-select multiple
+                                [(ngModel)]="chosenMetrics[i]" name="chosenMetrics-{{i}}" id="chosenMetrics" (selectionChange)="metricSelectionChanged()" >
+                                <mat-option *ngFor="let metric of metrics.value" [value]="metric">{{metric}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <ng-container *ngFor="let metric of chosenMetrics[i]; let j = index;">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Min value for: {{metric}}</mat-label>
+                                <input (input)="setThresholdValue($event, metric, i, 'min')" matInput>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Max value for: {{metric}}</mat-label>
+                                <input (input)="setThresholdValue($event, metric, i, 'max')" matInput>
+                            </mat-form-field>
+                        </ng-container>
+                    </ng-container>
+                </tr>
         </table>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button mat-dialog-close color="warn">Close</button>
-    <button mat-button color="success" (click)="addProjectsToDataSet()">Add</button>
+    <button mat-button color="success" (click)="addProjectToDataSet()">Add</button>
 </mat-dialog-actions>

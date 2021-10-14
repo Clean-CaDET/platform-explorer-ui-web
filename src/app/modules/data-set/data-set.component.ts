@@ -57,7 +57,7 @@ export class DataSetComponent implements OnInit {
     dialogRef.afterClosed().subscribe((res: DataSet) => this.addEmptyDataSet(res));
   }
 
-  public addProjectsToDataSet(): void {
+  public addProjectToDataSet(): void {
     let selectedDataSet = this.selection.selected[0];
     if (selectedDataSet) {
       let dialogConfig = UtilService.setDialogConfig('480px', '520px', selectedDataSet.id);

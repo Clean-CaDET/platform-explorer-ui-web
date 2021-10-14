@@ -1,12 +1,14 @@
 import { CandidateDataSetInstance } from "../candidate-data-set-instance/candidate-data-set-instance.model";
 import { ProjectState } from "../enums/enums.model";
+import { MetricThresholds } from "../metric-thresholds/metric-thresholds.model";
 
 export class DataSetProject {
     id: number = 0;
     name: string = '';
     url: string = '';
     candidateInstances: CandidateDataSetInstance[] = [];
-    state: ProjectState = ProjectState.Processing
+    state: ProjectState = ProjectState.Processing;
+    metricsThresholds: MetricThresholds[] = [];
 
     constructor(obj?: any) {
         if (obj) {
@@ -14,6 +16,7 @@ export class DataSetProject {
             this.name = obj.name;
             this.url = obj.url;
             this.candidateInstances = obj.candidateInstances;
+            this.metricsThresholds = [];
             this.setProjectState(obj.state);
         }
     }

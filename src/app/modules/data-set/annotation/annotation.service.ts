@@ -22,6 +22,10 @@ export class AnnotationService {
     return this.serverCommunicationService.getRequest('annotation/available-code-smells');
   }
 
+  public getAvailableMetrics(): Observable<Map<string, string[]>> {
+    return this.serverCommunicationService.getRequest('annotation/available-metrics');
+  }
+
   public getAvailableHeuristics(): Observable<Map<string, string[]>> {
     return this.serverCommunicationService.getRequest('annotation/available-heuristics');
   }

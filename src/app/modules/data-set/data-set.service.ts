@@ -13,7 +13,7 @@ import { CodeSmell } from './model/code-smell/code-smell.model';
   providedIn: 'root'
 })
 export class DataSetService {
-
+  
   constructor(private serverCommunicationService: ServerCommunicationService) { }
 
   public async getAllDataSets(): Promise<DataSet[]> {
@@ -26,13 +26,17 @@ export class DataSetService {
     return this.serverCommunicationService.postRequest('dataset/' + name, codeSmells, headers);
   }
 
-  public addProjectsToDataSet(projects: DataSetProject[], dataSetId: number): Observable<DataSet> {
+  public addProjectToDataSet(project: DataSetProject, dataSetId: number): Observable<DataSet> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    return this.serverCommunicationService.postRequest('dataset/' + dataSetId + '/add-projects', projects, headers)
+    return this.serverCommunicationService.postRequest('dataset/' + dataSetId + '/add-project', project, headers)
   }
 
   public async pollDataSetProject(id: number): Promise<DataSetProject> {
     return await this.serverCommunicationService.getRequestAsync('dataset/project/' + id);
+  }
+
+  public getDataSetCodeSmells(id: number): Observable<Map<string, string[]>> {
+    return this.serverCommunicationService.getRequest('dataset/' + id + '/code-smells');
   }
 }
