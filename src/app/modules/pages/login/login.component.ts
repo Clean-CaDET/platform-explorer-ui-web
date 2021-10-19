@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { UtilService } from 'src/app/util/util.service';
 
 @Component({
   selector: 'de-login',
@@ -23,7 +22,7 @@ export class LoginComponent implements OnInit {
 
   public login(){
     if (this.annotatorFormControl.valid) {
-      UtilService.setAnnotatorId(this.annotatorFormControl.value);
+      sessionStorage.setItem('annotatorId', this.annotatorFormControl.value.toString());
       this.router.navigate(['/data-set']);
     }
   }

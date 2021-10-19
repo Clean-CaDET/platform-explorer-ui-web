@@ -22,7 +22,7 @@
     padding-right: 10px;
 }
 
-.data-set-instance-container {
+.instance-container {
     display: flex;
     flex-direction: row;
     width: 100%;

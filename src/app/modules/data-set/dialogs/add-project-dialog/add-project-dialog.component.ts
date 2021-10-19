@@ -29,18 +29,31 @@ export class AddProjectDialogComponent implements OnInit {
     this.annotationService.getAvailableMetrics().subscribe(res => this.availableMetrics = res);
   }
 
-  public metricSelectionChanged(){
+  public metricSelectionChanged() {
     let i = 0;
-    for (let metrics of Object.entries(this.chosenMetrics)) {
+    for (let metricsForSmell of this.chosenMetrics) {
       let smell = Object.entries(this.codeSmells)[i][0];
-      for (let metric of metrics[1]) {
-        if (!this.metricThresholdsExist(smell, metric)) {
-          this.metricThresholds.push(new MetricThresholds({"codeSmell": smell, "metric": metric, "minValue": '', "maxValue": ''}));
-        }
-      }
+      this.initMetricsThresholds(smell, metricsForSmell);
       i++;
     }
     this.removeUnselectedMetrics();
+  }
+
+  private initMetricsThresholds(smell: string, metrics: string[]): void {
+    for (let metric of metrics) {
+      if (!this.metricThresholdsExist(smell, metric)) {
+        this.metricThresholds.push(new MetricThresholds({"codeSmell": smell, "metric": metric, "minValue": '', "maxValue": ''}));
+      }
+    }
+  }
+
+  private metricThresholdsExist(smell: string, metric: string): boolean { 
+    for (let threshold of this.metricThresholds) {
+      if (threshold.codeSmell == smell && threshold.metric == metric) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private removeUnselectedMetrics() {
@@ -48,27 +61,12 @@ export class AddProjectDialogComponent implements OnInit {
     for (let thresholds of this.metricThresholds) {
       let found = false;
       for (let metrics of this.chosenMetrics) {
-        for (let metric of metrics) {
-          if (thresholds.metric == metric) {
-            found = true;
-            break;
-          }
-        }
+        found = metrics.includes(thresholds.metric);
+        if (found) break;
       }
-      if (!found) {
-        this.metricThresholds.splice(i,1);
-      }
+      if (!found) this.metricThresholds.splice(i,1);
       i++;
     }
-  }
-
-  private metricThresholdsExist(smell: string, metric: string): boolean {
-    for (let threshold of this.metricThresholds) {
-      if (threshold.codeSmell == smell && threshold.metric == metric) {
-        return true;
-      }
-    }
-    return false;
   }
 
   public setThresholdValue(event: any, metric: string, i: number, type: string) {
@@ -84,7 +82,7 @@ export class AddProjectDialogComponent implements OnInit {
     }
   }
 
-  public setMetricsThresholds() {
+  public initMetricFilters() {
     for (let codeSmell of Object.entries(this.codeSmells)) {
       for (let metrics of Object.entries(this.availableMetrics)) {
         if (codeSmell[1][0] == metrics[0]) {
@@ -102,7 +100,6 @@ export class AddProjectDialogComponent implements OnInit {
   }
 
   private isValidInput(): boolean {
-    if (this.project.name.trim() == '' || this.project.url.trim() == '') return false;
-    return true;
+    return this.project.name.trim() != '' && this.project.url.trim() != '';
   }
 }

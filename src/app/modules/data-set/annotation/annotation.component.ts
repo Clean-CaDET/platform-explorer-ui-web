@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
-import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
-import { DataSetAnnotationDTO } from '../model/DTOs/data-set-annotation-dto/data-set-annotation-dto.model';
+import { Annotation } from '../model/annotation/annotation.model';
+import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
 
 import { AnnotationService } from './annotation.service';
@@ -16,7 +16,7 @@ export class AnnotationComponent implements OnInit {
 
   @Input() public codeSmell: string = '';
   @Input() public instanceId: number = 0;
-  @Input() public previousAnnotation: DataSetAnnotation | null = null;
+  @Input() public previousAnnotation: Annotation | null = null;
   @Input() public disableEdit: boolean = false;
 
   public severityFormControl: FormControl = new FormControl('0', [
@@ -32,8 +32,8 @@ export class AnnotationComponent implements OnInit {
   public annotatorId: string = '';
   private isHeuristicReasonChanged: boolean = false;
 
-  @Output() newAnnotation: EventEmitter<DataSetAnnotation> = new EventEmitter<DataSetAnnotation>();
-  @Output() changedAnnotation: EventEmitter<DataSetAnnotation> = new EventEmitter<DataSetAnnotation>();
+  @Output() newAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
+  @Output() changedAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
 
   constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
 
@@ -93,35 +93,36 @@ export class AnnotationComponent implements OnInit {
     this.addAnnotation(annotation);
   }
 
+  // TODO: Introduce an object model to avoid dictionaries
   private initHeuristics(input: Map<string, string[]>, heuristics: Map<string, string[]>): void {
     for (let keyValue of Object.entries(input)) {
       heuristics.set(keyValue[0], keyValue[1]);
     }
   }
 
-  private addAnnotation(annotation: DataSetAnnotationDTO): void {
+  private addAnnotation(annotation: AnnotationDTO): void {
     this.annotationService.addAnnotation(annotation).subscribe(
-      (res: DataSetAnnotation) => {
+      (res: Annotation) => {
         alert('Annotation added!');
-        this.newAnnotation.emit(new DataSetAnnotation(res));
+        this.newAnnotation.emit(new Annotation(res));
       },
       error => alert('ERROR:\n' + error.error.message)
     );
   }
 
-  private updateAnnotation(annotation: DataSetAnnotationDTO): void {
+  private updateAnnotation(annotation: AnnotationDTO): void {
     this.annotationService.updateAnnotation(this.previousAnnotation!.id, annotation).subscribe(
-      (res: DataSetAnnotation) => {
+      (res: Annotation) => {
         alert('Annotation changed!');
-        this.changedAnnotation.emit(new DataSetAnnotation(res));
+        this.changedAnnotation.emit(new Annotation(res));
       },
       error => alert('ERROR:\n' + error.error.message)
     );
   }
 
-  private getAnnotationFromInput(): DataSetAnnotationDTO {
-    return new DataSetAnnotationDTO({
-      dataSetInstanceId: this.instanceId,
+  private getAnnotationFromInput(): AnnotationDTO {
+    return new AnnotationDTO({
+      instanceId: this.instanceId,
       severity: this.severityFormControl.value,
       codeSmell: this.codeSmell,
       applicableHeuristics: this.getHeuristicsFromInput()

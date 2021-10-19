@@ -1,14 +1,14 @@
 import { SmellHeuristic } from "../../smell-heuristic/smell-heuristic.model";
 
-export class DataSetAnnotationDTO {
-    dataSetInstanceId: number = 0;
+export class AnnotationDTO {
+    instanceId: number = 0;
     severity: number = 0;
     codeSmell: string = '';
     applicableHeuristics: SmellHeuristic[] = [];
 
     constructor(obj?: any) {
         if (obj) {
-            this.dataSetInstanceId = obj.dataSetInstanceId;
+            this.instanceId = obj.instanceId;
             this.severity = obj.severity;
             this.codeSmell = obj.codeSmell;
             this.applicableHeuristics = obj.applicableHeuristics;

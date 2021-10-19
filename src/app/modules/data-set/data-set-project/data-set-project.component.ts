@@ -12,8 +12,8 @@ import { InstanceFilter, ProjectState } from '../model/enums/enums.model';
 
 import { DataSetService } from '../data-set.service';
 import { AnnotationService } from '../annotation/annotation.service';
-import { UtilService } from 'src/app/util/util.service';
-import { CandidateDataSetInstance } from '../model/candidate-data-set-instance/candidate-data-set-instance.model';
+import { DialogConfigService } from '../dialogs/dialog-config.service';
+import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 
 @Component({
   selector: 'de-data-set-project',
@@ -23,7 +23,7 @@ import { CandidateDataSetInstance } from '../model/candidate-data-set-instance/c
 export class DataSetProjectComponent implements OnInit {
 
   @Input() public projects: DataSetProject[] = [];
-  public candidateInstances: CandidateDataSetInstance[] = [];
+  public candidateInstances: SmellCandidateInstances[] = [];
   public displayedColumns: string[] = ['select', 'name', 'url', 'numOfInstances', 'status', 'consistency'];
   public selection: SelectionModel<DataSetProject> = new SelectionModel<DataSetProject>(true, []);
   public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.projects);
@@ -97,11 +97,11 @@ export class DataSetProjectComponent implements OnInit {
 
   public searchProjects(event: Event): void {
     const input = (event.target as HTMLInputElement).value;
-    this.dataSource.data = this.projects.filter(p => UtilService.includesNoCase(p.name, input));
+    this.dataSource.data = this.projects.filter(p => p.name.toLowerCase().includes(input.toLowerCase()));
   }
 
   public checkConsistency(projectId: number): void {
-    let dialogConfig = UtilService.setDialogConfig('420px', '500px', projectId);
+    let dialogConfig = DialogConfigService.setDialogConfig('420px', '500px', projectId);
     this.dialog.open(AnnotationConsistencyDialogComponent, dialogConfig);
   }
 

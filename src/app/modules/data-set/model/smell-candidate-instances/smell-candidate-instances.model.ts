@@ -1,10 +1,10 @@
 import { CodeSmell } from "../code-smell/code-smell.model";
-import { DataSetInstance } from "../data-set-instance/data-set-instance.model";
+import { Instance } from "../instance/instance.model";
 
-export class CandidateDataSetInstance {
+export class SmellCandidateInstances {
     id: number = 0;
     codeSmell: CodeSmell | undefined;
-    instances: DataSetInstance[] = [];
+    instances: Instance[] = [];
 
     constructor(obj?: any) {
         if (obj) {

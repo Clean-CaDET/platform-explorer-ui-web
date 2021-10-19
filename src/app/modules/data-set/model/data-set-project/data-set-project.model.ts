@@ -1,4 +1,4 @@
-import { CandidateDataSetInstance } from "../candidate-data-set-instance/candidate-data-set-instance.model";
+import { SmellCandidateInstances } from "../smell-candidate-instances/smell-candidate-instances.model";
 import { ProjectState } from "../enums/enums.model";
 import { MetricThresholds } from "../metric-thresholds/metric-thresholds.model";
 
@@ -6,7 +6,7 @@ export class DataSetProject {
     id: number = 0;
     name: string = '';
     url: string = '';
-    candidateInstances: CandidateDataSetInstance[] = [];
+    candidateInstances: SmellCandidateInstances[] = [];
     state: ProjectState = ProjectState.Processing;
     metricsThresholds: MetricThresholds[] = [];
 

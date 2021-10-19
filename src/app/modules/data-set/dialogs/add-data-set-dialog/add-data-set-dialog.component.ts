@@ -28,13 +28,13 @@ export class AddDataSetDialogComponent implements OnInit {
   }
 
   public createDataSet(): void {
-    if (this.isValidInput()) {
-      let smells: CodeSmell[] = [];
-      this.codeSmells.forEach(codeSmell => {
-        smells.push(new CodeSmell({'name': codeSmell}));
-      });
-      this.dataSetService.createDataSet(this.name, smells).subscribe((res: DataSet) => this.dialogRef.close(res));
-    }
+    if (!this.isValidInput()) return;
+    
+    let smells: CodeSmell[] = [];
+    this.codeSmells.forEach(codeSmell => {
+      smells.push(new CodeSmell({'name': codeSmell}));
+    });
+    this.dataSetService.createDataSet(this.name, smells).subscribe((res: DataSet) => this.dialogRef.close(res));
   }
 
   private initSmells(input: Map<string, string[]>): void {
@@ -46,8 +46,7 @@ export class AddDataSetDialogComponent implements OnInit {
   }
 
   private isValidInput(): boolean {
-    if (this.name != '' && this.codeSmells.length > 0) return true;
-    return false;
+    return this.name != '' && this.codeSmells.length > 0;
   }
 
 }

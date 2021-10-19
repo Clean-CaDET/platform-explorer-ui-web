@@ -6,29 +6,29 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { DisagreeingAnnotationsDialogComponent } from '../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
 
-import { DataSetAnnotation } from '../model/data-set-annotation/data-set-annotation.model';
-import { DataSetInstance } from '../model/data-set-instance/data-set-instance.model';
+import { Annotation } from '../model/annotation/annotation.model';
+import { Instance } from '../model/instance/instance.model';
 import { AnnotationStatus, InstanceFilter, InstanceType } from '../model/enums/enums.model';
 
-import { UtilService } from 'src/app/util/util.service';
-import { CandidateDataSetInstance } from '../model/candidate-data-set-instance/candidate-data-set-instance.model';
+import { DialogConfigService } from '../dialogs/dialog-config.service';
+import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 
 @Component({
-  selector: 'de-data-set-instance',
-  templateUrl: './data-set-instance.component.html',
-  styleUrls: ['./data-set-instance.component.css']
+  selector: 'de-instance',
+  templateUrl: './instance.component.html',
+  styleUrls: ['./instance.component.css']
 })
-export class DataSetInstanceComponent implements OnInit {
+export class InstanceComponent implements OnInit {
 
-  public instances: DataSetInstance[] = [];
+  public instances: Instance[] = [];
   @Input() public filter: InstanceFilter = InstanceFilter.All;
-  @Input() public candidateInstances: CandidateDataSetInstance[] = [];
+  @Input() public candidateInstances: SmellCandidateInstances[] = [];
   public instanceFilter = InstanceFilter;
   private initiallyDisplayedColumns: string[] = ['select', 'codeSnippetId', 'annotated'];
   public displayedColumns: string[] = this.initiallyDisplayedColumns;
-  public previousAnnotation: DataSetAnnotation | null = null;
-  public selection: SelectionModel<DataSetInstance> = new SelectionModel<DataSetInstance>(true, []);
-  public dataSource: MatTableDataSource<DataSetInstance> = new MatTableDataSource<DataSetInstance>(this.instances);
+  public previousAnnotation: Annotation | null = null;
+  public selection: SelectionModel<Instance> = new SelectionModel<Instance>(true, []);
+  public dataSource: MatTableDataSource<Instance> = new MatTableDataSource<Instance>(this.instances);
   public searchInput: string = '';
 
   public annotationStatuses: string[] = Object.keys(AnnotationStatus);
@@ -62,7 +62,7 @@ export class DataSetInstanceComponent implements OnInit {
     this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
   }
 
-  public toggleInstanceSelection(selectedInstance: DataSetInstance): void {
+  public toggleInstanceSelection(selectedInstance: Instance): void {
     this.iframe.srcdoc = '';
     this.previousAnnotation = null;
     if (!this.selection.isSelected(selectedInstance)) {
@@ -75,7 +75,7 @@ export class DataSetInstanceComponent implements OnInit {
     }
   }
 
-  private instanceHasSelectedAnnotationStatus(instance: DataSetInstance): boolean {
+  private instanceHasSelectedAnnotationStatus(instance: Instance): boolean {
     switch (this.selectedAnnotationStatus) {
       case AnnotationStatus.Annotated: {
         return instance.hasAnnotationFromLoggedUser;
@@ -89,7 +89,7 @@ export class DataSetInstanceComponent implements OnInit {
     }
   }
 
-  private filterForCodeSmell(): DataSetInstance[] {
+  private filterForCodeSmell(): Instance[] {
     for (let candidate of this.candidateInstances) {
       if (candidate.codeSmell?.name == this.selectedCodeSmell) {
         return this.setAnnotatorForInstances(candidate.instances);
@@ -98,8 +98,8 @@ export class DataSetInstanceComponent implements OnInit {
     return [];
   }
 
-  private setAnnotatorForInstances(instances: DataSetInstance[]): DataSetInstance[] {
-    instances.forEach((instance, index) => instances[index] = new DataSetInstance(instance));
+  private setAnnotatorForInstances(instances: Instance[]): Instance[] {
+    instances.forEach((instance, index) => instances[index] = new Instance(instance));
     return instances;
   }
 
@@ -111,13 +111,13 @@ export class DataSetInstanceComponent implements OnInit {
     this.showFilteredInstances();
   }
 
-  public async addAnnotation(annotation: DataSetAnnotation): Promise<void> {
+  public async addAnnotation(annotation: Annotation): Promise<void> {
     let i = this.instances.findIndex(i => i.id == this.selection.selected[0].id);
     this.instances[i].annotations.push(annotation);
     this.filtersChanged();
   }
 
-  public async changeAnnotation(annotation: DataSetAnnotation) {
+  public async changeAnnotation(annotation: Annotation) {
     let i = this.instances.findIndex(i => i.id == this.selection.selected[0].id);
     let j = this.instances[i].annotations.findIndex(a => a.id == annotation.id);
     this.instances[i].annotations[j] = annotation;
@@ -131,8 +131,8 @@ export class DataSetInstanceComponent implements OnInit {
     this.showFilteredInstances();
   }
 
-  public showAllAnnotations(annotations: DataSetAnnotation[], instanceId: number): void {
-    let dialogConfig = UtilService.setDialogConfig('550px', '700px', {annotations: annotations, instanceId: instanceId});
+  public showAllAnnotations(annotations: Annotation[], instanceId: number): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('550px', '700px', {annotations: annotations, instanceId: instanceId});
     this.dialog.open(DisagreeingAnnotationsDialogComponent, dialogConfig);
   }
 
@@ -150,7 +150,7 @@ export class DataSetInstanceComponent implements OnInit {
     this.instances = this.filterForCodeSmell();
     this.dataSource.data = this.instances.filter(i =>
       this.instanceHasSelectedAnnotationStatus(i)
-      && UtilService.includesNoCase(i.codeSnippetId, this.searchInput)
+      && i.codeSnippetId.toLowerCase().includes(this.searchInput.toLowerCase())
     );
   }
 
