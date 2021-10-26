@@ -16,33 +16,41 @@
                         </mat-form-field>
                     </td>
                 </tr>
+                <h2 mat-dialog-title>Set metrics filters</h2>
                 <tr>
-                    <button mat-stroked-button (click)="initMetricFilters()">
-                        Set metrics filters
-                    </button>
+                    <td *ngFor="let smellFilter of smellFilters">
+                        <button *ngIf="smellFilter.codeSmell" (click)="initMetricsThresholdsForSmell(smellFilter.codeSmell)" mat-stroked-button>
+                            {{smellFilter.codeSmell.name}}
+                        </button><br>
+                    </td>
                 </tr>
-                <tr>
-                    <ng-container *ngFor="let metrics of metricsForSmells | keyvalue; let i = index;">
-                        <mat-form-field appearance="fill" >
-                            <mat-label>{{metrics.key}}</mat-label>
-                            <mat-select multiple
-                                [(ngModel)]="chosenMetrics[i]" name="chosenMetrics-{{i}}" id="chosenMetrics" (selectionChange)="metricSelectionChanged()" >
-                                <mat-option *ngFor="let metric of metrics.value" [value]="metric">{{metric}}</mat-option>
+                <ng-container *ngFor="let smellFilter of smellFilters; let i = index;">
+                    <tr *ngIf="smellFilter.codeSmell && smellFilter.codeSmell.name == selectedSmell">
+                        <mat-form-field appearance="fill">
+                            <mat-select multiple [(ngModel)]="chosenMetrics[i]" name="chosenMetrics-{{i}}" id="chosenMetrics" placeholder="Choose metrics">
+                                <mat-option *ngFor="let metric of metricsForSelection" [value]="metric">{{metric}}</mat-option>
                             </mat-select>
                         </mat-form-field>
-
-                        <ng-container *ngFor="let metric of chosenMetrics[i]; let j = index;">
-                            <mat-form-field appearance="fill">
-                                <mat-label>Min value for: {{metric}}</mat-label>
-                                <input (input)="setThresholdValue($event, metric, i, 'min')" matInput>
-                            </mat-form-field>
-                            <mat-form-field appearance="fill">
-                                <mat-label>Max value for: {{metric}}</mat-label>
-                                <input (input)="setThresholdValue($event, metric, i, 'max')" matInput>
-                            </mat-form-field>
-                        </ng-container>
+                    </tr>
+                    <ng-container *ngIf="smellFilter.codeSmell && smellFilter.codeSmell.name == selectedSmell">
+                        <tr *ngFor="let threshold of smellFilter.metricsThresholds; let j = index;">
+                            <ng-container *ngIf="chosenMetrics[i]?.includes(threshold.metric)">
+                                <td>
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Min value for {{threshold.metric}}</mat-label>
+                                        <input [(ngModel)]="smellFilter.metricsThresholds[j].minValue" name="minValue" matInput placeholder="{{threshold.minValue}}">
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Max value for {{threshold.metric}}</mat-label>
+                                        <input [(ngModel)]="smellFilter.metricsThresholds[j].maxValue" name="maxValue" matInput placeholder="{{threshold.maxValue}}">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+                        </tr>
                     </ng-container>
-                </tr>
+                </ng-container>
         </table>
     </form>
 </mat-dialog-content>

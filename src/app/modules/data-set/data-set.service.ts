@@ -7,6 +7,7 @@ import { DataSet } from './model/data-set/data-set.model';
 
 import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service'; 
 import { CodeSmell } from './model/code-smell/code-smell.model';
+import { SmellFilter } from './model/smell-filter/smell-filter.model';
 
 
 @Injectable({
@@ -26,10 +27,11 @@ export class DataSetService {
     return this.serverCommunicationService.postRequest('dataset/' + name, codeSmells, headers);
   }
 
-  public addProjectToDataSet(project: DataSetProject, dataSetId: number): Observable<DataSet> {
+  public addProjectToDataSet(project: DataSetProject, smellFilters: SmellFilter[], dataSetId: number): Observable<DataSet> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    return this.serverCommunicationService.postRequest('dataset/' + dataSetId + '/add-project', project, headers)
+    let data = {project: project, smellFilters: smellFilters};
+    return this.serverCommunicationService.postRequest('dataset/' + dataSetId + '/add-project', data, headers)
   }
 
   public async pollDataSetProject(id: number): Promise<DataSetProject> {

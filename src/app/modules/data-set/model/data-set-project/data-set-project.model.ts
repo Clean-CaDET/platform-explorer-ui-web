@@ -1,6 +1,5 @@
 import { SmellCandidateInstances } from "../smell-candidate-instances/smell-candidate-instances.model";
 import { ProjectState } from "../enums/enums.model";
-import { MetricThresholds } from "../metric-thresholds/metric-thresholds.model";
 
 export class DataSetProject {
     id: number = 0;
@@ -8,7 +7,6 @@ export class DataSetProject {
     url: string = '';
     candidateInstances: SmellCandidateInstances[] = [];
     state: ProjectState = ProjectState.Processing;
-    metricsThresholds: MetricThresholds[] = [];
 
     constructor(obj?: any) {
         if (obj) {
@@ -16,7 +14,6 @@ export class DataSetProject {
             this.name = obj.name;
             this.url = obj.url;
             this.candidateInstances = obj.candidateInstances;
-            this.metricsThresholds = [];
             this.setProjectState(obj.state);
         }
     }

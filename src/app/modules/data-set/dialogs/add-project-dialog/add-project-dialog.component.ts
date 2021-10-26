@@ -2,8 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AnnotationService } from '../../annotation/annotation.service';
 import { DataSetService } from '../../data-set.service';
+import { CodeSmell } from '../../model/code-smell/code-smell.model';
 import { DataSetProject } from '../../model/data-set-project/data-set-project.model';
 import { MetricThresholds } from '../../model/metric-thresholds/metric-thresholds.model';
+import { SmellFilter } from '../../model/smell-filter/smell-filter.model';
 
 @Component({
   selector: 'de-add-project-dialog',
@@ -17,7 +19,9 @@ export class AddProjectDialogComponent implements OnInit {
   public availableMetrics: Map<string, string[]> = new Map<string, string[]>();
   public metricsForSmells: Map<string, string[]> = new Map<string, string[]>();
   public chosenMetrics: string[][] = [];
-  public metricThresholds: MetricThresholds[] = [];
+  public smellFilters: SmellFilter[] = [];
+  public metricsForSelection: string[] = [];
+  public selectedSmell: string = '';
  
   constructor(@Inject(MAT_DIALOG_DATA) private dataSetId: number, private dataSetService: DataSetService, private annotationService: AnnotationService, private dialogRef: MatDialogRef<AddProjectDialogComponent>) { }
 
@@ -25,77 +29,32 @@ export class AddProjectDialogComponent implements OnInit {
     if (!this.dataSetId) {
       this.dialogRef.close();
     }
-    this.dataSetService.getDataSetCodeSmells(this.dataSetId).subscribe(res => this.codeSmells = res);
+    this.dataSetService.getDataSetCodeSmells(this.dataSetId).subscribe(res => {
+      this.codeSmells = res;
+      for (let smell of Object.entries(this.codeSmells)) {
+        this.smellFilters.push(new SmellFilter({codeSmell: new CodeSmell({name:smell[0]}), metricsThresholds: []}))
+        this.chosenMetrics.push([]);
+      }
+    });
     this.annotationService.getAvailableMetrics().subscribe(res => this.availableMetrics = res);
   }
 
-  public metricSelectionChanged() {
-    let i = 0;
-    for (let metricsForSmell of this.chosenMetrics) {
-      let smell = Object.entries(this.codeSmells)[i][0];
-      this.initMetricsThresholds(smell, metricsForSmell);
-      i++;
-    }
-    this.removeUnselectedMetrics();
-  }
-
-  private initMetricsThresholds(smell: string, metrics: string[]): void {
-    for (let metric of metrics) {
-      if (!this.metricThresholdsExist(smell, metric)) {
-        this.metricThresholds.push(new MetricThresholds({"codeSmell": smell, "metric": metric, "minValue": '', "maxValue": ''}));
-      }
-    }
-  }
-
-  private metricThresholdsExist(smell: string, metric: string): boolean { 
-    for (let threshold of this.metricThresholds) {
-      if (threshold.codeSmell == smell && threshold.metric == metric) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private removeUnselectedMetrics() {
-    let i = 0;
-    for (let thresholds of this.metricThresholds) {
-      let found = false;
-      for (let metrics of this.chosenMetrics) {
-        found = metrics.includes(thresholds.metric);
-        if (found) break;
-      }
-      if (!found) this.metricThresholds.splice(i,1);
-      i++;
-    }
-  }
-
-  public setThresholdValue(event: any, metric: string, i: number, type: string) {
-    let smell = Object.entries(this.codeSmells)[i][0];
-    for (let j = 0; j < this.metricThresholds.length; j++) {
-      if (this.metricThresholds[j].codeSmell == smell && this.metricThresholds[j].metric == metric) {
-        if (type == 'min') {
-          this.metricThresholds[j].minValue = event.target.value;
-        } else {
-          this.metricThresholds[j].maxValue = event.target.value;
-        }
-      }
-    }
-  }
-
-  public initMetricFilters() {
-    for (let codeSmell of Object.entries(this.codeSmells)) {
-      for (let metrics of Object.entries(this.availableMetrics)) {
-        if (codeSmell[1][0] == metrics[0]) {
-          this.metricsForSmells.set(codeSmell[0], metrics[1]);
-        }
+  public initMetricsThresholdsForSmell(codeSmell: any) {
+    this.selectedSmell = codeSmell.name;
+    var snippetType = Object.entries(this.codeSmells).find(s => s[0] == codeSmell.name)?.[1][0];
+    this.metricsForSelection = Object.entries(this.availableMetrics).find(m => m[0] == snippetType)?.[1];
+    
+    var i = this.smellFilters.findIndex(f => f.codeSmell?.name == codeSmell.name);
+    if (this.smellFilters[i].metricsThresholds.length == 0) {
+      for (let metric of this.metricsForSelection) {
+          this.smellFilters[i].metricsThresholds.push(new MetricThresholds({metric: metric, minValue: '', maxValue: ''}));  
       }
     }
   }
 
   public addProjectToDataSet(): void {
-    this.project.metricsThresholds = this.metricThresholds;
     if (this.isValidInput()) {
-      this.dataSetService.addProjectToDataSet(this.project, this.dataSetId).subscribe(res => this.dialogRef.close(res));
+      this.dataSetService.addProjectToDataSet(this.project, this.smellFilters, this.dataSetId).subscribe(res => this.dialogRef.close(res));
     }
   }
 
