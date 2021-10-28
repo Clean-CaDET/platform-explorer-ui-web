@@ -7,7 +7,7 @@ import { DataSetComponent } from './data-set.component';
 import { AddDataSetDialogComponent } from './dialogs/add-data-set-dialog/add-data-set-dialog.component';
 import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-project-dialog.component';
 import { DataSetProjectComponent } from './data-set-project/data-set-project.component';
-import { DataSetInstanceComponent } from './data-set-instance/data-set-instance.component';
+import { InstanceComponent } from './instance/instance.component';
 import { AnnotationComponent } from './annotation/annotation.component';
 import { DisagreeingAnnotationsDialogComponent } from './dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
 import { AnnotationConsistencyDialogComponent } from './dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
@@ -18,7 +18,7 @@ import { AnnotationConsistencyDialogComponent } from './dialogs/annotation-consi
     AddDataSetDialogComponent,
     AddProjectDialogComponent,
     DataSetProjectComponent,
-    DataSetInstanceComponent,
+    InstanceComponent,
     AnnotationComponent,
     DisagreeingAnnotationsDialogComponent,
     AnnotationConsistencyDialogComponent,

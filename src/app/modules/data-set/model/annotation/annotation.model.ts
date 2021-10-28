@@ -2,7 +2,7 @@ import { Annotator } from "../annotator/annotator.model";
 import { CodeSmell } from "../code-smell/code-smell.model";
 import { SmellHeuristic } from "../smell-heuristic/smell-heuristic.model";
 
-export class DataSetAnnotation {
+export class Annotation {
     id: number = 0;
     instanceSmell: CodeSmell = new CodeSmell();
     severity: number = 0;

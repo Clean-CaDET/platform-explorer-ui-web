@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { DataSetAnnotation } from '../../model/data-set-annotation/data-set-annotation.model';
+import { Annotation } from '../../model/annotation/annotation.model';
 
-import { UtilService } from 'src/app/util/util.service';
+import { AnnotationService } from '../../annotation/annotation.service';
 
 @Component({
   selector: 'de-disagreeing-annotations-dialog',
@@ -12,7 +12,7 @@ import { UtilService } from 'src/app/util/util.service';
 })
 export class DisagreeingAnnotationsDialogComponent implements OnInit {
 
-  public loggedAnnotatorId: number = UtilService.getAnnotatorId();
+  public loggedAnnotatorId: number = AnnotationService.getLoggedInAnnotatorId();
 
   constructor(@Inject(MAT_DIALOG_DATA) public instanceWithDisagreeingAnnotations: InstanceWithDisagreeingAnnotations) { }
 
@@ -22,6 +22,6 @@ export class DisagreeingAnnotationsDialogComponent implements OnInit {
 }
 
 interface InstanceWithDisagreeingAnnotations {
-  annotations: DataSetAnnotation[],
+  annotations: Annotation[],
   instanceId: number
 }
