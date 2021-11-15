@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from "@angular/cdk/collections";
@@ -11,6 +11,8 @@ import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-proj
 
 import { DataSetService } from './data-set.service';
 import { UtilService } from 'src/app/util/util.service';
+import { ExportDraftDataSetDialogComponent } from './dialogs/export-draft-data-set-dialog/export-draft-data-set-dialog.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'de-data-set',
@@ -22,7 +24,7 @@ export class DataSetComponent implements OnInit {
 
   private dataSets: DataSet[] = [];
   public projectsToShow: DataSetProject[] = [];
-  public displayedColumns = ['select', 'name', 'numOfProjects'];
+  public displayedColumns = ['select', 'name', 'numOfProjects', 'dataSetExport'];
   public selection = new SelectionModel<DataSet>(true, []);
   public dataSource = new MatTableDataSource<DataSet>(this.dataSets);
 
@@ -33,7 +35,7 @@ export class DataSetComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dialog: MatDialog, private dataSetService: DataSetService) {}
+  constructor(private dialog: MatDialog, private dataSetService: DataSetService, private toastr: ToastrService) {}
 
   public async ngOnInit(): Promise<void> {
     this.dataSets = await this.dataSetService.getAllDataSets();
@@ -92,6 +94,17 @@ export class DataSetComponent implements OnInit {
       this.dataSets.push(dataSet);
       this.dataSource.data = this.dataSets;
     }
+  }
+
+  public exportDraftDataSet(dataSet: DataSet): void {
+    let dialogConfig = UtilService.setDialogConfig('300px', '300px');
+    let dialogRef = this.dialog.open(ExportDraftDataSetDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((exportPath: string) => {
+      this.dataSetService.exportDraftDataSet(dataSet.id, exportPath).then(res => {
+        let result = new Map(Object.entries(res));
+        this.toastr.success(result.get('successes')[0]['message']);
+      });
+    });
   }
 
 }

@@ -22,7 +22,12 @@
             <th mat-header-cell *matHeaderCellDef width="30%"> Number of projects </th>
             <td mat-cell *matCellDef="let dataSet" width="30%">{{dataSet.projects?.length || '0'}}</td>
         </ng-container>
-
+        <ng-container matColumnDef="dataSetExport">
+            <th mat-header-cell *matHeaderCellDef width="30%">Export dataset</th>
+            <td mat-cell *matCellDef="let dataSet" width="30%">
+                <button mat-raised-button (click)="exportDraftDataSet(dataSet)" color="primary" class="center-horizontally">Export</button>
+            </td>
+        </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>

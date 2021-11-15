@@ -11,12 +11,14 @@ import { DataSetInstanceComponent } from './data-set-instance/data-set-instance.
 import { AnnotationComponent } from './annotation/annotation.component';
 import { DisagreeingAnnotationsDialogComponent } from './dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
 import { AnnotationConsistencyDialogComponent } from './dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
+import { ExportDraftDataSetDialogComponent } from './dialogs/export-draft-data-set-dialog/export-draft-data-set-dialog.component';
 
 @NgModule({
   declarations: [
     DataSetComponent,
     AddDataSetDialogComponent,
     AddProjectDialogComponent,
+    ExportDraftDataSetDialogComponent,
     DataSetProjectComponent,
     DataSetInstanceComponent,
     AnnotationComponent,
