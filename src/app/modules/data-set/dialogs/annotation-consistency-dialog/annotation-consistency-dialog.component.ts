@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ConsistencyType } from '../../model/enums/enums.model';
 
-import { UtilService } from 'src/app/util/util.service';
+import { AnnotationService } from '../../annotation/annotation.service';
 import { AnnotationConsistencyService } from '../../annotation-consistency/annotation-consistency.service';
 
 @Component({
@@ -82,7 +82,7 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   }
 
   private getAnnotationConsistencyForAnnotator(): void {
-    this.annotationConsistencyService.getAnnotationConsistencyForAnnotator(this.projectId, UtilService.getAnnotatorId()).subscribe((res: Map<string, string>) => 
+    this.annotationConsistencyService.getAnnotationConsistencyForAnnotator(this.projectId, AnnotationService.getLoggedInAnnotatorId()).subscribe((res: Map<string, string>) => 
       this.results.set('My consistency', res));
   }
 
@@ -93,7 +93,7 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   }
 
   private getMetricsSignificanceInAnnotationsForAnnotator(): void {
-    this.annotationConsistencyService.getMetricsSignificanceInAnnotationsForAnnotator(this.projectId, UtilService.getAnnotatorId()).subscribe((res: Map<string, Map<string, string>>) => 
+    this.annotationConsistencyService.getMetricsSignificanceInAnnotationsForAnnotator(this.projectId, AnnotationService.getLoggedInAnnotatorId()).subscribe((res: Map<string, Map<string, string>>) => 
       this.results.set('My metrics significance', res));
   }
 

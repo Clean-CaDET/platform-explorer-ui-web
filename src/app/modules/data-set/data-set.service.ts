@@ -13,23 +13,24 @@ import { UtilService } from 'src/app/util/util.service';
   providedIn: 'root'
 })
 export class DataSetService {
-
+  
   constructor(private serverCommunicationService: ServerCommunicationService) { }
 
   public async getAllDataSets(): Promise<DataSet[]> {
-    return await this.serverCommunicationService.getRequestAsync('dataset');
+    return await this.serverCommunicationService.getRequestAsync('dataset/');
   }
 
-  public createDataSet(name: string): Observable<DataSet> {
+  public createDataSet(name: string, codeSmells: CodeSmell[]): Observable<DataSet> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    return this.serverCommunicationService.postRequest('dataset', `"${name}"`, headers);
+    return this.serverCommunicationService.postRequest('dataset/' + name, codeSmells, headers);
   }
 
-  public addProjectsToDataSet(projects: DataSetProject[], dataSetId: number): Observable<DataSet> {
+  public addProjectToDataSet(project: DataSetProject, smellFilters: SmellFilter[], dataSetId: number): Observable<DataSet> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    return this.serverCommunicationService.postRequest('dataset/' + dataSetId + '/add-projects', projects, headers)
+    let data = {project: project, smellFilters: smellFilters};
+    return this.serverCommunicationService.postRequest('dataset/' + dataSetId + '/add-project', data, headers)
   }
 
   public async pollDataSetProject(id: number): Promise<DataSetProject> {
@@ -39,7 +40,7 @@ export class DataSetService {
   public getDataSetCodeSmells(id: number): Observable<Map<string, string[]>> {
     return this.serverCommunicationService.getRequest('dataset/' + id + '/code-smells');
   }
-
+  
   public async exportDraftDataSet(id: number, exportPath: string): Promise<object> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');

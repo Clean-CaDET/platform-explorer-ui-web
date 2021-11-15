@@ -1,19 +1,19 @@
-import { UtilService } from "src/app/util/util.service";
-import { DataSetAnnotation } from "../data-set-annotation/data-set-annotation.model"; 
+import { AnnotationService } from "../../annotation/annotation.service";
+import { Annotation } from "../annotation/annotation.model"; 
 import { InstanceType } from "../enums/enums.model";
 
-export class DataSetInstance {
+export class Instance {
     id: number = 0;
     codeSnippetId: string = '';
     link: string = '';
     projectLink: string = '';
     type: InstanceType = InstanceType.Method;
-    annotations: DataSetAnnotation[] = [];
+    annotations: Annotation[] = [];
     metricFeatures: Map<string, number> = new Map();
     hasAnnotationFromLoggedUser: boolean = false;
-    annotationFromLoggedUser: DataSetAnnotation | null = null;
+    annotationFromLoggedUser: Annotation | null = null;
 
-    constructor(obj?: any, annotatorId?: number) {
+    constructor(obj?: any) {
         if (obj) {
             this.id = obj.id;
             this.codeSnippetId = obj.codeSnippetId;
@@ -22,7 +22,7 @@ export class DataSetInstance {
             this.annotations = obj.annotations;
             this.setMetricFeatures(obj.metricFeatures);
             this.setType(obj.type);
-            this.setAnnotationFromLoggedUser(annotatorId);
+            this.setAnnotationFromLoggedUser();
         }
     }
 
@@ -32,7 +32,7 @@ export class DataSetInstance {
         }
     }
 
-    private setAnnotationFromLoggedUser(annotatorId: number = UtilService.getAnnotatorId()): void {
+    private setAnnotationFromLoggedUser(annotatorId: number = AnnotationService.getLoggedInAnnotatorId()): void {
         this.annotationFromLoggedUser = this.annotations.filter(a => a.annotator.id == annotatorId)[0];
         if (this.annotationFromLoggedUser) {
             this.hasAnnotationFromLoggedUser = true;

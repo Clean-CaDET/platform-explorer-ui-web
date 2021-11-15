@@ -1,35 +1,60 @@
 <h2 mat-dialog-title>Add new projects</h2>
 <mat-dialog-content class="mat-typography">
-    <button mat-icon-button (click)="addEmptyProject()">
-        <mat-icon>add_circle</mat-icon>
-      </button>
     <form>
         <table cellspacing="2">
-            <ng-container *ngFor="let project of projects; let i = index">
                 <tr>
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>Project name</mat-label>
-                            <input [(ngModel)]="projects[i].name" name="name-{{i}}" type="text" matInput>
+                            <input [(ngModel)]="project.name" name="name" type="text" matInput>
                         </mat-form-field>
                     </td>
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>URL</mat-label>
-                            <input [(ngModel)]="projects[i].url" name="url-{{i}}" type="url" matInput>
+                            <input [(ngModel)]="project.url" name="url" type="url" matInput>
                         </mat-form-field>
                     </td>
-                    <td>
-                        <button mat-icon-button (click)="deleteProject(i)">
-                            <mat-icon>remove_circle_outline</mat-icon>
-                        </button>
+                </tr>
+                <h2 mat-dialog-title>Set metrics filters</h2>
+                <tr>
+                    <td *ngFor="let smellFilter of smellFilters">
+                        <button *ngIf="smellFilter.codeSmell" (click)="initMetricsThresholdsForSmell(smellFilter.codeSmell)" mat-stroked-button>
+                            {{smellFilter.codeSmell.name}}
+                        </button><br>
                     </td>
                 </tr>
-            </ng-container>
+                <ng-container *ngFor="let smellFilter of smellFilters; let i = index;">
+                    <tr *ngIf="smellFilter.codeSmell && smellFilter.codeSmell.name == selectedSmell">
+                        <mat-form-field appearance="fill">
+                            <mat-select multiple [(ngModel)]="chosenMetrics[i]" name="chosenMetrics-{{i}}" id="chosenMetrics" placeholder="Choose metrics">
+                                <mat-option *ngFor="let metric of metricsForSelection" [value]="metric">{{metric}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </tr>
+                    <ng-container *ngIf="smellFilter.codeSmell && smellFilter.codeSmell.name == selectedSmell">
+                        <tr *ngFor="let threshold of smellFilter.metricsThresholds; let j = index;">
+                            <ng-container *ngIf="chosenMetrics[i]?.includes(threshold.metric)">
+                                <td>
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Min value for {{threshold.metric}}</mat-label>
+                                        <input [(ngModel)]="smellFilter.metricsThresholds[j].minValue" name="minValue" matInput placeholder="{{threshold.minValue}}">
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Max value for {{threshold.metric}}</mat-label>
+                                        <input [(ngModel)]="smellFilter.metricsThresholds[j].maxValue" name="maxValue" matInput placeholder="{{threshold.maxValue}}">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </ng-container>
+                </ng-container>
         </table>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button mat-dialog-close color="warn">Close</button>
-    <button mat-button color="success" (click)="addProjectsToDataSet()">Add</button>
+    <button mat-button color="success" (click)="addProjectToDataSet()">Add</button>
 </mat-dialog-actions>

@@ -54,15 +54,15 @@ export class DataSetComponent implements OnInit {
   }
 
   public addDataSet(): void {
-    let dialogConfig = UtilService.setDialogConfig('250px', '250px');
+    let dialogConfig = DialogConfigService.setDialogConfig('300px', '300px');
     let dialogRef = this.dialog.open(AddDataSetDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((res: DataSet) => this.addEmptyDataSet(res));
   }
 
-  public addProjectsToDataSet(): void {
+  public addProjectToDataSet(): void {
     let selectedDataSet = this.selection.selected[0];
     if (selectedDataSet) {
-      let dialogConfig = UtilService.setDialogConfig('480px', '520px', selectedDataSet.id);
+      let dialogConfig = DialogConfigService.setDialogConfig('480px', '520px', selectedDataSet.id);
       let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
       dialogRef.afterClosed().subscribe((res: DataSet) => this.showProjects(res));
     }
@@ -73,7 +73,7 @@ export class DataSetComponent implements OnInit {
       this.toggleDataSetSelection(this.selection.selected[0]);
     }
     const input = (event.target as HTMLInputElement).value;
-    this.dataSource.data = this.dataSets.filter(s => UtilService.includesNoCase(s.name, input));
+    this.dataSource.data = this.dataSets.filter(s => s.name.toLowerCase().includes(input.toLowerCase()));
   }
 
   private showProjects(dataSet: DataSet): void {
