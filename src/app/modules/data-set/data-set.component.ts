@@ -10,9 +10,9 @@ import { AddDataSetDialogComponent } from './dialogs/add-data-set-dialog/add-dat
 import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-project-dialog.component';
 
 import { DataSetService } from './data-set.service';
-import { UtilService } from 'src/app/util/util.service';
 import { ExportDraftDataSetDialogComponent } from './dialogs/export-draft-data-set-dialog/export-draft-data-set-dialog.component';
 import { ToastrService } from 'ngx-toastr';
+import { DialogConfigService } from './dialogs/dialog-config.service';
 
 @Component({
   selector: 'de-data-set',
@@ -97,10 +97,10 @@ export class DataSetComponent implements OnInit {
   }
 
   public exportDraftDataSet(dataSet: DataSet): void {
-    let dialogConfig = UtilService.setDialogConfig('300px', '300px');
+    let dialogConfig = DialogConfigService.setDialogConfig('300px', '300px');
     let dialogRef = this.dialog.open(ExportDraftDataSetDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((exportPath: string) => {
-      this.dataSetService.exportDraftDataSet(dataSet.id, exportPath).then(res => {
+      this.dataSetService.exportDraftDataSet(dataSet.id, exportPath).subscribe(res => {
         let result = new Map(Object.entries(res));
         this.toastr.success(result.get('successes')[0]['message']);
       });

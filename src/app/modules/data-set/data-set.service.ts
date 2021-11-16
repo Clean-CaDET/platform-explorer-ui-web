@@ -6,7 +6,9 @@ import { DataSetProject } from './model/data-set-project/data-set-project.model'
 import { DataSet } from './model/data-set/data-set.model';
 
 import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service'; 
-import { UtilService } from 'src/app/util/util.service';
+import { SmellFilter } from './model/smell-filter/smell-filter.model';
+import { CodeSmell } from './model/code-smell/code-smell.model';
+
 
 
 @Injectable({
@@ -41,10 +43,10 @@ export class DataSetService {
     return this.serverCommunicationService.getRequest('dataset/' + id + '/code-smells');
   }
   
-  public async exportDraftDataSet(id: number, exportPath: string): Promise<object> {
+  public exportDraftDataSet(id: number, exportPath: string): Observable<object> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    let data = {id: id, annotatorId: UtilService.getAnnotatorId(), exportPath: exportPath}
-    return this.serverCommunicationService.postRequestAsync('dataset/export', data, headers);
+    let data = {id: id, annotatorId: sessionStorage.getItem('annotatorId'), exportPath: exportPath}
+    return this.serverCommunicationService.postRequest('dataset/export', data, headers);
   }
 }
