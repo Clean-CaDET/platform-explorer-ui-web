@@ -54,6 +54,22 @@
             </td>
         </ng-container>
 
+        <ng-container matColumnDef="projectDelete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let project">
+                <button mat-icon-button (click)="deleteProject(project)" color="primary" class="center-horizontally">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="projectUpdate">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let project">
+                <button mat-icon-button (click)="updateProject(project)" color="primary" class="center-horizontally">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </td>
+        </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>

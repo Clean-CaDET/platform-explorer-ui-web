@@ -14,6 +14,8 @@ import { DataSetService } from '../data-set.service';
 import { AnnotationService } from '../annotation/annotation.service';
 import { DialogConfigService } from '../dialogs/dialog-config.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { UpdateProjectDialogComponent } from '../dialogs/update-project-dialog/update-project-dialog.component';
 
 @Component({
   selector: 'de-data-set-project',
@@ -24,7 +26,7 @@ export class DataSetProjectComponent implements OnInit {
 
   @Input() public projects: DataSetProject[] = [];
   public candidateInstances: SmellCandidateInstances[] = [];
-  public displayedColumns: string[] = ['select', 'name', 'url', 'numOfInstances', 'status', 'consistency'];
+  public displayedColumns: string[] = ['select', 'name', 'url', 'numOfInstances', 'status', 'consistency', 'projectDelete', 'projectUpdate'];
   public selection: SelectionModel<DataSetProject> = new SelectionModel<DataSetProject>(true, []);
   public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.projects);
   public filter: InstanceFilter = InstanceFilter.All;
@@ -145,6 +147,25 @@ export class DataSetProjectComponent implements OnInit {
     let i = this.projects.findIndex(p => p.id == dataSetProject.id);
     this.projects[i] = dataSetProject;
     this.dataSource.data = this.projects;
+  }
+
+  public deleteProject(project: DataSetProject): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('150px', '300px');
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) this.dataSetService.deleteDataSetProject(project.id).subscribe(deleted => {
+        window.location.reload();
+        console.log('Deleted project ', deleted.name); // TODO toastr notification
+      });
+    });
+  }
+
+  public updateProject(project: DataSetProject): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', project);
+    let dialogRef = this.dialog.open(UpdateProjectDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((updated: DataSetProject) => {
+      console.log('Updated project ', updated.name); // TODO toastr notification
+    });
   }
 
 }

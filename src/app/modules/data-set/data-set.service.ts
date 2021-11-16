@@ -51,4 +51,14 @@ export class DataSetService {
       .set('Content-Type', 'application/json');
     return this.serverCommunicationService.putRequest('dataset/', dataSet, headers);
   }
+
+  public deleteDataSetProject(id: number): Observable<DataSetProject> {
+    return this.serverCommunicationService.deleteRequest('dataset/project/' + id);
+  }
+
+  public updateDataSetProject(project: DataSetProject): Observable<DataSetProject> {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    return this.serverCommunicationService.putRequest('dataset/project/', project, headers);
+  }
 }

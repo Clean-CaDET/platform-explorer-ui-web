@@ -13,6 +13,7 @@ import { DisagreeingAnnotationsDialogComponent } from './dialogs/disagreeing-ann
 import { AnnotationConsistencyDialogComponent } from './dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
+import { UpdateProjectDialogComponent } from './dialogs/update-project-dialog/update-project-dialog.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/u
     ConfirmDialogComponent,
     DataSetProjectComponent,
     UpdateDataSetDialogComponent,
+    UpdateProjectDialogComponent,
     InstanceComponent,
     AnnotationComponent,
     DisagreeingAnnotationsDialogComponent,
