@@ -41,4 +41,8 @@ export class DataSetService {
   public getDataSetCodeSmells(id: number): Observable<Map<string, string[]>> {
     return this.serverCommunicationService.getRequest('dataset/' + id + '/code-smells');
   }
+
+  public deleteDataSet(id: number): Observable<DataSet> {
+    return this.serverCommunicationService.deleteRequest('dataset/' + id);
+  }
 }

@@ -11,6 +11,7 @@ import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-proj
 
 import { DataSetService } from './data-set.service';
 import { DialogConfigService } from './dialogs/dialog-config.service';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'de-data-set',
@@ -22,7 +23,7 @@ export class DataSetComponent implements OnInit {
 
   private dataSets: DataSet[] = [];
   public projectsToShow: DataSetProject[] = [];
-  public displayedColumns = ['select', 'name', 'numOfProjects'];
+  public displayedColumns = ['select', 'name', 'numOfProjects', 'dataSetDelete'];
   public selection = new SelectionModel<DataSet>(true, []);
   public dataSource = new MatTableDataSource<DataSet>(this.dataSets);
 
@@ -94,4 +95,14 @@ export class DataSetComponent implements OnInit {
     }
   }
 
+  public deleteDataSet(dataSet: DataSet): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('150px', '300px');
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) this.dataSetService.deleteDataSet(dataSet.id).subscribe(deleted => {
+        window.location.reload();
+        console.log('Deleted dataset ', deleted.name); // TODO toastr notification
+      });
+    });
+  }
 }
