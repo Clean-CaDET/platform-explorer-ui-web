@@ -12,6 +12,7 @@ import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-proj
 import { DataSetService } from './data-set.service';
 import { DialogConfigService } from './dialogs/dialog-config.service';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
 
 @Component({
   selector: 'de-data-set',
@@ -23,7 +24,7 @@ export class DataSetComponent implements OnInit {
 
   private dataSets: DataSet[] = [];
   public projectsToShow: DataSetProject[] = [];
-  public displayedColumns = ['select', 'name', 'numOfProjects', 'dataSetDelete'];
+  public displayedColumns = ['select', 'name', 'numOfProjects', 'dataSetDelete', 'dataSetUpdate'];
   public selection = new SelectionModel<DataSet>(true, []);
   public dataSource = new MatTableDataSource<DataSet>(this.dataSets);
 
@@ -103,6 +104,14 @@ export class DataSetComponent implements OnInit {
         window.location.reload();
         console.log('Deleted dataset ', deleted.name); // TODO toastr notification
       });
+    });
+  }
+
+  public updateDataSet(dataSet: DataSet): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', dataSet);
+    let dialogRef = this.dialog.open(UpdateDataSetDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((updated: DataSet) => {
+      console.log('Updated dataset ', updated.name); // TODO toastr notification
     });
   }
 }

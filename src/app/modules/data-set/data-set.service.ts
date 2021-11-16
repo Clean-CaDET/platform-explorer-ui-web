@@ -45,4 +45,10 @@ export class DataSetService {
   public deleteDataSet(id: number): Observable<DataSet> {
     return this.serverCommunicationService.deleteRequest('dataset/' + id);
   }
+
+  public updateDataSet(dataSet: DataSet): Observable<DataSet> {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    return this.serverCommunicationService.putRequest('dataset/', dataSet, headers);
+  }
 }
