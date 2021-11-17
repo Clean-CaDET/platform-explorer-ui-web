@@ -164,7 +164,7 @@ export class DataSetProjectComponent implements OnInit {
     let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', project);
     let dialogRef = this.dialog.open(UpdateProjectDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((updated: DataSetProject) => {
-      console.log('Updated project ', updated.name); // TODO toastr notification
+      if (updated) console.log('Updated project ', updated.name); // TODO toastr notification
     });
   }
 

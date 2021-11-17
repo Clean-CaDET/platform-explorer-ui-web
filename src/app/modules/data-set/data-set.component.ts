@@ -111,7 +111,7 @@ export class DataSetComponent implements OnInit {
     let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', dataSet);
     let dialogRef = this.dialog.open(UpdateDataSetDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((updated: DataSet) => {
-      console.log('Updated dataset ', updated.name); // TODO toastr notification
+      if (updated) console.log('Updated dataset ', updated.name); // TODO toastr notification
     });
   }
 }
