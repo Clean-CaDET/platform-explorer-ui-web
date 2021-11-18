@@ -49,4 +49,24 @@ export class DataSetService {
     let data = {id: id, annotatorId: sessionStorage.getItem('annotatorId'), exportPath: exportPath}
     return this.serverCommunicationService.postRequest('dataset/export', data, headers);
   }
+  
+  public deleteDataSet(id: number): Observable<DataSet> {
+    return this.serverCommunicationService.deleteRequest('dataset/' + id);
+  }
+
+  public updateDataSet(dataSet: DataSet): Observable<DataSet> {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    return this.serverCommunicationService.putRequest('dataset/', dataSet, headers);
+  }
+
+  public deleteDataSetProject(id: number): Observable<DataSetProject> {
+    return this.serverCommunicationService.deleteRequest('dataset/project/' + id);
+  }
+
+  public updateDataSetProject(project: DataSetProject): Observable<DataSetProject> {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    return this.serverCommunicationService.putRequest('dataset/project/', project, headers);
+  }
 }

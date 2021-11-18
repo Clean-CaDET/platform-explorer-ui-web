@@ -26,6 +26,20 @@
             <th mat-header-cell *matHeaderCellDef width="30%">Export dataset</th>
             <td mat-cell *matCellDef="let dataSet" width="30%">
                 <button mat-raised-button (click)="exportDraftDataSet(dataSet)" color="primary" class="center-horizontally">Export</button>
+        <ng-container matColumnDef="dataSetDelete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let dataSet">
+                <button mat-icon-button (click)="deleteDataSet(dataSet)" color="primary" class="center-horizontally">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="dataSetUpdate">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let dataSet">
+                <button mat-icon-button (click)="updateDataSet(dataSet)" color="primary" class="center-horizontally">
+                    <mat-icon>edit</mat-icon>
+                </button>
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

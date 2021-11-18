@@ -13,6 +13,8 @@ import { DataSetService } from './data-set.service';
 import { ExportDraftDataSetDialogComponent } from './dialogs/export-draft-data-set-dialog/export-draft-data-set-dialog.component';
 import { ToastrService } from 'ngx-toastr';
 import { DialogConfigService } from './dialogs/dialog-config.service';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
 
 @Component({
   selector: 'de-data-set',
@@ -24,7 +26,7 @@ export class DataSetComponent implements OnInit {
 
   private dataSets: DataSet[] = [];
   public projectsToShow: DataSetProject[] = [];
-  public displayedColumns = ['select', 'name', 'numOfProjects', 'dataSetExport'];
+  public displayedColumns = ['select', 'name', 'numOfProjects', 'dataSetExport', 'dataSetDelete', 'dataSetUpdate'];
   public selection = new SelectionModel<DataSet>(true, []);
   public dataSource = new MatTableDataSource<DataSet>(this.dataSets);
 
@@ -103,8 +105,24 @@ export class DataSetComponent implements OnInit {
       this.dataSetService.exportDraftDataSet(dataSet.id, exportPath).subscribe(res => {
         let result = new Map(Object.entries(res));
         this.toastr.success(result.get('successes')[0]['message']);
+
+  public deleteDataSet(dataSet: DataSet): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('150px', '300px');
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) this.dataSetService.deleteDataSet(dataSet.id).subscribe(deleted => {
+        window.location.reload();
+        console.log('Deleted dataset ', deleted.name); // TODO toastr notification
+
       });
     });
   }
 
+  public updateDataSet(dataSet: DataSet): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', dataSet);
+    let dialogRef = this.dialog.open(UpdateDataSetDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((updated: DataSet) => {
+      if (updated) console.log('Updated dataset ', updated.name); // TODO toastr notification
+    });
+  }
 }
