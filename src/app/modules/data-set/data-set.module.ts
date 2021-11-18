@@ -11,13 +11,19 @@ import { InstanceComponent } from './instance/instance.component';
 import { AnnotationComponent } from './annotation/annotation.component';
 import { DisagreeingAnnotationsDialogComponent } from './dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
 import { AnnotationConsistencyDialogComponent } from './dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
+import { UpdateProjectDialogComponent } from './dialogs/update-project-dialog/update-project-dialog.component';
 
 @NgModule({
   declarations: [
     DataSetComponent,
     AddDataSetDialogComponent,
     AddProjectDialogComponent,
+    ConfirmDialogComponent,
     DataSetProjectComponent,
+    UpdateDataSetDialogComponent,
+    UpdateProjectDialogComponent,
     InstanceComponent,
     AnnotationComponent,
     DisagreeingAnnotationsDialogComponent,

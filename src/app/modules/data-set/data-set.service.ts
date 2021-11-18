@@ -41,4 +41,24 @@ export class DataSetService {
   public getDataSetCodeSmells(id: number): Observable<Map<string, string[]>> {
     return this.serverCommunicationService.getRequest('dataset/' + id + '/code-smells');
   }
+
+  public deleteDataSet(id: number): Observable<DataSet> {
+    return this.serverCommunicationService.deleteRequest('dataset/' + id);
+  }
+
+  public updateDataSet(dataSet: DataSet): Observable<DataSet> {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    return this.serverCommunicationService.putRequest('dataset/', dataSet, headers);
+  }
+
+  public deleteDataSetProject(id: number): Observable<DataSetProject> {
+    return this.serverCommunicationService.deleteRequest('dataset/project/' + id);
+  }
+
+  public updateDataSetProject(project: DataSetProject): Observable<DataSetProject> {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    return this.serverCommunicationService.putRequest('dataset/project/', project, headers);
+  }
 }
