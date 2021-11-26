@@ -1,28 +1,29 @@
-.add-data-set {
-    padding: 10px 0px 10px 0px;
+.all-tables{
+    display: flex;
+    flex-direction: row;
 }
 
 .data-set-container {
     display: flex;
     flex-direction: column;
-    max-width: 75%;
+    max-width: 60%;
     padding: 0px 0px 10px 0px;
+    margin: 20px 100px 0px 20px;
+    height: max-content;
 }
 
-.center-horizontally {
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-}
-
-button:disabled {
-    background-color: #808080 !important;
+.add-button {
+    margin: 25px 20px 0px 0px;
 }
 
 .mat-table {
     overflow: auto;
     max-height: 600px;
     width: 100%;
+}
+
+.cell-center {
+    text-align: center;
 }
 
 .mat-cell,

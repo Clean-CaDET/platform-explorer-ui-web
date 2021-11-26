@@ -1,11 +1,20 @@
-.center-horizontally {
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-}
-
 .annotation-data {
     flex-direction: column;
+    margin: auto;
+    width: fit-content;
+}
+
+.severity-input{
+    margin: 15px 10px 100px auto;
+    flex-direction: column;
+    width: fit-content;
+}
+
+.annotate-container {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: fit-content;
 }
 
 .form-field {
@@ -14,8 +23,54 @@
 
 .heuristic-reasons {
     flex-direction: row;
+    margin: auto;
+    width: fit-content;
 }
 
 .annotate {
-    padding-bottom: 10px;
+    margin: 0px auto 100px 10px !important;
+    width: fit-content;
+}
+
+#severity-div {
+    margin-left: 10px;
+}
+
+#severity {
+    width: 80px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+mat-checkbox {
+    font-size: 16px;
+}
+
+::ng-deep .warningSnackbar {
+    background: rgb(230, 178, 81);
+    color: black;
+}
+
+::ng-deep .warningSnackbar button {
+    color: black;
+}
+
+::ng-deep .successSnackbar {
+    background: rgb(137, 231, 137);
+    color: black;
+}
+
+::ng-deep .successSnackbar button {
+    color: black;
+}
+
+::ng-deep .errorSnackbar {
+    background: rgb(214, 95, 95);
+    color: black;
+}
+
+::ng-deep .errorSnackbar button {
+    color: black;
 }

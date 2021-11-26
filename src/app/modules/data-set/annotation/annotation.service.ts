@@ -42,28 +42,12 @@ export class AnnotationService {
     return this.serverCommunicationService.putRequest('annotation/update/' + annotationId, annotation, headers);
   }
 
-  public async requiringAdditionalAnnotation(projects: DataSetProject[]): Promise<SmellCandidateInstances[]> {
-    let ids = this.getProjectIdsAsString(projects);
-    if (ids != '') {
-      return await this.serverCommunicationService.getRequestAsync('annotation/requiring-additional-annotation?projectIds=' + ids);
-    }
-    return [];
+  public async requiringAdditionalAnnotation(project: DataSetProject): Promise<SmellCandidateInstances[]> {
+    return await this.serverCommunicationService.getRequestAsync('annotation/requiring-additional-annotation/' + project.id);
   }
 
-  public async disagreeingAnnotations(projects: DataSetProject[]): Promise<SmellCandidateInstances[]> {
-    let ids = this.getProjectIdsAsString(projects);
-    if (ids != '') {
-      return await this.serverCommunicationService.getRequestAsync('annotation/disagreeing-annotations?projectIds=' + ids);
-    }
-    return [];
-  }
-
-  private getProjectIdsAsString(projects: DataSetProject[]): string {
-    let projectIds = '';
-    for (let project of projects) {
-      projectIds += project.id + ',';
-    }
-    return projectIds.substring(0, projectIds.length - 1);
+  public async disagreeingAnnotations(project: DataSetProject): Promise<SmellCandidateInstances[]> {
+      return await this.serverCommunicationService.getRequestAsync('annotation/disagreeing-annotations/' + project.id);
   }
 
   public static getLoggedInAnnotatorId(): number {

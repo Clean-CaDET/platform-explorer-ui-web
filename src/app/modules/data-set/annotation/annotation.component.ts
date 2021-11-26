@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Annotation } from '../model/annotation/annotation.model';
 import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
@@ -31,11 +32,14 @@ export class AnnotationComponent implements OnInit {
   public applicableHeuristics: Map<string, string> = new Map();
   public annotatorId: string = '';
   private isHeuristicReasonChanged: boolean = false;
+  private warningSnackbarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['warningSnackbar']};
+  private successSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['successSnackbar']};
+  private errorSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['errorSnackbar']};
 
   @Output() newAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
   @Output() changedAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
 
-  constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
+  constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef, private _snackBar: MatSnackBar) { }
 
   public ngOnInit(): void {
     this.annotatorId = this.previousAnnotation?.annotator.id + '';
@@ -103,20 +107,20 @@ export class AnnotationComponent implements OnInit {
   private addAnnotation(annotation: AnnotationDTO): void {
     this.annotationService.addAnnotation(annotation).subscribe(
       (res: Annotation) => {
-        alert('Annotation added!');
+        this._snackBar.open('Annotation added!', 'OK', this.successSnackBarOptions);
         this.newAnnotation.emit(new Annotation(res));
       },
-      error => alert('ERROR:\n' + error.error.message)
+      error => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
     );
   }
 
   private updateAnnotation(annotation: AnnotationDTO): void {
     this.annotationService.updateAnnotation(this.previousAnnotation!.id, annotation).subscribe(
       (res: Annotation) => {
-        alert('Annotation changed!');
+        this._snackBar.open('Annotation changed!', 'OK', this.successSnackBarOptions);
         this.changedAnnotation.emit(new Annotation(res));
       },
-      error => alert('ERROR:\n' + error.error.message)
+      error => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
     );
   }
 
@@ -161,14 +165,26 @@ export class AnnotationComponent implements OnInit {
   }
 
   private showErrorInputMessage(): void {
-    let message = 'Invalid input:';
     if (!this.severityFormControl.valid) {
-      message += '\n- Severity must be between 0 and 3';
+      this._snackBar.open('Severity must be between 0 and 3.', 'OK', this.warningSnackbarOptions);
+    } else if (this.heuristics.value.length == 0 && this.severityFormControl.value > 0) {
+      this._snackBar.open("For severity greater than 0 you must add heuristic.", 'OK', this.warningSnackbarOptions);
     }
-    if (this.heuristics.value.length == 0 && this.severityFormControl.value > 0) {
-      message += '\n- For severity greater than 0 you must add heuristic'
-    }
-    alert(message);
   }
 
+  public checkHeuristicCheckbox(heuristic: string, checked: boolean) {
+    if (checked) {
+      this.heuristics.value.push(heuristic);
+    } else {
+      let updatedHeuristics: string[] = [];
+      this.heuristics.value.forEach((h: string) => {
+        if (h != heuristic) updatedHeuristics.push(h);
+      });
+      this.heuristics.setValue(updatedHeuristics);
+    }
+  }
+
+  public isHeuristicApplied(heuristic: string) {
+    return this.heuristics.value.find((h: string) => h == heuristic) != undefined;
+  }
 }

@@ -1,6 +1,8 @@
 .consistency-type-select {
     width: 300px;
+    margin-right: 20px;
 }
+
 
 .severity {
     padding-right: 10px;
@@ -11,6 +13,30 @@
 }
 
 .result {
-    height: 250px;
-    width: 400px;
+    height: max-content;
+    width: 500px;
+}
+
+h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(92, 13, 110);
+    text-align: center;
+}
+
+#severity {
+    width: 80px;
+}
+
+::ng-deep .warningSnackbar {
+    background: rgb(230, 178, 81);
+    color: black;
+}
+
+::ng-deep .warningSnackbar button {
+    color: black;
+}
+
+p {
+    font-size: 18px;
+    padding-left: 10px;
 }

@@ -1,21 +1,15 @@
-<div class="data-set-project-container mat-elevation-z8 center-horizontally container" *ngIf="!isProjectsEmpty()">
-    <mat-form-field appearance="standard" class="search">
-        <mat-label>Search by name</mat-label>
-        <input matInput (keyup)="searchProjects($event)" placeholder="My project">
-    </mat-form-field>
+<div class="project-container mat-elevation-z8 container" *ngIf="projects.length != 0">
+    <p class="table-title">Projects</p>
+    <div class="table-header">
+        <mat-form-field appearance="fill" class="search">
+            <mat-label>Search by name</mat-label>
+            <input matInput (keyup)="searchProjects($event)" placeholder="Project name">
+        </mat-form-field>
+        <button class="add-button" mat-mini-fab matTooltip="New project" matTooltipPosition="right" (click)="addProject()" color="primary">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-        <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef width="5%">
-                <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleAllProjectsSelection()" [checked]="selection.hasValue() && isAllProjectsSelected()">
-                </mat-checkbox>
-            </th>
-            <td mat-cell *matCellDef="let project" width="5%">
-                <ng-container *ngIf="project.candidateInstances?.length">
-                    <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleProjectSelection(project)" [checked]="selection.isSelected(project)">
-                    </mat-checkbox>
-                </ng-container>
-            </td>
-        </ng-container>
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef width="20%"> Name </th>
             <td mat-cell *matCellDef="let project" width="20%"> {{project.name}} </td>
@@ -27,51 +21,50 @@
             </td>
         </ng-container>
         <ng-container matColumnDef="numOfInstances">
-            <th mat-header-cell *matHeaderCellDef width="5%"> Number of instances </th>
-            <td mat-cell *matCellDef="let project" width="5%">{{project.getTotalNumOfInstances()}}</td>
+            <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Instances</th>
+            <td mat-cell *matCellDef="let project" width="5%" class="cell-center">{{project.getTotalNumOfInstances()}}</td>
         </ng-container>
         <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef width="5%"> Status </th>
-            <td mat-cell *matCellDef="let project" width="5%">
+            <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center"> Status </th>
+            <td mat-cell *matCellDef="let project" width="5%" class="cell-center">
                 <ng-container *ngIf="project.state == projectState.Processing">
-                    <mat-spinner color="warn" diameter="20">
+                    <mat-spinner matTooltip="processing" diameter="20">
                     </mat-spinner>
                 </ng-container>
                 <ng-container *ngIf="project.state == projectState.Built">
-                    <mat-icon>check_circle_outline</mat-icon>
+                    <mat-icon matTooltip="built" class="icon-built-project">check_circle_outline</mat-icon>
                 </ng-container>
                 <ng-container *ngIf="project.state == projectState.Failed">
-                    <mat-icon>highlight_off</mat-icon>
+                    <mat-icon matTooltip="failed" class="icon-failed-project">highlight_off</mat-icon>
                 </ng-container>
             </td>
         </ng-container>
         <ng-container matColumnDef="consistency">
-            <th mat-header-cell *matHeaderCellDef width="5%"> Consistency </th>
+            <th mat-header-cell *matHeaderCellDef width="5%"></th>
             <td mat-cell *matCellDef="let project" width="5%">
                 <ng-container *ngIf="project.candidateInstances.length > 0">
-                    <button mat-raised-button color="primary" (click)="checkConsistency(project.id)">Check consistency</button>
+                    <button mat-stroked-button color="primary" (click)="checkConsistency(project.id)">Check consistency</button>
                 </ng-container>
             </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="chooseProject(row)"  [class.row-chosen]="row.id == chosenProject.id"></tr>
     </table>
     <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
     </mat-paginator>
-    <div class="find-annotations">
-        <div class="instance-filter">
-            <button mat-raised-button color="primary" (click)="showAllInstances()" [disabled]="selection.selected.length == 0">All</button>
-        </div>
-        <div class="instance-filter">
-            <button mat-raised-button color="primary" (click)="showInstancesForAdditionalAnnotation()" [disabled]="selection.selected.length == 0">Need additional annotations</button>
-        </div>
-        <div class="instance-filter">
-            <button mat-raised-button color="primary" (click)="showInstancesWithDisagreeingAnnotations()" [disabled]="selection.selected.length == 0">Disagreeing annotations</button>
-        </div>
-    </div>
+    <form class="filterForm">
+        <mat-form-field appearance="fill" *ngIf="chosenProject.id">
+            <mat-label>Choose instances filter</mat-label>
+            <mat-select required name="instancesFilter"  [(ngModel)]="selectedFilter" (selectionChange)="filterSelection()" [formControl]="filterFormControl">
+            <mat-option *ngFor="let filter of instancesFilters" [value]="filter" >
+                {{filter}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
 </div>
 
-<div class="top-padding">
-    <de-instance [filter]="filter" [candidateInstances]="candidateInstances"></de-instance>
+<div *ngIf="projects.length == 0" class="message">
+    No projects to show.<br><br>Select a dataset or add projects to the selected dataset.
 </div>

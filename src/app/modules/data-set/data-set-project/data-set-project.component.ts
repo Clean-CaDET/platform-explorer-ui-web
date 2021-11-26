@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { SelectionModel } from '@angular/cdk/collections';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +13,10 @@ import { DataSetService } from '../data-set.service';
 import { AnnotationService } from '../annotation/annotation.service';
 import { DialogConfigService } from '../dialogs/dialog-config.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
+import { AddProjectDialogComponent } from '../dialogs/add-project-dialog/add-project-dialog.component';
+import { DataSet } from '../model/data-set/data-set.model';
+import { FormControl, Validators } from '@angular/forms';
+
 
 @Component({
   selector: 'de-data-set-project',
@@ -23,12 +26,19 @@ import { SmellCandidateInstances } from '../model/smell-candidate-instances/smel
 export class DataSetProjectComponent implements OnInit {
 
   @Input() public projects: DataSetProject[] = [];
+  @Input() public dataset: DataSet | null = null;
   public candidateInstances: SmellCandidateInstances[] = [];
-  public displayedColumns: string[] = ['select', 'name', 'url', 'numOfInstances', 'status', 'consistency'];
-  public selection: SelectionModel<DataSetProject> = new SelectionModel<DataSetProject>(true, []);
+  public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'consistency'];
   public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.projects);
-  public filter: InstanceFilter = InstanceFilter.All;
+  public filter: InstanceFilter | null = null;
   public projectState = ProjectState;
+  public chosenProject: DataSetProject = new DataSetProject();
+  @Output() newProjects = new EventEmitter<DataSetProject[]>();
+  @Output() newFilter = new EventEmitter<InstanceFilter>();
+  @Output() newCandidates = new EventEmitter<SmellCandidateInstances[]>();
+  public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"];
+  public filterFormControl: FormControl = new FormControl('', [Validators.required]);
+  public selectedFilter: string = '';
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   private pollingCycleDurationInSeconds: number = 10;
@@ -41,39 +51,19 @@ export class DataSetProjectComponent implements OnInit {
   constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog, private httpClient: HttpClient) { }
 
   public ngOnInit(): void {
+    this.filterFormControl.markAsTouched();
     this.httpClient.get('assets/appsettings.json').subscribe((data: any) => this.pollingCycleDurationInSeconds = data.pollingCycleDuration);
   }
 
   public ngOnChanges(): void {
-    this.selection.clear();
+    this.chosenProject = new DataSetProject();
     this.candidateInstances = [];
+    this.newCandidates.emit(this.candidateInstances);
     if (!this.isProjectsEmpty()) {
       this.projects.forEach((project, index) => this.projects[index] = new DataSetProject(project));
-      this.dataSource.data = this.projects;
       this.startPollingProjects();
-    }
-  }
-
-  public toggleProjectSelection(selectedProject: DataSetProject): void {
-    this.selection.toggle(selectedProject);
-    this.showFilteredInstances();
-  }
-
-  public toggleAllProjectsSelection(): void {
-    if (this.isAllProjectsSelected()) {
-      this.candidateInstances = [];
-      this.selection.clear();
-      return;
-    }
-
-    this.selection.select(...this.dataSource.data.filter(p => p.candidateInstances.length > 0));
-    this.showFilteredInstances();
-  }
-
-  public isAllProjectsSelected(): boolean {
-    const numSelected = this.selection.selected.length;
-    const numProjectsWithInstances = this.dataSource.data.filter(p => p.candidateInstances.length > 0).length;
-    return numSelected === numProjectsWithInstances;
+    } 
+    this.dataSource.data = this.projects;
   }
 
   public isProjectsEmpty(): boolean {
@@ -81,18 +71,31 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   public showAllInstances(): void {
+    this.resetCandidateInstances();
     this.filter = InstanceFilter.All;
+    this.newFilter.emit(this.filter);
     this.showFilteredInstances();
   }
 
-  public async showInstancesForAdditionalAnnotation(): Promise<void> {
-    this.filter = InstanceFilter.NeedAdditionalAnnotations;
-    this.candidateInstances = await this.annotationService.requiringAdditionalAnnotation(this.selection.selected);
+  private resetCandidateInstances() {
+    this.candidateInstances = [];
+    this.newCandidates.emit(this.candidateInstances);
   }
 
-  public async showInstancesWithDisagreeingAnnotations(): Promise<void> {
+  public async showInstancesForAdditionalAnnotation(): Promise<any> {
+    this.resetCandidateInstances();
+    this.filter = InstanceFilter.NeedAdditionalAnnotations;
+    this.newFilter.emit(this.filter);
+    this.candidateInstances = await this.annotationService.requiringAdditionalAnnotation(this.chosenProject);
+    this.newCandidates.emit(this.candidateInstances);
+  }
+
+  public async showInstancesWithDisagreeingAnnotations():  Promise<any> {
+    this.resetCandidateInstances();
     this.filter = InstanceFilter.DisagreeingAnnotations;
-    this.candidateInstances = await this.annotationService.disagreeingAnnotations(this.selection.selected);
+    this.newFilter.emit(this.filter);
+    this.candidateInstances = await this.annotationService.disagreeingAnnotations(this.chosenProject);
+    this.newCandidates.emit(this.candidateInstances);
   }
 
   public searchProjects(event: Event): void {
@@ -101,17 +104,15 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   public checkConsistency(projectId: number): void {
-    let dialogConfig = DialogConfigService.setDialogConfig('420px', '500px', projectId);
+    let dialogConfig = DialogConfigService.setDialogConfig('auto', '600px', projectId);
     this.dialog.open(AnnotationConsistencyDialogComponent, dialogConfig);
   }
 
   private showFilteredInstances(): void {
-    this.candidateInstances = [];
     switch(this.filter) { 
       case InstanceFilter.All: {
-        for (let project of this.selection.selected) {
-          this.candidateInstances.push.apply(this.candidateInstances, project.candidateInstances);
-        }
+        this.candidateInstances.push.apply(this.candidateInstances, this.chosenProject.candidateInstances);
+        this.newCandidates.emit(this.candidateInstances);
         break; 
       }
       case InstanceFilter.NeedAdditionalAnnotations: { 
@@ -147,4 +148,25 @@ export class DataSetProjectComponent implements OnInit {
     this.dataSource.data = this.projects;
   }
 
+  public chooseProject(project: DataSetProject): void {
+    this.chosenProject = project;
+    this.selectedFilter = '';
+    this.resetCandidateInstances();
+  }
+
+  public addProject(): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('480px', '520px', this.dataset?.id);
+    let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((res: DataSet) => this.newProjects.emit(res.projects));
+  }
+
+  public filterSelection() {
+    if (this.selectedFilter == 'All instances') {
+      this.showAllInstances();
+    } else if (this.selectedFilter == 'Need additional annotations') {
+      this.showInstancesForAdditionalAnnotation();
+    } else {
+      this.showInstancesWithDisagreeingAnnotations();
+    }
+  }
 }

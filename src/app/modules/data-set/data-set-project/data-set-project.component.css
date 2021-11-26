@@ -1,8 +1,9 @@
-.data-set-project-container {
+.project-container {
     display: flex;
     flex-direction: column;
-    max-width: 75%;
     padding: 0px 0px 10px 0px;
+    margin-top: 20px;
+    width: 100%;
 }
 
 .find-annotations {
@@ -15,16 +16,6 @@
     padding: 0px 5px 0px 5px
 }
 
-.center-horizontally {
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-}
-
-button:disabled {
-    background-color: #808080 !important;
-}
-
 .mat-table {
     overflow: auto;
     max-height: 600px;
@@ -34,4 +25,33 @@ button:disabled {
 .mat-cell,
 .mat-header-cell {
     padding: 0px 10px 0px 0px;
+}
+
+.add-button {
+    margin: 25px 20px 0px 0px;
+}
+
+.icon-built-project {
+    color: green;
+}
+
+.icon-failed-project {
+    color: darkred;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+.message {
+    margin: 180px;
+    padding: 20px;
+    font-size: 22px;
+    font-style: italic;
+    text-shadow: 2px 2px 8px lightgray;
+    opacity: 0.7;
+}
+
+.filterForm {
+    margin-left: 20px;
 }
