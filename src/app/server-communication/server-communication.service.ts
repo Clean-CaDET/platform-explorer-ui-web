@@ -26,6 +26,10 @@ export class ServerCommunicationService {
     return this.sendRequest('PUT', path, body, headers);
   }
 
+  public deleteRequest(path: string): Observable<any> {
+    return this.sendRequest('DELETE', path);
+  }
+
   private sendRequest(method: string, path: string, body?: any, headers?: HttpHeaders): Observable<any> {
     return this.http.request<any>(method, environment.apiHost + path, {
       headers : headers,

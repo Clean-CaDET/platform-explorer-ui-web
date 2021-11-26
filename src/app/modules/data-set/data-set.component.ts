@@ -11,6 +11,8 @@ import { DataSetService } from './data-set.service';
 import { DialogConfigService } from './dialogs/dialog-config.service';
 import { SmellCandidateInstances } from './model/smell-candidate-instances/smell-candidate-instances.model';
 import { InstanceFilter } from './model/enums/enums.model';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
 
 @Component({
   selector: 'de-data-set',
@@ -22,7 +24,7 @@ export class DataSetComponent implements OnInit {
 
   private dataSets: DataSet[] = [];
   public projectsToShow: DataSetProject[] = [];
-  public displayedColumns = ['name', 'numOfProjects'];
+  public displayedColumns = ['name', 'numOfProjects', 'dataSetDelete', 'dataSetUpdate'];
   public dataSource = new MatTableDataSource<DataSet>(this.dataSets);
   public chosenDataset: DataSet = new DataSet();
   public filter: InstanceFilter = InstanceFilter.All;
@@ -90,4 +92,22 @@ export class DataSetComponent implements OnInit {
     this.candidateInstances = candidates;
   }
 
+  public deleteDataSet(dataSet: DataSet): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('150px', '300px');
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) this.dataSetService.deleteDataSet(dataSet.id).subscribe(deleted => {
+        window.location.reload();
+        console.log('Deleted dataset ', deleted.name); // TODO toastr notification
+      });
+    });
+  }
+
+  public updateDataSet(dataSet: DataSet): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', dataSet);
+    let dialogRef = this.dialog.open(UpdateDataSetDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((updated: DataSet) => {
+      if (updated) console.log('Updated dataset ', updated.name); // TODO toastr notification
+    });
+  }
 }

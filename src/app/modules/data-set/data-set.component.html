@@ -26,7 +26,6 @@
         <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
         </mat-paginator>
     </div>
-
     <div>
         <de-data-set-project [projects]="projectsToShow" [dataset]="chosenDataset" (newProjects)="newProjects($event)" (newFilter)="newFilter($event)" (newCandidates)="newCandidates($event)"></de-data-set-project>
     </div>

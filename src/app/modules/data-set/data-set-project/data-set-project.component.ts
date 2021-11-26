@@ -16,6 +16,8 @@ import { SmellCandidateInstances } from '../model/smell-candidate-instances/smel
 import { AddProjectDialogComponent } from '../dialogs/add-project-dialog/add-project-dialog.component';
 import { DataSet } from '../model/data-set/data-set.model';
 import { FormControl, Validators } from '@angular/forms';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { UpdateProjectDialogComponent } from '../dialogs/update-project-dialog/update-project-dialog.component';
 
 
 @Component({
@@ -28,7 +30,7 @@ export class DataSetProjectComponent implements OnInit {
   @Input() public projects: DataSetProject[] = [];
   @Input() public dataset: DataSet | null = null;
   public candidateInstances: SmellCandidateInstances[] = [];
-  public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'consistency'];
+  public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'consistency', 'projectDelete', 'projectUpdate'];
   public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.projects);
   public filter: InstanceFilter | null = null;
   public projectState = ProjectState;
@@ -168,5 +170,24 @@ export class DataSetProjectComponent implements OnInit {
     } else {
       this.showInstancesWithDisagreeingAnnotations();
     }
+  }
+
+  public deleteProject(project: DataSetProject): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('150px', '300px');
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) this.dataSetService.deleteDataSetProject(project.id).subscribe(deleted => {
+        window.location.reload();
+        console.log('Deleted project ', deleted.name); // TODO toastr notification
+      });
+    });
+  }
+
+  public updateProject(project: DataSetProject): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', project);
+    let dialogRef = this.dialog.open(UpdateProjectDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((updated: DataSetProject) => {
+      if (updated) console.log('Updated project ', updated.name); // TODO toastr notification
+    });
   }
 }
