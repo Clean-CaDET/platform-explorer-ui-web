@@ -24,7 +24,6 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
     Validators.max(3),
   ]);
   public typeFormControl: FormControl = new FormControl('', Validators.required);
-  private warningSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['warningSnackbar']};
 
   public showResultClicked = false;
   public results: Map<string, any> = new Map();
