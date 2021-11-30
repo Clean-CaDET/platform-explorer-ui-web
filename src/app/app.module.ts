@@ -10,6 +10,7 @@ import { PagesModule } from './modules/pages/pages.module';
 import { AppComponent } from './app.component';
 
 import { ServerCommunicationService } from './server-communication/server-communication.service';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ServerCommunicationService } from './server-communication/server-commun
     MaterialModule,
     DataSetModule,
     PagesModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     ServerCommunicationService,

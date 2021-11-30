@@ -8,6 +8,8 @@ import { DataSetProject } from './model/data-set-project/data-set-project.model'
 import { AddDataSetDialogComponent } from './dialogs/add-data-set-dialog/add-data-set-dialog.component';
 
 import { DataSetService } from './data-set.service';
+import { ExportDraftDataSetDialogComponent } from './dialogs/export-draft-data-set-dialog/export-draft-data-set-dialog.component';
+import { ToastrService } from 'ngx-toastr';
 import { DialogConfigService } from './dialogs/dialog-config.service';
 import { SmellCandidateInstances } from './model/smell-candidate-instances/smell-candidate-instances.model';
 import { InstanceFilter } from './model/enums/enums.model';
@@ -24,7 +26,7 @@ export class DataSetComponent implements OnInit {
 
   private dataSets: DataSet[] = [];
   public projectsToShow: DataSetProject[] = [];
-  public displayedColumns = ['name', 'numOfProjects', 'dataSetDelete', 'dataSetUpdate'];
+  public displayedColumns = ['name', 'numOfProjects', 'dataSetExport', 'dataSetUpdate', 'dataSetDelete'];
   public dataSource = new MatTableDataSource<DataSet>(this.dataSets);
   public chosenDataset: DataSet = new DataSet();
   public filter: InstanceFilter = InstanceFilter.All;
@@ -37,7 +39,7 @@ export class DataSetComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dialog: MatDialog, private dataSetService: DataSetService) {}
+  constructor(private dialog: MatDialog, private dataSetService: DataSetService, private toastr: ToastrService) {}
 
   public async ngOnInit(): Promise<void> {
     this.dataSets = await this.dataSetService.getAllDataSets();
@@ -91,6 +93,17 @@ export class DataSetComponent implements OnInit {
   public newCandidates(candidates: SmellCandidateInstances[]): void {
     this.candidateInstances = candidates;
   }
+  public exportDraftDataSet(dataSet: DataSet): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px');
+    let dialogRef = this.dialog.open(ExportDraftDataSetDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((exportPath: string) => {
+      if (exportPath == '') return;
+      this.dataSetService.exportDraftDataSet(dataSet.id, exportPath).subscribe(res => {
+        let result = new Map(Object.entries(res));
+        this.toastr.success(result.get('successes')[0]['message']);
+      });
+    });
+  }
 
   public deleteDataSet(dataSet: DataSet): void {
     let dialogConfig = DialogConfigService.setDialogConfig('150px', '300px');
@@ -98,7 +111,6 @@ export class DataSetComponent implements OnInit {
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) this.dataSetService.deleteDataSet(dataSet.id).subscribe(deleted => {
         window.location.reload();
-        console.log('Deleted dataset ', deleted.name); // TODO toastr notification
       });
     });
   }
@@ -107,7 +119,7 @@ export class DataSetComponent implements OnInit {
     let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', dataSet);
     let dialogRef = this.dialog.open(UpdateDataSetDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((updated: DataSet) => {
-      if (updated) console.log('Updated dataset ', updated.name); // TODO toastr notification
+      if (updated) this.toastr.success('Updated dataset ' + updated.name);
     });
   }
 }
