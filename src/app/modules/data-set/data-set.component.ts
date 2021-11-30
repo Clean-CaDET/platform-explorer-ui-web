@@ -10,6 +10,8 @@ import { AddDataSetDialogComponent } from './dialogs/add-data-set-dialog/add-dat
 import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-project-dialog.component';
 
 import { DataSetService } from './data-set.service';
+import { ExportDraftDataSetDialogComponent } from './dialogs/export-draft-data-set-dialog/export-draft-data-set-dialog.component';
+import { ToastrService } from 'ngx-toastr';
 import { DialogConfigService } from './dialogs/dialog-config.service';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
@@ -24,7 +26,7 @@ export class DataSetComponent implements OnInit {
 
   private dataSets: DataSet[] = [];
   public projectsToShow: DataSetProject[] = [];
-  public displayedColumns = ['select', 'name', 'numOfProjects', 'dataSetDelete', 'dataSetUpdate'];
+  public displayedColumns = ['select', 'name', 'numOfProjects', 'dataSetExport', 'dataSetDelete', 'dataSetUpdate'];
   public selection = new SelectionModel<DataSet>(true, []);
   public dataSource = new MatTableDataSource<DataSet>(this.dataSets);
 
@@ -35,7 +37,7 @@ export class DataSetComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dialog: MatDialog, private dataSetService: DataSetService) {}
+  constructor(private dialog: MatDialog, private dataSetService: DataSetService, private toastr: ToastrService) {}
 
   public async ngOnInit(): Promise<void> {
     this.dataSets = await this.dataSetService.getAllDataSets();
@@ -96,6 +98,14 @@ export class DataSetComponent implements OnInit {
     }
   }
 
+  public exportDraftDataSet(dataSet: DataSet): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('300px', '300px');
+    let dialogRef = this.dialog.open(ExportDraftDataSetDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((exportPath: string) => {
+      this.dataSetService.exportDraftDataSet(dataSet.id, exportPath).subscribe(res => {
+        let result = new Map(Object.entries(res));
+        this.toastr.success(result.get('successes')[0]['message']);
+
   public deleteDataSet(dataSet: DataSet): void {
     let dialogConfig = DialogConfigService.setDialogConfig('150px', '300px');
     let dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
@@ -103,6 +113,7 @@ export class DataSetComponent implements OnInit {
       if (confirmed) this.dataSetService.deleteDataSet(dataSet.id).subscribe(deleted => {
         window.location.reload();
         console.log('Deleted dataset ', deleted.name); // TODO toastr notification
+
       });
     });
   }

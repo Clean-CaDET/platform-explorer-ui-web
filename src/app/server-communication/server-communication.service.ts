@@ -22,6 +22,10 @@ export class ServerCommunicationService {
     return this.sendRequest('POST', path, body, headers);
   }
 
+  public async postRequestAsync(path: string, body: any, headers: HttpHeaders): Promise<any> {
+    return await this.sendRequestAsync('POST', path, body, headers);
+  }
+
   public putRequest(path: string, body: any, headers: HttpHeaders): Observable<any> {
     return this.sendRequest('PUT', path, body, headers);
   }
