@@ -107,14 +107,6 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   }
 
   private isValidInput(): boolean {
-    if (this.selectedConsistencyType == '') {
-      this._snackBar.open('Choose consistency type.', 'OK', this.warningSnackBarOptions);
-    } else if (this.severityNeeded && (this.severityFormControl.hasError('min') || this.severityFormControl.hasError('max'))) {
-      this._snackBar.open('Severity must be between 0 and 3.', 'OK', this.warningSnackBarOptions);
-    } else if (this.severityNeeded && this.severityFormControl.hasError('required')) {
-      this._snackBar.open('You must enter the severity.', 'OK', this.warningSnackBarOptions);
-    }
-
     if (this.severityNeeded) return this.selectedConsistencyType != '' && this.severityFormControl.valid;
     return this.selectedConsistencyType != '';
   }

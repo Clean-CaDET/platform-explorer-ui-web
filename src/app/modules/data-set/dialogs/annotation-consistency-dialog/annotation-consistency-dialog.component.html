@@ -8,6 +8,9 @@
                     <mat-select name="consistencies" [(ngModel)]="selectedConsistencyType" (selectionChange)="consistencyTypeChanged()" required [formControl]="typeFormControl">
                         <mat-option *ngFor="let type of consistencyTypes" [value]="type">{{type}}</mat-option>
                     </mat-select>
+                    <mat-error *ngIf="typeFormControl.hasError('required')">
+                        Consistency type is <strong>required</strong>
+                    </mat-error>
                 </mat-form-field>
                 <button mat-stroked-button (click)="getConsistencyResults()" color="primary">Check</button>
             </tr>

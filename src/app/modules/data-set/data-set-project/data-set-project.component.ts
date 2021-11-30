@@ -18,6 +18,7 @@ import { DataSet } from '../model/data-set/data-set.model';
 import { FormControl, Validators } from '@angular/forms';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { UpdateProjectDialogComponent } from '../dialogs/update-project-dialog/update-project-dialog.component';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -50,7 +51,7 @@ export class DataSetProjectComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog, private httpClient: HttpClient) { }
+  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog, private httpClient: HttpClient, private toastr: ToastrService) { }
 
   public ngOnInit(): void {
     this.filterFormControl.markAsTouched();
@@ -178,7 +179,6 @@ export class DataSetProjectComponent implements OnInit {
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) this.dataSetService.deleteDataSetProject(project.id).subscribe(deleted => {
         window.location.reload();
-        console.log('Deleted project ', deleted.name); // TODO toastr notification
       });
     });
   }
@@ -187,7 +187,7 @@ export class DataSetProjectComponent implements OnInit {
     let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', project);
     let dialogRef = this.dialog.open(UpdateProjectDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((updated: DataSetProject) => {
-      if (updated) console.log('Updated project ', updated.name); // TODO toastr notification
+      if (updated) this.toastr.success('Updated project ' + updated.name);
     });
   }
 }
