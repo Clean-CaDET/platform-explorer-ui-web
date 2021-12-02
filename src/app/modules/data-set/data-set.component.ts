@@ -31,6 +31,7 @@ export class DataSetComponent implements OnInit {
   public chosenDataset: DataSet = new DataSet();
   public filter: InstanceFilter = InstanceFilter.All;
   public candidateInstances: SmellCandidateInstances[] = [];
+  public panelOpenState = false;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
 
@@ -84,6 +85,7 @@ export class DataSetComponent implements OnInit {
 
   public newProjects(projects: DataSetProject[]): void {
     this.projectsToShow = projects;
+    this.chosenDataset.projects = projects;
   }
 
   public newFilter(filter: InstanceFilter): void {
@@ -110,7 +112,9 @@ export class DataSetComponent implements OnInit {
     let dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) this.dataSetService.deleteDataSet(dataSet.id).subscribe(deleted => {
-        window.location.reload();
+        this.dataSets.splice(this.dataSets.findIndex(d => d.id == dataSet.id), 1);
+        this.dataSource.data = this.dataSets;
+        if (this.chosenDataset.id == dataSet.id) this.projectsToShow = [];
       });
     });
   }

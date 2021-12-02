@@ -1,9 +1,9 @@
 .project-container {
     display: flex;
     flex-direction: column;
-    padding: 0px 0px 10px 0px;
     margin-top: 20px;
     margin-right: 20px;
+    background-color: white;
 }
 
 .find-annotations {
@@ -17,9 +17,13 @@
 }
 
 .mat-table {
+    width: 100%; 
+}
+
+#projects-table-div {
+    height: fit-content;
+    max-height: 290px;
     overflow: auto;
-    max-height: 600px;
-    width: 100%;
 }
 
 .mat-cell,
@@ -28,7 +32,7 @@
 }
 
 .add-button {
-    margin: 25px 20px 0px 0px;
+    margin: 5px 20px 0px 0px;
 }
 
 .icon-built-project {
@@ -44,7 +48,8 @@
 }
 
 .message {
-    margin: 180px;
+    margin-top: 50px;
+    text-align: center;
     padding: 20px;
     font-size: 22px;
     font-style: italic;
@@ -53,5 +58,6 @@
 }
 
 .filterForm {
+    margin-top: 10px;
     margin-left: 20px;
 }

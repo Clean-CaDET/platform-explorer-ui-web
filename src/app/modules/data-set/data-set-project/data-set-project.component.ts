@@ -54,6 +54,7 @@ export class DataSetProjectComponent implements OnInit {
   constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog, private httpClient: HttpClient, private toastr: ToastrService) { }
 
   public ngOnInit(): void {
+    this.dataset = null;
     this.filterFormControl.markAsTouched();
     this.httpClient.get('assets/appsettings.json').subscribe((data: any) => this.pollingCycleDurationInSeconds = data.pollingCycleDuration);
   }
@@ -178,7 +179,9 @@ export class DataSetProjectComponent implements OnInit {
     let dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) this.dataSetService.deleteDataSetProject(project.id).subscribe(deleted => {
-        window.location.reload();
+        this.projects.splice(this.projects.findIndex(p => p.id == project.id), 1);
+        this.dataSource.data = this.projects;
+        this.newProjects.emit(this.projects);
       });
     });
   }
