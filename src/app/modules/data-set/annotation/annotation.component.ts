@@ -41,11 +41,8 @@ export class AnnotationComponent implements OnInit {
 
   public ngOnInit(): void {
     this.annotatorId = this.previousAnnotation?.annotator.id + '';
-    if (!this.disableEdit) {
-      this.annotationService.getAvailableHeuristics().subscribe(res => this.initHeuristics(res, this.availableHeuristics));
-    } else if (this.previousAnnotation) {
-      this.setupInputFromPreviousAnnotation();
-    }
+    this.annotationService.getAvailableHeuristics().subscribe(res => this.initHeuristics(res, this.availableHeuristics));
+    if (this.previousAnnotation) this.setupInputFromPreviousAnnotation();
   }
 
   public ngOnChanges(): void {

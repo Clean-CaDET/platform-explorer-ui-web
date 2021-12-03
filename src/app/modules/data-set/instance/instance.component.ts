@@ -61,6 +61,8 @@ export class InstanceComponent implements OnInit {
   public ngOnChanges(): void {
     if (this.iframe) this.iframe.srcdoc = '';
     this.selectedCodeSmell = '';
+    this.severityValues.clear();
+    this.selectedSeverity = null;
     this.dataSource.data = [];
     this.codeSmells = [];
     this.candidateInstances.forEach(instances => this.codeSmells.push(instances.codeSmell?.name!));
@@ -140,6 +142,7 @@ export class InstanceComponent implements OnInit {
   }
 
   private showFilteredInstances(): void {
+    this.severityValues.clear();
     this.displayedColumns = this.initiallyDisplayedColumns.slice();
     if (this.filter == InstanceFilter.DisagreeingAnnotations) {
       this.displayedColumns.push('show-annotations');
