@@ -95,6 +95,7 @@ export class DataSetComponent implements OnInit {
   public newCandidates(candidates: SmellCandidateInstances[]): void {
     this.candidateInstances = candidates;
   }
+  
   public exportDraftDataSet(dataSet: DataSet): void {
     let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px');
     let dialogRef = this.dialog.open(ExportDraftDataSetDialogComponent, dialogConfig);

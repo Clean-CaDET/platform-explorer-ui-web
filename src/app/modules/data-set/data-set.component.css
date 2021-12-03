@@ -63,6 +63,7 @@ mat-panel-description {
 mat-expansion-panel-header,
 mat-expansion-panel-header.mat-expanded:hover {
     border: 2px solid white;
+    border-radius: 10px;
 }
 
 de-data-set-project {

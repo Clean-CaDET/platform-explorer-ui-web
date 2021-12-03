@@ -25,7 +25,7 @@ export class InstanceComponent implements OnInit {
   @Input() public filter: InstanceFilter | null = null;
   @Input() public candidateInstances: SmellCandidateInstances[] = [];
   public instanceFilter = InstanceFilter;
-  private initiallyDisplayedColumns: string[] = ['codeSnippetId', 'annotated'];
+  private initiallyDisplayedColumns: string[] = ['codeSnippetId', 'annotated', 'severity'];
   public displayedColumns: string[] = this.initiallyDisplayedColumns;
   public previousAnnotation: Annotation | null = null;
   public dataSource: MatTableDataSource<Instance> = new MatTableDataSource<Instance>(this.instances);
@@ -34,14 +34,18 @@ export class InstanceComponent implements OnInit {
   public annotationStatuses: string[] = Object.keys(AnnotationStatus);
   public selectedAnnotationStatus: AnnotationStatus = AnnotationStatus.All;
 
+  public severityValues: Set<number> = new Set();
+  public selectedSeverity: number | null = null;
+
   public codeSmells: string[] = [];
   @Input() public selectedCodeSmell: string = '';
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   private iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
   public selectFormControl = new FormControl('', Validators.required);
-  public chosenInstance: Instance = new Instance();
-  public annotatorId = AnnotationService.getLoggedInAnnotatorId()
+  public chosenInstance: Instance | null = new Instance();
+  public annotatorId = AnnotationService.getLoggedInAnnotatorId();
+  public panelOpenState = false;
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
@@ -82,6 +86,10 @@ export class InstanceComponent implements OnInit {
     }
   }
 
+  private instanceHasSelectedSeverity(instance: Instance): boolean {
+    return instance.annotationFromLoggedUser?.severity == this.selectedSeverity;
+  }
+
   private filterForCodeSmell(): Instance[] {
     for (let candidate of this.candidateInstances) {
       if (candidate.codeSmell?.name == this.selectedCodeSmell) {
@@ -98,24 +106,25 @@ export class InstanceComponent implements OnInit {
 
   public filtersChanged(): void {
     if (this.iframe) this.iframe.srcdoc = '';
+    this.chosenInstance = null;
     this.showFilteredInstances();
   }
 
   public async addAnnotation(annotation: Annotation): Promise<void> {
-    let i = this.instances.findIndex(i => i.id == this.chosenInstance.id);
+    let i = this.instances.findIndex(i => i.id == this.chosenInstance?.id);
     this.instances[i].annotations.push(annotation);
-    this.filtersChanged();
+    this.showFilteredInstances();
   }
 
   public async changeAnnotation(annotation: Annotation) {
-    let i = this.instances.findIndex(i => i.id == this.chosenInstance.id);
+    let i = this.instances.findIndex(i => i.id == this.chosenInstance?.id);
     let j = this.instances[i].annotations.findIndex(a => a.id == annotation.id);
     this.instances[i].annotations[j] = annotation;
-    this.filtersChanged();
+    this.showFilteredInstances();
   }
 
   public searchInstances(): void {
-    this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
+    this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance?.link!);
     this.showFilteredInstances();
   }
 
@@ -136,10 +145,19 @@ export class InstanceComponent implements OnInit {
       this.displayedColumns.push('show-annotations');
     }
     this.instances = this.filterForCodeSmell();
+    this.instances.forEach((i:any) => {
+      this.severityValues.add(i.annotationFromLoggedUser?.severity);
+    });
     this.dataSource.data = this.instances.filter(i =>
       this.instanceHasSelectedAnnotationStatus(i)
       && i.codeSnippetId.toLowerCase().includes(this.searchInput.toLowerCase())
     );
+
+    if (this.selectedSeverity != null || this.selectedSeverity != undefined) {
+      this.dataSource.data = this.dataSource.data.filter(i =>
+        this.instanceHasSelectedSeverity(i)
+      );
+    }
   }
 
   private createSrcdocFromGithubLink(githubLink: string): string {

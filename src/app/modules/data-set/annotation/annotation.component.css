@@ -1,47 +1,41 @@
-.annotation-data {
-    flex-direction: column;
-    margin: auto;
-    width: fit-content;
-}
-
-.severity-input{
-    margin: 15px 10px 100px auto;
-    flex-direction: column;
-    width: fit-content;
-}
-
-.annotate-container {
+form {
     display: flex;
     flex-direction: column;
     margin: auto;
     width: fit-content;
+    border: 3px solid rgb(232, 244, 255);
+    padding: 10px 60px 20px 60px; 
+    border-radius: 20px;
+}
+
+.heuristic-reason {
+    display: flex;
+    flex-direction: column;
+}
+
+#severity {
+    width: 80px;
+    margin: auto;
 }
 
 .form-field {
     padding: 0px 5px 0px 5px;
 }
 
-.heuristic-reasons {
-    flex-direction: row;
-    margin: auto;
-    width: fit-content;
+.reason {
+    width: 100%;
 }
 
-.annotate {
-    margin: 0px auto 100px 10px !important;
-    width: fit-content;
-}
-
-#severity-div {
-    margin-left: 10px;
-}
-
-#severity {
-    width: 80px;
+.annotate-button {
+    margin: auto !important;
 }
 
 ul {
     list-style-type: none;
+}
+
+p {
+    font-size: 20px;
 }
 
 mat-checkbox {

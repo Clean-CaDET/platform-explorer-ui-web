@@ -66,7 +66,7 @@
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="chooseProject(row)"  [class.row-chosen]="row.id == chosenProject.id"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="row.state != projectState.Failed && chooseProject(row)" [class.row-chosen]="row.id == chosenProject.id"></tr>
         </table>
     </div>
     <form class="filterForm">

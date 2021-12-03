@@ -1,31 +1,16 @@
 .instance-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 50%;
-    margin: 40px 0px 20px 20px;
+    margin: 20px;
     height: max-content;
+    background-color: white;
 }
 
 .filters {
-    padding: 20px 20px 0px 10px;
+    padding: 0px 20px 0px 10px;
 }
 
-.instances-table {
-    display: flex;
-    flex-direction: column;
-    width: 60%;
-}
-
-.code-snippet {
-    display: flex;
-    width: 50%;
-    margin: 25px 20px 20px 20px;
-}
-
-.mat-table {
-    overflow: auto;
-    max-height: 600px;
-    width: 100%;
+#snippet {
+    width: 70%;
+    margin: 20px;
 }
 
 .mat-cell,
@@ -33,17 +18,14 @@
     padding: 0px 10px 0px 0px;
 }
 
-mat-divider {
-    margin-top: 40px;
-}
-
 .annotation-container {
     display: flex;
     flex-direction: row;
+    height: 100%;
 }
 
 mat-form-field {
-    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .annotation-detail {
@@ -67,10 +49,60 @@ tr.annotation-row {
 }
 
 .message {
-    margin: 80px;
-    padding: 20px;
+    margin: 50px;
+    text-align: center;
     font-size: 22px;
     font-style: italic;
     text-shadow: 2px 2px 8px lightgray;
     opacity: 0.7;
+}
+
+mat-expansion-panel {
+    width: 98%;
+    padding: 10px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(222, 236, 241);
+}
+
+mat-panel-title {
+    font-size: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(92, 13, 110);
+    font-weight: 550;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+mat-panel-description {
+    margin: 10px;
+    margin-left: 130px;
+    padding: 10px;
+}
+
+mat-expansion-panel-header,
+mat-expansion-panel-header.mat-expanded:hover {
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
+#instances-table-div {
+    min-height: fit-content;
+    max-height: 300px;
+    overflow: auto;
+}
+
+de-annotation {
+    width: 25%;
+    margin: 20px;
+}
+
+.mat-table {
+    width: 100%;
+}
+
+th.mat-sort-header-sorted {
+    color: black;
 }
