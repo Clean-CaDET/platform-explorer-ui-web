@@ -1,5 +1,4 @@
 .instance-container {
-    margin: 20px;
     height: max-content;
     background-color: white;
 }
@@ -105,4 +104,25 @@ de-annotation {
 
 th.mat-sort-header-sorted {
     color: black;
+}
+
+#severity-filter {
+    width: 100px;
+}
+
+#ann-status-filter {
+    width: 150px;
+}
+
+#smell-filter-div {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+#smell-filter-div > p {
+    font-size: 18px;
+    text-shadow: 2px 2px 8px lightgray;
+    margin: 20px 10px 0px 20px;
+    color: rgb(92, 13, 110);
 }

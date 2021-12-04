@@ -5,7 +5,16 @@
             Choose an instance to annotate
         </mat-panel-description>
     </mat-expansion-panel-header>
-    <div class="instance-container mat-elevation-z8 container" *ngIf="filter != null && candidateInstances.length != 0">
+    <div id="smell-filter-div" *ngIf="filter != null && candidateInstances.length != 0">
+        <p>Select a code smell:</p>
+        <mat-form-field appearance="fill">
+            <mat-label>Code smell</mat-label>
+            <mat-select [(value)]="selectedCodeSmell" (selectionChange)="filtersChanged()" required [formControl]="selectFormControl">
+                <mat-option [value]="smell" *ngFor="let smell of codeSmells">{{smell}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="instance-container mat-elevation-z8 container" *ngIf="selectedCodeSmell != ''">
         <p class="table-title">Instances ({{filter}})</p>
         <div class="table-header">
             <mat-form-field appearance="fill" class="search">
@@ -13,19 +22,13 @@
                 <input matInput (keyup)="searchInstances()" [(ngModel)]="searchInput" placeholder="Code snippet id">
             </mat-form-field>
             <div class="filters">
-                <mat-form-field appearance="fill">
-                    <mat-label>Code smell</mat-label>
-                    <mat-select [(value)]="selectedCodeSmell" (selectionChange)="filtersChanged()" required [formControl]="selectFormControl">
-                        <mat-option [value]="smell" *ngFor="let smell of codeSmells">{{smell}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill"  id="ann-status-filter">
                     <mat-label>Annotation status</mat-label>
                     <mat-select [(value)]="selectedAnnotationStatus" (selectionChange)="filtersChanged()">
                         <mat-option [value]="status" *ngFor="let status of annotationStatuses">{{status}}</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill" id="severity-filter" *ngIf="selectedAnnotationStatus != 'Not_Annotated'">
                     <mat-label>Severity</mat-label>
                     <mat-select [(value)]="selectedSeverity" (selectionChange)="filtersChanged()">
                         <mat-option [value]="severity" *ngFor="let severity of severityValues">{{severity}}</mat-option>
@@ -55,8 +58,8 @@
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="severity">
-                    <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Severity</th>
-                    <td mat-cell *matCellDef="let instance" width="5%" class="cell-center">
+                    <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center" [hidden]="selectedAnnotationStatus == 'Not_Annotated'">Severity</th>
+                    <td mat-cell *matCellDef="let instance" width="5%" class="cell-center"  [hidden]="selectedAnnotationStatus == 'Not_Annotated'">
                         <span *ngIf="instance.hasAnnotationFromLoggedUser">{{instance.annotationFromLoggedUser.severity}}</span>
                     </td>
                 </ng-container>
