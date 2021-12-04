@@ -161,7 +161,9 @@ export class DataSetProjectComponent implements OnInit {
   public addProject(): void {
     let dialogConfig = DialogConfigService.setDialogConfig('480px', '520px', this.dataset?.id);
     let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((res: DataSet) => this.newProjects.emit(res.projects));
+    dialogRef.afterClosed().subscribe((res: DataSet) => {
+      if (res) this.newProjects.emit(res.projects);
+    });
   }
 
   public filterSelection() {
