@@ -1,14 +1,14 @@
-<h2 mat-dialog-title>Disagreeing annotations</h2>
+<h1 class="table-title">Disagreeing annotations</h1>
 <mat-dialog-content class="mat-typography">
     <form>
         <table cellspacing="2">
             <ng-container *ngFor="let annotation of instanceWithDisagreeingAnnotations.annotations">
                 <tr>
                     <th *ngIf="annotation.annotator.id == loggedAnnotatorId">
-                        Annotated by you
+                        Your annotations
                     </th>
                     <th *ngIf="annotation.annotator.id != loggedAnnotatorId">
-                        Annotated by {{annotation.annotator.id}}
+                        Annotator {{annotation.annotator.id}}
                     </th>
                 </tr>
                 <tr>
@@ -22,5 +22,5 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button mat-dialog-close color="warn">Close</button>
+    <button mat-stroked-button mat-dialog-close color="primary">Close</button>
 </mat-dialog-actions>

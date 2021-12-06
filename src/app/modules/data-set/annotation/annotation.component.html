@@ -1,31 +1,25 @@
 <form *ngIf="instanceId">
-    <div class="container annotation-data">
-        <mat-form-field appearance="fill" floatLabel="always" class="form-field">
-            <mat-label>Severity</mat-label>
-            <input type="number" matInput [formControl]="severityFormControl">
-            <mat-error *ngIf="severityFormControl.hasError('required')">
-                Severity is <strong>required</strong>
-            </mat-error>
-            <mat-error *ngIf="severityFormControl.hasError('min') || severityFormControl.hasError('max')">
-                Severity must be between 0 and 3
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="fill" floatLabel="always" class="form-field">
-            <mat-label>Heuristics</mat-label>
-            <mat-select [formControl]="heuristics" multiple name="heuristics">
-                <mat-option *ngFor="let heuristic of getAvailableHeuristics()" [value]="heuristic">{{heuristic}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div class="heuristic-reasons">
-        <ng-container *ngFor="let heuristic of heuristics.value">
-            <mat-form-field appearance="fill" floatLabel="always" class="form-field">
-                <mat-label>Reason: {{heuristic}}</mat-label>
-                <input type="text" id="reason-{{heuristic}}-{{annotatorId}}" matInput (change)="addReasonForHeuristic($event.target!, heuristic)" [disabled]="disableEdit">
-            </mat-form-field>
-        </ng-container>
-    </div>
-    <div class="annotate" *ngIf="!disableEdit">
-        <button class="center-horizontally" mat-raised-button color="primary" (click)="annotate()">Annotate</button>
-    </div>
+    <ul class="form-field">
+        <p>Heuristics:</p>
+        <li *ngFor="let heuristic of getAvailableHeuristics()">
+            <div class="heuristic-reason">
+                <mat-checkbox color="primary" [checked]="isHeuristicApplied(heuristic)" (change)="checkHeuristicCheckbox(heuristic, $event.checked)"  [disabled]="disableEdit">{{heuristic}}</mat-checkbox>
+                <mat-form-field appearance="fill" floatLabel="always" class="form-field reason" *ngIf="isHeuristicApplied(heuristic)">
+                    <mat-label>Reason</mat-label>
+                    <input type="text" matInput (change)="addReasonForHeuristic($event.target!, heuristic)" [disabled]="disableEdit" value="{{heuristicsAndReasons.get(heuristic)}}">
+                </mat-form-field>
+            </div>
+        </li>
+    </ul>
+    <mat-form-field floatLabel="always" class="form-field" id="severity">
+        <mat-label>Severity</mat-label>
+        <input type="number" matInput [formControl]="severityFormControl">
+        <mat-error *ngIf="severityFormControl.hasError('required')">
+            Severity is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="severityFormControl.hasError('min') || severityFormControl.hasError('max')">
+            Severity must be between 0 and 3
+        </mat-error>
+    </mat-form-field>
+    <button class="annotate-button" *ngIf="!disableEdit" mat-stroked-button color="primary" (click)="annotate()">Annotate</button>
 </form>

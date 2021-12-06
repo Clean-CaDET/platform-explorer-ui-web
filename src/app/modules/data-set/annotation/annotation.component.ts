@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Annotation } from '../model/annotation/annotation.model';
 import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
@@ -15,7 +16,7 @@ import { AnnotationService } from './annotation.service';
 export class AnnotationComponent implements OnInit {
 
   @Input() public codeSmell: string = '';
-  @Input() public instanceId: number = 0;
+  @Input() public instanceId: number | null = null;
   @Input() public previousAnnotation: Annotation | null = null;
   @Input() public disableEdit: boolean = false;
 
@@ -24,56 +25,34 @@ export class AnnotationComponent implements OnInit {
     Validators.min(0),
     Validators.max(3),
   ]);
-  public heuristics = new FormControl();
 
   private availableHeuristics: Map<string, string[]> = new Map();
-
-  public applicableHeuristics: Map<string, string> = new Map();
+  public heuristicsAndReasons: Map<string, string> = new Map();
   public annotatorId: string = '';
-  private isHeuristicReasonChanged: boolean = false;
+  private warningSnackbarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['warningSnackbar']};
+  private successSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['successSnackbar']};
+  private errorSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['errorSnackbar']};
 
   @Output() newAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
   @Output() changedAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
 
-  constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef) { }
+  constructor(private annotationService: AnnotationService, private changeDetector: ChangeDetectorRef, private _snackBar: MatSnackBar) { }
 
   public ngOnInit(): void {
     this.annotatorId = this.previousAnnotation?.annotator.id + '';
-    if (!this.disableEdit) {
-      this.annotationService.getAvailableHeuristics().subscribe(res => this.initHeuristics(res, this.availableHeuristics));
-    } else if (this.previousAnnotation) {
-      let previousHeristics = this.previousAnnotation.applicableHeuristics.map(h => h.description);
-      this.availableHeuristics.set(this.codeSmell, previousHeristics);
-    }
+    this.annotationService.getAvailableHeuristics().subscribe(res => this.initHeuristics(res, this.availableHeuristics));
+    if (this.previousAnnotation) this.setupInputFromPreviousAnnotation();
   }
 
   public ngOnChanges(): void {
     this.severityFormControl.setValue(0);
-    if (this.disableEdit) {
-      this.severityFormControl.disable();
-      this.heuristics.disable();
-    }
-    this.heuristics.setValue([]);
-    this.applicableHeuristics = new Map();
+    if (this.disableEdit) this.severityFormControl.disable();
+    this.heuristicsAndReasons = new Map();
     this.setupInputFromPreviousAnnotation();
   }
 
-  public ngAfterViewChecked(): void {
-    if (this.isHeuristicReasonChanged) {
-      for (let description of this.applicableHeuristics.keys()) {
-        let reasonInput = document.getElementById('reason-' + description + '-' + this.annotatorId) as HTMLInputElement;
-        if (reasonInput) {
-          reasonInput.value = this.applicableHeuristics.get(description)!;
-        }
-      }
-      this.changeDetector.detectChanges();
-      this.isHeuristicReasonChanged = false;
-    }
-  }
-
   public addReasonForHeuristic(target: EventTarget, heuristic: string): void {
-    this.applicableHeuristics.set(heuristic, (target as HTMLInputElement).value);
-    this.isHeuristicReasonChanged = true;
+    this.heuristicsAndReasons.set(heuristic, (target as HTMLInputElement).value);
   }
 
   public getAvailableHeuristics(): string[] {
@@ -103,20 +82,20 @@ export class AnnotationComponent implements OnInit {
   private addAnnotation(annotation: AnnotationDTO): void {
     this.annotationService.addAnnotation(annotation).subscribe(
       (res: Annotation) => {
-        alert('Annotation added!');
+        this._snackBar.open('Annotation added!', 'OK', this.successSnackBarOptions);
         this.newAnnotation.emit(new Annotation(res));
       },
-      error => alert('ERROR:\n' + error.error.message)
+      error => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
     );
   }
 
   private updateAnnotation(annotation: AnnotationDTO): void {
     this.annotationService.updateAnnotation(this.previousAnnotation!.id, annotation).subscribe(
       (res: Annotation) => {
-        alert('Annotation changed!');
+        this._snackBar.open('Annotation changed!', 'OK', this.successSnackBarOptions);
         this.changedAnnotation.emit(new Annotation(res));
       },
-      error => alert('ERROR:\n' + error.error.message)
+      error => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
     );
   }
 
@@ -131,44 +110,47 @@ export class AnnotationComponent implements OnInit {
 
   private getHeuristicsFromInput(): SmellHeuristic[] {
     let ret: SmellHeuristic[] = [];
-    for (let selectedHeuristic of this.heuristics.value) {
+    for (let heuristic of this.heuristicsAndReasons.keys()) {
       ret.push(new SmellHeuristic({
-        description: selectedHeuristic,
+        description: heuristic,
         isApplicable: true,
-        reasonForApplicability: this.applicableHeuristics.get(selectedHeuristic)
+        reasonForApplicability: this.heuristicsAndReasons.get(heuristic)
       }));
     }
     return ret;
   }
 
   private setupInputFromPreviousAnnotation(): void {
-    if (this.previousAnnotation) {
-      this.severityFormControl.setValue(this.previousAnnotation.severity);
-      this.codeSmell = this.previousAnnotation.instanceSmell.name;
-      let previousHeuristics: string[] = []
-      this.previousAnnotation.applicableHeuristics.forEach( h => {
-        previousHeuristics.push(h.description);
-        this.applicableHeuristics.set(h.description, h.reasonForApplicability);
-      });
-      this.heuristics.setValue(previousHeuristics);
-      this.isHeuristicReasonChanged = true;
-    }
+    if (!this.previousAnnotation) return;
+    this.severityFormControl.setValue(this.previousAnnotation.severity);
+    this.codeSmell = this.previousAnnotation.instanceSmell.name;
+    this.previousAnnotation.applicableHeuristics.forEach( h => {
+      this.heuristicsAndReasons.set(h.description, h.reasonForApplicability);
+    });
   }
 
   private isValidInput(): boolean {
     return this.severityFormControl.valid 
-      && !(this.heuristics.value.length == 0 && this.severityFormControl.value > 0);
+      && !(this.heuristicsAndReasons.size == 0 && this.severityFormControl.value > 0);
   }
 
   private showErrorInputMessage(): void {
-    let message = 'Invalid input:';
     if (!this.severityFormControl.valid) {
-      message += '\n- Severity must be between 0 and 3';
+      this._snackBar.open('Severity must be between 0 and 3.', 'OK', this.warningSnackbarOptions);
+    } else if (this.heuristicsAndReasons.keys.length == 0 && this.severityFormControl.value > 0) {
+      this._snackBar.open("For severity greater than 0 you must add heuristic.", 'OK', this.warningSnackbarOptions);
     }
-    if (this.heuristics.value.length == 0 && this.severityFormControl.value > 0) {
-      message += '\n- For severity greater than 0 you must add heuristic'
-    }
-    alert(message);
   }
 
+  public checkHeuristicCheckbox(heuristic: string, checked: boolean) {
+    if (checked) {
+      this.heuristicsAndReasons.set(heuristic, '');
+    } else {
+      this.heuristicsAndReasons.delete(heuristic);
+    }
+  }
+
+  public isHeuristicApplied(heuristic: string) {
+    return this.heuristicsAndReasons.has(heuristic);
+  }
 }
