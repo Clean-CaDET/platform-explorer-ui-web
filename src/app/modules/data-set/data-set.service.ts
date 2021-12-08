@@ -8,6 +8,7 @@ import { DataSet } from './model/data-set/data-set.model';
 import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service'; 
 import { SmellFilter } from './model/smell-filter/smell-filter.model';
 import { CodeSmell } from './model/code-smell/code-smell.model';
+import { ProjectBuildSettings } from './model/project-build-settings/project-build-settings.model';
 
 
 
@@ -28,10 +29,10 @@ export class DataSetService {
     return this.serverCommunicationService.postRequest('dataset/' + name, codeSmells, headers);
   }
 
-  public addProjectToDataSet(project: DataSetProject, smellFilters: SmellFilter[], dataSetId: number): Observable<DataSet> {
+  public addProjectToDataSet(project: DataSetProject, smellFilters: SmellFilter[], buildSettings: ProjectBuildSettings, dataSetId: number): Observable<DataSet> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    let data = {project: project, smellFilters: smellFilters};
+    let data = {project: project, smellFilters: smellFilters, buildSettings: buildSettings};
     return this.serverCommunicationService.postRequest('dataset/' + dataSetId + '/add-project', data, headers)
   }
 
