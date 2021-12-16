@@ -1,19 +1,52 @@
-<h2 mat-dialog-title>Add new projects</h2>
+<h2 mat-dialog-title>Add new project</h2>
 <mat-dialog-content class="mat-typography">
-    <form>
+    <form [formGroup]="newProjectForm">
         <table cellspacing="2">
                 <tr>
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>Project name</mat-label>
-                            <input [(ngModel)]="project.name" name="name" type="text" matInput>
+                            <input [(ngModel)]="project.name" name="name" type="text" matInput formControlName="name">
+                            <mat-error *ngIf="newProjectForm.get('name')!.hasError('required')">
+                                Project name is <strong>required!</strong>
+                            </mat-error>
                         </mat-form-field>
                     </td>
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>URL</mat-label>
-                            <input [(ngModel)]="project.url" name="url" type="url" matInput>
+                            <input [(ngModel)]="project.url" name="url" type="url" matInput formControlName="url">
+                            <mat-error *ngIf="newProjectForm.get('url')!.hasError('required')">
+                                URL is <strong>required</strong>
+                            </mat-error>
                         </mat-form-field>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Number of instances</mat-label>
+                            <input [(ngModel)]="projectBuildSettings.numOfInstances" name="numOfInstances" type="number" matInput formControlName="instancesNum">
+                            <mat-error *ngIf="newProjectForm.get('instancesNum')!.hasError('min')">
+                                Number of instances <strong>must be greater than 0</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Num of instances type</mat-label>
+                            <mat-select [(value)]="projectBuildSettings.numOfInstancesType">
+                              <mat-option *ngFor="let type of numOfInstancesTypes" [value]="type">
+                                {{type}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-checkbox name="randomizeClasses" [(ngModel)]="projectBuildSettings.randomizeClassSelection">Randomize class selection</mat-checkbox>
+                        <mat-checkbox name="randomizeMembers" [(ngModel)]="projectBuildSettings.randomizeMemberSelection">Randomize member selection</mat-checkbox>
                     </td>
                 </tr>
                 <h2 mat-dialog-title>Set metrics filters</h2>
@@ -38,13 +71,13 @@
                                 <td>
                                     <mat-form-field appearance="fill">
                                         <mat-label>Min value for {{threshold.metric}}</mat-label>
-                                        <input [(ngModel)]="smellFilter.metricsThresholds[j].minValue" name="minValue" matInput placeholder="{{threshold.minValue}}">
+                                        <input [(ngModel)]="threshold.minValue" name="minValue-{{j}}" matInput placeholder="{{threshold.minValue}}">
                                     </mat-form-field>
                                 </td>
                                 <td>
                                     <mat-form-field appearance="fill">
                                         <mat-label>Max value for {{threshold.metric}}</mat-label>
-                                        <input [(ngModel)]="smellFilter.metricsThresholds[j].maxValue" name="maxValue" matInput placeholder="{{threshold.maxValue}}">
+                                        <input [(ngModel)]="threshold.maxValue" name="maxValue-{{j}}" matInput placeholder="{{threshold.maxValue}}">
                                     </mat-form-field>
                                 </td>
                             </ng-container>

@@ -195,4 +195,12 @@ export class DataSetProjectComponent implements OnInit {
       if (updated) this.toastr.success('Updated project ' + updated.name);
     });
   }
+
+  public getTotalInstancesInDataset(): number {
+    let sum = 0;
+    this.dataset?.projects.forEach(project => {
+      sum += project.getTotalNumOfInstances();
+    });
+    return sum;
+  }
 }

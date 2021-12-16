@@ -28,3 +28,8 @@ export enum ConsistencyType {
     MetricsSignificanceForAnnotator = 'Metrics significance for my annotations',
     MetricsSignificanceBetweenAnnotators = 'Metrics significance between annotators'
 }
+
+export enum NumOfInstancesType {
+    Percentage = 'Percentage',
+    Number = 'Number'
+}
