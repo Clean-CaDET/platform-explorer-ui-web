@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AnnotationService } from '../../annotation/annotation.service';
 import { DataSetService } from '../../data-set.service';
@@ -28,18 +28,17 @@ export class AddProjectDialogComponent implements OnInit {
   public numOfInstancesTypes: NumOfInstancesType[] = [NumOfInstancesType.Percentage, NumOfInstancesType.Number];
   public projectBuildSettings: ProjectBuildSettings = new ProjectBuildSettings({numOfInstances: 100, numOfInstancesType: NumOfInstancesType.Percentage, randomizeClassSelection: true, randomizeMemberSelection: true});
 
-  public nameFormControl: FormControl = new FormControl('', [
-    Validators.required
-  ]);
-
-  public urlFormControl: FormControl = new FormControl('', [
-    Validators.required
-  ]);
-
-  public instancesNumFormControl: FormControl = new FormControl('100', [
-    Validators.min(1),
-  ]);
- 
+  public newProjectForm = new FormGroup({
+    name: new FormControl('', [
+      Validators.required
+    ]),
+    url: new FormControl('', [
+      Validators.required
+    ]),
+    instancesNum: new FormControl('100', [
+      Validators.min(1),
+    ])
+  });
  
   constructor(@Inject(MAT_DIALOG_DATA) private dataSetId: number, private dataSetService: DataSetService, private annotationService: AnnotationService, private dialogRef: MatDialogRef<AddProjectDialogComponent>) { }
 
@@ -89,6 +88,6 @@ export class AddProjectDialogComponent implements OnInit {
   }
 
   private isValidInput(): boolean {
-    return this.nameFormControl.valid && this.urlFormControl.valid;
+    return this.newProjectForm.get('name')!.valid && this.newProjectForm.get('url')!.valid;
   }
 }

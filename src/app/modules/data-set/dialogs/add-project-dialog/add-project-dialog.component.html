@@ -1,22 +1,22 @@
 <h2 mat-dialog-title>Add new project</h2>
 <mat-dialog-content class="mat-typography">
-    <form>
+    <form [formGroup]="newProjectForm">
         <table cellspacing="2">
                 <tr>
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>Project name</mat-label>
-                            <input [(ngModel)]="project.name" name="name" type="text" matInput [formControl]="nameFormControl">
-                            <mat-error *ngIf="nameFormControl.hasError('required')">
-                                Project name is <strong>required</strong>
+                            <input [(ngModel)]="project.name" name="name" type="text" matInput formControlName="name">
+                            <mat-error *ngIf="newProjectForm.get('name')!.hasError('required')">
+                                Project name is <strong>required!</strong>
                             </mat-error>
                         </mat-form-field>
                     </td>
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>URL</mat-label>
-                            <input [(ngModel)]="project.url" name="url" type="url" matInput [formControl]="urlFormControl">
-                            <mat-error *ngIf="urlFormControl.hasError('required')">
+                            <input [(ngModel)]="project.url" name="url" type="url" matInput formControlName="url">
+                            <mat-error *ngIf="newProjectForm.get('url')!.hasError('required')">
                                 URL is <strong>required</strong>
                             </mat-error>
                         </mat-form-field>
@@ -26,8 +26,8 @@
                     <td>
                         <mat-form-field appearance="fill">
                             <mat-label>Number of instances</mat-label>
-                            <input [(ngModel)]="projectBuildSettings.numOfInstances" name="numOfInstances" type="number" matInput [formControl]="instancesNumFormControl">
-                            <mat-error *ngIf="instancesNumFormControl.hasError('min')">
+                            <input [(ngModel)]="projectBuildSettings.numOfInstances" name="numOfInstances" type="number" matInput formControlName="instancesNum">
+                            <mat-error *ngIf="newProjectForm.get('instancesNum')!.hasError('min')">
                                 Number of instances <strong>must be greater than 0</strong>
                             </mat-error>
                         </mat-form-field>
