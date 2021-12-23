@@ -1,0 +1,19 @@
+<div mat-dialog-content>
+    <p class="table-title">Update {{heuristic?.name}}</p>
+    <mat-card fxFlex="30%">
+        <mat-card-content fxLayout="column">
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input [(ngModel)]="heuristic!.name" type="text" matInput required>
+            </mat-form-field><br>
+            <mat-form-field>
+                <mat-label>Description</mat-label>
+                <input [(ngModel)]="heuristic!.description" type="text" matInput required>
+            </mat-form-field>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div mat-dialog-actions>
+    <button mat-button color="warn" (click)="close()">Close</button>
+    <button mat-button color="success" (click)="update()">Update</button>
+</div>
