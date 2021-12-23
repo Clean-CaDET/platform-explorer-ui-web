@@ -1,0 +1,115 @@
+<div class="smell-definition-container mat-elevation-z8 container">
+    <p class="table-title">Code smells</p>
+    <div class="table-header">
+        <mat-form-field appearance="fill" class="search">
+            <mat-label>Search by name</mat-label>
+            <input matInput (keyup)="searchCodeSmells($event)" placeholder="Code smell name">
+        </mat-form-field>
+        <button class="add-button" mat-mini-fab matTooltip="New code smell" matTooltipPosition="right" (click)="addCodeSmell()" color="primary">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <table mat-table [dataSource]="codeSmellsDataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef width="30%"> Name </th>
+            <td mat-cell *matCellDef="let codeSmellDefinition">
+                <span class="truncate-text">{{codeSmellDefinition.name}}</span>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef class="cell-center" width="30%">Description</th>
+            <td mat-cell *matCellDef="let codeSmellDefinition"class="cell-center">{{codeSmellDefinition.description}}</td>
+        </ng-container>
+        <ng-container matColumnDef="heuristics">
+            <th mat-header-cell *matHeaderCellDef class="cell-center"width="10%">Heuristics</th>
+            <td mat-cell *matCellDef="let codeSmellDefinition" class="cell-center">
+                <button mat-icon-button color="primary" class="center-horizontally" (click)="showHeuristics(codeSmellDefinition)">
+                    <mat-icon matTooltip="Show">more_horiz</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="severityRange">
+            <th mat-header-cell *matHeaderCellDef class="cell-center"width="10%">Severity range</th>
+            <td mat-cell *matCellDef="let codeSmellDefinition" class="cell-center">
+                <button mat-icon-button color="primary" class="center-horizontally" (click)="showSeverityRange(codeSmellDefinition)">
+                    <mat-icon matTooltip="Show">more_horiz</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="severityValues">
+            <th mat-header-cell *matHeaderCellDef class="cell-center">Severity values</th>
+            <td mat-cell *matCellDef="let codeSmellDefinition" class="cell-center">
+                <button mat-icon-button color="primary" class="center-horizontally" (click)="showSeverityValues(codeSmellDefinition)">
+                    <mat-icon matTooltip="Show">more_horiz</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let codeSmellDefinition">
+                <button mat-icon-button (click)="updateCodeSmellDefinition(codeSmellDefinition)" color="primary" class="center-horizontally">
+                    <mat-icon matTooltip="edit">edit</mat-icon>
+                </button>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let codeSmellDefinition">
+                <button mat-icon-button (click)="deleteCodeSmellDefinition(codeSmellDefinition)" color="primary" class="center-horizontally">
+                    <mat-icon matTooltip="delete">delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="codeSmellsDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: codeSmellsDisplayedColumns;"></tr>
+    </table>
+</div>
+
+<br>
+
+<div class="smell-definition-container mat-elevation-z8 container">
+    <p class="table-title">Heuristics</p>
+    <div class="table-header">
+        <mat-form-field appearance="fill" class="search">
+            <mat-label>Search by name</mat-label>
+            <input matInput (keyup)="searchHeuristics($event)" placeholder="Heuristic name">
+        </mat-form-field>
+        <button class="add-button" mat-mini-fab matTooltip="New heuristic" matTooltipPosition="right" (click)="addHeuristic()" color="primary">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <table mat-table [dataSource]="heuristicsDataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef width="30%"> Name </th>
+            <td mat-cell *matCellDef="let heuristic">
+                <span class="truncate-text">{{heuristic.name}}</span>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef class="cell-center" width="30%">Description</th>
+            <td mat-cell *matCellDef="let heuristic"class="cell-center">{{heuristic.description}}</td>
+        </ng-container>
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let heuristic">
+                <button mat-icon-button (click)="updateHeuristic(heuristic)" color="primary" class="center-horizontally">
+                    <mat-icon matTooltip="edit">edit</mat-icon>
+                </button>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let heuristic">
+                <button mat-icon-button (click)="deleteHeuristic(heuristic)" color="primary" class="center-horizontally">
+                    <mat-icon matTooltip="delete">delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="heuristicsDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: heuristicsDisplayedColumns;"></tr>
+    </table>
+</div>

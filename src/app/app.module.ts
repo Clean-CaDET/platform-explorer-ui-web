@@ -6,11 +6,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './material/material.module';
 import { DataSetModule } from './modules/data-set/data-set.module';
 import { PagesModule } from './modules/pages/pages.module';
-
 import { AppComponent } from './app.component';
-
 import { ServerCommunicationService } from './server-communication/server-communication.service';
 import { ToastrModule } from 'ngx-toastr';
+import { AnnotationSchemaModule } from './modules/annotation-schema/annotation-schema.module';
 
 @NgModule({
   declarations: [
@@ -20,10 +19,10 @@ import { ToastrModule } from 'ngx-toastr';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
     HttpClientModule,
     MaterialModule,
     DataSetModule,
+    AnnotationSchemaModule,
     PagesModule,
     ToastrModule.forRoot()
   ],
