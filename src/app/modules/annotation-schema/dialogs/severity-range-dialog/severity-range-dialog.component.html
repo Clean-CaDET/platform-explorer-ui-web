@@ -1,0 +1,10 @@
+<p *ngIf="codeSmellDefinition?.severityValues?.length != 0" class="warning-message">WARNING: Severity values are already defined!</p>
+<h1 mat-dialog-title>Severity range for {{codeSmellDefinition?.name}}</h1>
+<div mat-dialog-content>
+  Min value: {{codeSmellDefinition?.severityRange?.minValue}}<br>
+  Max value: {{codeSmellDefinition?.severityRange?.maxValue}}<br>
+  Step: {{codeSmellDefinition?.severityRange?.step}}
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+</div>
