@@ -23,6 +23,11 @@
     height: 100%;
 }
 
+.vertical-container {
+    display: flex;
+    flex-direction: column;
+}
+
 mat-form-field {
     padding-right: 10px;
 }
@@ -133,4 +138,18 @@ tr.mat-footer-row {
   
 .mat-table-sticky {
     border-top: 1px solid rgb(168, 166, 166);
+}
+
+#related-instances {
+    margin: 10px;
+    max-height: inherit;
+    overflow: auto;
+}
+
+.green-icon {
+    color: green;
+}
+
+.orange-icon {
+    color: orange;
 }
