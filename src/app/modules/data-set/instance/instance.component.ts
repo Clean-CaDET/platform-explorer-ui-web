@@ -13,6 +13,7 @@ import { DialogConfigService } from '../dialogs/dialog-config.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 import { FormControl, Validators } from '@angular/forms';
 import { AnnotationService } from '../annotation/annotation.service';
+import { RelatedInstance } from '../model/related-instance/related-instance.model';
 
 @Component({
   selector: 'de-instance',
@@ -27,9 +28,12 @@ export class InstanceComponent implements OnInit {
   public instanceFilter = InstanceFilter;
   private initiallyDisplayedColumns: string[] = ['codeSnippetId', 'annotated', 'severity'];
   public displayedColumns: string[] = this.initiallyDisplayedColumns;
+  public displayedColumnsRelatedInstances: string[] = ['codeSnippetId', 'relationType', 'couplingCounter'];
   public previousAnnotation: Annotation | null = null;
   public dataSource: MatTableDataSource<Instance> = new MatTableDataSource<Instance>(this.instances);
+  public dataSourceRelatedInstances: MatTableDataSource<RelatedInstance> = new MatTableDataSource<RelatedInstance>();
   public searchInput: string = '';
+  public chosenInstanceName: string = '';
 
   public annotationStatuses: string[] = Object.keys(AnnotationStatus);
   public selectedAnnotationStatus: AnnotationStatus = AnnotationStatus.All;
@@ -170,6 +174,8 @@ export class InstanceComponent implements OnInit {
 
   public chooseInstance(instance: Instance): void {
     this.chosenInstance = instance;
+    this.chosenInstanceName = this.chosenInstance?.codeSnippetId.split('.').pop()!;
+    this.dataSourceRelatedInstances.data = this.chosenInstance.relatedInstances;
     this.previousAnnotation = this.chosenInstance.annotations.find(a => a.annotator.id == this.annotatorId)!;
     this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
   }

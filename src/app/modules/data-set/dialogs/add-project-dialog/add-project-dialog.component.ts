@@ -27,18 +27,6 @@ export class AddProjectDialogComponent implements OnInit {
   public selectedSmell: string = '';
   public numOfInstancesTypes: NumOfInstancesType[] = [NumOfInstancesType.Percentage, NumOfInstancesType.Number];
   public projectBuildSettings: ProjectBuildSettings = new ProjectBuildSettings({numOfInstances: 100, numOfInstancesType: NumOfInstancesType.Percentage, randomizeClassSelection: true, randomizeMemberSelection: true});
-
-  public newProjectForm = new FormGroup({
-    name: new FormControl('', [
-      Validators.required
-    ]),
-    url: new FormControl('', [
-      Validators.required
-    ]),
-    instancesNum: new FormControl('100', [
-      Validators.min(1),
-    ])
-  });
  
   constructor(@Inject(MAT_DIALOG_DATA) private dataSetId: number, private dataSetService: DataSetService, private annotationService: AnnotationService, private dialogRef: MatDialogRef<AddProjectDialogComponent>) { }
 
@@ -88,6 +76,6 @@ export class AddProjectDialogComponent implements OnInit {
   }
 
   private isValidInput(): boolean {
-    return this.newProjectForm.get('name')!.valid && this.newProjectForm.get('url')!.valid;
+    return this.project.name != '' && this.project.url != '' && this.projectBuildSettings.numOfInstances > 0;
   }
 }

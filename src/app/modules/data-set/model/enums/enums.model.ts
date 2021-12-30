@@ -33,3 +33,9 @@ export enum NumOfInstancesType {
     Percentage = 'Percentage',
     Number = 'Number'
 }
+
+export enum RelationType {
+    Referenced = 'Referenced',
+    References = 'References',
+    Parent = 'Parent'
+}

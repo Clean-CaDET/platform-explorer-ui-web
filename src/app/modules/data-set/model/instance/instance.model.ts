@@ -1,6 +1,7 @@
 import { AnnotationService } from "../../annotation/annotation.service";
 import { Annotation } from "../annotation/annotation.model"; 
 import { InstanceType } from "../enums/enums.model";
+import { RelatedInstance } from "../related-instance/related-instance.model";
 
 export class Instance {
     id: number = 0;
@@ -12,6 +13,7 @@ export class Instance {
     metricFeatures: Map<string, number> = new Map();
     hasAnnotationFromLoggedUser: boolean = false;
     annotationFromLoggedUser: Annotation | null = null;
+    relatedInstances: RelatedInstance[] = [];
 
     constructor(obj?: any) {
         if (obj) {
@@ -23,6 +25,7 @@ export class Instance {
             this.setMetricFeatures(obj.metricFeatures);
             this.setType(obj.type);
             this.setAnnotationFromLoggedUser();
+            this.relatedInstances = obj.relatedInstances.map((i: any) => new RelatedInstance(i))
         }
     }
 
