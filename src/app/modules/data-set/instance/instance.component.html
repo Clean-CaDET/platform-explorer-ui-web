@@ -110,10 +110,10 @@
                         <span *ngIf="instance.relationType=='Parent'">{{instance.relationType}}</span>
                     </td>
                 </ng-container>
-                <ng-container matColumnDef="couplingCounter">
+                <ng-container matColumnDef="couplingStrength">
                     <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Coupling counter</th>
                     <td mat-cell *matCellDef="let instance" class="cell-center">
-                        {{instance.couplingCounter}}
+                        {{instance.couplingStrength}}
                     </td>
                 </ng-container>
 

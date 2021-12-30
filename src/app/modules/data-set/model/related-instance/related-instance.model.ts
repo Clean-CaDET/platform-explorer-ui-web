@@ -5,7 +5,7 @@ export class RelatedInstance {
     codeSnippetId: string = '';
     link: string = '';
     relationType: string = '';
-    couplingCounter: number = 0;
+    couplingStrength: number = 0;
 
     constructor(obj?: any) {
         if (obj) {
@@ -13,7 +13,7 @@ export class RelatedInstance {
             this.codeSnippetId = obj.codeSnippetId;
             this.link = obj.link;
             this.setRelationType(obj.relationType);
-            this.couplingCounter = obj.couplingCounter;
+            this.couplingStrength = obj.couplingStrength;
         }
     }
 

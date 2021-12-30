@@ -28,7 +28,7 @@ export class InstanceComponent implements OnInit {
   public instanceFilter = InstanceFilter;
   private initiallyDisplayedColumns: string[] = ['codeSnippetId', 'annotated', 'severity'];
   public displayedColumns: string[] = this.initiallyDisplayedColumns;
-  public displayedColumnsRelatedInstances: string[] = ['codeSnippetId', 'relationType', 'couplingCounter'];
+  public displayedColumnsRelatedInstances: string[] = ['codeSnippetId', 'relationType', 'couplingStrength'];
   public previousAnnotation: Annotation | null = null;
   public dataSource: MatTableDataSource<Instance> = new MatTableDataSource<Instance>(this.instances);
   public dataSourceRelatedInstances: MatTableDataSource<RelatedInstance> = new MatTableDataSource<RelatedInstance>();
