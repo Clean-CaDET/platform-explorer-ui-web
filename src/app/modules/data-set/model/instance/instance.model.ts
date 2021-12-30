@@ -25,16 +25,8 @@ export class Instance {
             this.setMetricFeatures(obj.metricFeatures);
             this.setType(obj.type);
             this.setAnnotationFromLoggedUser();
-            this.relatedInstances = this.setRelatedInstances(obj.relatedInstances);
+            this.relatedInstances = obj.relatedInstances.map((i: any) => new RelatedInstance(i))
         }
-    }
-
-    private setRelatedInstances(relatedInstances: any): RelatedInstance[] {
-        var res: RelatedInstance[] = [];
-        relatedInstances.forEach((inst:any) => {
-            res.push(new RelatedInstance(inst));
-        });
-        return res;
     }
 
     private setMetricFeatures(metricFeatures: Map<string, number>): void {
