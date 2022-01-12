@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,10 +20,10 @@ import { RelatedInstance } from '../model/related-instance/related-instance.mode
   templateUrl: './instance.component.html',
   styleUrls: ['./instance.component.css'],
 })
-export class InstanceComponent implements OnInit {
+export class InstanceComponent {
 
   public instances: Instance[] = [];
-  @Input() public filter: InstanceFilter | null = null;
+  @Input() public filter: InstanceFilter = InstanceFilter.All;
   @Input() public candidateInstances: SmellCandidateInstances[] = [];
   public instanceFilter = InstanceFilter;
   private initiallyDisplayedColumns: string[] = ['codeSnippetId', 'annotated', 'severity'];
@@ -42,7 +42,7 @@ export class InstanceComponent implements OnInit {
   public selectedSeverity: number | null = null;
 
   public codeSmells: string[] = [];
-  @Input() public selectedCodeSmell: string = '';
+  public selectedCodeSmell: string = '';
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   private iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
@@ -58,20 +58,21 @@ export class InstanceComponent implements OnInit {
 
   constructor(private dialog: MatDialog) { }
 
-  public ngOnInit(): void {
-    this.selectFormControl.markAsTouched();
-  }
-
   public ngOnChanges(): void {
     if (this.iframe) this.iframe.srcdoc = '';
-    this.selectedCodeSmell = '';
+    this.setInitSmellSelection();
     this.severityValues.clear();
     this.selectedSeverity = null;
-    this.dataSource.data = [];
+    this.chosenInstance = new Instance();
+    this.panelOpenState = this.candidateInstances.length != 0
+  }
+
+  private setInitSmellSelection() {
     this.codeSmells = [];
     this.candidateInstances.forEach(instances => this.codeSmells.push(instances.codeSmell?.name!));
-    this.chosenInstance = new Instance();
-    this.selectFormControl.setValue('');
+    this.selectedCodeSmell = sessionStorage.getItem('codeSmellFilter')!;
+    this.selectFormControl.setValue(this.selectedCodeSmell);
+    this.filtersChanged();
   }
 
   public ngAfterViewChecked(): void {
@@ -180,7 +181,9 @@ export class InstanceComponent implements OnInit {
     this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
   }
 
-  public newProjectSelected(event: any): void {
-    this.selectedCodeSmell = "";
+  public smellSelectionChanged() {
+    sessionStorage.setItem('codeSmellFilter', this.selectedCodeSmell);
+    this.selectFormControl.setValue(this.selectedCodeSmell);
+    this.filtersChanged();
   }
 }

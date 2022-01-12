@@ -41,7 +41,7 @@ export class DataSetProjectComponent implements OnInit {
   @Output() newCandidates = new EventEmitter<SmellCandidateInstances[]>();
   public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"];
   public filterFormControl: FormControl = new FormControl('', [Validators.required]);
-  public selectedFilter: string = '';
+  public selectedFilter: string = 'All instances';
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   private pollingCycleDurationInSeconds: number = 10;
@@ -154,8 +154,7 @@ export class DataSetProjectComponent implements OnInit {
 
   public chooseProject(project: DataSetProject): void {
     this.chosenProject = project;
-    this.selectedFilter = '';
-    this.resetCandidateInstances();
+    this.filterSelection();
   }
 
   public addProject(): void {

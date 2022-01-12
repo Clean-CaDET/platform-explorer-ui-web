@@ -1,15 +1,15 @@
-<mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+<mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="panelOpenState">
     <mat-expansion-panel-header>
         <mat-panel-title>Instances</mat-panel-title>
         <mat-panel-description *ngIf="!panelOpenState">
             Choose an instance to annotate
         </mat-panel-description>
     </mat-expansion-panel-header>
-    <div id="smell-filter-div" *ngIf="filter != null && candidateInstances.length != 0">
+    <div id="smell-filter-div" *ngIf="candidateInstances.length != 0">
         <p>Select a code smell:</p>
         <mat-form-field appearance="fill">
             <mat-label>Code smell</mat-label>
-            <mat-select [(value)]="selectedCodeSmell" (selectionChange)="filtersChanged()" required [formControl]="selectFormControl">
+            <mat-select [(value)]="selectedCodeSmell" (selectionChange)="smellSelectionChanged()" required [formControl]="selectFormControl">
                 <mat-option [value]="smell" *ngFor="let smell of codeSmells">{{smell}}</mat-option>
             </mat-select>
         </mat-form-field>

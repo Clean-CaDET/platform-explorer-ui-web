@@ -81,6 +81,7 @@ export class DataSetComponent implements OnInit {
   public chooseDataset(dataset: DataSet): void {
     this.chosenDataset = dataset;
     this.projectsToShow = dataset.projects;
+    sessionStorage.setItem('codeSmellFilter', this.chosenDataset.projects[0]!.candidateInstances[0]!.codeSmell?.name!);
   }
 
   public newProjects(projects: DataSetProject[]): void {
