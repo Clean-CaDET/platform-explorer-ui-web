@@ -27,7 +27,7 @@ export class AnnotationContainerComponent {
   
   constructor() { }
 
-  public ngAfterViewChecked(): void {
+  public ngAfterContentChecked(): void {
     if (!this.iframe) this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
     if (this.iframe && sessionStorage.getItem('changeView')=='true') {
       this.iframe.srcdoc = '';
@@ -42,7 +42,7 @@ export class AnnotationContainerComponent {
       if (newSrcDoc != this.iframe.srcdoc) this.iframe.srcdoc = newSrcDoc;
     }
     
-    if (this.chosenInstance) this.dataSourceRelatedInstances.data = this.chosenInstance.relatedInstances;
+    if (this.chosenInstance) this.dataSourceRelatedInstances.data = this.chosenInstance?.relatedInstances.sort((a, b) => a.relationType.localeCompare(b.relationType));
 
     var newName = this.chosenInstance?.codeSnippetId.split('.').pop()!;
     if (newName != this.chosenInstanceName) this.chosenInstanceName = newName;
