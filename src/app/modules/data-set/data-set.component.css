@@ -67,5 +67,33 @@ mat-expansion-panel-header.mat-expanded:hover {
 }
 
 de-data-set-project {
-    width: 70%;
+    width: 50%;
+}
+
+de-instance {
+    width: 50%;
+}
+
+.drawer-container {
+    height: 100%;
+}
+  
+.sidenav {
+padding: 20px;
+}
+
+de-annotation-container {
+    width: 25%;
+    margin: 20px;
+}
+
+.mat-stroked-button {
+    color: rgb(92, 13, 110);
+    margin-top: 10px;
+}
+
+.centered-button {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }

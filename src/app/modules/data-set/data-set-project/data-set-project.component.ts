@@ -154,6 +154,7 @@ export class DataSetProjectComponent implements OnInit {
 
   public chooseProject(project: DataSetProject): void {
     this.chosenProject = project;
+    sessionStorage.setItem('changeView', 'true');
     this.filterSelection();
   }
 

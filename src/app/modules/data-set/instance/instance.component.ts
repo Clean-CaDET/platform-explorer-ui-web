@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,7 +13,6 @@ import { DialogConfigService } from '../dialogs/dialog-config.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 import { FormControl, Validators } from '@angular/forms';
 import { AnnotationService } from '../annotation/annotation.service';
-import { RelatedInstance } from '../model/related-instance/related-instance.model';
 
 @Component({
   selector: 'de-instance',
@@ -25,15 +24,10 @@ export class InstanceComponent {
   public instances: Instance[] = [];
   @Input() public filter: InstanceFilter = InstanceFilter.All;
   @Input() public candidateInstances: SmellCandidateInstances[] = [];
-  public instanceFilter = InstanceFilter;
   private initiallyDisplayedColumns: string[] = ['codeSnippetId', 'annotated', 'severity'];
   public displayedColumns: string[] = this.initiallyDisplayedColumns;
-  public displayedColumnsRelatedInstances: string[] = ['codeSnippetId', 'relationType', 'couplingStrength'];
-  public previousAnnotation: Annotation | null = null;
   public dataSource: MatTableDataSource<Instance> = new MatTableDataSource<Instance>(this.instances);
-  public dataSourceRelatedInstances: MatTableDataSource<RelatedInstance> = new MatTableDataSource<RelatedInstance>();
   public searchInput: string = '';
-  public chosenInstanceName: string = '';
 
   public annotationStatuses: string[] = Object.keys(AnnotationStatus);
   public selectedAnnotationStatus: AnnotationStatus = AnnotationStatus.All;
@@ -45,11 +39,16 @@ export class InstanceComponent {
   public selectedCodeSmell: string = '';
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
-  private iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
   public selectFormControl = new FormControl('', Validators.required);
   public chosenInstance: Instance | null = new Instance();
   public annotatorId = AnnotationService.getLoggedInAnnotatorId();
-  public panelOpenState = false;
+
+  @Output() instanceToAnnotate = new EventEmitter<Instance>();
+  @Output() selectedSmell = new EventEmitter<string>();
+  @Output() previousAnnotation = new EventEmitter<Annotation>();
+
+  @Input() newAnnotation: Annotation | undefined;
+  @Input() changedAnnotation: Annotation | undefined;
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
@@ -59,12 +58,10 @@ export class InstanceComponent {
   constructor(private dialog: MatDialog) { }
 
   public ngOnChanges(): void {
-    if (this.iframe) this.iframe.srcdoc = '';
     this.setInitSmellSelection();
     this.severityValues.clear();
     this.selectedSeverity = null;
-    this.chosenInstance = new Instance();
-    this.panelOpenState = this.candidateInstances.length != 0
+    this.showFilteredInstances();
   }
 
   private setInitSmellSelection() {
@@ -72,11 +69,28 @@ export class InstanceComponent {
     this.candidateInstances.forEach(instances => this.codeSmells.push(instances.codeSmell?.name!));
     this.selectedCodeSmell = sessionStorage.getItem('codeSmellFilter')!;
     this.selectFormControl.setValue(this.selectedCodeSmell);
-    this.filtersChanged();
   }
 
-  public ngAfterViewChecked(): void {
-    this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
+  public ngDoCheck() {
+    if (this.newAnnotation) this.addAnnotation();
+    if (this.changedAnnotation) this.changeAnnotation();
+    
+    this.showFilteredInstances();
+  }
+
+  private addAnnotation() {
+    let i = this.instances.findIndex(i => i.id == this.chosenInstance?.id);
+    if (i != -1) {
+      this.instances[i].annotations.push(this.newAnnotation!);
+      this.dataSource.data = this.instances;
+    }
+  }
+
+  private changeAnnotation() {
+    let i = this.instances.findIndex(i => i.id == this.chosenInstance?.id);
+    let j = -1;
+    if (i != -1) j = this.instances[i].annotations.findIndex(a => a.id == this.changedAnnotation?.id);
+    if (j != -1) this.instances[i].annotations[j] = this.changedAnnotation!;
   }
 
   private instanceHasSelectedAnnotationStatus(instance: Instance): boolean {
@@ -111,30 +125,6 @@ export class InstanceComponent {
     return instances;
   }
 
-  public filtersChanged(): void {
-    if (this.iframe) this.iframe.srcdoc = '';
-    this.chosenInstance = null;
-    this.showFilteredInstances();
-  }
-
-  public async addAnnotation(annotation: Annotation): Promise<void> {
-    let i = this.instances.findIndex(i => i.id == this.chosenInstance?.id);
-    this.instances[i].annotations.push(annotation);
-    this.showFilteredInstances();
-  }
-
-  public async changeAnnotation(annotation: Annotation) {
-    let i = this.instances.findIndex(i => i.id == this.chosenInstance?.id);
-    let j = this.instances[i].annotations.findIndex(a => a.id == annotation.id);
-    this.instances[i].annotations[j] = annotation;
-    this.showFilteredInstances();
-  }
-
-  public searchInstances(): void {
-    this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance?.link!);
-    this.showFilteredInstances();
-  }
-
   public showAllAnnotations(annotations: Annotation[], instanceId: number): void {
     let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', {annotations: annotations, instanceId: instanceId});
     this.dialog.open(DisagreeingAnnotationsDialogComponent, dialogConfig);
@@ -146,7 +136,7 @@ export class InstanceComponent {
     return url.split('.').join(`.${hairSpace}`);
   }
 
-  private showFilteredInstances(): void {
+  public showFilteredInstances(): void {
     this.severityValues.clear();
     this.displayedColumns = this.initiallyDisplayedColumns.slice();
     if (this.filter == InstanceFilter.DisagreeingAnnotations) {
@@ -168,22 +158,16 @@ export class InstanceComponent {
     }
   }
 
-  private createSrcdocFromGithubLink(githubLink: string): string {
-    let completeLink = 'https://emgithub.com/embed.js?target=' + encodeURIComponent(githubLink) + '&style=github&showBorder=on&showLineNumbers=on&showFileMeta=on&showCopy=on';
-    return '<script src=\"' + completeLink + '\"></script>';
-  }
-
   public chooseInstance(instance: Instance): void {
     this.chosenInstance = instance;
-    this.chosenInstanceName = this.chosenInstance?.codeSnippetId.split('.').pop()!;
-    this.dataSourceRelatedInstances.data = this.chosenInstance.relatedInstances;
-    this.previousAnnotation = this.chosenInstance.annotations.find(a => a.annotator.id == this.annotatorId)!;
-    this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
+    this.instanceToAnnotate.emit(this.chosenInstance);
+    this.selectedSmell.emit(this.selectedCodeSmell);
+    this.previousAnnotation.emit(this.chosenInstance.annotations.find(a => a.annotator.id == this.annotatorId)!);
   }
 
   public smellSelectionChanged() {
     sessionStorage.setItem('codeSmellFilter', this.selectedCodeSmell);
     this.selectFormControl.setValue(this.selectedCodeSmell);
-    this.filtersChanged();
+    this.showFilteredInstances();
   }
 }

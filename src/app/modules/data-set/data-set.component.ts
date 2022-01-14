@@ -15,6 +15,8 @@ import { SmellCandidateInstances } from './model/smell-candidate-instances/smell
 import { InstanceFilter } from './model/enums/enums.model';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
+import { Instance } from './model/instance/instance.model';
+import { Annotation } from './model/annotation/annotation.model';
 
 @Component({
   selector: 'de-data-set',
@@ -32,6 +34,14 @@ export class DataSetComponent implements OnInit {
   public filter: InstanceFilter = InstanceFilter.All;
   public candidateInstances: SmellCandidateInstances[] = [];
   public panelOpenState = false;
+  public showFiller = false;
+
+  public instanceToAnnotate: Instance | undefined;
+  public selectedSmell: string = '';
+  public previousAnnotation: Annotation | undefined;
+
+  public newAnnotation: Annotation | undefined;
+  public changedAnnotation: Annotation | undefined;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
 
@@ -45,6 +55,12 @@ export class DataSetComponent implements OnInit {
   public async ngOnInit(): Promise<void> {
     this.dataSets = await this.dataSetService.getAllDataSets();
     this.dataSource.data = this.dataSets;
+    
+    if (this.dataSets.length > 0) {
+      this.chosenDataset = this.dataSets[0];
+      this.projectsToShow = this.chosenDataset.projects;
+      sessionStorage.setItem('codeSmellFilter', this.chosenDataset.projects[0]!.candidateInstances[0]!.codeSmell?.name!);
+    }
   }
 
   public addDataSet(): void {
@@ -82,6 +98,7 @@ export class DataSetComponent implements OnInit {
     this.chosenDataset = dataset;
     this.projectsToShow = dataset.projects;
     sessionStorage.setItem('codeSmellFilter', this.chosenDataset.projects[0]!.candidateInstances[0]!.codeSmell?.name!);
+    sessionStorage.setItem('changeView', 'true');
   }
 
   public newProjects(projects: DataSetProject[]): void {
@@ -95,6 +112,18 @@ export class DataSetComponent implements OnInit {
 
   public newCandidates(candidates: SmellCandidateInstances[]): void {
     this.candidateInstances = candidates;
+  }
+
+  public chosenInstance(instance: Instance): void {
+    this.instanceToAnnotate = instance;
+  }
+
+  public smellSelected(smell: string): void {
+    this.selectedSmell = smell;
+  }
+
+  public previousAnnotated(annotation: Annotation): void {
+    this.previousAnnotation = annotation; 
   }
   
   public exportDraftDataSet(dataSet: DataSet): void {
@@ -127,5 +156,13 @@ export class DataSetComponent implements OnInit {
     dialogRef.afterClosed().subscribe((updated: DataSet) => {
       if (updated) this.toastr.success('Updated dataset ' + updated.name);
     });
+  }
+
+  public async addAnnotation(annotation: Annotation): Promise<void> {
+    this.newAnnotation = annotation;
+  }
+
+  public async changeAnnotation(annotation: Annotation) {
+    this.changedAnnotation = annotation;
   }
 }

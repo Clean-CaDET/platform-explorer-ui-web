@@ -17,7 +17,7 @@ export class AnnotationComponent implements OnInit {
 
   @Input() public codeSmell: string = '';
   @Input() public instanceId: number | null = null;
-  @Input() public previousAnnotation: Annotation | null = null;
+  @Input() public previousAnnotation: Annotation | undefined;
   @Input() public disableEdit: boolean = false;
 
   public severityFormControl: FormControl = new FormControl('0', [

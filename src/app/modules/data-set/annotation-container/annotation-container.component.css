@@ -1,0 +1,42 @@
+.annotation-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+#snippet {
+    width: 70%;
+    margin: 20px;
+}
+
+.vertical-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#related-instances {
+    margin: 10px;
+    max-height: inherit;
+    overflow: auto;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+.mat-table {
+    width: 100%;
+}
+
+.green-icon {
+    color: green;
+}
+
+.orange-icon {
+    color: orange;
+}

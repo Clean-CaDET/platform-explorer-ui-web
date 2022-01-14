@@ -15,6 +15,7 @@ import { ExportDraftDataSetDialogComponent } from './dialogs/export-draft-data-s
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
 import { UpdateProjectDialogComponent } from './dialogs/update-project-dialog/update-project-dialog.component';
+import { AnnotationContainerComponent } from './annotation-container/annotation-container.component';
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import { UpdateProjectDialogComponent } from './dialogs/update-project-dialog/up
     AnnotationComponent,
     DisagreeingAnnotationsDialogComponent,
     AnnotationConsistencyDialogComponent,
+    AnnotationContainerComponent
   ],
   imports: [
     CommonModule,

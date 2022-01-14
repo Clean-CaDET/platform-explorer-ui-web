@@ -1,125 +1,78 @@
-<mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="panelOpenState">
-    <mat-expansion-panel-header>
-        <mat-panel-title>Instances</mat-panel-title>
-        <mat-panel-description *ngIf="!panelOpenState">
-            Choose an instance to annotate
-        </mat-panel-description>
-    </mat-expansion-panel-header>
-    <div id="smell-filter-div" *ngIf="candidateInstances.length != 0">
-        <p>Select a code smell:</p>
-        <mat-form-field appearance="fill">
-            <mat-label>Code smell</mat-label>
-            <mat-select [(value)]="selectedCodeSmell" (selectionChange)="smellSelectionChanged()" required [formControl]="selectFormControl">
-                <mat-option [value]="smell" *ngFor="let smell of codeSmells">{{smell}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div class="instance-container mat-elevation-z8 container" *ngIf="selectedCodeSmell != ''">
-        <p class="table-title">Instances ({{filter}})</p>
-        <div class="table-header">
-            <mat-form-field appearance="fill" class="search">
-                <mat-label>Search by code snippet id</mat-label>
-                <input matInput (keyup)="searchInstances()" [(ngModel)]="searchInput" placeholder="Code snippet id">
-            </mat-form-field>
-            <div class="filters">
-                <mat-form-field appearance="fill"  id="ann-status-filter">
-                    <mat-label>Annotation status</mat-label>
-                    <mat-select [(value)]="selectedAnnotationStatus" (selectionChange)="filtersChanged()">
-                        <mat-option [value]="status" *ngFor="let status of annotationStatuses">{{status}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field appearance="fill" id="severity-filter" *ngIf="selectedAnnotationStatus != 'Not_Annotated'">
-                    <mat-label>Severity</mat-label>
-                    <mat-select [(value)]="selectedSeverity" (selectionChange)="filtersChanged()">
-                        <mat-option [value]="severity" *ngFor="let severity of severityValues">{{severity}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
-        <div id="instances-table-div">
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
-                <ng-container matColumnDef="codeSnippetId">
-                    <th mat-header-cell *matHeaderCellDef width="85%">Code snippet id</th>
-                    <td mat-cell *matCellDef="let instance" width="85%">
-                        <a href="{{instance.link}}" target="_blank">{{formatUrl(instance.codeSnippetId)}}</a>
-                    </td>
-                    <td mat-footer-cell *matFooterCellDef>Total instances: {{dataSource.data.length}}</td>
-                </ng-container>
-                <ng-container matColumnDef="annotated">
-                    <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Annotated</th>
-                    <td mat-cell *matCellDef="let instance" width="5%" class="cell-center">
-                        <ng-container *ngIf="instance.hasAnnotationFromLoggedUser; else not_annotated">
-                            <mat-icon matTooltip="annotated" class="icon-annotated">check_circle_outline</mat-icon>
-                        </ng-container>
-                        <ng-template #not_annotated>
-                            <ng-container>
-                                <mat-icon matTooltip="not annotated" class="icon-not-annotated">highlight_off</mat-icon>
-                            </ng-container>
-                        </ng-template>
-                    </td>
-                    <td mat-footer-cell *matFooterCellDef></td>
-                </ng-container>
-                <ng-container matColumnDef="severity">
-                    <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center" [hidden]="selectedAnnotationStatus == 'Not_Annotated'">Severity</th>
-                    <td mat-cell *matCellDef="let instance" width="5%" class="cell-center"  [hidden]="selectedAnnotationStatus == 'Not_Annotated'">
-                        <span *ngIf="instance.hasAnnotationFromLoggedUser">{{instance.annotationFromLoggedUser.severity}}</span>
-                    </td>
-                    <td mat-footer-cell *matFooterCellDef></td>
-                </ng-container>
-                <ng-container matColumnDef="show-annotations" >
-                    <th mat-header-cell *matHeaderCellDef width="5%"> Annotations </th>
-                    <td mat-cell *matCellDef="let instance" width="5%">
-                        <ng-container *ngIf="instance.annotations.length">
-                            <button mat-stroked-button color="primary" (click)="showAllAnnotations(instance.annotations, instance.id)">Show</button>
-                        </ng-container>
-                    </td>
-                    <td mat-footer-cell *matFooterCellDef></td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row matRipple *matRowDef="let row; columns: displayedColumns;" (click)="chooseInstance(row)" [class.row-chosen]="row.id == chosenInstance?.id"></tr>
-                <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
-            </table>
-        </div>
-    </div> 
-    <div *ngIf="candidateInstances.length == 0" class="message">
-        No instances to show.<br><br>Select a project and filter for the selected project (all, need additional or disagreeing annotations).
-    </div>
-</mat-expansion-panel>
-
-<div class="annotation-container">
-    <iframe frameborder=0 id="snippet" scrolling="yes"></iframe>
-    <div class="vertical-container">
-        <de-annotation *ngIf="chosenInstance?.id!" (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)" [codeSmell]="selectedCodeSmell" [instanceId]="chosenInstance?.id!" [previousAnnotation]="previousAnnotation">
-        </de-annotation> 
-        
-        <div  id="related-instances" *ngIf="chosenInstance?.id! && chosenInstance?.relatedInstances!.length > 0">
-            <p class="table-title">Related instances:</p>
-            <table mat-table [dataSource]="dataSourceRelatedInstances" class="mat-elevation-z8" multiTemplateDataRows>
-                <ng-container matColumnDef="codeSnippetId">
-                    <th mat-header-cell *matHeaderCellDef width="50%">Code snippet id</th>
-                    <td mat-cell *matCellDef="let instance">
-                        <a href="{{instance.link}}" target="_blank">{{formatUrl(instance.codeSnippetId)}}</a>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="relationType">
-                    <th mat-header-cell *matHeaderCellDef width="45%" class="cell-center">Relation type</th>
-                    <td mat-cell *matCellDef="let instance"  class="cell-center">
-                        <mat-icon *ngIf="instance.relationType=='References'" class="green-icon" matTooltip="references {{chosenInstanceName}}">call_received</mat-icon>
-                        <mat-icon *ngIf="instance.relationType=='Referenced'" class="orange-icon" matTooltip="referenced by {{chosenInstanceName}}">call_made</mat-icon>
-                        <span *ngIf="instance.relationType=='Parent'">{{instance.relationType}}</span>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="couplingStrength">
-                    <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Coupling counter</th>
-                    <td mat-cell *matCellDef="let instance" class="cell-center">
-                        {{instance.couplingStrength}}
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumnsRelatedInstances"></tr>
-                <tr mat-row matRipple *matRowDef="let row; columns: displayedColumnsRelatedInstances;"></tr>
-            </table>
-        </div>
-    </div>
+<div id="smell-filter-div" *ngIf="candidateInstances.length != 0">
+    <p>Select a code smell:</p>
+    <mat-form-field appearance="fill">
+        <mat-label>Code smell</mat-label>
+        <mat-select [(value)]="selectedCodeSmell" (selectionChange)="smellSelectionChanged()" required [formControl]="selectFormControl">
+            <mat-option [value]="smell" *ngFor="let smell of codeSmells">{{smell}}</mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
+<div class="instance-container mat-elevation-z8 container" *ngIf="candidateInstances.length != 0">
+    <p class="table-title">Instances ({{filter}})</p>
+    <div class="table-header">
+        <mat-form-field appearance="fill" class="search">
+            <mat-label>Search by code snippet id</mat-label>
+            <input matInput (keyup)="showFilteredInstances()" [(ngModel)]="searchInput" placeholder="Code snippet id">
+        </mat-form-field>
+        <div class="filters">
+            <mat-form-field appearance="fill"  id="ann-status-filter">
+                <mat-label>Annotation status</mat-label>
+                <mat-select [(value)]="selectedAnnotationStatus" (selectionChange)="showFilteredInstances()">
+                    <mat-option [value]="status" *ngFor="let status of annotationStatuses">{{status}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" id="severity-filter" *ngIf="selectedAnnotationStatus != 'Not_Annotated'">
+                <mat-label>Severity</mat-label>
+                <mat-select [(value)]="selectedSeverity" (selectionChange)="showFilteredInstances()">
+                    <mat-option [value]="severity" *ngFor="let severity of severityValues">{{severity}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div id="instances-table-div">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
+            <ng-container matColumnDef="codeSnippetId">
+                <th mat-header-cell *matHeaderCellDef width="85%">Code snippet id</th>
+                <td mat-cell *matCellDef="let instance" width="85%">
+                    <a href="{{instance.link}}" target="_blank">{{formatUrl(instance.codeSnippetId)}}</a>
+                </td>
+                <td mat-footer-cell *matFooterCellDef>Total instances: {{dataSource.data.length}}</td>
+            </ng-container>
+            <ng-container matColumnDef="annotated">
+                <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Annotated</th>
+                <td mat-cell *matCellDef="let instance" width="5%" class="cell-center">
+                    <ng-container *ngIf="instance.hasAnnotationFromLoggedUser; else not_annotated">
+                        <mat-icon matTooltip="annotated" class="icon-annotated">check_circle_outline</mat-icon>
+                    </ng-container>
+                    <ng-template #not_annotated>
+                        <ng-container>
+                            <mat-icon matTooltip="not annotated" class="icon-not-annotated">highlight_off</mat-icon>
+                        </ng-container>
+                    </ng-template>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+            </ng-container>
+            <ng-container matColumnDef="severity">
+                <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center" [hidden]="selectedAnnotationStatus == 'Not_Annotated'">Severity</th>
+                <td mat-cell *matCellDef="let instance" width="5%" class="cell-center"  [hidden]="selectedAnnotationStatus == 'Not_Annotated'">
+                    <span *ngIf="instance.hasAnnotationFromLoggedUser">{{instance.annotationFromLoggedUser.severity}}</span>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+            </ng-container>
+            <ng-container matColumnDef="show-annotations" >
+                <th mat-header-cell *matHeaderCellDef width="5%"> Annotations </th>
+                <td mat-cell *matCellDef="let instance" width="5%">
+                    <ng-container *ngIf="instance.annotations.length">
+                        <button mat-stroked-button color="primary" (click)="showAllAnnotations(instance.annotations, instance.id)">Show</button>
+                    </ng-container>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row matRipple *matRowDef="let row; columns: displayedColumns;" (click)="chooseInstance(row)" [class.row-chosen]="row.id == chosenInstance?.id"></tr>
+            <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+        </table>
+    </div>
+</div> 
+
