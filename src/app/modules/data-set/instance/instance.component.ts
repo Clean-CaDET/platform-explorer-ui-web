@@ -47,9 +47,6 @@ export class InstanceComponent {
   @Output() selectedSmell = new EventEmitter<string>();
   @Output() previousAnnotation = new EventEmitter<Annotation>();
 
-  @Input() newAnnotation: Annotation | undefined;
-  @Input() changedAnnotation: Annotation | undefined;
-
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
     this.dataSource.paginator = this.paginator;
@@ -72,25 +69,7 @@ export class InstanceComponent {
   }
 
   public ngDoCheck() {
-    if (this.newAnnotation) this.addAnnotation();
-    if (this.changedAnnotation) this.changeAnnotation();
-    
     this.showFilteredInstances();
-  }
-
-  private addAnnotation() {
-    let i = this.instances.findIndex(i => i.id == this.chosenInstance?.id);
-    if (i != -1) {
-      this.instances[i].annotations.push(this.newAnnotation!);
-      this.dataSource.data = this.instances;
-    }
-  }
-
-  private changeAnnotation() {
-    let i = this.instances.findIndex(i => i.id == this.chosenInstance?.id);
-    let j = -1;
-    if (i != -1) j = this.instances[i].annotations.findIndex(a => a.id == this.changedAnnotation?.id);
-    if (j != -1) this.instances[i].annotations[j] = this.changedAnnotation!;
   }
 
   private instanceHasSelectedAnnotationStatus(instance: Instance): boolean {

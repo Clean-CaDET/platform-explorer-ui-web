@@ -19,6 +19,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { UpdateProjectDialogComponent } from '../dialogs/update-project-dialog/update-project-dialog.component';
 import { ToastrService } from 'ngx-toastr';
+import { Instance } from '../model/instance/instance.model';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class DataSetProjectComponent implements OnInit {
   @Input() public projects: DataSetProject[] = [];
   @Input() public dataset: DataSet | null = null;
   public candidateInstances: SmellCandidateInstances[] = [];
-  public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'consistency', 'projectDelete', 'projectUpdate'];
+  public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'consistency', 'projectDelete', 'projectUpdate', 'fullyAnnotated'];
   public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.projects);
   public filter: InstanceFilter | null = null;
   public projectState = ProjectState;
@@ -59,6 +60,10 @@ export class DataSetProjectComponent implements OnInit {
     this.httpClient.get('assets/appsettings.json').subscribe((data: any) => this.pollingCycleDurationInSeconds = data.pollingCycleDuration);
   }
 
+  public ngDoCheck() {
+    this.areProjectsFullyAnnotated();
+  }
+
   public ngOnChanges(): void {
     this.chosenProject = new DataSetProject();
     this.candidateInstances = [];
@@ -68,6 +73,21 @@ export class DataSetProjectComponent implements OnInit {
       this.startPollingProjects();
     } 
     this.dataSource.data = this.projects;
+  }
+
+  private areProjectsFullyAnnotated() {
+    this.projects.forEach(p => {
+      p.fullyAnnotated = true;
+      p.candidateInstances.forEach(c => {
+          c.instances.forEach(i => {
+            if (!this.findAnnotationFromAnnotator(i)) p.fullyAnnotated = false;
+          });
+      });
+    });
+  }
+
+  private findAnnotationFromAnnotator(instance: Instance) {
+    return instance.annotations.find(a => a.annotator.id.toString() == sessionStorage.getItem('annotatorId'));
   }
 
   public isProjectsEmpty(): boolean {

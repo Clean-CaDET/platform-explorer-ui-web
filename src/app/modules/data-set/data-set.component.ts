@@ -40,9 +40,6 @@ export class DataSetComponent implements OnInit {
   public selectedSmell: string = '';
   public previousAnnotation: Annotation | undefined;
 
-  public newAnnotation: Annotation | undefined;
-  public changedAnnotation: Annotation | undefined;
-
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
@@ -159,10 +156,11 @@ export class DataSetComponent implements OnInit {
   }
 
   public async addAnnotation(annotation: Annotation): Promise<void> {
-    this.newAnnotation = annotation;
+    this.instanceToAnnotate?.annotations.push(annotation);
   }
 
   public async changeAnnotation(annotation: Annotation) {
-    this.changedAnnotation = annotation;
+    var i = this.instanceToAnnotate?.annotations.findIndex(a => a.id == annotation.id)!;
+    if (i != -1) this.instanceToAnnotate!.annotations[i] = annotation;
   }
 }
