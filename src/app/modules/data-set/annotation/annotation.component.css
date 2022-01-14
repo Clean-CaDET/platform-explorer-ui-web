@@ -26,7 +26,7 @@ form {
     width: 100%;
 }
 
-.annotate-button {
+#annotate-button {
     margin: auto !important;
 }
 
