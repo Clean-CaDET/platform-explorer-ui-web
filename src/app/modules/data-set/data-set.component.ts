@@ -17,6 +17,7 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
 import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
 import { Instance } from './model/instance/instance.model';
 import { Annotation } from './model/annotation/annotation.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'de-data-set',
@@ -35,10 +36,14 @@ export class DataSetComponent implements OnInit {
   public candidateInstances: SmellCandidateInstances[] = [];
   public panelOpenState = false;
   public showFiller = false;
+  public automaticAnnotationMode = false;
 
   public instanceToAnnotate: Instance | undefined;
   public selectedSmell: string = '';
   public previousAnnotation: Annotation | undefined;
+  public chosenProject: DataSetProject | undefined;
+  public totalNumInstances: number = 0;
+  public annotatedInstancesNum: number = 0;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
 
@@ -47,7 +52,7 @@ export class DataSetComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dialog: MatDialog, private dataSetService: DataSetService, private toastr: ToastrService) {}
+  constructor(private dialog: MatDialog, private dataSetService: DataSetService, private toastr: ToastrService, private router: Router) {}
 
   public async ngOnInit(): Promise<void> {
     this.dataSets = await this.dataSetService.getAllDataSets();
@@ -56,8 +61,24 @@ export class DataSetComponent implements OnInit {
     if (this.dataSets.length > 0) {
       this.chosenDataset = this.dataSets[0];
       this.projectsToShow = this.chosenDataset.projects;
+      this.countAnnotatedInstances();
       sessionStorage.setItem('codeSmellFilter', this.chosenDataset.projects[0]!.candidateInstances[0]!.codeSmell?.name!);
     }
+  }
+
+  private countAnnotatedInstances() {
+    this.annotatedInstancesNum = 0;
+    this.totalNumInstances = 0;
+    this.chosenDataset.projects.forEach(project => {
+      project.candidateInstances.forEach(candidates => {
+        this.totalNumInstances += candidates.instances.length;
+        candidates.instances.forEach(instance => {
+          if (instance.annotations.find(a => a.annotator.id.toString() == sessionStorage.getItem('annotatorId'))) {
+            this.annotatedInstancesNum++;
+          }
+        });
+      });
+    });
   }
 
   public addDataSet(): void {
@@ -96,6 +117,7 @@ export class DataSetComponent implements OnInit {
     this.projectsToShow = dataset.projects;
     sessionStorage.setItem('codeSmellFilter', this.chosenDataset.projects[0]!.candidateInstances[0]!.codeSmell?.name!);
     sessionStorage.setItem('changeView', 'true');
+    this.countAnnotatedInstances();
   }
 
   public newProjects(projects: DataSetProject[]): void {
@@ -157,10 +179,62 @@ export class DataSetComponent implements OnInit {
 
   public async addAnnotation(annotation: Annotation): Promise<void> {
     this.instanceToAnnotate?.annotations.push(annotation);
+    if (this.automaticAnnotationMode) this.loadNextInstanceForAnnotation();
+    this.countAnnotatedInstances();
+  }
+
+  public loadNextInstanceForAnnotation() {
+    var allInstances = this.getInstancesFromAllProjects();
+    var i = 0;
+    allInstances.forEach((instance: Instance) => {
+      if (instance.id == this.instanceToAnnotate?.id && i < allInstances.length-1) {
+        this.instanceToAnnotate = allInstances[i+1];
+        this.candidateInstances = this.projectsToShow.find(p => p.url == this.instanceToAnnotate?.projectLink)?.candidateInstances!;
+        this.chosenProject = this.projectsToShow.find(p => p.url == this.instanceToAnnotate?.projectLink);
+        if (this.instanceToAnnotate.hasAnnotationFromLoggedUser) this.previousAnnotation = this.instanceToAnnotate.annotationFromLoggedUser!;
+        return;
+      }
+      i++;
+    });
+  }
+
+  private getInstancesFromAllProjects(): Instance[] {
+    var allInstances: Instance[] = [];
+    this.projectsToShow.forEach(project => {
+      project.candidateInstances.forEach(candidates => {
+        if (candidates.codeSmell?.name==this.selectedSmell) {
+          candidates.instances.forEach(instance => {
+            allInstances.push(instance);
+          });
+        }
+      });
+    });
+    return allInstances;
   }
 
   public async changeAnnotation(annotation: Annotation) {
     var i = this.instanceToAnnotate?.annotations.findIndex(a => a.id == annotation.id)!;
     if (i != -1) this.instanceToAnnotate!.annotations[i] = annotation;
+    if (this.automaticAnnotationMode) this.loadNextInstanceForAnnotation();
+  }
+
+  public loadPreviousInstance() {
+    var allInstances = this.getInstancesFromAllProjects();
+    var i = 0;
+    allInstances.forEach((instance: Instance) => {
+      if (instance.id == this.instanceToAnnotate?.id && i > 0) {
+        this.instanceToAnnotate = allInstances[i-1];
+        this.candidateInstances = this.projectsToShow.find(p => p.url == this.instanceToAnnotate?.projectLink)?.candidateInstances!;
+        this.chosenProject = this.projectsToShow.find(p => p.url == this.instanceToAnnotate?.projectLink);
+        if (this.instanceToAnnotate.hasAnnotationFromLoggedUser) this.previousAnnotation = this.instanceToAnnotate.annotationFromLoggedUser!;
+        return;
+      }
+      i++;
+    });
+  }
+
+  public logout() {
+    sessionStorage.clear();
+    this.router.navigate(['/login']);
   }
 }

@@ -42,7 +42,7 @@ export class AnnotationContainerComponent {
       if (newSrcDoc != this.iframe.srcdoc) this.iframe.srcdoc = newSrcDoc;
     }
     
-    if (this.chosenInstance) this.dataSourceRelatedInstances.data = this.chosenInstance?.relatedInstances.sort((a, b) => a.relationType.localeCompare(b.relationType));
+    if (this.chosenInstance) { this.dataSourceRelatedInstances.data = this.chosenInstance?.relatedInstances.sort((a, b) => a.relationType.toString().localeCompare(b.relationType.toString())).map(i => new RelatedInstance(i)) }
 
     var newName = this.chosenInstance?.codeSnippetId.split('.').pop()!;
     if (newName != this.chosenInstanceName) this.chosenInstanceName = newName;

@@ -32,11 +32,12 @@ export class DataSetProjectComponent implements OnInit {
   @Input() public projects: DataSetProject[] = [];
   @Input() public dataset: DataSet | null = null;
   public candidateInstances: SmellCandidateInstances[] = [];
-  public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'consistency', 'projectDelete', 'projectUpdate', 'fullyAnnotated'];
+  public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
   public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.projects);
   public filter: InstanceFilter | null = null;
   public projectState = ProjectState;
   public chosenProject: DataSetProject = new DataSetProject();
+  @Input() selectedRow: DataSetProject | undefined;
   @Output() newProjects = new EventEmitter<DataSetProject[]>();
   @Output() newFilter = new EventEmitter<InstanceFilter>();
   @Output() newCandidates = new EventEmitter<SmellCandidateInstances[]>();
@@ -66,8 +67,7 @@ export class DataSetProjectComponent implements OnInit {
 
   public ngOnChanges(): void {
     this.chosenProject = new DataSetProject();
-    this.candidateInstances = [];
-    this.newCandidates.emit(this.candidateInstances);
+    if (this.selectedRow) this.chosenProject = this.selectedRow;
     if (!this.isProjectsEmpty()) {
       this.projects.forEach((project, index) => this.projects[index] = new DataSetProject(project));
       this.startPollingProjects();

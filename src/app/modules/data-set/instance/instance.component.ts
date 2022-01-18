@@ -40,7 +40,7 @@ export class InstanceComponent {
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   public selectFormControl = new FormControl('', Validators.required);
-  public chosenInstance: Instance | null = new Instance();
+  @Input() public chosenInstance: Instance | undefined;
   public annotatorId = AnnotationService.getLoggedInAnnotatorId();
 
   @Output() instanceToAnnotate = new EventEmitter<Instance>();

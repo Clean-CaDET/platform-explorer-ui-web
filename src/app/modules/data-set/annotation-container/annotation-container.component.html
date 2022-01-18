@@ -1,9 +1,6 @@
 <div class="annotation-container">
     <iframe frameborder=0 id="snippet"></iframe>
     <div class="vertical-container"> 
-        <de-annotation *ngIf="chosenInstance?.id!" (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)" [codeSmell]="selectedCodeSmell" [instanceId]="chosenInstance?.id!" [previousAnnotation]="previousAnnotation">
-        </de-annotation> 
-        
         <p *ngIf="chosenInstance?.id!" class="table-title">Check the instance on GitHub!
             <a href="{{chosenInstance?.link}}" target="_blank">
                 <mat-icon>open_in_new</mat-icon>
@@ -38,6 +35,9 @@
                 <tr mat-row matRipple *matRowDef="let row; columns: displayedColumnsRelatedInstances;"></tr>
             </table>
         </div>
+        
+        <de-annotation *ngIf="chosenInstance?.id!" (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)" [codeSmell]="selectedCodeSmell" [instanceId]="chosenInstance?.id!" [previousAnnotation]="previousAnnotation">
+        </de-annotation> 
     </div>
 </div>
 

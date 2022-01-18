@@ -1,6 +1,7 @@
 .instance-container {
     height: max-content;
     background-color: white;
+    margin-top: 20px;
 }
 
 .filters {
@@ -38,8 +39,7 @@ mat-form-field {
 }
 
 #instances-table-div {
-    min-height: fit-content;
-    max-height: 300px;
+    max-height: 290px;
     overflow: auto;
 }
 
@@ -58,14 +58,6 @@ mat-form-field {
 #smell-filter-div {
     display: flex;
     flex-direction: row;
-    margin-top: 10px;
-}
-
-#smell-filter-div > p {
-    font-size: 18px;
-    text-shadow: 2px 2px 8px lightgray;
-    margin: 20px 10px 0px 20px;
-    color: rgb(92, 13, 110);
 }
 
 tr.mat-footer-row {
@@ -74,4 +66,17 @@ tr.mat-footer-row {
   
 .mat-table-sticky {
     border-top: 1px solid rgb(168, 166, 166);
+}
+
+#total-instances {
+    margin-left: auto;
+    margin-right: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.filterForm {
+    margin-left: 20px;
+    border-top: 2px solid lightgray;
 }

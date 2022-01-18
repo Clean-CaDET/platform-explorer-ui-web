@@ -1,7 +1,6 @@
 .annotation-container {
     display: flex;
     flex-direction: row;
-    height: 100%;
 }
 
 #snippet {
@@ -12,6 +11,7 @@
 .vertical-container {
     display: flex;
     flex-direction: column;
+    max-height: 700px;
 }
 
 #related-instances {
@@ -43,4 +43,8 @@
 
 .blue-icon {
     color: rgb(101, 184, 236);
+}
+
+iframe {
+    max-height: 700px;
 }

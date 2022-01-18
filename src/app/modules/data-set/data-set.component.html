@@ -57,26 +57,46 @@
             </button>
         </div>
     </mat-sidenav>
-  
+    <div class="mat-toolbar-div">
+        <mat-toolbar>
+            <div class="options-div">
+                <div class="dataset-options-div">
+                    <mat-panel-title>
+                        Dataset: {{chosenDataset.name}}
+                    </mat-panel-title>
+                    <button mat-button (click)="drawer.toggle()" id="edit-button">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <mat-panel-title id="annotations-info">
+                        Annotated {{annotatedInstancesNum}}/{{totalNumInstances}}
+                    </mat-panel-title>
+                </div>
+                <div class="toggle-automatic-mode">
+                    Automatic annotation mode
+                    <mat-slide-toggle color="primary" [(ngModel)]="automaticAnnotationMode"></mat-slide-toggle>
+                    <button mat-button id="logout-button" (click)="logout()">
+                        <mat-icon matTooltip="Logout">exit_to_app</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </mat-toolbar>
+    </div>
     <div>
         <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true">
-            <div *ngIf="!drawer.opened">
-                <button mat-stroked-button (click)="drawer.toggle()">
-                    <mat-icon>edit</mat-icon>
-                    Change dataset
-                </button>
-            </div>
             <mat-expansion-panel-header>
-                <mat-panel-title>
-                    Dataset: {{chosenDataset.name}}
+                <mat-panel-title id="expansion-title">
+                    <span>Projects and instances</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div class="all-tables">
-                <de-data-set-project [projects]="projectsToShow" [dataset]="chosenDataset" (newProjects)="newProjects($event)" (newFilter)="newFilter($event)" (newCandidates)="newCandidates($event)"></de-data-set-project>
-                <de-instance [filter]="filter" [candidateInstances]="candidateInstances" (instanceToAnnotate)="chosenInstance($event)" (selectedSmell)="smellSelected($event)" (previousAnnotation)="previousAnnotated($event)"></de-instance>
+                <de-data-set-project [selectedRow]="chosenProject" [projects]="projectsToShow" [dataset]="chosenDataset" (newProjects)="newProjects($event)" (newFilter)="newFilter($event)" (newCandidates)="newCandidates($event)"></de-data-set-project>
+                <de-instance [filter]="filter" [chosenInstance]="instanceToAnnotate" [candidateInstances]="candidateInstances" (instanceToAnnotate)="chosenInstance($event)" (previousAnnotation)="previousAnnotated($event)" (selectedSmell)="smellSelected($event)"></de-instance>
             </div>
         </mat-expansion-panel>
-        
         <de-annotation-container [chosenInstance]="instanceToAnnotate" [selectedCodeSmell]="selectedSmell" [previousAnnotation]="previousAnnotation!" (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)"></de-annotation-container>
+        <div *ngIf="instanceToAnnotate" class="automatic-buttons-div">
+            <button mat-stroked-button color="primary" (click)="loadPreviousInstance()">Previous</button>
+            <button mat-stroked-button color="primary" (click)="loadNextInstanceForAnnotation()">Next</button>
+        </div>
     </div>
 </mat-sidenav-container>
