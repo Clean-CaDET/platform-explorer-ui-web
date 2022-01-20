@@ -182,7 +182,11 @@ export class DataSetProjectComponent implements OnInit {
     let dialogConfig = DialogConfigService.setDialogConfig('480px', '520px', this.dataset?.id);
     let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((res: DataSet) => {
-      if (res) this.newProjects.emit(res.projects);
+      if (res) {
+        this.projects = res.projects;
+        this.dataSource.data = this.projects;
+        this.newProjects.emit(this.projects);
+      }
     });
   }
 
@@ -204,6 +208,7 @@ export class DataSetProjectComponent implements OnInit {
         this.projects.splice(this.projects.findIndex(p => p.id == project.id), 1);
         this.dataSource.data = this.projects;
         this.newProjects.emit(this.projects);
+        this.newCandidates.emit([]);
       });
     });
   }

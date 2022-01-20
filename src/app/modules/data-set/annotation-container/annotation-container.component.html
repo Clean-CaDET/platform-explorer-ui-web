@@ -11,13 +11,13 @@
             <p class="table-title">Related instances:</p>
             <table mat-table [dataSource]="dataSourceRelatedInstances" class="mat-elevation-z8" multiTemplateDataRows>
                 <ng-container matColumnDef="codeSnippetId">
-                    <th mat-header-cell *matHeaderCellDef width="50%">Code snippet id</th>
+                    <th mat-header-cell *matHeaderCellDef >Code snippet id</th>
                     <td mat-cell *matCellDef="let instance">
                         <a href="{{instance.link}}" target="_blank">{{formatUrl(instance.codeSnippetId)}}</a>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="relationType">
-                    <th mat-header-cell *matHeaderCellDef width="45%" class="cell-center">Relation type</th>
+                    <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Relation type</th>
                     <td mat-cell *matCellDef="let instance"  class="cell-center">
                         <mat-icon *ngIf="instance.relationType=='References'" class="green-icon" matTooltip="references {{chosenInstanceName}}">call_received</mat-icon>
                         <mat-icon *ngIf="instance.relationType=='Referenced'" class="orange-icon" matTooltip="referenced by {{chosenInstanceName}}">call_made</mat-icon>
@@ -26,11 +26,16 @@
                 </ng-container>
                 <ng-container matColumnDef="couplingStrength">
                     <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Coupling strength</th>
-                    <td mat-cell *matCellDef="let instance" class="cell-center">
-                        {{instance.couplingStrength}}
+                    <td mat-cell *matCellDef="let instance" class="cell-center" title="{{instance.couplingTypeAndStrength | json}}">
+                        {{totalCouplingStrength.get(instance.id)}}
                     </td>
                 </ng-container>
-
+                <ng-container matColumnDef="couplingType">
+                    <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Coupling details</th>
+                    <td mat-cell *matCellDef="let instance" class="cell-center">
+                        {{instance.couplingTypeAndStrength | couplingDetails}}
+                    </td>
+                </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumnsRelatedInstances; sticky: true"></tr>
                 <tr mat-row matRipple *matRowDef="let row; columns: displayedColumnsRelatedInstances;"></tr>
             </table>
