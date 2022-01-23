@@ -46,5 +46,6 @@ export enum CouplingType {
     Parameter = 'Parameter',
     ReturnType = 'ReturnType',
     Variable = 'Variable',
-    Parent = 'Parent'
+    Parent = 'Parent',
+    AccessedAccessor = 'AccessedAccessor'
 }

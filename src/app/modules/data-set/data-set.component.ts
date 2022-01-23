@@ -57,7 +57,10 @@ export class DataSetComponent implements OnInit {
   public async ngOnInit(): Promise<void> {
     this.dataSets = await this.dataSetService.getAllDataSets();
     this.dataSource.data = this.dataSets;
-    
+    this.automaticDatasetSelection();
+  }
+
+  private automaticDatasetSelection() {
     if (this.dataSets.length > 0) {
       this.chosenDataset = this.dataSets[0];
       this.projectsToShow = this.chosenDataset.projects;
@@ -115,6 +118,7 @@ export class DataSetComponent implements OnInit {
   public chooseDataset(dataset: DataSet): void {
     this.chosenDataset = dataset;
     this.projectsToShow = dataset.projects;
+    this.candidateInstances = [];
     sessionStorage.setItem('codeSmellFilter', this.chosenDataset.projects[0]!.candidateInstances[0]!.codeSmell?.name!);
     sessionStorage.setItem('changeView', 'true');
     this.countAnnotatedInstances();
@@ -165,6 +169,7 @@ export class DataSetComponent implements OnInit {
         this.dataSets.splice(this.dataSets.findIndex(d => d.id == dataSet.id), 1);
         this.dataSource.data = this.dataSets;
         if (this.chosenDataset.id == dataSet.id) this.projectsToShow = [];
+        this.automaticDatasetSelection();
       });
     });
   }
