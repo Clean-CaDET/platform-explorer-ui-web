@@ -17,7 +17,7 @@ export class AnnotationComponent implements OnInit {
 
   @Input() public codeSmell: string = '';
   @Input() public instanceId: number | null = null;
-  @Input() public previousAnnotation: Annotation | null = null;
+  @Input() public previousAnnotation: Annotation | undefined;
   @Input() public disableEdit: boolean = false;
 
   public severityFormControl: FormControl = new FormControl('0', [
@@ -60,16 +60,24 @@ export class AnnotationComponent implements OnInit {
   }
 
   public annotate(): void {
+    this.setAnnotateButtonDisableProperty(true);
     if (!this.isValidInput()) {
       this.showErrorInputMessage();
+      this.setAnnotateButtonDisableProperty(false);
       return;
     }
     let annotation = this.getAnnotationFromInput();
     if (this.previousAnnotation) {
       this.updateAnnotation(annotation);
+      this.setAnnotateButtonDisableProperty(false);
       return;
     }
     this.addAnnotation(annotation);
+    this.setAnnotateButtonDisableProperty(false);
+  }
+  
+  private setAnnotateButtonDisableProperty(value: boolean) {
+    (<HTMLInputElement> document.getElementById("annotate-button")).disabled = value;
   }
 
   // TODO: Introduce an object model to avoid dictionaries

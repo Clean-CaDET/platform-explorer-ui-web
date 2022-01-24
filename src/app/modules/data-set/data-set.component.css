@@ -38,6 +38,7 @@ mat-cell > span.truncate-text {
 }
 
 mat-expansion-panel {
+    margin-top: 20px;
     width: 98%;
     padding: 10px;
     margin-left: auto;
@@ -51,8 +52,29 @@ mat-panel-title {
     color: rgb(92, 13, 110);
     font-weight: 550;
     margin: 10px;
+    margin-right: 0px;
     padding: 10px;
-    text-align: center;
+    padding-right: 0px;
+}
+
+#annotations-info {
+    font-size: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(92, 13, 110);
+    font-weight: 550;
+}
+
+#expansion-title {
+    font-size: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(105, 85, 109);
+    font-weight: 550;
+}
+
+#edit-button {
+    margin-left: 0px;
+    padding-left: 0px;
+    color: rgb(92, 13, 110);
 }
 
 mat-panel-description {
@@ -67,5 +89,83 @@ mat-expansion-panel-header.mat-expanded:hover {
 }
 
 de-data-set-project {
-    width: 70%;
+    width: 50%;
+}
+
+de-instance {
+    width: 50%;
+}
+
+.drawer-container {
+    height: 100%;
+}
+  
+.sidenav {
+padding: 20px;
+}
+
+de-annotation-container {
+    width: 25%;
+}
+
+.mat-stroked-button {
+    color: rgb(92, 13, 110);
+    margin-top: 10px;
+}
+
+.centered-button {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.toggle-automatic-mode {
+    margin-top: 10px;
+    margin-left: 20px;
+    color:rgb(92, 13, 110);
+    border-radius: 2px;
+    padding: 10px;
+    font-size: 14px;
+    float: right;
+}
+
+#logout-button {
+    margin-right: 0px;
+    padding-right: 0px;
+    margin-left: 20px;
+    color: black;
+}
+
+.options-div {
+    overflow:hidden;
+    width: 100%;
+}
+
+.dataset-options-div {
+    display: flex;
+    flex-direction: row;
+    float: left;
+}
+
+mat-slide-toggle {
+    margin-left: 5px;
+}
+
+.automatic-buttons-div {
+    margin-left: 20%;
+}
+
+.automatic-buttons-div button {
+    margin: 10px;
+}
+
+mat-toolbar {
+    background-color: rgb(223, 206, 228);
+}
+
+.mat-toolbar-div {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }

@@ -25,7 +25,7 @@ export class Instance {
             this.setMetricFeatures(obj.metricFeatures);
             this.setType(obj.type);
             this.setAnnotationFromLoggedUser();
-            this.relatedInstances = obj.relatedInstances.map((i: any) => new RelatedInstance(i))
+            if (obj.relatedInstances)this.relatedInstances = obj.relatedInstances.map((i: any) => new RelatedInstance(i))
         }
     }
 

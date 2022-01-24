@@ -7,6 +7,7 @@ export class DataSetProject {
     url: string = '';
     candidateInstances: SmellCandidateInstances[] = [];
     state: ProjectState = ProjectState.Processing;
+    fullyAnnotated: boolean = false;
 
     constructor(obj?: any) {
         if (obj) {
@@ -15,6 +16,7 @@ export class DataSetProject {
             this.url = obj.url;
             this.candidateInstances = obj.candidateInstances;
             this.setProjectState(obj.state);
+            this.fullyAnnotated = obj.fullyAnnotated;
         }
     }
 

@@ -1,11 +1,11 @@
-import { RelationType } from "../enums/enums.model";
+import { CouplingType, RelationType } from "../enums/enums.model";
 
 export class RelatedInstance {
     id: number = 0;
     codeSnippetId: string = '';
     link: string = '';
     relationType: string = '';
-    couplingStrength: number = 0;
+    couplingTypeAndStrength: Map<CouplingType, number> = new Map();
 
     constructor(obj?: any) {
         if (obj) {
@@ -13,7 +13,7 @@ export class RelatedInstance {
             this.codeSnippetId = obj.codeSnippetId;
             this.link = obj.link;
             this.setRelationType(obj.relationType);
-            this.couplingStrength = obj.couplingStrength;
+            this.couplingTypeAndStrength = obj.couplingTypeAndStrength;
         }
     }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,27 +13,21 @@ import { DialogConfigService } from '../dialogs/dialog-config.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 import { FormControl, Validators } from '@angular/forms';
 import { AnnotationService } from '../annotation/annotation.service';
-import { RelatedInstance } from '../model/related-instance/related-instance.model';
 
 @Component({
   selector: 'de-instance',
   templateUrl: './instance.component.html',
   styleUrls: ['./instance.component.css'],
 })
-export class InstanceComponent implements OnInit {
+export class InstanceComponent {
 
   public instances: Instance[] = [];
-  @Input() public filter: InstanceFilter | null = null;
+  @Input() public filter: InstanceFilter = InstanceFilter.All;
   @Input() public candidateInstances: SmellCandidateInstances[] = [];
-  public instanceFilter = InstanceFilter;
   private initiallyDisplayedColumns: string[] = ['codeSnippetId', 'annotated', 'severity'];
   public displayedColumns: string[] = this.initiallyDisplayedColumns;
-  public displayedColumnsRelatedInstances: string[] = ['codeSnippetId', 'relationType', 'couplingStrength'];
-  public previousAnnotation: Annotation | null = null;
   public dataSource: MatTableDataSource<Instance> = new MatTableDataSource<Instance>(this.instances);
-  public dataSourceRelatedInstances: MatTableDataSource<RelatedInstance> = new MatTableDataSource<RelatedInstance>();
   public searchInput: string = '';
-  public chosenInstanceName: string = '';
 
   public annotationStatuses: string[] = Object.keys(AnnotationStatus);
   public selectedAnnotationStatus: AnnotationStatus = AnnotationStatus.All;
@@ -42,14 +36,16 @@ export class InstanceComponent implements OnInit {
   public selectedSeverity: number | null = null;
 
   public codeSmells: string[] = [];
-  @Input() public selectedCodeSmell: string = '';
+  public selectedCodeSmell: string = '';
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
-  private iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
   public selectFormControl = new FormControl('', Validators.required);
-  public chosenInstance: Instance | null = new Instance();
+  @Input() public chosenInstance: Instance | undefined;
   public annotatorId = AnnotationService.getLoggedInAnnotatorId();
-  public panelOpenState = false;
+
+  @Output() instanceToAnnotate = new EventEmitter<Instance>();
+  @Output() selectedSmell = new EventEmitter<string>();
+  @Output() previousAnnotation = new EventEmitter<Annotation>();
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
@@ -58,24 +54,22 @@ export class InstanceComponent implements OnInit {
 
   constructor(private dialog: MatDialog) { }
 
-  public ngOnInit(): void {
-    this.selectFormControl.markAsTouched();
-  }
-
   public ngOnChanges(): void {
-    if (this.iframe) this.iframe.srcdoc = '';
-    this.selectedCodeSmell = '';
+    this.setInitSmellSelection();
     this.severityValues.clear();
     this.selectedSeverity = null;
-    this.dataSource.data = [];
-    this.codeSmells = [];
-    this.candidateInstances.forEach(instances => this.codeSmells.push(instances.codeSmell?.name!));
-    this.chosenInstance = new Instance();
-    this.selectFormControl.setValue('');
+    this.showFilteredInstances();
   }
 
-  public ngAfterViewChecked(): void {
-    this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
+  private setInitSmellSelection() {
+    this.codeSmells = [];
+    this.candidateInstances.forEach(instances => this.codeSmells.push(instances.codeSmell?.name!));
+    this.selectedCodeSmell = sessionStorage.getItem('codeSmellFilter')!;
+    this.selectFormControl.setValue(this.selectedCodeSmell);
+  }
+
+  public ngDoCheck() {
+    this.showFilteredInstances();
   }
 
   private instanceHasSelectedAnnotationStatus(instance: Instance): boolean {
@@ -110,30 +104,6 @@ export class InstanceComponent implements OnInit {
     return instances;
   }
 
-  public filtersChanged(): void {
-    if (this.iframe) this.iframe.srcdoc = '';
-    this.chosenInstance = null;
-    this.showFilteredInstances();
-  }
-
-  public async addAnnotation(annotation: Annotation): Promise<void> {
-    let i = this.instances.findIndex(i => i.id == this.chosenInstance?.id);
-    this.instances[i].annotations.push(annotation);
-    this.showFilteredInstances();
-  }
-
-  public async changeAnnotation(annotation: Annotation) {
-    let i = this.instances.findIndex(i => i.id == this.chosenInstance?.id);
-    let j = this.instances[i].annotations.findIndex(a => a.id == annotation.id);
-    this.instances[i].annotations[j] = annotation;
-    this.showFilteredInstances();
-  }
-
-  public searchInstances(): void {
-    this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance?.link!);
-    this.showFilteredInstances();
-  }
-
   public showAllAnnotations(annotations: Annotation[], instanceId: number): void {
     let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', {annotations: annotations, instanceId: instanceId});
     this.dialog.open(DisagreeingAnnotationsDialogComponent, dialogConfig);
@@ -145,7 +115,7 @@ export class InstanceComponent implements OnInit {
     return url.split('.').join(`.${hairSpace}`);
   }
 
-  private showFilteredInstances(): void {
+  public showFilteredInstances(): void {
     this.severityValues.clear();
     this.displayedColumns = this.initiallyDisplayedColumns.slice();
     if (this.filter == InstanceFilter.DisagreeingAnnotations) {
@@ -167,20 +137,16 @@ export class InstanceComponent implements OnInit {
     }
   }
 
-  private createSrcdocFromGithubLink(githubLink: string): string {
-    let completeLink = 'https://emgithub.com/embed.js?target=' + encodeURIComponent(githubLink) + '&style=github&showBorder=on&showLineNumbers=on&showFileMeta=on&showCopy=on';
-    return '<script src=\"' + completeLink + '\"></script>';
-  }
-
   public chooseInstance(instance: Instance): void {
     this.chosenInstance = instance;
-    this.chosenInstanceName = this.chosenInstance?.codeSnippetId.split('.').pop()!;
-    this.dataSourceRelatedInstances.data = this.chosenInstance.relatedInstances;
-    this.previousAnnotation = this.chosenInstance.annotations.find(a => a.annotator.id == this.annotatorId)!;
-    this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
+    this.instanceToAnnotate.emit(this.chosenInstance);
+    this.selectedSmell.emit(this.selectedCodeSmell);
+    this.previousAnnotation.emit(this.chosenInstance.annotations.find(a => a.annotator.id == this.annotatorId)!);
   }
 
-  public newProjectSelected(event: any): void {
-    this.selectedCodeSmell = "";
+  public smellSelectionChanged() {
+    sessionStorage.setItem('codeSmellFilter', this.selectedCodeSmell);
+    this.selectFormControl.setValue(this.selectedCodeSmell);
+    this.showFilteredInstances();
   }
 }

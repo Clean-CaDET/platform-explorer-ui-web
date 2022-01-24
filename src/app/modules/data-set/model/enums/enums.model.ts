@@ -39,3 +39,13 @@ export enum RelationType {
     References = 'References',
     Parent = 'Parent'
 }
+
+export enum CouplingType {
+    Field = 'Field',
+    MethodInvocation = 'MethodInvocation',
+    Parameter = 'Parameter',
+    ReturnType = 'ReturnType',
+    Variable = 'Variable',
+    Parent = 'Parent',
+    AccessedAccessor = 'AccessedAccessor'
+}

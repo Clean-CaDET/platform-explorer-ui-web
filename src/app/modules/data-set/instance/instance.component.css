@@ -1,15 +1,11 @@
 .instance-container {
     height: max-content;
     background-color: white;
+    margin-top: 20px;
 }
 
 .filters {
     padding: 0px 20px 0px 10px;
-}
-
-#snippet {
-    width: 70%;
-    margin: 20px;
 }
 
 .mat-cell,
@@ -17,27 +13,8 @@
     padding: 0px 10px 0px 0px;
 }
 
-.annotation-container {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-}
-
-.vertical-container {
-    display: flex;
-    flex-direction: column;
-}
-
 mat-form-field {
     padding-right: 10px;
-}
-
-.annotation-detail {
-    overflow: hidden;
-}
-
-tr.annotation-row {
-    height: 0;
 }
 
 .icon-annotated {
@@ -61,54 +38,13 @@ tr.annotation-row {
     opacity: 0.7;
 }
 
-mat-expansion-panel {
-    width: 98%;
-    padding: 10px;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: rgb(222, 236, 241);
-}
-
-mat-panel-title {
-    font-size: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(92, 13, 110);
-    font-weight: 550;
-    margin: 10px;
-    padding: 10px;
-    text-align: center;
-}
-
-mat-panel-description {
-    margin: 10px;
-    margin-left: 130px;
-    padding: 10px;
-}
-
-mat-expansion-panel-header,
-mat-expansion-panel-header.mat-expanded:hover {
-    border: 2px solid white;
-    border-radius: 10px;
-}
-
 #instances-table-div {
-    min-height: fit-content;
-    max-height: 300px;
+    max-height: 290px;
     overflow: auto;
-}
-
-de-annotation {
-    width: 25%;
-    margin: 20px;
 }
 
 .mat-table {
     width: 100%;
-}
-
-th.mat-sort-header-sorted {
-    color: black;
 }
 
 #severity-filter {
@@ -122,14 +58,6 @@ th.mat-sort-header-sorted {
 #smell-filter-div {
     display: flex;
     flex-direction: row;
-    margin-top: 10px;
-}
-
-#smell-filter-div > p {
-    font-size: 18px;
-    text-shadow: 2px 2px 8px lightgray;
-    margin: 20px 10px 0px 20px;
-    color: rgb(92, 13, 110);
 }
 
 tr.mat-footer-row {
@@ -140,16 +68,15 @@ tr.mat-footer-row {
     border-top: 1px solid rgb(168, 166, 166);
 }
 
-#related-instances {
-    margin: 10px;
-    max-height: inherit;
-    overflow: auto;
+#total-instances {
+    margin-left: auto;
+    margin-right: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 15px;
 }
 
-.green-icon {
-    color: green;
-}
-
-.orange-icon {
-    color: orange;
+.filterForm {
+    margin-left: 20px;
+    border-top: 2px solid lightgray;
 }

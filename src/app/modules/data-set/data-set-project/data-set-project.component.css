@@ -58,14 +58,23 @@
 }
 
 .filterForm {
-    margin-top: 10px;
     margin-left: 20px;
+    border-top: 2px solid lightgray;
 }
-
-tr.mat-footer-row {
-    font-weight: bold;
-  }
   
 .mat-table-sticky {
     border-top: 1px solid rgb(168, 166, 166);
+}
+
+.horizontal-div {
+    display: flex;
+    flex-direction: row;
+}
+
+#total-instances {
+    margin-left: auto;
+    margin-right: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 15px;
 }

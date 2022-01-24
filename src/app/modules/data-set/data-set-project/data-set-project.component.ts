@@ -19,6 +19,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { UpdateProjectDialogComponent } from '../dialogs/update-project-dialog/update-project-dialog.component';
 import { ToastrService } from 'ngx-toastr';
+import { Instance } from '../model/instance/instance.model';
 
 
 @Component({
@@ -31,17 +32,18 @@ export class DataSetProjectComponent implements OnInit {
   @Input() public projects: DataSetProject[] = [];
   @Input() public dataset: DataSet | null = null;
   public candidateInstances: SmellCandidateInstances[] = [];
-  public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'consistency', 'projectDelete', 'projectUpdate'];
+  public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
   public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.projects);
   public filter: InstanceFilter | null = null;
   public projectState = ProjectState;
   public chosenProject: DataSetProject = new DataSetProject();
+  @Input() selectedRow: DataSetProject | undefined;
   @Output() newProjects = new EventEmitter<DataSetProject[]>();
   @Output() newFilter = new EventEmitter<InstanceFilter>();
   @Output() newCandidates = new EventEmitter<SmellCandidateInstances[]>();
   public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"];
   public filterFormControl: FormControl = new FormControl('', [Validators.required]);
-  public selectedFilter: string = '';
+  public selectedFilter: string = 'All instances';
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   private pollingCycleDurationInSeconds: number = 10;
@@ -59,15 +61,33 @@ export class DataSetProjectComponent implements OnInit {
     this.httpClient.get('assets/appsettings.json').subscribe((data: any) => this.pollingCycleDurationInSeconds = data.pollingCycleDuration);
   }
 
+  public ngDoCheck() {
+    this.areProjectsFullyAnnotated();
+  }
+
   public ngOnChanges(): void {
     this.chosenProject = new DataSetProject();
-    this.candidateInstances = [];
-    this.newCandidates.emit(this.candidateInstances);
+    if (this.selectedRow) this.chosenProject = this.selectedRow;
     if (!this.isProjectsEmpty()) {
       this.projects.forEach((project, index) => this.projects[index] = new DataSetProject(project));
       this.startPollingProjects();
     } 
     this.dataSource.data = this.projects;
+  }
+
+  private areProjectsFullyAnnotated() {
+    this.projects.forEach(p => {
+      p.fullyAnnotated = true;
+      p.candidateInstances.forEach(c => {
+          c.instances.forEach(i => {
+            if (!this.findAnnotationFromAnnotator(i)) p.fullyAnnotated = false;
+          });
+      });
+    });
+  }
+
+  private findAnnotationFromAnnotator(instance: Instance) {
+    return instance.annotations.find(a => a.annotator.id.toString() == sessionStorage.getItem('annotatorId'));
   }
 
   public isProjectsEmpty(): boolean {
@@ -154,15 +174,19 @@ export class DataSetProjectComponent implements OnInit {
 
   public chooseProject(project: DataSetProject): void {
     this.chosenProject = project;
-    this.selectedFilter = '';
-    this.resetCandidateInstances();
+    sessionStorage.setItem('changeView', 'true');
+    this.filterSelection();
   }
 
   public addProject(): void {
     let dialogConfig = DialogConfigService.setDialogConfig('480px', '520px', this.dataset?.id);
     let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((res: DataSet) => {
-      if (res) this.newProjects.emit(res.projects);
+      if (res) {
+        this.projects = res.projects;
+        this.dataSource.data = this.projects;
+        this.newProjects.emit(this.projects);
+      }
     });
   }
 
@@ -184,6 +208,7 @@ export class DataSetProjectComponent implements OnInit {
         this.projects.splice(this.projects.findIndex(p => p.id == project.id), 1);
         this.dataSource.data = this.projects;
         this.newProjects.emit(this.projects);
+        this.newCandidates.emit([]);
       });
     });
   }
