@@ -196,7 +196,11 @@ export class DataSetComponent implements OnInit {
         this.instanceToAnnotate = allInstances[i+1];
         this.candidateInstances = this.projectsToShow.find(p => p.url == this.instanceToAnnotate?.projectLink)?.candidateInstances!;
         this.chosenProject = this.projectsToShow.find(p => p.url == this.instanceToAnnotate?.projectLink);
-        if (this.instanceToAnnotate.hasAnnotationFromLoggedUser) this.previousAnnotation = this.instanceToAnnotate.annotationFromLoggedUser!;
+        if (this.instanceToAnnotate.hasAnnotationFromLoggedUser) {
+          this.previousAnnotation = this.instanceToAnnotate.annotationFromLoggedUser!;
+        } else {
+          this.previousAnnotation = undefined;
+        }
         return;
       }
       i++;
@@ -231,7 +235,11 @@ export class DataSetComponent implements OnInit {
         this.instanceToAnnotate = allInstances[i-1];
         this.candidateInstances = this.projectsToShow.find(p => p.url == this.instanceToAnnotate?.projectLink)?.candidateInstances!;
         this.chosenProject = this.projectsToShow.find(p => p.url == this.instanceToAnnotate?.projectLink);
-        if (this.instanceToAnnotate.hasAnnotationFromLoggedUser) this.previousAnnotation = this.instanceToAnnotate.annotationFromLoggedUser!;
+        if (this.instanceToAnnotate.hasAnnotationFromLoggedUser) {
+          this.previousAnnotation = this.instanceToAnnotate.annotationFromLoggedUser!;
+        } else {
+          this.previousAnnotation = undefined;
+        }
         return;
       }
       i++;
