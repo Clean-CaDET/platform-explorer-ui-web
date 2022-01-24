@@ -4,8 +4,25 @@ form {
     margin: auto;
     width: fit-content;
     border: 3px solid white;
-    padding: 10px 60px 20px 60px; 
+    padding: 10px 30px 20px 0px; 
     border-radius: 20px;
+}
+
+.horizontal-div {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    padding-bottom: 20px;
+}
+
+.note-div {
+    margin-top: auto;
+    padding-left: 20px;
+    border-left: 3px solid white;
+}
+
+.full-width {
+    width: 100%;
 }
 
 .heuristic-reason {
@@ -18,10 +35,6 @@ form {
     margin: auto;
 }
 
-.form-field {
-    padding: 0px 5px 0px 5px;
-}
-
 .reason {
     width: 100%;
 }
@@ -32,6 +45,7 @@ form {
 
 ul {
     list-style-type: none;
+    padding-right: 20px;
 }
 
 p {

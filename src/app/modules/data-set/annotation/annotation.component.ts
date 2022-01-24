@@ -29,6 +29,7 @@ export class AnnotationComponent implements OnInit {
   private availableHeuristics: Map<string, string[]> = new Map();
   public heuristicsAndReasons: Map<string, string> = new Map();
   public annotatorId: string = '';
+  public note: string = '';
   private warningSnackbarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['warningSnackbar']};
   private successSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['successSnackbar']};
   private errorSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['errorSnackbar']};
@@ -112,7 +113,8 @@ export class AnnotationComponent implements OnInit {
       instanceId: this.instanceId,
       severity: this.severityFormControl.value,
       codeSmell: this.codeSmell,
-      applicableHeuristics: this.getHeuristicsFromInput()
+      applicableHeuristics: this.getHeuristicsFromInput(),
+      note: this.note
     });
   }
 
@@ -129,12 +131,14 @@ export class AnnotationComponent implements OnInit {
   }
 
   private setupInputFromPreviousAnnotation(): void {
+    this.note = '';
     if (!this.previousAnnotation) return;
     this.severityFormControl.setValue(this.previousAnnotation.severity);
     this.codeSmell = this.previousAnnotation.instanceSmell.name;
     this.previousAnnotation.applicableHeuristics.forEach( h => {
       this.heuristicsAndReasons.set(h.description, h.reasonForApplicability);
     });
+    this.note = this.previousAnnotation.note;
   }
 
   private isValidInput(): boolean {

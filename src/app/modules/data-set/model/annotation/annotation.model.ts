@@ -8,6 +8,7 @@ export class Annotation {
     severity: number = 0;
     applicableHeuristics: SmellHeuristic[] = [];
     annotator: Annotator = new Annotator();
+    note: string = '';
 
     constructor(obj?: any) {
         if (obj) {
@@ -16,6 +17,7 @@ export class Annotation {
             this.severity = obj.severity;
             this.applicableHeuristics = obj.applicableHeuristics;
             this.annotator = obj.annotator;
+            this.note = obj.note;
         }
     }
 }
