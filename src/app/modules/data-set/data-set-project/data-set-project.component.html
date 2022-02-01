@@ -88,7 +88,7 @@
         <div class="horizontal-div">
             <mat-form-field appearance="fill" *ngIf="chosenProject.id">
                 <mat-label>Choose instances filter</mat-label>
-                <mat-select required name="instancesFilter"  [(ngModel)]="selectedFilter" (selectionChange)="filterSelection()" [formControl]="filterFormControl">
+                <mat-select required name="instancesFilter" (selectionChange)="filterSelection()" [formControl]="filterFormControl">
                 <mat-option *ngFor="let filter of instancesFilters" [value]="filter" >
                     {{filter}}
                 </mat-option>

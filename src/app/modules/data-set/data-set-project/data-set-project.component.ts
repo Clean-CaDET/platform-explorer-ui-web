@@ -41,9 +41,9 @@ export class DataSetProjectComponent implements OnInit {
   @Output() newProjects = new EventEmitter<DataSetProject[]>();
   @Output() newFilter = new EventEmitter<InstanceFilter>();
   @Output() newCandidates = new EventEmitter<SmellCandidateInstances[]>();
+  @Output() totalInstances = new EventEmitter<number>();
   public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"];
-  public filterFormControl: FormControl = new FormControl('', [Validators.required]);
-  public selectedFilter: string = 'All instances';
+  public filterFormControl: FormControl = new FormControl('All instances', [Validators.required]);
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   private pollingCycleDurationInSeconds: number = 10;
@@ -191,9 +191,9 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   public filterSelection() {
-    if (this.selectedFilter == 'All instances') {
+    if (this.filterFormControl.value == 'All instances') {
       this.showAllInstances();
-    } else if (this.selectedFilter == 'Need additional annotations') {
+    } else if (this.filterFormControl.value == 'Need additional annotations') {
       this.showInstancesForAdditionalAnnotation();
     } else {
       this.showInstancesWithDisagreeingAnnotations();
@@ -226,6 +226,7 @@ export class DataSetProjectComponent implements OnInit {
     this.dataset?.projects.forEach(project => {
       sum += project.getTotalNumOfInstances();
     });
+    this.totalInstances.emit(sum);
     return sum;
   }
 }

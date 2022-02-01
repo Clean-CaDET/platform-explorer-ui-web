@@ -87,7 +87,12 @@ export class DataSetComponent implements OnInit {
   public addDataSet(): void {
     let dialogConfig = DialogConfigService.setDialogConfig('300px', '300px');
     let dialogRef = this.dialog.open(AddDataSetDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((res: DataSet) => this.addEmptyDataSet(res));
+    dialogRef.afterClosed().subscribe((res: DataSet) => {
+      this.addEmptyDataSet(res);
+      this.chosenDataset = res;
+      this.countAnnotatedInstances();
+      this.showProjects(res);
+    })
   }
 
   public searchDataSets(event: Event): void {
@@ -116,10 +121,11 @@ export class DataSetComponent implements OnInit {
   }
 
   public chooseDataset(dataset: DataSet): void {
+    this.instanceToAnnotate = undefined;
     this.chosenDataset = dataset;
     this.projectsToShow = dataset.projects;
     this.candidateInstances = [];
-    sessionStorage.setItem('codeSmellFilter', this.chosenDataset.projects[0]!.candidateInstances[0]!.codeSmell?.name!);
+    if (this.chosenDataset.projects.length > 0) sessionStorage.setItem('codeSmellFilter', this.chosenDataset.projects[0]!.candidateInstances[0]!.codeSmell?.name!);
     sessionStorage.setItem('changeView', 'true');
     this.countAnnotatedInstances();
   }
@@ -133,7 +139,12 @@ export class DataSetComponent implements OnInit {
     this.filter = filter;
   }
 
+  public totalInstances(totalInstances: number): void {
+    this.totalNumInstances = totalInstances;
+  }
+
   public newCandidates(candidates: SmellCandidateInstances[]): void {
+    this.instanceToAnnotate = undefined;
     this.candidateInstances = candidates;
   }
 

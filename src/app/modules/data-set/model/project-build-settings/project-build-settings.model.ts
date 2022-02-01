@@ -5,6 +5,7 @@ export class ProjectBuildSettings {
     numOfInstancesType: NumOfInstancesType = NumOfInstancesType.Percentage;
     randomizeClassSelection: boolean = true;
     randomizeMemberSelection: boolean = true;
+    foldersToIgnore: string[] = [];
 
     constructor(obj?: any) {
         if (obj) {
@@ -12,6 +13,7 @@ export class ProjectBuildSettings {
             this.numOfInstancesType = obj.numOfInstancesType;
             this.randomizeClassSelection = obj.randomizeClassSelection;
             this.randomizeMemberSelection = obj.randomizeMemberSelection;
+            this.foldersToIgnore = obj.foldersToIgnore;
         }
     }
 }

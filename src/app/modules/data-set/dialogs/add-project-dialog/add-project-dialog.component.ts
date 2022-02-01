@@ -26,7 +26,10 @@ export class AddProjectDialogComponent implements OnInit {
   public metricsForSelection: string[] = [];
   public selectedSmell: string = '';
   public numOfInstancesTypes: NumOfInstancesType[] = [NumOfInstancesType.Percentage, NumOfInstancesType.Number];
-  public projectBuildSettings: ProjectBuildSettings = new ProjectBuildSettings({numOfInstances: 100, numOfInstancesType: NumOfInstancesType.Percentage, randomizeClassSelection: true, randomizeMemberSelection: true});
+  public projectBuildSettings: ProjectBuildSettings = new ProjectBuildSettings({numOfInstances: 100, numOfInstancesType: NumOfInstancesType.Percentage, randomizeClassSelection: true, randomizeMemberSelection: true, foldersToIgnore: []});
+  public newFolderToIgnore: string = '';
+  public ignoreFolders: boolean = false;
+  public setMetricsFilters: boolean = false;
  
   constructor(@Inject(MAT_DIALOG_DATA) private dataSetId: number, private dataSetService: DataSetService, private annotationService: AnnotationService, private dialogRef: MatDialogRef<AddProjectDialogComponent>) { }
 
@@ -60,7 +63,8 @@ export class AddProjectDialogComponent implements OnInit {
   public addProjectToDataSet(): void {
     if (this.isValidInput()) {
       this.removeUnselectedMetrics();
-      this.dataSetService.addProjectToDataSet(this.project, this.smellFilters, this.projectBuildSettings, this.dataSetId).subscribe(res => this.dialogRef.close(res));
+      this.dataSetService.addProjectToDataSet(this.project, this.smellFilters, this.projectBuildSettings, this.dataSetId)
+        .subscribe(res => this.dialogRef.close(res));
     }
   }
 
@@ -77,5 +81,21 @@ export class AddProjectDialogComponent implements OnInit {
 
   private isValidInput(): boolean {
     return this.project.name != '' && this.project.url != '' && this.projectBuildSettings.numOfInstances > 0;
+  }
+
+  public removeFolderToIgnore(folder: string): void {
+    var index = this.projectBuildSettings.foldersToIgnore.findIndex(f => f == folder);
+    this.projectBuildSettings.foldersToIgnore.splice(index, 1);
+  }
+
+  public addFolderToIgnore(): void {
+    if (this.newFolderToIgnore) {
+      this.projectBuildSettings.foldersToIgnore.push(this.newFolderToIgnore);
+      this.newFolderToIgnore = '';
+    }
+  }
+
+  public ignoreFoldersCheckboxChanged() {
+    if (!this.ignoreFolders) this.projectBuildSettings.foldersToIgnore = [];
   }
 }

@@ -89,7 +89,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div class="all-tables">
-                <de-data-set-project [selectedRow]="chosenProject" [projects]="projectsToShow" [dataset]="chosenDataset" (newProjects)="newProjects($event)" (newFilter)="newFilter($event)" (newCandidates)="newCandidates($event)"></de-data-set-project>
+                <de-data-set-project [selectedRow]="chosenProject" [projects]="projectsToShow" [dataset]="chosenDataset" (newProjects)="newProjects($event)" (newFilter)="newFilter($event)" (newCandidates)="newCandidates($event)" (totalInstances)="totalInstances($event)"></de-data-set-project>
                 <de-instance [filter]="filter" [chosenInstance]="instanceToAnnotate" [candidateInstances]="candidateInstances" (instanceToAnnotate)="chosenInstance($event)" (previousAnnotation)="previousAnnotated($event)" (selectedSmell)="smellSelected($event)"></de-instance>
             </div>
         </mat-expansion-panel>
