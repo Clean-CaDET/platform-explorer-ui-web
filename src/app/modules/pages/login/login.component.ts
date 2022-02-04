@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SessionStorageService } from 'src/app/session-storage.service';
 
 
 @Component({
@@ -15,15 +16,16 @@ export class LoginComponent implements OnInit {
     Validators.min(1),
   ]);
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private sessionService: SessionStorageService) { }
 
   ngOnInit(): void {
+    if (this.sessionService.getLoggedInAnnotator() != null) this.router.navigate(['/datasets']);
   }
 
   public login(){
     if (this.annotatorFormControl.valid) {
-      sessionStorage.setItem('annotatorId', this.annotatorFormControl.value.toString());
-      this.router.navigate(['/data-set']);
+      this.sessionService.setLoggedInAnnotator(this.annotatorFormControl.value.toString());
+      this.router.navigate(['/datasets']);
     }
   }
 

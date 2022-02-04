@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, Pipe, PipeTransform } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { SessionStorageService } from 'src/app/session-storage.service';
 import { Annotation } from '../model/annotation/annotation.model';
 import { Instance } from '../model/instance/instance.model';
 import { RelatedInstance } from '../model/related-instance/related-instance.model';
@@ -25,7 +26,7 @@ export class AnnotationContainerComponent implements OnInit {
   public iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
   public totalCouplingStrength: Map<number, number> = new Map();
   
-  constructor() { }
+  constructor(private sessionService: SessionStorageService) { }
 
   ngOnInit(): void {
   }
@@ -34,7 +35,7 @@ export class AnnotationContainerComponent implements OnInit {
     if (!this.iframe) this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
     if (this.iframe && sessionStorage.getItem('changeView')=='true') {
       this.iframe.srcdoc = '';
-      this.chosenInstance = new Instance();
+      this.chosenInstance = new Instance(this.sessionService);
       sessionStorage.setItem('changeView', 'false')
     }
   }

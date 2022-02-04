@@ -1,0 +1,62 @@
+.all-tables {
+    display: flex;
+    flex-direction: row;
+}
+
+mat-expansion-panel {
+    margin-top: 20px;
+    width: 98%;
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(245, 239, 245);
+}
+
+mat-panel-title {
+    font-size: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(92, 13, 110);
+    font-weight: 550;
+    margin: 10px;
+    margin-right: 0px;
+    padding: 10px;
+    padding-right: 0px;
+}
+
+#expansion-title {
+    font-size: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(105, 85, 109);
+    font-weight: 550;
+}
+
+mat-expansion-panel-header,
+mat-expansion-panel-header.mat-expanded:hover {
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
+de-data-set-project {
+    width: 50%;
+}
+
+de-instance {
+    width: 50%;
+}
+
+de-annotation-container {
+    width: 25%;
+}
+
+.mat-stroked-button {
+    color: rgb(92, 13, 110);
+    margin-top: 10px;
+}
+
+.automatic-buttons-div {
+    margin-left: 20%;
+}
+
+.automatic-buttons-div button {
+    margin: 10px;
+}

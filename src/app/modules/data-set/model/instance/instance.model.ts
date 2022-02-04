@@ -1,4 +1,4 @@
-import { AnnotationService } from "../../annotation/annotation.service";
+import { SessionStorageService } from "src/app/session-storage.service";
 import { Annotation } from "../annotation/annotation.model"; 
 import { InstanceType } from "../enums/enums.model";
 import { RelatedInstance } from "../related-instance/related-instance.model";
@@ -15,7 +15,7 @@ export class Instance {
     annotationFromLoggedUser: Annotation | null = null;
     relatedInstances: RelatedInstance[] = [];
 
-    constructor(obj?: any) {
+    constructor(sessionService: SessionStorageService, obj?: any) {
         if (obj) {
             this.id = obj.id;
             this.codeSnippetId = obj.codeSnippetId;
@@ -24,7 +24,7 @@ export class Instance {
             this.annotations = obj.annotations;
             this.setMetricFeatures(obj.metricFeatures);
             this.setType(obj.type);
-            this.setAnnotationFromLoggedUser();
+            this.setAnnotationFromLoggedUser(sessionService);
             if (obj.relatedInstances)this.relatedInstances = obj.relatedInstances.map((i: any) => new RelatedInstance(i))
         }
     }
@@ -35,7 +35,8 @@ export class Instance {
         }
     }
 
-    private setAnnotationFromLoggedUser(annotatorId: number = AnnotationService.getLoggedInAnnotatorId()): void {
+    private setAnnotationFromLoggedUser(sessionService: SessionStorageService): void {
+        var annotatorId: number = Number(sessionService.getLoggedInAnnotator());
         this.annotationFromLoggedUser = this.annotations.filter(a => a.annotator.id == annotatorId)[0];
         if (this.annotationFromLoggedUser) {
             this.hasAnnotationFromLoggedUser = true;

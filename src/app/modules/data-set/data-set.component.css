@@ -1,28 +1,5 @@
-.all-tables{
-    display: flex;
-    flex-direction: row;
-}
-
-.data-set-container {
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-    margin: 20px 20px 0px 20px;
-    height: max-content;
-    background-color: white;
-}
-
 .add-button {
     margin: 5px 20px 0px 0px;
-}
-
-.cell-center {
-    text-align: center;
-}
-
-.mat-cell,
-.mat-header-cell {
-    padding: 0px 10px 0px 0px;
 }
 
 mat-cell > span.truncate-text {
@@ -31,141 +8,37 @@ mat-cell > span.truncate-text {
     white-space: nowrap;
 }
 
-#datasets-table-div {
-    min-height: fit-content;
-    max-height: 300px;
-    overflow: auto;
+.cell-center {
+    text-align: center;
 }
 
-mat-expansion-panel {
-    margin-top: 20px;
-    width: 98%;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: rgb(245, 239, 245);
+.datasetName:hover {
+    font-weight: bold;
+    cursor: pointer;
 }
 
-mat-panel-title {
-    font-size: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(92, 13, 110);
-    font-weight: 550;
-    margin: 10px;
-    margin-right: 0px;
-    padding: 10px;
-    padding-right: 0px;
-}
-
-#annotations-info {
-    font-size: 15px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(92, 13, 110);
-    font-weight: 550;
-}
-
-#expansion-title {
-    font-size: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(105, 85, 109);
-    font-weight: 550;
-}
-
-#edit-button {
-    margin-left: 0px;
+.table-title {
     padding-left: 0px;
-    color: rgb(92, 13, 110);
-}
-
-mat-panel-description {
-    margin: 10px;
-    padding: 10px;
-}
-
-mat-expansion-panel-header,
-mat-expansion-panel-header.mat-expanded:hover {
-    border: 2px solid white;
-    border-radius: 10px;
-}
-
-de-data-set-project {
     width: 50%;
+    margin: auto;
+    padding-bottom: 20px;
 }
 
-de-instance {
+.table-header {
     width: 50%;
+    margin: auto;
 }
 
-.drawer-container {
-    height: 100%;
-}
-  
-.sidenav {
-padding: 20px;
+.search {
+    padding: 0px;
 }
 
-de-annotation-container {
-    width: 25%;
+#datasets-table-div {
+    width: 50%;
+    margin: auto;
 }
 
-.mat-stroked-button {
-    color: rgb(92, 13, 110);
-    margin-top: 10px;
-}
-
-.centered-button {
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.toggle-automatic-mode {
-    margin-top: 10px;
-    margin-left: 20px;
-    color:rgb(92, 13, 110);
-    border-radius: 2px;
-    padding: 10px;
-    font-size: 14px;
-    float: right;
-}
-
-#logout-button {
-    margin-right: 0px;
-    padding-right: 0px;
-    margin-left: 20px;
-    color: black;
-}
-
-.options-div {
-    overflow:hidden;
-    width: 100%;
-}
-
-.dataset-options-div {
-    display: flex;
-    flex-direction: row;
-    float: left;
-}
-
-mat-slide-toggle {
-    margin-left: 5px;
-}
-
-.automatic-buttons-div {
-    margin-left: 20%;
-}
-
-.automatic-buttons-div button {
-    margin: 10px;
-}
-
-mat-toolbar {
-    background-color: rgb(223, 206, 228);
-}
-
-.mat-toolbar-div {
-    position: sticky;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
 }

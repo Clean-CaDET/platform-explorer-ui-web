@@ -1,0 +1,18 @@
+<div>
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title id="expansion-title">
+                <span>Projects and instances</span>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="all-tables">
+            <de-data-set-project [selectedRow]="chosenProject" [projects]="projectsToShow" [dataset]="chosenDataset" (newProjects)="newProjects($event)" (newFilter)="newFilter($event)" (newCandidates)="newCandidates($event)"></de-data-set-project>
+            <de-instance [filter]="filter" [chosenInstance]="instanceToAnnotate" [candidateInstances]="candidateInstances" (instanceToAnnotate)="chosenInstance($event)" (previousAnnotation)="previousAnnotated($event)" (selectedSmell)="smellSelected($event)"></de-instance>
+        </div>
+    </mat-expansion-panel>
+    <de-annotation-container [chosenInstance]="instanceToAnnotate" [selectedCodeSmell]="selectedSmell" [previousAnnotation]="previousAnnotation!" (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)"></de-annotation-container>
+    <div *ngIf="instanceToAnnotate" class="automatic-buttons-div">
+        <button mat-stroked-button color="primary" (click)="loadPreviousInstance()">Previous</button>
+        <button mat-stroked-button color="primary" (click)="loadNextInstanceForAnnotation()">Next</button>
+    </div>
+</div>

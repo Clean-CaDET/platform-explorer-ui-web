@@ -20,6 +20,7 @@ import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog
 import { UpdateProjectDialogComponent } from '../dialogs/update-project-dialog/update-project-dialog.component';
 import { ToastrService } from 'ngx-toastr';
 import { Instance } from '../model/instance/instance.model';
+import { SessionStorageService } from 'src/app/session-storage.service';
 
 
 @Component({
@@ -53,7 +54,7 @@ export class DataSetProjectComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog, private httpClient: HttpClient, private toastr: ToastrService) { }
+  constructor(private dataSetService: DataSetService, private annotationService: AnnotationService, private dialog: MatDialog, private httpClient: HttpClient, private toastr: ToastrService, private sessionService: SessionStorageService) { }
 
   public ngOnInit(): void {
     this.dataset = null;
@@ -87,7 +88,7 @@ export class DataSetProjectComponent implements OnInit {
   }
 
   private findAnnotationFromAnnotator(instance: Instance) {
-    return instance.annotations.find(a => a.annotator.id.toString() == sessionStorage.getItem('annotatorId'));
+    return instance.annotations.find(a => a.annotator.id.toString() == this.sessionService.getLoggedInAnnotator());
   }
 
   public isProjectsEmpty(): boolean {

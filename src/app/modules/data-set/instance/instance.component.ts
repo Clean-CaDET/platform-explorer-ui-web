@@ -2,17 +2,14 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } 
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-
 import { DisagreeingAnnotationsDialogComponent } from '../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
-
 import { Annotation } from '../model/annotation/annotation.model';
 import { Instance } from '../model/instance/instance.model';
 import { AnnotationStatus, InstanceFilter } from '../model/enums/enums.model';
-
 import { DialogConfigService } from '../dialogs/dialog-config.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 import { FormControl, Validators } from '@angular/forms';
-import { AnnotationService } from '../annotation/annotation.service';
+import { SessionStorageService } from 'src/app/session-storage.service';
 
 @Component({
   selector: 'de-instance',
@@ -41,7 +38,7 @@ export class InstanceComponent {
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   public selectFormControl = new FormControl('', Validators.required);
   @Input() public chosenInstance: Instance | undefined;
-  public annotatorId = AnnotationService.getLoggedInAnnotatorId();
+  public annotatorId = Number(this.sessionService.getLoggedInAnnotator());
 
   @Output() instanceToAnnotate = new EventEmitter<Instance>();
   @Output() selectedSmell = new EventEmitter<string>();
@@ -52,7 +49,7 @@ export class InstanceComponent {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private sessionService: SessionStorageService) { }
 
   public ngOnChanges(): void {
     this.setInitSmellSelection();
@@ -100,7 +97,7 @@ export class InstanceComponent {
   }
 
   private setAnnotatorForInstances(instances: Instance[]): Instance[] {
-    instances.forEach((instance, index) => instances[index] = new Instance(instance));
+    instances.forEach((instance, index) => instances[index] = new Instance(this.sessionService, instance));
     return instances;
   }
 

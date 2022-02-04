@@ -1,7 +1,9 @@
+import { SessionStorageService } from 'src/app/session-storage.service';
 import { Instance } from './instance.model';
 
 describe('Instance', () => {
   it('should create an instance', () => {
-    expect(new Instance()).toBeTruthy();
+    var sessionService: SessionStorageService = new SessionStorageService();
+    expect(new Instance(sessionService)).toBeTruthy();
   });
 });

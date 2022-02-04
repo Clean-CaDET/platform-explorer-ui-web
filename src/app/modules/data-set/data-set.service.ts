@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-import { DataSetProject } from './model/data-set-project/data-set-project.model';
 import { DataSet } from './model/data-set/data-set.model';
-
 import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service'; 
-import { SmellFilter } from './model/smell-filter/smell-filter.model';
 import { CodeSmell } from './model/code-smell/code-smell.model';
+import { DataSetProject } from './model/data-set-project/data-set-project.model';
 import { ProjectBuildSettings } from './model/project-build-settings/project-build-settings.model';
-
+import { SmellFilter } from './model/smell-filter/smell-filter.model';
+import { SessionStorageService } from 'src/app/session-storage.service';
 
 
 @Injectable({
@@ -17,7 +15,7 @@ import { ProjectBuildSettings } from './model/project-build-settings/project-bui
 })
 export class DataSetService {
   
-  constructor(private serverCommunicationService: ServerCommunicationService) { }
+  constructor(private serverCommunicationService: ServerCommunicationService, private sessionService: SessionStorageService) { }
 
   public async getAllDataSets(): Promise<DataSet[]> {
     return await this.serverCommunicationService.getRequestAsync('dataset/');
@@ -29,6 +27,7 @@ export class DataSetService {
     return this.serverCommunicationService.postRequest('dataset/' + name, codeSmells, headers);
   }
 
+  // todo move to project service
   public addProjectToDataSet(project: DataSetProject, smellFilters: SmellFilter[], buildSettings: ProjectBuildSettings, dataSetId: number): Observable<DataSet> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
@@ -43,11 +42,12 @@ export class DataSetService {
   public getDataSetCodeSmells(id: number): Observable<Map<string, string[]>> {
     return this.serverCommunicationService.getRequest('dataset/' + id + '/code-smells');
   }
+  //
   
   public exportDraftDataSet(id: number, exportPath: string): Observable<object> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    let data = {id: id, annotatorId: sessionStorage.getItem('annotatorId'), exportPath: exportPath}
+    let data = {id: id, annotatorId: this.sessionService.getLoggedInAnnotator(), exportPath: exportPath}
     return this.serverCommunicationService.postRequest('dataset/export', data, headers);
   }
   
@@ -61,6 +61,7 @@ export class DataSetService {
     return this.serverCommunicationService.putRequest('dataset/', dataSet, headers);
   }
 
+  // todo move to project service
   public deleteDataSetProject(id: number): Observable<DataSetProject> {
     return this.serverCommunicationService.deleteRequest('dataset/project/' + id);
   }
@@ -70,4 +71,5 @@ export class DataSetService {
       .set('Content-Type', 'application/json');
     return this.serverCommunicationService.putRequest('dataset/project/', project, headers);
   }
+  //
 }
