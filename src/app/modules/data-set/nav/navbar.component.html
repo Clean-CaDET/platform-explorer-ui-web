@@ -2,9 +2,15 @@
     <mat-toolbar>
         <div class="options-div">
             <div>
-                DataSet Explorer
+                <span *ngIf="!isLoggedIn()">DataSet Explorer</span>
             </div>
-            <div *ngIf="isLoggedIn()">
+            <div *ngIf="isLoggedIn()" class="horizontal-div">
+                <button mat-button (click)="goToDatasets()">
+                    Datasets
+                </button>
+                <button mat-button (click)="goToAnnotationSchema()">
+                    Annotation schema
+                </button>
                 <button mat-button id="logout-button" (click)="logout()">
                     <mat-icon matTooltip="Logout">exit_to_app</mat-icon>
                 </button>
@@ -12,28 +18,3 @@
         </div>
     </mat-toolbar>
 </div>
-
-<!-- <div class="mat-toolbar-div">
-    <mat-toolbar>
-        <div class="options-div">
-            <div class="dataset-options-div">
-                <mat-panel-title>
-                    Dataset: {{chosenDataset.name}}
-                </mat-panel-title>
-                <button mat-button id="edit-button">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <mat-panel-title id="annotations-info">
-                    Annotated {{annotatedInstancesNum}}/{{totalNumInstances}}
-                </mat-panel-title>
-            </div>
-            <div class="toggle-automatic-mode">
-                Automatic annotation mode
-                <mat-slide-toggle color="primary" [(ngModel)]="automaticAnnotationMode"></mat-slide-toggle>
-                <button mat-button id="logout-button" (click)="logout()">
-                    <mat-icon matTooltip="Logout">exit_to_app</mat-icon>
-                </button>
-            </div>
-        </div>
-    </mat-toolbar>
-</div> -->

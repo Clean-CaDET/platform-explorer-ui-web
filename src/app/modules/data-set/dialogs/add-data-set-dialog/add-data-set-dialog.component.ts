@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-
 import { MatDialogRef } from "@angular/material/dialog";
-
 import { DataSet } from '../../model/data-set/data-set.model';
-
-import { DataSetService } from '../../data-set.service'; 
 import { CodeSmell } from '../../model/code-smell/code-smell.model';
 import { AnnotationService } from '../../annotation/annotation.service';
+import { DataSetService } from '../../services/data-set.service';
 
 @Component({
   selector: 'de-add-data-set-dialog',

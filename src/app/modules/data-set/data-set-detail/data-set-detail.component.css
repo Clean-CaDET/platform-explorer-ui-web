@@ -1,62 +1,159 @@
-.all-tables {
-    display: flex;
-    flex-direction: row;
+.mat-toolbar-div {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
-mat-expansion-panel {
-    margin-top: 20px;
-    width: 98%;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: rgb(245, 239, 245);
+mat-toolbar {
+    background-color:rgb(236, 228, 238);
+}
+
+.options-div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.table-title {
+    padding-left: 0px;
+    margin-left: 10px;
+}
+
+.table-header {
+    margin-left: 10px;
+}
+
+.search {
+    padding: 0px;
+}
+
+#projects-table-div {
+    height: fit-content;
+    max-height: 290px;
+    overflow: auto;
+    margin: auto;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+.bold-name:hover {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.toggle-automatic-mode {
+    margin-left: 20px;
+    color:rgb(92, 13, 110);
+    border-radius: 2px;
+    font-size: 14px;
+    float: right;
+} 
+
+#annotations-info {
+    font-size: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 550;
+}
+
+.vertical-div {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-slide-toggle {
+    margin-left: 5px;
 }
 
 mat-panel-title {
     font-size: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(92, 13, 110);
-    font-weight: 550;
-    margin: 10px;
-    margin-right: 0px;
-    padding: 10px;
-    padding-right: 0px;
-}
-
-#expansion-title {
-    font-size: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(105, 85, 109);
     font-weight: 550;
 }
 
-mat-expansion-panel-header,
-mat-expansion-panel-header.mat-expanded:hover {
-    border: 2px solid white;
-    border-radius: 10px;
-}
-
-de-data-set-project {
-    width: 50%;
-}
-
-de-instance {
-    width: 50%;
-}
-
-de-annotation-container {
-    width: 25%;
+mat-panel-title>span {
+    font-weight: 650;
 }
 
 .mat-stroked-button {
     color: rgb(92, 13, 110);
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
-.automatic-buttons-div {
-    margin-left: 20%;
+.filterForm {
+    border-top: 2px solid lightgray;
+    margin-left: 10px;
+    padding-top: 10px;
 }
 
-.automatic-buttons-div button {
+.horizontal-div {
+    display: flex;
+    flex-direction: horizontal;
+}
+
+.table-container {
+    height: max-content;
+    background-color: white;
     margin: 10px;
+    width: 50%;
+}
+
+.filters {
+    padding-right: 10px;
+}
+
+#ann-status-filter {
+    width: 150px;
+    margin-right: 10px;
+}
+
+#severity-filter {
+    width: 100px;
+}
+
+#instances-table-div {
+    max-height: 290px;
+    overflow: auto;
+}
+
+#total-instances {
+    margin-left: auto;
+    margin-right: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+#smell-filter-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.icon-annotated {
+    color: green;
+}
+
+.icon-not-annotated {
+    color: grey;
+}
+
+.add-button {
+    margin: 5px 20px 0px 0px;
+}
+
+.icon-built-project {
+    color: green;
+}
+
+.icon-failed-project {
+    color: darkred;
 }

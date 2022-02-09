@@ -1,12 +1,12 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { Annotation } from '../model/annotation/annotation.model';
 import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service'; 
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 import { SessionStorageService } from 'src/app/session-storage.service';
+import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
 
 
 @Injectable({

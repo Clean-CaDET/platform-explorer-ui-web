@@ -4,7 +4,6 @@ import { MaterialModule } from 'src/app/material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddDataSetDialogComponent } from './dialogs/add-data-set-dialog/add-data-set-dialog.component';
 import { AddProjectDialogComponent } from './dialogs/add-project-dialog/add-project-dialog.component';
-import { DataSetProjectComponent } from './data-set-project/data-set-project.component';
 import { InstanceComponent } from './instance/instance.component';
 import { AnnotationComponent } from './annotation/annotation.component';
 import { DisagreeingAnnotationsDialogComponent } from './dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
@@ -14,8 +13,8 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
 import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
 import { UpdateProjectDialogComponent } from './dialogs/update-project-dialog/update-project-dialog.component';
 import { AnnotationContainerComponent, CouplingDetailsPipe } from './annotation-container/annotation-container.component';
-import { DataSetDetailComponent } from './data-set-detail/data-set-detail.component';
 import { DataSetComponent } from './data-set.component';
+import { DataSetDetailComponent } from './data-set-detail/data-set-detail.component';
 
 
 @NgModule({
@@ -26,7 +25,6 @@ import { DataSetComponent } from './data-set.component';
     AddProjectDialogComponent,
     ExportDraftDataSetDialogComponent,
     ConfirmDialogComponent,
-    DataSetProjectComponent,
     UpdateDataSetDialogComponent,
     UpdateProjectDialogComponent,
     InstanceComponent,

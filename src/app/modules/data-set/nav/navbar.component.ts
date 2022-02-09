@@ -20,4 +20,12 @@ export class NavbarComponent {
   public isLoggedIn() {
     return this.sessionService.getLoggedInAnnotator() != null;
   }
+
+  public goToDatasets() {
+    this.router.navigate(['/datasets']);
+  }
+
+  public goToAnnotationSchema() {
+    this.router.navigate(['/annotation-schema']);
+  }
 }

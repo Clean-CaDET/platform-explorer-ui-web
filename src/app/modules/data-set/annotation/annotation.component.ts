@@ -1,11 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { Annotation } from '../model/annotation/annotation.model';
 import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
-
 import { AnnotationService } from './annotation.service';
 
 @Component({

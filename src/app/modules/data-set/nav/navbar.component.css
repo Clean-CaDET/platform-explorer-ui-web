@@ -21,39 +21,11 @@ mat-toolbar {
     float: right;
 }
 
-
-/* .toggle-automatic-mode {
-    margin-top: 10px;
-    margin-left: 20px;
-    color:rgb(92, 13, 110);
-    border-radius: 2px;
-    padding: 10px;
-    font-size: 14px;
-    float: right;
-} 
-
-#annotations-info {
-    font-size: 15px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(92, 13, 110);
-    font-weight: 550;
-}
-
-#edit-button {
-    margin-left: 0px;
-    padding-left: 0px;
-    color: rgb(92, 13, 110);
-}
-
-
-.dataset-options-div {
+.horizontal-div {
     display: flex;
-    flex-direction: row;
-    float: left;
+    flex-direction: horizontal;
 }
 
-mat-slide-toggle {
-    margin-left: 5px;
+.mat-button {
+    color: rgb(92, 13, 110);
 }
-
-*/

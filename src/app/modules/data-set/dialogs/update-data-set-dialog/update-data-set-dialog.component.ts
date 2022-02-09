@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { DataSetService } from '../../data-set.service';
 import { DataSet } from '../../model/data-set/data-set.model';
+import { DataSetService } from '../../services/data-set.service';
 
 @Component({
   selector: 'de-update-data-set-dialog',
