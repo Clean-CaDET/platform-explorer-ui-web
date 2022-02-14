@@ -20,6 +20,9 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { DisagreeingAnnotationsDialogComponent } from '../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
 import { DataSetProjectService } from '../services/data-set-project.service';
 import { DataSetService } from '../services/data-set.service';
+import { Location } from '@angular/common';
+import { AnnotationNotificationService } from '../services/annotation-notification.service';
+
 
 @Component({
   selector: 'de-data-set-detail',
@@ -66,26 +69,65 @@ export class DataSetDetailComponent implements OnInit {
   public showFiller = false;
   public automaticAnnotationMode = false;
   public instanceToAnnotate: Instance | undefined;
-  public selectedSmell: string = '';
   public previousAnnotation: Annotation | undefined;
   public totalNumInstances: number = 0;
   ///
 
   constructor(private route: ActivatedRoute, private sessionService: SessionStorageService, 
     private projectService: DataSetProjectService, private datasetService: DataSetService, 
-    private dialog: MatDialog, private toastr: ToastrService) {}
+    private dialog: MatDialog, private toastr: ToastrService, private location: Location, 
+    private annotationNotificationService: AnnotationNotificationService) {
+      this.annotationNotificationService.newAnnotation.subscribe(annotation => {
+        this.newAnnotation(annotation);
+      });
+      this.annotationNotificationService.changedAnnotation.subscribe(annotation => {
+        this.newAnnotation(annotation);
+      });
+  }
+
+  private newAnnotation(annotation: Annotation) {
+    this.sessionService.setSmellFilter(annotation.instanceSmell.name);
+    var i = this.filterInstancesBySmell().findIndex(i => i.id == this.chosenInstance.id);
+    var annotatedInstance = this.filterInstancesBySmell()[i];
+    annotatedInstance.annotationFromLoggedUser = annotation;
+    annotatedInstance.hasAnnotationFromLoggedUser = true;
+  }
 
   public ngOnInit() {
     this.sessionService.clearSmellFilter();
     this.route.params.subscribe(async (params: Params) => {
-      this.chosenDataset = new DataSet(await this.datasetService.getDataSet(params['id']));
-      var counter = 0;
-      this.chosenDataset.projects.forEach(project => {
-        counter += project.countAnnotatedInstances();
-      });
-      this.annotatedInstancesNum = counter;
-      this.dataSourceProjects.data = this.chosenDataset.projects;
+      this.loadProjects(params);
     });
+  }
+
+  private async loadProjects(params: Params) {
+    this.chosenDataset = new DataSet(await this.datasetService.getDataSet(params['id']));
+    this.countAnnotatedInstances();
+    this.dataSourceProjects.data = this.chosenDataset.projects;
+    this.loadInstance(params);
+  }
+
+  //todo
+  private countAnnotatedInstances() {
+    var counter = 0;
+    this.chosenDataset.projects.forEach(project => {
+      counter += project.countAnnotatedInstances();
+    });
+    this.annotatedInstancesNum = counter;
+  }
+
+  private loadInstance(params: Params) {
+    if (params['instanceId']) {
+      this.initProject();
+      this.chooseInstance(this.filterInstancesBySmell().find(i => i.id == params['instanceId'])!);
+    }
+  }
+
+  private initProject() {
+    this.chosenProject = this.chosenDataset.projects[0];
+    this.initSmellSelection();
+    this.initInstances();
+    this.initSeverities();
   }
 
   public addProject(): void {
@@ -143,6 +185,8 @@ export class DataSetDetailComponent implements OnInit {
 
   public async chooseProject(project: DataSetProject): Promise<void> {
     this.chosenProject = new DataSetProject(await this.projectService.getProject(project.id));
+    this.chosenInstance = new Instance(this.sessionService);
+    this.location.replaceState('/datasets/' + this.chosenDataset.id);
     this.initSmellSelection();
     this.initInstances();
     this.initSeverities();
@@ -166,7 +210,7 @@ export class DataSetDetailComponent implements OnInit {
     this.dataSourceInstances.data = this.filterInstancesBySmell();
   }
 
-  private filterInstancesBySmell() {
+  private filterInstancesBySmell(): Instance[] {
     return this.chosenProject.candidateInstances.find(c => c.codeSmell?.name == this.sessionService.getSmellFilter())?.instances!;
   }
 
@@ -243,14 +287,13 @@ export class DataSetDetailComponent implements OnInit {
     this.dataSourceInstances.data = this.filterInstancesBySmell();
     this.initSeverities();
     this.selectedAnnotationStatus = AnnotationStatus.All;
+    this.chosenInstance = new Instance(this.sessionService);
   }
 
-  // todo
   public chooseInstance(instance: Instance): void {
     this.chosenInstance = instance;
-    // this.instanceToAnnotate.emit(this.chosenInstance);
-    // this.selectedSmell.emit(this.selectedCodeSmell);
-    // this.previousAnnotation.emit(this.chosenInstance.annotations.find(a => a.annotator.id == this.annotatorId)!);
+    this.location.replaceState('/datasets/'+this.chosenDataset.id+'/instances/'+this.chosenInstance.id);
+    this.ngOnInit();
   }
 
   public showAllAnnotations(annotations: Annotation[], instanceId: number): void {
@@ -275,7 +318,7 @@ export class DataSetDetailComponent implements OnInit {
       // });
     });
   }
-  
+
   public previousAnnotated(annotation: Annotation): void {
     this.previousAnnotation = annotation; 
   }

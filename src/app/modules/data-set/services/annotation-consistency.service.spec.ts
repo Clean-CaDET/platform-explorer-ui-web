@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-
 import { AnnotationConsistencyService } from './annotation-consistency.service';
+
 
 describe('AnnotationConsistencyService', () => {
   let service: AnnotationConsistencyService;

@@ -2,9 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConsistencyType } from '../../model/enums/enums.model';
-import { AnnotationConsistencyService } from '../../annotation-consistency/annotation-consistency.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { SessionStorageService } from 'src/app/session-storage.service';
+import { AnnotationConsistencyService } from '../../services/annotation-consistency.service';
 
 @Component({
   selector: 'de-annotation-consistency-dialog',

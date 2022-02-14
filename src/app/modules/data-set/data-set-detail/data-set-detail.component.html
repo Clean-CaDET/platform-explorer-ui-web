@@ -40,6 +40,7 @@
     </mat-toolbar>
 </div>
 <div class="horizontal-div">
+    <!-- Projects table -->
     <div class="table-container mat-elevation-z8 container">
         <p class="table-title">Projects</p>
         <div class="table-header">
@@ -125,7 +126,7 @@
                     </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumnsProjects; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumnsProjects;"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsProjects;" [class.row-chosen]="row.id == chosenProject.id"></tr>
             </table>
         </div>
 
@@ -140,6 +141,7 @@
             </mat-form-field>
         </form>
     </div>
+    <!-- Instances table -->
     <div class="table-container mat-elevation-z8 container" *ngIf="chosenProject?.id">
         <p class="table-title">Instances</p>
         <div class="table-header">
@@ -213,3 +215,8 @@
         </form>
     </div>
 </div>
+
+<de-annotation-container *ngIf="chosenInstance?.id" [instanceId]="chosenInstance.id" 
+[selectedSmell]="selectedSmellFormControl.value">
+</de-annotation-container> 
+<router-outlet></router-outlet>

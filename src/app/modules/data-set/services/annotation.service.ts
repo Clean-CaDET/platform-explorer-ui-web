@@ -7,6 +7,7 @@ import { ServerCommunicationService } from 'src/app/server-communication/server-
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 import { SessionStorageService } from 'src/app/session-storage.service';
 import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
+import { Instance } from '../model/instance/instance.model';
 
 
 @Injectable({
@@ -50,7 +51,11 @@ export class AnnotationService {
       return await this.serverCommunicationService.getRequestAsync('annotation/disagreeing-annotations/' + project.id);
   }
 
-  public getLoggedInAnnotatorId(): number {
-    return Number(this.sessionService.getLoggedInAnnotator());
+  public async getInstanceWithRelatedInstances(id: number): Promise<Instance> {
+    return await this.serverCommunicationService.getRequestAsync('annotation/instances/' + id);
+  }
+
+  public async getInstanceWithAnnotations(id: number): Promise<Instance> {
+    return await this.serverCommunicationService.getRequestAsync('instances/' + id + '/annotations');
   }
 }
