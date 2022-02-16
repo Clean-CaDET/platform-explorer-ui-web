@@ -21,6 +21,7 @@ import { DataSetProjectService } from '../services/data-set-project.service';
 import { DataSetService } from '../services/data-set.service';
 import { Location } from '@angular/common';
 import { AnnotationNotificationService } from '../services/annotation-notification.service';
+import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 
 
 @Component({
@@ -33,15 +34,13 @@ export class DataSetDetailComponent implements OnInit {
 
   public chosenDataset: DataSet = new DataSet();
   public dataSourceProjects: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.chosenDataset.projects);
-  public displayedColumnsProjects: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
+  public displayedColumnsProjects: string[] = ['name', 'url', 'numOfInstances', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
   public chosenProject: DataSetProject = new DataSetProject();
   public projectState = ProjectState;
   public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"]; // ovde staviti kao Object.keys(...); pogledaj dva reda ispod
   public filterFormControl: FormControl = new FormControl('All instances', [Validators.required]);
   private pollingCycleDurationInSeconds: number = 10;
   public annotatedInstancesNum: number = 0;
-  
-
   public dataSourceInstances: MatTableDataSource<Instance> = new MatTableDataSource<Instance>();
   private initColumnsInstances: string[] = ['codeSnippetId', 'annotated', 'severity'];
   public displayedColumnsInstances: string[] = this.initColumnsInstances;
@@ -53,7 +52,6 @@ export class DataSetDetailComponent implements OnInit {
   public codeSmells: string[] = [];
   public selectedSmellFormControl = new FormControl('', Validators.required);
   public chosenInstance: Instance = new Instance(this.sessionService);
-  public automaticAnnotationMode = false;
   public panelOpenState = false;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
@@ -62,11 +60,7 @@ export class DataSetDetailComponent implements OnInit {
       this.dataSourceProjects.paginator = this.paginator;
   }
 
-  //// todo delete unnecessary
-  public totalNumInstances: number = 0;
-  ///
-
-  constructor(private route: ActivatedRoute, private sessionService: SessionStorageService, 
+  constructor(private route: ActivatedRoute, public sessionService: SessionStorageService, 
     private projectService: DataSetProjectService, private datasetService: DataSetService, 
     private dialog: MatDialog, private toastr: ToastrService, private location: Location, 
     private annotationNotificationService: AnnotationNotificationService) {
@@ -76,25 +70,56 @@ export class DataSetDetailComponent implements OnInit {
       this.annotationNotificationService.changedAnnotation.subscribe(annotation => {
         this.annotationSubmitted(annotation);
       });
+      this.annotationNotificationService.annotationCounter.subscribe(() => {
+        this.countAnnotatedDatasetInstances();
+      });
   }
 
   public ngOnInit() {
     this.sessionService.clearAutoAnnotationMode();
     this.sessionService.clearSmellFilter();
     this.route.params.subscribe(async (params: Params) => {
-      this.loadProjects(params);
+      this.loadDataset(params).then(() => {
+        if (params['projectId']) {
+          this.loadProject(params).then(() => {
+            if (params['instanceId']) this.loadInstance(params);
+          });
+        }
+      });
     });
   }
 
-  private async loadProjects(params: Params) {
+  private async loadDataset(params: Params) {
     this.chosenDataset = new DataSet(await this.datasetService.getDataSet(params['id']));
-    this.countAnnotatedInstances();//todo
+    this.annotationNotificationService.datasetChosen.emit(this.chosenDataset);
     this.dataSourceProjects.data = this.chosenDataset.projects;
-    this.loadInstance(params);
+  }
+
+  private async loadProject(params: Params) {
+    var project = this.chosenDataset.projects.find(p => p.id == params['projectId']);
+    if (project) {
+      this.chosenProject = new DataSetProject(await this.projectService.getProject(project.id));
+      this.annotationNotificationService.projectChosen.emit(this.chosenProject);
+      this.initSmellSelection();
+      this.initInstances();
+      this.initSeverities();
+    }
+  }
+
+  private loadInstance(params: Params) {
+    this.chosenProject.candidateInstances.forEach(candidate => {
+      var instance = candidate.instances.find(i => i.id == params['instanceId']);
+      if (instance) {
+        this.selectedSmellFormControl.setValue(candidate.codeSmell?.name);
+        this.dataSourceInstances.data = candidate.instances;
+        this.chooseInstance(instance);
+      }
+    });
   }
 
   private annotationSubmitted(annotation: Annotation) {
     this.updateInstancesTable(annotation);
+    if (this.sessionService.getAnnotationCounter()) this.annotatedInstancesNum++;
     if (this.sessionService.getAutoAnnotationMode() == 'true') this.loadNextInstance();
   }
 
@@ -139,6 +164,7 @@ export class DataSetDetailComponent implements OnInit {
         var projectInstances = this.getProjectInstances(this.chosenProject);
         if (projectInstances.length > 0) {
           this.chosenInstance = projectInstances[0];
+          this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
           this.location.replaceState('/datasets/'+this.chosenDataset.id+'/instances/'+this.chosenInstance.id);
         }
       })
@@ -152,6 +178,7 @@ export class DataSetDetailComponent implements OnInit {
         var projectInstances = this.getProjectInstances(this.chosenProject);
         if (projectInstances.length > 0) {
           this.chosenInstance = projectInstances[projectInstances.length-1];
+          this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
           this.location.replaceState('/datasets/'+this.chosenDataset.id+'/instances/'+this.chosenInstance.id);
         }
       })
@@ -168,29 +195,6 @@ export class DataSetDetailComponent implements OnInit {
     var currentProjectId = this.chosenDataset.projects.findIndex(p => p.id == this.chosenProject.id);
     if (currentProjectId == 0) return null;
     else return this.chosenDataset.projects[currentProjectId-1];
-  }
-
-  //todo
-  private countAnnotatedInstances() {
-    var counter = 0;
-    this.chosenDataset.projects.forEach(project => {
-      counter += project.countAnnotatedInstances();
-    });
-    this.annotatedInstancesNum = counter;
-  }
-
-  private loadInstance(params: Params) {
-    if (params['instanceId']) {
-      this.initProject();
-      this.chooseInstance(this.filterInstancesBySmell().find(i => i.id == params['instanceId'])!);
-    }
-  }
-
-  private initProject() {
-    this.chosenProject = this.chosenDataset.projects[0];
-    this.initSmellSelection();
-    this.initInstances();
-    this.initSeverities();
   }
 
   public addProject(): void {
@@ -249,7 +253,9 @@ export class DataSetDetailComponent implements OnInit {
   public async chooseProject(project: DataSetProject): Promise<DataSetProject> {
     this.chosenProject = new DataSetProject(await this.projectService.getProject(project.id));
     this.chosenInstance = new Instance(this.sessionService);
-    this.location.replaceState('/datasets/' + this.chosenDataset.id);
+    this.annotationNotificationService.projectChosen.emit(project);
+    this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
+    this.location.replaceState('/datasets/' + this.chosenDataset.id + '/projects/' + this.chosenProject.id);
     this.initSmellSelection();
     this.initInstances();
     this.initSeverities();
@@ -352,23 +358,19 @@ export class DataSetDetailComponent implements OnInit {
     this.initSeverities();
     this.selectedAnnotationStatus = AnnotationStatus.All;
     this.chosenInstance = new Instance(this.sessionService);
+    this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
   }
 
   public chooseInstance(instance: Instance): void {
+    this.annotationNotificationService.instanceChosen.emit(instance);
     this.chosenInstance = instance;
-    this.location.replaceState('/datasets/'+this.chosenDataset.id+'/instances/'+this.chosenInstance.id);
-    this.route.params.subscribe(async (params: Params) => {
-      this.loadProjects(params);
-    });
+    this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
+    this.location.replaceState('/datasets/'+this.chosenDataset.id+'/projects/'+this.chosenProject.id+'/instances/'+this.chosenInstance.id);
   }
 
   public showAllAnnotations(annotations: Annotation[], instanceId: number): void {
     let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', {annotations: annotations, instanceId: instanceId});
     this.dialog.open(DisagreeingAnnotationsDialogComponent, dialogConfig);
-  }
-
-  public toggleAutomaticMode() {
-    this.sessionService.setAutoAnnotationMode(this.automaticAnnotationMode);
   }
   
   @HostListener('window:keydown', ['$event'])
@@ -385,22 +387,32 @@ export class DataSetDetailComponent implements OnInit {
     }
   }
 
-  ////
-  /*
-  private countAnnotatedInstances() {
-    this.annotatedInstancesNum = 0;
-    this.totalNumInstances = 0;
-    this.chosenDataset.projects.forEach(project => {
-      //popraviti,puca
-      // project.candidateInstances.forEach(candidates => {
-      //   this.totalNumInstances += candidates.instances.length;
-      //   candidates.instances.forEach(instance => {
-      //     if (instance.annotations.find(a => a.annotator.id.toString() == this.sessionService.getLoggedInAnnotator())) {
-      //       this.annotatedInstancesNum++;
-      //     }
-      //   });
-      // });
-    });
+  private countAnnotatedDatasetInstances() {
+    if (this.sessionService.getAnnotationCounter() == 'true') {
+      this.displayedColumnsProjects = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
+      this.annotatedInstancesNum = 0;
+      this.chosenDataset.projects.forEach(async (project, index) => {
+        if (!project.candidateInstances) project = new DataSetProject(await this.projectService.getProject(project.id));
+        var counted = this.countAnnotatedProjectInstances(project.candidateInstances);
+        if (counted == project.instancesCount) this.chosenDataset.projects[index].fullyAnnotated = true;
+        this.annotatedInstancesNum += counted;
+      })
+    } else {
+      this.displayedColumnsProjects = ['name', 'url', 'numOfInstances', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
+    }
   }
-}*/
+
+  private countAnnotatedProjectInstances(candidates: SmellCandidateInstances[]): number {
+    var counter = 0;
+    candidates.forEach(candidate => {
+      candidate.instances.forEach(instance => {
+        instance.annotations.forEach(annotation => {
+          if (annotation.annotator.id+'' == this.sessionService.getLoggedInAnnotator()) {
+            counter++;
+          }
+        });
+      });
+    });
+    return counter;
+  }
 }

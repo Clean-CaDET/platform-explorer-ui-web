@@ -1,21 +1,9 @@
 <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true">
     <mat-expansion-panel-header>
-        <div class="exp-panel-header-div">
-            <div class="vertical-div">
-                <mat-panel-title>
-                    Dataset: <span>{{chosenDataset.name}}</span>
-                </mat-panel-title>
-                <mat-panel-title *ngIf="chosenProject?.id">
-                    Project: <span>{{chosenProject.name}}</span>
-                </mat-panel-title>
-            </div>
-            <div class="toggle-automatic-mode vertical-div">
-                <mat-panel-title>
-                    Automatic annotation mode
-                    <mat-slide-toggle color="primary" [(ngModel)]="automaticAnnotationMode" (change)="toggleAutomaticMode()"></mat-slide-toggle>
-                </mat-panel-title>
+        <div class="exp-panel-header-div" *ngIf="sessionService.getAnnotationCounter() == 'true'">
+            <div class="toggle-automatic-mode">
                 <mat-panel-title id="annotations-info">
-                    Annotated <span>{{annotatedInstancesNum}}/{{chosenDataset.instancesCount}}</span>
+                    Annotated: <span>{{annotatedInstancesNum}}/{{chosenDataset.instancesCount}}</span>
                 </mat-panel-title>
             </div>
         </div>

@@ -12,7 +12,8 @@ const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'datasets', component: DataSetComponent },
   { path: 'datasets/:id', component: DataSetDetailComponent },
-  { path: 'datasets/:id/instances/:instanceId', component: DataSetDetailComponent },
+  { path: 'datasets/:id/projects/:projectId', component: DataSetDetailComponent },
+  { path: 'datasets/:id/projects/:projectId/instances/:instanceId', component: DataSetDetailComponent },
 ];
 
 @NgModule({

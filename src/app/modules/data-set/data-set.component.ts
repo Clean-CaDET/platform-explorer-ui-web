@@ -11,6 +11,7 @@ import { DialogConfigService } from "./dialogs/dialog-config.service";
 import { ExportDraftDataSetDialogComponent } from "./dialogs/export-draft-data-set-dialog/export-draft-data-set-dialog.component";
 import { UpdateDataSetDialogComponent } from "./dialogs/update-data-set-dialog/update-data-set-dialog.component";
 import { DataSet } from "./model/data-set/data-set.model";
+import { AnnotationNotificationService } from "./services/annotation-notification.service";
 import { DataSetService } from "./services/data-set.service";
 
 
@@ -33,7 +34,7 @@ export class DataSetComponent implements OnInit {
 
     constructor(private dialog: MatDialog, private toastr: ToastrService, 
         private datasetService: DataSetService, private router: Router,
-        private sessionService: SessionStorageService) {}
+        private sessionService: SessionStorageService, private annotationNotificationService: AnnotationNotificationService) {}
 
     public async ngOnInit(): Promise<void> {
         var res = await this.datasetService.getAllDataSets();
@@ -87,6 +88,7 @@ export class DataSetComponent implements OnInit {
     }
 
     public chooseDataset(dataset: DataSet): void {
+        this.annotationNotificationService.datasetChosen.emit(dataset);
         this.sessionService.clearSmellFilter();
         this.router.navigate(['/datasets', dataset.id]);
     }

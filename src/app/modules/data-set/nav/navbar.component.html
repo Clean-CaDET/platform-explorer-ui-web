@@ -1,8 +1,21 @@
 <div class="mat-toolbar-div">
     <mat-toolbar>
         <div class="options-div">
-            <div>
-                <span *ngIf="!isLoggedIn()">DataSet Explorer</span>
+            <div *ngIf="!isLoggedIn()">
+                <span >DataSet Explorer</span>
+            </div>
+            <div class="vertical-div">
+                <span *ngIf="chosenDataset?.id">Dataset: {{chosenDataset.name}}</span>
+                <span *ngIf="chosenProject?.id">Project: {{chosenProject.name}}</span>
+                <span *ngIf="chosenInstance?.id">Instance: {{chosenInstance.codeSnippetId}}</span>
+                <div class="toggle-option" *ngIf="chosenDataset?.id">
+                    Automatic annotation mode
+                    <mat-slide-toggle color="primary" (change)="toggleAutomaticMode($event)"></mat-slide-toggle>
+                </div>
+                <div class="toggle-option" *ngIf="chosenDataset?.id">
+                    Annotations counter
+                    <mat-slide-toggle [checked]="annotationsCounter" color="primary" (change)="toggleAnnotationsCounter($event)"></mat-slide-toggle>
+                </div>
             </div>
             <div *ngIf="isLoggedIn()" class="horizontal-div">
                 <button mat-button (click)="goToDatasets()">
