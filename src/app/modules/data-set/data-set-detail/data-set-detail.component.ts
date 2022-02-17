@@ -22,6 +22,7 @@ import { DataSetService } from '../services/data-set.service';
 import { Location } from '@angular/common';
 import { AnnotationNotificationService } from '../services/annotation-notification.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
+import { AnnotationService } from '../services/annotation.service';
 
 
 @Component({
@@ -63,9 +64,11 @@ export class DataSetDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, public sessionService: SessionStorageService, 
     private projectService: DataSetProjectService, private datasetService: DataSetService, 
     private dialog: MatDialog, private toastr: ToastrService, private location: Location, 
-    private annotationNotificationService: AnnotationNotificationService) {
+    private annotationNotificationService: AnnotationNotificationService,
+    private annotationService: AnnotationService) {
       this.annotationNotificationService.newAnnotation.subscribe(annotation => {
         this.annotationSubmitted(annotation);
+        if (this.sessionService.getAnnotationCounter()) this.annotatedInstancesNum++;
       });
       this.annotationNotificationService.changedAnnotation.subscribe(annotation => {
         this.annotationSubmitted(annotation);
@@ -76,6 +79,7 @@ export class DataSetDetailComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.sessionService.clearAnnotationCounter();
     this.sessionService.clearAutoAnnotationMode();
     this.sessionService.clearSmellFilter();
     this.route.params.subscribe(async (params: Params) => {
@@ -119,7 +123,7 @@ export class DataSetDetailComponent implements OnInit {
 
   private annotationSubmitted(annotation: Annotation) {
     this.updateInstancesTable(annotation);
-    if (this.sessionService.getAnnotationCounter()) this.annotatedInstancesNum++;
+    this.initSeverities();
     if (this.sessionService.getAutoAnnotationMode() == 'true') this.loadNextInstance();
   }
 
@@ -252,13 +256,10 @@ export class DataSetDetailComponent implements OnInit {
 
   public async chooseProject(project: DataSetProject): Promise<DataSetProject> {
     this.chosenProject = new DataSetProject(await this.projectService.getProject(project.id));
-    this.chosenInstance = new Instance(this.sessionService);
     this.annotationNotificationService.projectChosen.emit(project);
-    this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
     this.location.replaceState('/datasets/' + this.chosenDataset.id + '/projects/' + this.chosenProject.id);
     this.initSmellSelection();
-    this.initInstances();
-    this.initSeverities();
+    this.filterSelection();
     return this.chosenProject;
   }
 
@@ -302,15 +303,18 @@ export class DataSetDetailComponent implements OnInit {
     this.dialog.open(AnnotationConsistencyDialogComponent, dialogConfig);
   }
 
-  // todo
-  public filterSelection() {    
-    // if (this.filterFormControl.value == 'All instances') {
-    //   this.showAllInstances();
-    // } else if (this.filterFormControl.value == 'Need additional annotations') {
-    //   this.showInstancesForAdditionalAnnotation();
-    // } else {
-    //   this.showInstancesWithDisagreeingAnnotations();
-    // }
+  public async filterSelection() {    
+    if (this.filterFormControl.value == 'All instances') {
+      this.chosenProject = new DataSetProject(await this.projectService.getProject(this.chosenProject.id));
+    } else if (this.filterFormControl.value == 'Need additional annotations') {
+      this.chosenProject.candidateInstances = await this.annotationService.requiringAdditionalAnnotation(this.chosenProject);
+    } else {
+      this.chosenProject.candidateInstances = await this.annotationService.disagreeingAnnotations(this.chosenProject);
+    }
+    this.chosenInstance = new Instance(this.sessionService);
+    this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
+    this.initInstances();
+    this.initSeverities();
   }
  
   public searchInstances(): void {

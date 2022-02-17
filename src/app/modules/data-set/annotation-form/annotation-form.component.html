@@ -3,11 +3,11 @@
         <p>Heuristics:</p>
         <li *ngFor="let heuristic of heuristics()">
             <div class="heuristic-reason">
-                <mat-checkbox color="primary" [checked]="isHeuristicApplied(heuristic)" (change)="checkHeuristicCheckbox(heuristic, $event.checked)"  [disabled]="disableEdit">{{heuristic}}</mat-checkbox>
-                <mat-form-field appearance="fill" floatLabel="always" class="form-field reason" *ngIf="isHeuristicApplied(heuristic)">
-                    <mat-label>Reason</mat-label>
-                    <input type="text" matInput (change)="addReasonForHeuristic($event.target!, heuristic)" [disabled]="disableEdit" value="{{appliedHeuristicsAndReasons.get(heuristic)}}">
-                </mat-form-field>
+                <mat-checkbox color="primary" [checked]="isHeuristicApplied(heuristic)" (change)="checkHeuristicCheckbox(heuristic, $event.checked)"  [disabled]="disableEdit">{{heuristic}}
+                    <button mat-icon-button *ngIf="isHeuristicApplied(heuristic)" color="primary" (click)="openReasonDialog(heuristic)">
+                        <mat-icon matTooltip="reason">note_add</mat-icon>
+                    </button>
+                </mat-checkbox>
             </div>
         </li>
     </ul>

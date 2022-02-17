@@ -10,7 +10,7 @@ form {
 
 .heuristic-reason {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 #severity {

@@ -15,6 +15,7 @@ import { DataSetComponent } from './data-set.component';
 import { DataSetDetailComponent } from './data-set-detail/data-set-detail.component';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AnnotationFormComponent } from './annotation-form/annotation-form.component';
+import { HeuristicReasonDialogComponent } from './dialogs/heuristic-reason-dialog/heuristic-reason-dialog.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { AnnotationFormComponent } from './annotation-form/annotation-form.compo
     AddDataSetDialogComponent,
     AddProjectDialogComponent,
     ExportDraftDataSetDialogComponent,
+    HeuristicReasonDialogComponent,
     ConfirmDialogComponent,
     UpdateDataSetDialogComponent,
     UpdateProjectDialogComponent,
