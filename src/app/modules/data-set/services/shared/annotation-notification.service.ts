@@ -1,8 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Annotation } from '../model/annotation/annotation.model';
-import { DataSetProject } from '../model/data-set-project/data-set-project.model';
-import { DataSet } from '../model/data-set/data-set.model';
-import { Instance } from '../model/instance/instance.model';
+import { Annotation } from '../../model/annotation/annotation.model';
+import { DataSetProject } from '../../model/data-set-project/data-set-project.model';
+import { DataSet } from '../../model/data-set/data-set.model';
+import { Instance } from '../../model/instance/instance.model';
 
 
 @Injectable({

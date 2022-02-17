@@ -2,8 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConsistencyType } from '../../model/enums/enums.model';
-import { SessionStorageService } from 'src/app/session-storage.service';
 import { AnnotationConsistencyService } from '../../services/annotation-consistency.service';
+import { SessionStorageService } from '../../services/shared/session-storage.service';
 
 @Component({
   selector: 'de-annotation-consistency-dialog',
@@ -27,7 +27,9 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   public selectedResult: string = '';
   public resultDescription: string = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) private projectId: number, private annotationConsistencyService: AnnotationConsistencyService, private sessionService: SessionStorageService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) private projectId: number, 
+    private annotationConsistencyService: AnnotationConsistencyService, 
+    private sessionService: SessionStorageService) { }
 
   public ngOnInit(): void {
     this.typeFormControl.markAsTouched();

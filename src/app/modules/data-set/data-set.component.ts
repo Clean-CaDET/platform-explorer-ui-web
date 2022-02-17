@@ -4,15 +4,15 @@ import { MatPaginator, MatPaginatorIntl } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
-import { SessionStorageService } from "src/app/session-storage.service";
 import { AddDataSetDialogComponent } from "./dialogs/add-data-set-dialog/add-data-set-dialog.component";
 import { ConfirmDialogComponent } from "./dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogConfigService } from "./dialogs/dialog-config.service";
 import { ExportDraftDataSetDialogComponent } from "./dialogs/export-draft-data-set-dialog/export-draft-data-set-dialog.component";
 import { UpdateDataSetDialogComponent } from "./dialogs/update-data-set-dialog/update-data-set-dialog.component";
 import { DataSet } from "./model/data-set/data-set.model";
-import { AnnotationNotificationService } from "./services/annotation-notification.service";
 import { DataSetService } from "./services/data-set.service";
+import { AnnotationNotificationService } from "./services/shared/annotation-notification.service";
+import { SessionStorageService } from "./services/shared/session-storage.service";
 
 
 @Component({

@@ -7,9 +7,9 @@ import { CodeSmell } from '../model/code-smell/code-smell.model';
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { ProjectBuildSettings } from '../model/project-build-settings/project-build-settings.model';
 import { SmellFilter } from '../model/smell-filter/smell-filter.model';
-import { SessionStorageService } from 'src/app/session-storage.service';
 import { DatasetSummaryDTO } from '../model/DTOs/dataset-summary-dto/dataset-summary-dto.model';
 import { DatasetDetailDTO } from '../model/DTOs/dataset-detail-dto/dataset-detail-dto.model';
+import { SessionStorageService } from './shared/session-storage.service';
 
 
 @Injectable({
@@ -19,7 +19,8 @@ export class DataSetService {
   
   private datasetPath: string = 'dataset/';
 
-  constructor(private serverCommunicationService: ServerCommunicationService, private sessionService: SessionStorageService) { }
+  constructor(private serverCommunicationService: ServerCommunicationService, 
+    private sessionService: SessionStorageService) { }
 
   public async getDataSet(id: number): Promise<DatasetDetailDTO> {
     return await this.serverCommunicationService.getRequestAsync(this.datasetPath + id);

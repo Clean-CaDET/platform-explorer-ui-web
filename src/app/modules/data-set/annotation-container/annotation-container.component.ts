@@ -1,9 +1,9 @@
 import { Component, Input, Pipe, PipeTransform } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { SessionStorageService } from 'src/app/session-storage.service';
 import { Instance } from '../model/instance/instance.model';
 import { RelatedInstance } from '../model/related-instance/related-instance.model';
 import { AnnotationService } from '../services/annotation.service';
+import { SessionStorageService } from '../services/shared/session-storage.service';
 
 
 @Component({

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Router } from '@angular/router';
-import { SessionStorageService } from 'src/app/session-storage.service';
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { DataSet } from '../model/data-set/data-set.model';
 import { Instance } from '../model/instance/instance.model';
-import { AnnotationNotificationService } from '../services/annotation-notification.service';
+import { AnnotationNotificationService } from '../services/shared/annotation-notification.service';
+import { SessionStorageService } from '../services/shared/session-storage.service';
 
 
 @Component({

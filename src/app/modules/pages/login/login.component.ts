@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SessionStorageService } from 'src/app/session-storage.service';
+import { SessionStorageService } from '../../data-set/services/shared/session-storage.service';
 
 
 @Component({

@@ -2,7 +2,6 @@ import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service';
-import { SessionStorageService } from 'src/app/session-storage.service';
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 
 
@@ -13,7 +12,7 @@ export class DataSetProjectService {
 
   private projectsPath: string = 'projects/';
 
-  constructor(private serverCommunicationService: ServerCommunicationService, private sessionService: SessionStorageService) { }
+  constructor(private serverCommunicationService: ServerCommunicationService) { }
 
   public async getProject(id: number): Promise<DataSetProject> {
     return await this.serverCommunicationService.getRequestAsync(this.projectsPath + id);

@@ -5,7 +5,6 @@ import { AnnotationStatus, ProjectState } from '../model/enums/enums.model';
 import { Instance } from '../model/instance/instance.model';
 import { Annotation } from '../model/annotation/annotation.model';
 import { ActivatedRoute, Params } from '@angular/router';
-import { SessionStorageService } from 'src/app/session-storage.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { AddProjectDialogComponent } from '../dialogs/add-project-dialog/add-project-dialog.component';
 import { DialogConfigService } from '../dialogs/dialog-config.service';
@@ -20,9 +19,10 @@ import { DisagreeingAnnotationsDialogComponent } from '../dialogs/disagreeing-an
 import { DataSetProjectService } from '../services/data-set-project.service';
 import { DataSetService } from '../services/data-set.service';
 import { Location } from '@angular/common';
-import { AnnotationNotificationService } from '../services/annotation-notification.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 import { AnnotationService } from '../services/annotation.service';
+import { AnnotationNotificationService } from '../services/shared/annotation-notification.service';
+import { SessionStorageService } from '../services/shared/session-storage.service';
 
 
 @Component({

@@ -1,16 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SessionStorageService } from 'src/app/session-storage.service';
 import { DialogConfigService } from '../dialogs/dialog-config.service';
 import { HeuristicReasonDialogComponent } from '../dialogs/heuristic-reason-dialog/heuristic-reason-dialog.component';
 import { Annotation } from '../model/annotation/annotation.model';
 import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
 import { Instance } from '../model/instance/instance.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
-import { AnnotationNotificationService } from '../services/annotation-notification.service';
 import { AnnotationService } from '../services/annotation.service';
+import { AnnotationNotificationService } from '../services/shared/annotation-notification.service';
+import { SessionStorageService } from '../services/shared/session-storage.service';
 
 
 @Component({
@@ -49,8 +49,7 @@ export class AnnotationFormComponent implements OnInit {
 
   public async ngOnChanges(): Promise<void> {
     this.instance = new Instance(this.sessionService, await this.annotationService.getInstanceWithAnnotations(this.instanceId));
-    if (this.instance.hasAnnotationFromLoggedUser) this.setPreviousAnnotation();
-    else this.initAnnotationForm();
+    this.instance.hasAnnotationFromLoggedUser ? this.setPreviousAnnotation() : this.initAnnotationForm();
   }
 
   private setPreviousAnnotation() {
@@ -72,11 +71,7 @@ export class AnnotationFormComponent implements OnInit {
   }
 
   public checkHeuristicCheckbox(heuristic: string, checked: boolean) {
-    if (checked) {
-      this.appliedHeuristicsAndReasons.set(heuristic, '');
-    } else {
-      this.appliedHeuristicsAndReasons.delete(heuristic);
-    }
+    checked ? this.appliedHeuristicsAndReasons.set(heuristic, '') : this.appliedHeuristicsAndReasons.delete(heuristic);
   }
 
   public isHeuristicApplied(heuristic: string) {

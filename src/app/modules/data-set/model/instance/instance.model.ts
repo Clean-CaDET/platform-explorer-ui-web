@@ -1,4 +1,4 @@
-import { SessionStorageService } from "src/app/session-storage.service";
+import { SessionStorageService } from "../../services/shared/session-storage.service";
 import { Annotation } from "../annotation/annotation.model"; 
 import { InstanceType } from "../enums/enums.model";
 import { RelatedInstance } from "../related-instance/related-instance.model";

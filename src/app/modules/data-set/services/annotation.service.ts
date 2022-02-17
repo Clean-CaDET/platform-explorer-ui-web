@@ -5,9 +5,9 @@ import { DataSetProject } from '../model/data-set-project/data-set-project.model
 import { Annotation } from '../model/annotation/annotation.model';
 import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service'; 
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
-import { SessionStorageService } from 'src/app/session-storage.service';
 import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
 import { Instance } from '../model/instance/instance.model';
+import { SessionStorageService } from './shared/session-storage.service';
 
 
 @Injectable({
@@ -15,7 +15,8 @@ import { Instance } from '../model/instance/instance.model';
 })
 export class AnnotationService {
 
-  constructor(private serverCommunicationService: ServerCommunicationService, private sessionService: SessionStorageService) { }
+  constructor(private serverCommunicationService: ServerCommunicationService, 
+    private sessionService: SessionStorageService) { }
 
   public getAvailableCodeSmells(): Observable<Map<string, string[]>> {
     return this.serverCommunicationService.getRequest('annotation/available-code-smells');
