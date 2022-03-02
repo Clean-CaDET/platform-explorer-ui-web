@@ -99,7 +99,7 @@ mat-panel-title>span {
 
 .horizontal-div {
     display: flex;
-    flex-direction: horizontal;
+    flex-direction: row;
 }
 
 .table-container {

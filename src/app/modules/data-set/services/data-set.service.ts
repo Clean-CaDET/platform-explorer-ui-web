@@ -9,7 +9,7 @@ import { ProjectBuildSettings } from '../model/project-build-settings/project-bu
 import { SmellFilter } from '../model/smell-filter/smell-filter.model';
 import { DatasetSummaryDTO } from '../model/DTOs/dataset-summary-dto/dataset-summary-dto.model';
 import { DatasetDetailDTO } from '../model/DTOs/dataset-detail-dto/dataset-detail-dto.model';
-import { SessionStorageService } from './shared/session-storage.service';
+import { LocalStorageService } from './shared/local-storage.service';
 
 
 @Injectable({
@@ -20,7 +20,7 @@ export class DataSetService {
   private datasetPath: string = 'dataset/';
 
   constructor(private serverCommunicationService: ServerCommunicationService, 
-    private sessionService: SessionStorageService) { }
+    private storageService: LocalStorageService) { }
 
   public async getDataSet(id: number): Promise<DatasetDetailDTO> {
     return await this.serverCommunicationService.getRequestAsync(this.datasetPath + id);
@@ -39,7 +39,7 @@ export class DataSetService {
   public exportDraftDataSet(id: number, exportPath: string): Observable<object> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    let data = {id: id, annotatorId: this.sessionService.getLoggedInAnnotator(), exportPath: exportPath}
+    let data = {id: id, annotatorId: this.storageService.getLoggedInAnnotator(), exportPath: exportPath}
     return this.serverCommunicationService.postRequest(this.datasetPath + 'export', data, headers);
   }
   

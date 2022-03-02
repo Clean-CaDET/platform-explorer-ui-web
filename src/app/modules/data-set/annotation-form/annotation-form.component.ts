@@ -10,7 +10,7 @@ import { Instance } from '../model/instance/instance.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
 import { AnnotationService } from '../services/annotation.service';
 import { AnnotationNotificationService } from '../services/shared/annotation-notification.service';
-import { SessionStorageService } from '../services/shared/session-storage.service';
+import { LocalStorageService } from '../services/shared/local-storage.service';
 
 
 @Component({
@@ -22,7 +22,7 @@ export class AnnotationFormComponent implements OnInit {
 
   @Input() public codeSmell: string = '';
   @Input() public instanceId: number = 0;
-  public instance: Instance = new Instance(this.sessionService);
+  public instance: Instance = new Instance(this.storageService);
   public appliedHeuristicsAndReasons: Map<string, string> = new Map();
   public severityFormControl: FormControl = new FormControl('0', [Validators.required, Validators.min(0), Validators.max(3),]);
   private availableHeuristics: Map<string, string[]> = new Map();
@@ -36,7 +36,7 @@ export class AnnotationFormComponent implements OnInit {
   //
 
   constructor(private annotationService: AnnotationService, private _snackBar: MatSnackBar,
-    private sessionService: SessionStorageService, private annotationNotificationService: AnnotationNotificationService,
+    private storageService: LocalStorageService, private annotationNotificationService: AnnotationNotificationService,
     private dialog: MatDialog) {}
 
   public ngOnInit(): void {
@@ -48,13 +48,13 @@ export class AnnotationFormComponent implements OnInit {
   }
 
   public async ngOnChanges(): Promise<void> {
-    this.instance = new Instance(this.sessionService, await this.annotationService.getInstanceWithAnnotations(this.instanceId));
+    this.instance = new Instance(this.storageService, await this.annotationService.getInstanceWithAnnotations(this.instanceId));
     this.instance.hasAnnotationFromLoggedUser ? this.setPreviousAnnotation() : this.initAnnotationForm();
   }
 
   private setPreviousAnnotation() {
+    this.appliedHeuristicsAndReasons.clear();
     this.severityFormControl.setValue(this.instance.annotationFromLoggedUser?.severity);
-    //this.codeSmell = this.previousAnnotation.instanceSmell.name; // todo check if necessary
     this.instance.annotationFromLoggedUser?.applicableHeuristics.forEach( h => {
       this.appliedHeuristicsAndReasons.set(h.description, h.reasonForApplicability);
     });

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Annotation } from '../../model/annotation/annotation.model';
-import { SessionStorageService } from '../../services/shared/session-storage.service';
+import { LocalStorageService } from '../../services/shared/local-storage.service';
 
 
 @Component({
@@ -11,10 +11,10 @@ import { SessionStorageService } from '../../services/shared/session-storage.ser
 })
 export class DisagreeingAnnotationsDialogComponent implements OnInit {
 
-  public loggedAnnotatorId: number = Number(this.sessionService.getLoggedInAnnotator());
+  public loggedAnnotatorId: number = Number(this.storageService.getLoggedInAnnotator());
 
   constructor(@Inject(MAT_DIALOG_DATA) public instanceWithDisagreeingAnnotations: InstanceWithDisagreeingAnnotations,
-   private sessionService: SessionStorageService) { }
+   private storageService: LocalStorageService) { }
 
   ngOnInit(): void {
   }

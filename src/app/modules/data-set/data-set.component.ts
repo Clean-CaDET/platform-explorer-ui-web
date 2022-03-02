@@ -12,7 +12,7 @@ import { UpdateDataSetDialogComponent } from "./dialogs/update-data-set-dialog/u
 import { DataSet } from "./model/data-set/data-set.model";
 import { DataSetService } from "./services/data-set.service";
 import { AnnotationNotificationService } from "./services/shared/annotation-notification.service";
-import { SessionStorageService } from "./services/shared/session-storage.service";
+import { LocalStorageService } from "./services/shared/local-storage.service";
 
 
 @Component({
@@ -34,9 +34,10 @@ export class DataSetComponent implements OnInit {
 
     constructor(private dialog: MatDialog, private toastr: ToastrService, 
         private datasetService: DataSetService, private router: Router,
-        private sessionService: SessionStorageService, private annotationNotificationService: AnnotationNotificationService) {}
+        private storageService: LocalStorageService, private annotationNotificationService: AnnotationNotificationService) {}
 
     public async ngOnInit(): Promise<void> {
+        if (!this.storageService.getLoggedInAnnotator()) this.router.navigate(['/login']);
         var res = await this.datasetService.getAllDataSets();
         res.map(d => this.datasets.push(new DataSet({id: d.id, name: d.name, projectsCount: d.projectsCount, projects: []})))
         this.dataSource.data = this.datasets;
@@ -89,7 +90,7 @@ export class DataSetComponent implements OnInit {
 
     public chooseDataset(dataset: DataSet): void {
         this.annotationNotificationService.datasetChosen.emit(dataset);
-        this.sessionService.clearSmellFilter();
+        this.storageService.clearSmellFilter();
         this.router.navigate(['/datasets', dataset.id]);
     }
 }

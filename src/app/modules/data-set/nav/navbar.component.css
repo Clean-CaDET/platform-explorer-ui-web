@@ -1,6 +1,9 @@
 mat-toolbar {
     background-color: rgb(223, 206, 228);
-    height: 110px;
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+    height: 44px;
 }
 
 .mat-toolbar-div {
@@ -16,19 +19,11 @@ mat-toolbar {
 
 .options-div {
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
 }
 
 #logout-button {
     color: black;
     float: right;
-}
-
-.horizontal-div {
-    display: flex;
-    flex-direction: horizontal;
 }
 
 .mat-button {

@@ -1,4 +1,4 @@
-import { SessionStorageService } from "../../services/shared/session-storage.service";
+import { LocalStorageService } from "../../services/shared/local-storage.service";
 import { Annotation } from "../annotation/annotation.model"; 
 import { InstanceType } from "../enums/enums.model";
 import { RelatedInstance } from "../related-instance/related-instance.model";
@@ -7,25 +7,25 @@ export class Instance {
     id: number = 0;
     codeSnippetId: string = '';
     link: string = '';
-    projectLink: string = '';
     type: InstanceType = InstanceType.Method;
     annotations: Annotation[] = [];
     metricFeatures: Map<string, number> = new Map();
     hasAnnotationFromLoggedUser: boolean = false;
     annotationFromLoggedUser: Annotation | null = null;
     relatedInstances: RelatedInstance[] = [];
+    projectId: number = 0;
 
-    constructor(sessionService: SessionStorageService, obj?: any) {
+    constructor(storageService: LocalStorageService, obj?: any) {
         if (obj) {
             this.id = obj.id;
             this.codeSnippetId = obj.codeSnippetId;
             this.link = obj.link;
-            this.projectLink = obj.projectLink;
             this.annotations = obj.annotations;
             this.setMetricFeatures(obj.metricFeatures);
             this.setType(obj.type);
-            this.setAnnotationFromLoggedUser(sessionService);
+            this.setAnnotationFromLoggedUser(storageService);
             if (obj.relatedInstances)this.relatedInstances = obj.relatedInstances.map((i: any) => new RelatedInstance(i))
+            this.projectId = obj.projectId;
         }
     }
 
@@ -35,8 +35,8 @@ export class Instance {
         }
     }
 
-    private setAnnotationFromLoggedUser(sessionService: SessionStorageService): void {
-        var annotatorId: number = Number(sessionService.getLoggedInAnnotator());
+    private setAnnotationFromLoggedUser(storageService: LocalStorageService): void {
+        var annotatorId: number = Number(storageService.getLoggedInAnnotator());
         this.annotationFromLoggedUser = this.annotations.filter(a => a.annotator.id == annotatorId)[0];
         if (this.annotationFromLoggedUser) {
             this.hasAnnotationFromLoggedUser = true;

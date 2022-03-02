@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 @Injectable({
     providedIn: 'root'
 })
-export class SessionStorageService {
+export class LocalStorageService {
 
     private annotatorId: string = 'annotatorId';
     private smellFilter: string = 'smellFilter';
@@ -11,50 +11,50 @@ export class SessionStorageService {
     private annotationCounter: string = 'annotationCounter';
 
     public getLoggedInAnnotator() {
-        return sessionStorage.getItem(this.annotatorId);
+        return localStorage.getItem(this.annotatorId);
     }
 
     public setLoggedInAnnotator(annotatorId: string) {
-        sessionStorage.setItem(this.annotatorId, annotatorId);
+        localStorage.setItem(this.annotatorId, annotatorId);
     }
 
     public getSmellFilter() {
-        return sessionStorage.getItem(this.smellFilter);
+        return localStorage.getItem(this.smellFilter);
     }
 
     public setSmellFilter(smellFilter: string) {
-        sessionStorage.setItem(this.smellFilter, smellFilter);
+        localStorage.setItem(this.smellFilter, smellFilter);
     }
 
     public clearSmellFilter() {
-        sessionStorage.removeItem(this.smellFilter);
+        localStorage.removeItem(this.smellFilter);
     }
     
     public getAutoAnnotationMode() {
-        return sessionStorage.getItem(this.autoAnnotationMode);
+        return localStorage.getItem(this.autoAnnotationMode);
     }
 
     public setAutoAnnotationMode(autoAnnotationMode: boolean) {
-        sessionStorage.setItem(this.autoAnnotationMode, autoAnnotationMode+'');
+        localStorage.setItem(this.autoAnnotationMode, autoAnnotationMode+'');
     }
 
     public getAnnotationCounter() {
-        return sessionStorage.getItem(this.annotationCounter);
+        return localStorage.getItem(this.annotationCounter);
     }
 
     public setAnnotationCounter(annotationCounter: boolean) {
-        sessionStorage.setItem(this.annotationCounter, annotationCounter+'');
+        localStorage.setItem(this.annotationCounter, annotationCounter+'');
     }
 
     public clearAnnotationCounter() {
-        sessionStorage.removeItem(this.annotationCounter);
+        localStorage.removeItem(this.annotationCounter);
     }
 
     public clearAutoAnnotationMode() {
-        sessionStorage.removeItem(this.autoAnnotationMode);
+        localStorage.removeItem(this.autoAnnotationMode);
     }
 
-    public clearSessionStorage() {
-        sessionStorage.clear();
+    public clearLocalStorage() {
+        localStorage.clear();
     }
 }

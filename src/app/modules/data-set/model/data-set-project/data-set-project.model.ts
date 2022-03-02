@@ -63,4 +63,8 @@ export class DataSetProject {
         });
         return counter;
     }
+
+    public hasInstances(): boolean {
+        return this.candidateInstances.length > 0 && this.candidateInstances[0].instances.length > 0;
+    }
 }
