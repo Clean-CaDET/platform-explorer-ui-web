@@ -13,7 +13,7 @@ export class AnnotationNotificationService {
   public newAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
   public changedAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
   public datasetChosen: EventEmitter<DataSet> = new EventEmitter<DataSet>();
-  public projectChosen: EventEmitter<DataSetProject> = new EventEmitter<DataSetProject>();
+  public projectChosen: EventEmitter<any> = new EventEmitter<any>();
   public instanceChosen: EventEmitter<Instance> = new EventEmitter<Instance>();
 
   constructor() { }

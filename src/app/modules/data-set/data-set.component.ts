@@ -89,7 +89,6 @@ export class DataSetComponent implements OnInit {
     }
 
     public chooseDataset(dataset: DataSet): void {
-        this.annotationNotificationService.datasetChosen.emit(dataset);
         this.storageService.clearSmellFilter();
         this.router.navigate(['/datasets', dataset.id]);
     }

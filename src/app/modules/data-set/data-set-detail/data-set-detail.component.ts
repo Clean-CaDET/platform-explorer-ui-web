@@ -1,28 +1,23 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { DataSet } from '../model/data-set/data-set.model';
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
-import { AnnotationStatus, ProjectState } from '../model/enums/enums.model';
+import { AnnotationStatus } from '../model/enums/enums.model';
 import { Instance } from '../model/instance/instance.model';
 import { Annotation } from '../model/annotation/annotation.model';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { AddProjectDialogComponent } from '../dialogs/add-project-dialog/add-project-dialog.component';
 import { DialogConfigService } from '../dialogs/dialog-config.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AnnotationConsistencyDialogComponent } from '../dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component';
-import { UpdateProjectDialogComponent } from '../dialogs/update-project-dialog/update-project-dialog.component';
 import { ToastrService } from 'ngx-toastr';
-import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { FormControl, Validators } from '@angular/forms';
-import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { DisagreeingAnnotationsDialogComponent } from '../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component';
 import { DataSetProjectService } from '../services/data-set-project.service';
 import { DataSetService } from '../services/data-set.service';
 import { Location } from '@angular/common';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
-import { AnnotationService } from '../services/annotation.service';
 import { AnnotationNotificationService } from '../services/shared/annotation-notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
+import { AnnotationService } from '../services/annotation.service';
 
 
 @Component({
@@ -34,13 +29,7 @@ import { LocalStorageService } from '../services/shared/local-storage.service';
 export class DataSetDetailComponent implements OnInit {
 
   public chosenDataset: DataSet = new DataSet();
-  public dataSourceProjects: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.chosenDataset.projects);
-  public displayedColumnsProjects: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
-  public chosenProject: DataSetProject = new DataSetProject();
-  public projectState = ProjectState;
-  public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"]; // ovde staviti kao Object.keys(...); pogledaj dva reda ispod
-  public filterFormControl: FormControl = new FormControl('All instances', [Validators.required]);
-  private pollingCycleDurationInSeconds: number = 10;
+  public chosenProject: DataSetProject = new DataSetProject();// todo maybe only candidates
   public annotatedInstancesNum: number = 0;
   public dataSourceInstances: MatTableDataSource<Instance> = new MatTableDataSource<Instance>();
   private initColumnsInstances: string[] = ['codeSnippetId', 'annotated', 'severity'];
@@ -55,18 +44,13 @@ export class DataSetDetailComponent implements OnInit {
   public chosenInstance: Instance = new Instance(this.storageService);
   public panelOpenState = false;
   public automaticAnnotationMode = false;
-
-  private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
-  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
-      this.paginator = mp;
-      this.dataSourceProjects.paginator = this.paginator;
-  }
+  public filter: string = 'All instances';
 
   constructor(private route: ActivatedRoute, public storageService: LocalStorageService, 
     private projectService: DataSetProjectService, private datasetService: DataSetService, 
     private dialog: MatDialog, private toastr: ToastrService, private location: Location, 
     private annotationNotificationService: AnnotationNotificationService,
-    private annotationService: AnnotationService, private router: Router) {
+    private router: Router, private annotationService: AnnotationService) {
       this.annotationNotificationService.newAnnotation.subscribe(annotation => {
         this.annotationSubmitted(annotation);
         this.annotatedInstancesNum++;
@@ -82,6 +66,13 @@ export class DataSetDetailComponent implements OnInit {
         this.chosenInstance = instance;
         this.updateCandidates();
       });
+      this.annotationNotificationService.projectChosen.subscribe((res: any) => {
+        this.chosenProject = res['project'];
+        this.filter = res['filter'];
+        this.filterInstances(this.chosenProject.id).then(() => {
+          this.chooseDefaultInstance();
+        });
+      })
   }
 
   private async updateCandidates() {
@@ -113,7 +104,6 @@ export class DataSetDetailComponent implements OnInit {
   private async loadDataset(params: Params) {
     this.chosenDataset = new DataSet(await this.datasetService.getDataSet(params['id']));
     this.annotationNotificationService.datasetChosen.emit(this.chosenDataset);
-    this.dataSourceProjects.data = this.chosenDataset.projects;
     this.countAnnotatedDatasetInstances();
   }
 
@@ -160,14 +150,16 @@ export class DataSetDetailComponent implements OnInit {
   private loadNextProjectInstance() {
     var nextProject = this.getNextProject();
     if (nextProject) { 
-      this.chooseProject(nextProject.id).then(() => {
+      this.filterInstances(nextProject.id).then(() => {
+        this.chooseDefaultInstance();
+      }).then(() => {
         var projectInstances = this.getProjectInstances(this.chosenProject);
         if (projectInstances.length > 0) {
           this.chosenInstance = projectInstances[0];
           this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
           this.location.replaceState('/datasets/'+this.chosenDataset.id+'/instances/'+this.chosenInstance.id);
         }
-      })
+      });
     }
   }
 
@@ -203,70 +195,10 @@ export class DataSetDetailComponent implements OnInit {
     else return this.chosenDataset.projects[currentProjectId-1];
   }
 
-  public addProject(): void {
-    let dialogConfig = DialogConfigService.setDialogConfig('480px', '520px', this.chosenDataset.id);// auto
-    let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((dataset: DataSet) => {
-      if (dataset) {
-        this.chosenDataset.projectsCount = this.chosenDataset.projects.length;
-        this.dataSourceProjects.data = this.chosenDataset.projects;
-        this.startPollingProjects();
-        location.reload();
-      }
-    });
-  }
-
-  private startPollingProjects(): void {
-    let secondsToWait: number = 0;
-    for (let project of this.chosenDataset.projects.filter(p => p.state == ProjectState.Processing)) {
-      this.pollDataSetProjectAsync(project, secondsToWait++);
-    }
-  }
-
-  private async pollDataSetProjectAsync(dataSetProject: DataSetProject, secondsToWait: number): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 1000 * secondsToWait));
-    while (dataSetProject.state == ProjectState.Processing) {
-      await new Promise(resolve => setTimeout(resolve, 1000 * this.pollingCycleDurationInSeconds));
-      dataSetProject = new DataSetProject(await this.projectService.getProject(dataSetProject.id));
-    }
-    this.updateProjects(dataSetProject);
-  }
-
-  private updateProjects(dataSetProject: DataSetProject): void {
-    let i = this.chosenDataset.projects.findIndex(p => p.id == dataSetProject.id);
-    this.chosenDataset.projects[i] = dataSetProject;
-    this.dataSourceProjects.data = this.chosenDataset.projects;
-  }
-
-  public updateProject(project: DataSetProject): void {
-    let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', project);//auto
-    let dialogRef = this.dialog.open(UpdateProjectDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((updated: DataSetProject) => {
-      if (updated) this.toastr.success('Updated project ' + updated.name);
-    });
-  }
-
-  public deleteProject(id: number): void {
-    let dialogRef = this.dialog.open(ConfirmDialogComponent);
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) this.projectService.deleteDataSetProject(id).subscribe(deleted => {
-        this.chosenDataset.projects.splice(this.chosenDataset.projects.findIndex(p => p.id == deleted.id), 1);
-        this.dataSourceProjects.data = this.chosenDataset.projects;
-      });
-    });
-  }
-
-  public async chooseProject(id: number): Promise<void> {
-    this.filterInstances(id).then(() => {
-      this.chooseDefaultInstance();
-    });
-  }
-
-  public async filterInstances(id: number) {    
-    this.chosenProject = new DataSetProject(await this.projectService.getProject(id)); // todo ovo bi trebalo obrisati i promeniti da elseifovi dobave ceo projekat
-    if (this.filterFormControl.value == 'All instances') {
+  public async filterInstances(id: number) {
+    if (this.filter == 'All instances') {
       this.chosenProject = new DataSetProject(await this.projectService.getProject(id));
-    } else if (this.filterFormControl.value == 'Need additional annotations') {
+    } else if (this.filter == 'Need additional annotations') {
       this.chosenProject.candidateInstances = await this.annotationService.requiringAdditionalAnnotation(id);
     } else {
       this.chosenProject.candidateInstances = await this.annotationService.disagreeingAnnotations(id);
@@ -310,16 +242,6 @@ export class DataSetDetailComponent implements OnInit {
     this.dataSourceInstances.data.forEach((i:any) => {
       if (i.annotationFromLoggedUser?.severity != null) this.severityValues.add(i.annotationFromLoggedUser?.severity);
     });
-  }
-
-  public searchProjects(event: Event): void {
-    const input = (event.target as HTMLInputElement).value;
-    this.dataSourceProjects.data = this.chosenDataset.projects.filter(p => p.name.toLowerCase().includes(input.toLowerCase()));
-  }
-
-  public checkConsistency(projectId: number): void {
-    let dialogConfig = DialogConfigService.setDialogConfig('auto', '600px', projectId); // auto
-    this.dialog.open(AnnotationConsistencyDialogComponent, dialogConfig);
   }
 
   public searchInstances(): void {

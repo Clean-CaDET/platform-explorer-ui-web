@@ -16,12 +16,14 @@ import { DataSetDetailComponent } from './data-set-detail/data-set-detail.compon
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AnnotationFormComponent } from './annotation-form/annotation-form.component';
 import { HeuristicReasonDialogComponent } from './dialogs/heuristic-reason-dialog/heuristic-reason-dialog.component';
+import { ProjectsComponent } from './projects/projects.component';
 
 
 @NgModule({
   declarations: [
     DataSetComponent,
     DataSetDetailComponent,
+    ProjectsComponent,
     AddDataSetDialogComponent,
     AddProjectDialogComponent,
     ExportDraftDataSetDialogComponent,

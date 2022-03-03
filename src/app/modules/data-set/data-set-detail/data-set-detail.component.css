@@ -36,13 +36,6 @@ mat-expansion-panel {
     padding: 0px;
 }
 
-#projects-table-div {
-    height: fit-content;
-    max-height: 290px;
-    overflow: auto;
-    margin: auto;
-}
-
 .mat-cell,
 .mat-header-cell {
     padding: 0px 10px 0px 0px;
@@ -146,18 +139,6 @@ mat-panel-title>span {
 
 .icon-not-annotated {
     color: grey;
-}
-
-.add-button {
-    margin: 5px 20px 0px 0px;
-}
-
-.icon-built-project {
-    color: green;
-}
-
-.icon-failed-project {
-    color: darkred;
 }
 
 .auto-buttons-div {
