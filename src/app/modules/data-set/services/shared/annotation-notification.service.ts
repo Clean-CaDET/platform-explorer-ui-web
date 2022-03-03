@@ -15,7 +15,6 @@ export class AnnotationNotificationService {
   public datasetChosen: EventEmitter<DataSet> = new EventEmitter<DataSet>();
   public projectChosen: EventEmitter<DataSetProject> = new EventEmitter<DataSetProject>();
   public instanceChosen: EventEmitter<Instance> = new EventEmitter<Instance>();
-  public annotationCounter: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 

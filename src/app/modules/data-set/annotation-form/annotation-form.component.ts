@@ -120,6 +120,7 @@ export class AnnotationFormComponent implements OnInit {
   private addAnnotation(): void {
     this.annotationService.addAnnotation(this.getSubmittedAnnotation()).subscribe(
       (annotation: Annotation) => {
+        this.instance.annotationFromLoggedUser = annotation;
         this._snackBar.open('Annotation added!', 'OK', this.successSnackBarOptions);
         this.annotationNotificationService.newAnnotation.emit(annotation);
       },

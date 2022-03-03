@@ -43,9 +43,4 @@ export class NavbarComponent implements OnInit {
   public toggleAutomaticMode(event: MatSlideToggleChange) {
     this.storageService.setAutoAnnotationMode(event.checked);
   }
-
-  public toggleAnnotationsCounter(event: MatSlideToggleChange) {
-    this.storageService.setAnnotationCounter(event.checked);
-    this.annotationNotificationService.annotationCounter.emit();
-  }
 }

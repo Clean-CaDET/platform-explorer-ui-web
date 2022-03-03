@@ -35,7 +35,7 @@ export class DataSetDetailComponent implements OnInit {
 
   public chosenDataset: DataSet = new DataSet();
   public dataSourceProjects: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.chosenDataset.projects);
-  public displayedColumnsProjects: string[] = ['name', 'url', 'numOfInstances', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
+  public displayedColumnsProjects: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
   public chosenProject: DataSetProject = new DataSetProject();
   public projectState = ProjectState;
   public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"]; // ovde staviti kao Object.keys(...); pogledaj dva reda ispod
@@ -68,13 +68,14 @@ export class DataSetDetailComponent implements OnInit {
     private annotationService: AnnotationService, private router: Router) {
       this.annotationNotificationService.newAnnotation.subscribe(annotation => {
         this.annotationSubmitted(annotation);
-        if (this.storageService.getAnnotationCounter()) this.annotatedInstancesNum++;
+        this.annotatedInstancesNum++;
+        if (this.chosenProject.countAnnotatedInstances() == this.chosenProject.instancesCount) {
+          var i = this.chosenDataset.projects.findIndex(p => p.id == this.chosenProject.id);
+          this.chosenDataset.projects[i].fullyAnnotated = true;
+        }
       });
       this.annotationNotificationService.changedAnnotation.subscribe(annotation => {
         this.annotationSubmitted(annotation);
-      });
-      this.annotationNotificationService.annotationCounter.subscribe(() => {
-        this.countAnnotatedDatasetInstances();
       });
       this.annotationNotificationService.instanceChosen.subscribe(instance => {
         this.chosenInstance = instance;
@@ -100,7 +101,6 @@ export class DataSetDetailComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.storageService.clearAnnotationCounter();
     this.storageService.clearAutoAnnotationMode();
     this.route.params.subscribe(async (params: Params) => {
       this.loadDataset(params).then(() => {
@@ -113,6 +113,7 @@ export class DataSetDetailComponent implements OnInit {
     this.chosenDataset = new DataSet(await this.datasetService.getDataSet(params['id']));
     this.annotationNotificationService.datasetChosen.emit(this.chosenDataset);
     this.dataSourceProjects.data = this.chosenDataset.projects;
+    this.countAnnotatedDatasetInstances();
   }
 
   private annotationSubmitted(annotation: Annotation) {
@@ -169,17 +170,23 @@ export class DataSetDetailComponent implements OnInit {
     }
   }
 
-  private loadPreviousProjectInstance() {
+  private async loadPreviousProjectInstance() {
     var previousProject = this.getPreviousProject();
-    if (previousProject) { 
-      this.chooseProject(previousProject.id).then(() => {
-        var projectInstances = this.getProjectInstances(this.chosenProject);
-        if (projectInstances.length > 0) {
-          this.chosenInstance = projectInstances[projectInstances.length-1];
-          this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
-          this.location.replaceState('/datasets/'+this.chosenDataset.id+'/instances/'+this.chosenInstance.id);
-        }
-      })
+    if (!previousProject) return;
+    else this.chosenProject = previousProject;
+
+    this.chosenProject.candidateInstances = new DataSetProject(await this.projectService.getProject(previousProject.id)).candidateInstances;
+    this.initSmellSelection();
+    this.initInstances();
+    this.initSeverities();
+    this.getLastInstance();
+  }
+
+  private getLastInstance() {
+    var projectInstances = this.getProjectInstances(this.chosenProject);
+    if (projectInstances.length > 0) {
+      this.chosenInstance = projectInstances[projectInstances.length-1];
+      this.router.navigate(['datasets/' + this.chosenDataset.id + '/instances', this.chosenInstance.id]);
     }
   }
 
@@ -198,12 +205,12 @@ export class DataSetDetailComponent implements OnInit {
   public addProject(): void {
     let dialogConfig = DialogConfigService.setDialogConfig('480px', '520px', this.chosenDataset.id);// auto
     let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(async (dataset: DataSet) => {
+    dialogRef.afterClosed().subscribe((dataset: DataSet) => {
       if (dataset) {
-        this.chosenDataset.projects = dataset.projects.map(p => new DataSetProject(p));
         this.chosenDataset.projectsCount = this.chosenDataset.projects.length;
         this.dataSourceProjects.data = this.chosenDataset.projects;
         this.startPollingProjects();
+        location.reload();
       }
     });
   }
@@ -385,18 +392,13 @@ export class DataSetDetailComponent implements OnInit {
   }
 
   private countAnnotatedDatasetInstances() {
-    if (this.storageService.getAnnotationCounter() == 'true') {
-      this.displayedColumnsProjects = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
-      this.annotatedInstancesNum = 0;
-      this.chosenDataset.projects.forEach(async (project, index) => {
-        if (!project.candidateInstances) project = new DataSetProject(await this.projectService.getProject(project.id));
-        var counted = this.countAnnotatedProjectInstances(project.candidateInstances);
-        if (counted == project.instancesCount) this.chosenDataset.projects[index].fullyAnnotated = true;
-        this.annotatedInstancesNum += counted;
-      })
-    } else {
-      this.displayedColumnsProjects = ['name', 'url', 'numOfInstances', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
-    }
+    this.annotatedInstancesNum = 0;
+    this.chosenDataset.projects.forEach(async (project, index) => {
+      if (!project.candidateInstances) project = new DataSetProject(await this.projectService.getProject(project.id));
+      var counted = this.countAnnotatedProjectInstances(project.candidateInstances);
+      if (counted == project.instancesCount) this.chosenDataset.projects[index].fullyAnnotated = true;
+      this.annotatedInstancesNum += counted;
+    });
   }
 
   private countAnnotatedProjectInstances(candidates: SmellCandidateInstances[]): number {
