@@ -39,8 +39,4 @@ export class NavbarComponent implements OnInit {
   public goToAnnotationSchema() {
     this.router.navigate(['/annotation-schema']);
   }
-
-  public toggleAutomaticMode(event: MatSlideToggleChange) {
-    this.storageService.setAutoAnnotationMode(event.checked);
-  }
 }

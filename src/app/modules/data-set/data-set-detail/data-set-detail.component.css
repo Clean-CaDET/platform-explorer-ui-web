@@ -1,18 +1,18 @@
 mat-expansion-panel-header {
     padding: 5px;
     margin: 5px;
-    height: 10px;
+    height: 5px;
 }
 
 mat-expansion-panel-header.mat-expanded {
-    height: 10px;;
+    height: 5px;
 }
 
 mat-expansion-panel {
     background-color:rgb(236, 228, 238);
 }
 
-.exp-panel-header-div {
+.toolbar {
     width: 100%;
     z-index: 1000;
     display: flex;
@@ -73,10 +73,10 @@ mat-expansion-panel {
 
 mat-slide-toggle {
     margin-left: 5px;
+    margin-right: 5px;
 }
 
 mat-panel-title {
-    font-size: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 550;
 }

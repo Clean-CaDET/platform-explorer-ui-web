@@ -54,6 +54,7 @@ export class DataSetDetailComponent implements OnInit {
   public selectedSmellFormControl = new FormControl('', Validators.required);
   public chosenInstance: Instance = new Instance(this.storageService);
   public panelOpenState = false;
+  public automaticAnnotationMode = false;
 
   private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
@@ -413,5 +414,9 @@ export class DataSetDetailComponent implements OnInit {
       });
     });
     return counter;
+  }
+
+  public toggleAutomaticMode() {
+    this.storageService.setAutoAnnotationMode(this.automaticAnnotationMode);
   }
 }
