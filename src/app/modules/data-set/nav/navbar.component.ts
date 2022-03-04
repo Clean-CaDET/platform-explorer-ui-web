@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Router } from '@angular/router';
-import { AnnotationNotificationService } from '../services/shared/annotation-notification.service';
+import { NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 
 
@@ -15,7 +15,7 @@ export class NavbarComponent implements OnInit {
   public annotationsCounter: boolean = false;
 
   constructor(private storageService: LocalStorageService, private router: Router,
-    private annotationNotificationService: AnnotationNotificationService) {
+    private annotationNotificationService: NotificationService) {
       
   }
 

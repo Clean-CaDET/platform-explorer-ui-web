@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator, MatPaginatorIntl } from "@angular/material/paginator";
@@ -13,7 +13,7 @@ import { DataSetProject } from "../model/data-set-project/data-set-project.model
 import { DataSet } from "../model/data-set/data-set.model";
 import { ProjectState } from "../model/enums/enums.model";
 import { DataSetProjectService } from "../services/data-set-project.service";
-import { AnnotationNotificationService } from "../services/shared/annotation-notification.service";
+import { NotificationService } from "../services/shared/notification.service";
 
 @Component({
     selector: 'de-projects',
@@ -25,7 +25,7 @@ export class ProjectsComponent {
 
     public chosenDataset: DataSet = new DataSet();
     public chosenProject: DataSetProject = new DataSetProject();
-    public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.chosenDataset.projects);// todo rename
+    public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.chosenDataset.projects);
     public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
     private pollingCycleDurationInSeconds: number = 10;
     public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"];
@@ -39,8 +39,7 @@ export class ProjectsComponent {
     }
 
     constructor(private dialog: MatDialog, private projectService: DataSetProjectService,
-        private toastr: ToastrService,
-        private annotationNotificationService: AnnotationNotificationService) {
+        private toastr: ToastrService, private annotationNotificationService: NotificationService) {
         this.annotationNotificationService.datasetChosen.subscribe((dataset: DataSet) => {
             this.chosenDataset = dataset;
             this.dataSource.data = this.chosenDataset.projects;

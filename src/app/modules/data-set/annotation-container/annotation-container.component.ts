@@ -4,7 +4,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Instance } from '../model/instance/instance.model';
 import { RelatedInstance } from '../model/related-instance/related-instance.model';
 import { AnnotationService } from '../services/annotation.service';
-import { AnnotationNotificationService } from '../services/shared/annotation-notification.service';
+import { NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 
 
@@ -24,7 +24,7 @@ export class AnnotationContainerComponent implements OnInit {
   
   constructor(private storageService: LocalStorageService, 
     private annotationService: AnnotationService, private route: ActivatedRoute,
-    private annotationNotificationService: AnnotationNotificationService) { 
+    private annotationNotificationService: NotificationService) { 
   }
 
   async ngOnInit() {

@@ -17,6 +17,7 @@ import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AnnotationFormComponent } from './annotation-form/annotation-form.component';
 import { HeuristicReasonDialogComponent } from './dialogs/heuristic-reason-dialog/heuristic-reason-dialog.component';
 import { ProjectsComponent } from './projects/projects.component';
+import { InstancesComponent } from './instances/instances.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { ProjectsComponent } from './projects/projects.component';
     DataSetComponent,
     DataSetDetailComponent,
     ProjectsComponent,
+    InstancesComponent,
     AddDataSetDialogComponent,
     AddProjectDialogComponent,
     ExportDraftDataSetDialogComponent,

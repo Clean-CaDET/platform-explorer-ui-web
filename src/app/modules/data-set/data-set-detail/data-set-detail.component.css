@@ -23,33 +23,6 @@ mat-expansion-panel {
     margin: 10px;
 }
 
-.table-title {
-    padding-left: 0px;
-    margin-left: 10px;
-}
-
-.table-header {
-    margin-left: 10px;
-}
-
-.search {
-    padding: 0px;
-}
-
-.mat-cell,
-.mat-header-cell {
-    padding: 0px 10px 0px 0px;
-}
-
-.cell-center {
-    text-align: center;
-}
-
-.bold-name:hover {
-    font-weight: bold;
-    cursor: pointer;
-}
-
 .toggle-automatic-mode {
     margin-left: 20px;
     color:rgb(92, 13, 110);
@@ -84,61 +57,9 @@ mat-panel-title>span {
     margin-bottom: 5px;
 }
 
-.filterForm {
-    border-top: 2px solid lightgray;
-    margin-left: 10px;
-    padding-top: 10px;
-}
-
 .horizontal-div {
     display: flex;
     flex-direction: row;
-}
-
-.table-container {
-    height: max-content;
-    background-color: white;
-    margin: 10px;
-    width: 50%;
-}
-
-.filters {
-    padding-right: 10px;
-}
-
-#ann-status-filter {
-    width: 150px;
-    margin-right: 10px;
-}
-
-#severity-filter {
-    width: 100px;
-}
-
-#instances-table-div {
-    max-height: 290px;
-    overflow: auto;
-}
-
-#total-instances {
-    margin-left: auto;
-    margin-right: 20px;
-    margin-top: 20px;
-    font-weight: bold;
-    font-size: 15px;
-}
-
-#smell-filter-div {
-    display: flex;
-    flex-direction: row;
-}
-
-.icon-annotated {
-    color: green;
-}
-
-.icon-not-annotated {
-    color: grey;
 }
 
 .auto-buttons-div {
@@ -149,4 +70,14 @@ mat-panel-title>span {
 
 .auto-buttons-div>button {
     margin: 5px;
+}
+
+de-instances {
+    width: 55%;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+de-projects {
+    width: 45%;
 }

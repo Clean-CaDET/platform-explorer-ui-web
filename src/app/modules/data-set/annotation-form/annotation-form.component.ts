@@ -9,7 +9,7 @@ import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model
 import { Instance } from '../model/instance/instance.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
 import { AnnotationService } from '../services/annotation.service';
-import { AnnotationNotificationService } from '../services/shared/annotation-notification.service';
+import { NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 
 
@@ -36,7 +36,7 @@ export class AnnotationFormComponent implements OnInit {
   //
 
   constructor(private annotationService: AnnotationService, private _snackBar: MatSnackBar,
-    private storageService: LocalStorageService, private annotationNotificationService: AnnotationNotificationService,
+    private storageService: LocalStorageService, private annotationNotificationService: NotificationService,
     private dialog: MatDialog) {}
 
   public ngOnInit(): void {

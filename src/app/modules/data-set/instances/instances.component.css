@@ -18,17 +18,6 @@
     padding: 0px;
 }
 
-.add-button {
-    margin: 5px 20px 0px 0px;
-}
-
-#projects-table-div {
-    height: fit-content;
-    max-height: 290px;
-    overflow: auto;
-    margin: auto;
-}
-
 .mat-cell,
 .mat-header-cell {
     padding: 0px 10px 0px 0px;
@@ -38,23 +27,54 @@
     text-align: center;
 }
 
+.filters {
+    padding-right: 10px;
+}
+
+#ann-status-filter {
+    width: 150px;
+    margin-right: 10px;
+}
+
+#severity-filter {
+    width: 100px;
+}
+
+#instances-table-div {
+    max-height: 290px;
+    overflow: auto;
+}
+
 .bold-name:hover {
     font-weight: bold;
     cursor: pointer;
 }
 
-.icon-built-project {
+.icon-annotated {
     color: green;
 }
 
-.icon-failed-project {
-    color: darkred;
+.icon-not-annotated {
+    color: grey;
 }
 
 .filterForm {
     border-top: 2px solid lightgray;
     margin-left: 10px;
     padding-top: 10px;
+}
+
+#total-instances {
+    margin-left: auto;
+    margin-right: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+#smell-filter-div {
+    display: flex;
+    flex-direction: row;
 }
 
 .mat-stroked-button {

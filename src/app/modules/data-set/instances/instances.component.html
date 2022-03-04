@@ -1,0 +1,72 @@
+<div class="table-container mat-elevation-z8 container"  *ngIf="chosenProject?.id">
+    <p class="table-title">Instances</p>
+    <div class="table-header">
+        <mat-form-field appearance="fill" class="search">
+            <mat-label>Search by code snippet id</mat-label>
+            <input matInput [(ngModel)]="searchInput" (keyup)="searchInstances()" placeholder="Code snippet id">
+        </mat-form-field>
+        <div class="filters">
+            <mat-form-field appearance="fill"  id="ann-status-filter">
+                <mat-label>Annotation status</mat-label>
+                <mat-select [(value)]="selectedAnnotationStatus" (selectionChange)="filterByAnnotationStatus()">
+                    <mat-option [value]="status" *ngFor="let status of annotationStatuses">{{status}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" id="severity-filter" *ngIf="selectedAnnotationStatus != 'Not_Annotated'">
+                <mat-label>Severity</mat-label>
+                <mat-select [(value)]="selectedSeverity" (selectionChange)="filterBySeverity()">
+                    <mat-option [value]="severity" *ngFor="let severity of severityValues">{{severity}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div id="instances-table-div">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
+            <ng-container matColumnDef="codeSnippetId">
+                <th mat-header-cell *matHeaderCellDef width="65%">Code snippet id</th>
+                <td mat-cell class="bold-name" *matCellDef="let instance" width="65%">{{instance.codeSnippetId}}</td>
+            </ng-container>
+            <ng-container matColumnDef="annotated">
+                <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Annotated</th>
+                <td mat-cell *matCellDef="let instance" width="5%" class="cell-center">
+                    <ng-container *ngIf="instance.hasAnnotationFromLoggedUser; else not_annotated">
+                        <mat-icon matTooltip="annotated" class="icon-annotated">check_circle_outline</mat-icon>
+                    </ng-container>
+                    <ng-template #not_annotated>
+                        <ng-container>
+                            <mat-icon matTooltip="not annotated" class="icon-not-annotated">highlight_off</mat-icon>
+                        </ng-container>
+                    </ng-template>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="severity">
+                <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center" [hidden]="selectedAnnotationStatus == 'Not_Annotated'">Severity</th>
+                <td mat-cell *matCellDef="let instance" width="5%" class="cell-center"  [hidden]="selectedAnnotationStatus == 'Not_Annotated'">
+                    <span *ngIf="instance.hasAnnotationFromLoggedUser">{{instance.annotationFromLoggedUser.severity}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="show-annotations" >
+                <th mat-header-cell *matHeaderCellDef width="5%"> Annotations </th>
+                <td mat-cell *matCellDef="let instance" width="5%">
+                    <ng-container *ngIf="instance.annotations.length">
+                        <button mat-stroked-button color="primary" (click)="showAllAnnotations(instance.annotations, instance.id)">Show</button>
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row matRipple *matRowDef="let row; columns: displayedColumns;" (click)="chooseInstance(row.id)" [class.row-chosen]="row.id == chosenInstance?.id"></tr>
+        </table>
+    </div>
+    <form class="filterForm">
+        <div id="smell-filter-div">
+            <mat-form-field appearance="fill">
+                <mat-label>Code smell</mat-label>
+                <mat-select (selectionChange)="smellSelectionChanged()" required [formControl]="selectedSmellFormControl">
+                    <mat-option [value]="smell" *ngFor="let smell of codeSmells">{{smell}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <p id="total-instances">Num of instances: {{dataSource.data.length}}</p>
+        </div>
+    </form>
+</div>
