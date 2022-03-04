@@ -2,10 +2,12 @@
     <mat-expansion-panel-header #panelH>
         <div class="toolbar">
             <mat-panel-title id="annotations-info">
-                {{ chosenDataset.name }}&ensp;/&ensp;{{ chosenProject.name }}&ensp;/&ensp;{{chosenInstance.codeSnippetId | className}}
+                <span>{{ chosenDataset.name }}</span>
+                <span *ngIf="chosenProject?.id">&ensp;/&ensp;{{ chosenProject.name }}</span>
+                <span *ngIf="chosenInstance?.id">&ensp;/&ensp;{{chosenInstance.codeSnippetId | className}}</span>
             </mat-panel-title>
             <mat-panel-title id="annotations-info">
-                Annotated: <span>{{annotatedInstancesNum}}/{{chosenDataset.instancesCount}}</span>
+                Annotated:&ensp;<span>{{annotatedInstancesNum}}/{{chosenDataset.instancesCount}}</span>
             </mat-panel-title>
             <div class="toggle-automatic-mode">
                 <mat-panel-title>

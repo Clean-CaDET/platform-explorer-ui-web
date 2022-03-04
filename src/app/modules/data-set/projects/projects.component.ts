@@ -44,6 +44,9 @@ export class ProjectsComponent {
             this.chosenDataset = dataset;
             this.dataSource.data = this.chosenDataset.projects;
         });
+        this.annotationNotificationService.instanceChosen.subscribe(async instance => {
+          this.chosenProject = new DataSetProject(await this.projectService.getProject(instance.projectId));
+        });
     }
 
     public addProject(): void {

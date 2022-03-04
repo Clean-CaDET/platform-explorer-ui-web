@@ -19,7 +19,7 @@ import { LocalStorageService } from '../services/shared/local-storage.service';
 export class DataSetDetailComponent implements OnInit {
 
   public chosenDataset: DataSet = new DataSet();
-  public chosenProject: DataSetProject = new DataSetProject();// todo maybe only candidates
+  public chosenProject: DataSetProject = new DataSetProject();
   public chosenInstance: Instance = new Instance(this.storageService);
   public annotatedInstancesNum: number = 0;
   public panelOpenState = false;
@@ -37,7 +37,10 @@ export class DataSetDetailComponent implements OnInit {
       });
       this.annotationNotificationService.instanceChosen.subscribe(instance => {
         this.chosenInstance = instance;
-    });
+      });
+      this.annotationNotificationService.projectChosen.subscribe(res => {
+        this.chosenProject = res['project'];
+      });
   }
 
   public ngOnInit() {
