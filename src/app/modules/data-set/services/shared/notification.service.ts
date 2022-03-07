@@ -15,8 +15,8 @@ export class NotificationService {
   public datasetChosen: EventEmitter<DataSet> = new EventEmitter<DataSet>();
   public projectChosen: EventEmitter<any> = new EventEmitter<any>();
   public instanceChosen: EventEmitter<Instance> = new EventEmitter<Instance>();
-  public nextInstance: EventEmitter<void> = new EventEmitter<void>();
-  public previousInstance: EventEmitter<void> = new EventEmitter<void>();
+  public nextInstance: EventEmitter<number> = new EventEmitter<number>();
+  public previousInstance: EventEmitter<number> = new EventEmitter<number>();
 
   constructor() { }
 

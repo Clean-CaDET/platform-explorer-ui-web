@@ -63,9 +63,9 @@ mat-panel-title>span {
 }
 
 .auto-buttons-div {
-    margin: auto;
+    margin-right: 235px;
     display: flex;
-    justify-content: center;
+    justify-content: right;
 }
 
 .auto-buttons-div>button {

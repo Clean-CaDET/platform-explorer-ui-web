@@ -1,17 +1,26 @@
 <form>
-    <ul class="form-field">
-        <p>Heuristics:</p>
-        <li *ngFor="let heuristic of heuristics()">
-            <div class="heuristic-reason">
-                <mat-checkbox color="primary" [checked]="isHeuristicApplied(heuristic)" (change)="checkHeuristicCheckbox(heuristic, $event.checked)"  [disabled]="disableEdit">{{heuristic}}
-                    <button mat-icon-button *ngIf="isHeuristicApplied(heuristic)" color="primary" (click)="openReasonDialog(heuristic)">
-                        <mat-icon matTooltip="reason">note_add</mat-icon>
-                    </button>
-                </mat-checkbox>
-            </div>
-        </li>
-    </ul>
-    <mat-form-field floatLabel="always" class="form-field" id="severity">
+    <p>Annotation form</p>
+    <table>
+        <tr>
+            <td class="header-cell first-column-cell">Heuristic</td>
+            <td class="header-cell">Reason</td>
+        </tr>
+        <tr *ngFor="let heuristic of heuristics()">
+            <td class="first-column-cell">
+                <mat-checkbox color="primary" [checked]="isHeuristicApplied(heuristic)" 
+                (change)="checkHeuristicCheckbox(heuristic, $event.checked)"  
+                [disabled]="disableEdit"></mat-checkbox>
+                {{heuristic}}
+            </td>
+            <td>
+                <mat-form-field appearance="outline" class="reason">
+                    <input type="text" matInput value="{{appliedHeuristicsAndReasons.get(heuristic)}}"
+                        (change)="addReasonForHeuristic($event.target!, heuristic)">
+                </mat-form-field>
+            </td>
+        </tr>
+    </table>
+    <mat-form-field floatLabel="always" class="form-field" id="severity" appearance="outline">
         <mat-label>Severity</mat-label>
         <input type="number" matInput [formControl]="severityFormControl">
         <mat-error *ngIf="severityFormControl.hasError('required')">

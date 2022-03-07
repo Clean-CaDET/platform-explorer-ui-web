@@ -83,7 +83,8 @@
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.row-chosen]="row.id == chosenProject.id"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+            [class.row-chosen]="row.id == chosenProject.id" id="row-{{row.id}}"></tr>
         </table>
     </div>
 

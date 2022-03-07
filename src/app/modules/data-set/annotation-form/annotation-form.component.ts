@@ -1,9 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DialogConfigService } from '../dialogs/dialog-config.service';
-import { HeuristicReasonDialogComponent } from '../dialogs/heuristic-reason-dialog/heuristic-reason-dialog.component';
 import { Annotation } from '../model/annotation/annotation.model';
 import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
 import { Instance } from '../model/instance/instance.model';
@@ -36,8 +33,7 @@ export class AnnotationFormComponent implements OnInit {
   //
 
   constructor(private annotationService: AnnotationService, private _snackBar: MatSnackBar,
-    private storageService: LocalStorageService, private annotationNotificationService: NotificationService,
-    private dialog: MatDialog) {}
+    private storageService: LocalStorageService, private annotationNotificationService: NotificationService) {}
 
   public ngOnInit(): void {
     this.annotationService.getAvailableHeuristics().subscribe(res => {
@@ -149,12 +145,7 @@ export class AnnotationFormComponent implements OnInit {
     return ret;
   }
 
-  public openReasonDialog(heuristic: string) {
-    let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', this.appliedHeuristicsAndReasons.get(heuristic));
-    let dialogRef = this.dialog.open(HeuristicReasonDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((reason: string) => {
-      if (reason == '') return;
-      this.appliedHeuristicsAndReasons.set(heuristic, reason);
-    });
+  public addReasonForHeuristic(input: any, heuristic: string) {
+    this.appliedHeuristicsAndReasons.set(heuristic, input.value);
   }
 } 

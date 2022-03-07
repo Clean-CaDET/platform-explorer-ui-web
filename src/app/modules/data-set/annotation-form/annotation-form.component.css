@@ -3,19 +3,19 @@ form {
     flex-direction: column;
     margin: auto;
     width: fit-content;
-    border: 3px solid white;
+    border: 3px solid rgb(236, 228, 238);
     padding: 10px 60px 20px 60px; 
     border-radius: 20px;
-}
-
-.heuristic-reason {
-    display: flex;
-    flex-direction: row;
 }
 
 #severity {
     width: 80px;
     margin: auto;
+    margin-top: 10px;
+}
+
+.reason {
+    margin-left: 5px;
 }
 
 .form-field {
@@ -32,6 +32,25 @@ ul {
 
 p {
     font-size: 20px;
+    color:rgb(92, 13, 110);
+    font-weight: 450;
+}
+
+table {
+    border-collapse: collapse;
+    width: 400px;
+    table-layout: fixed;
+}
+
+.header-cell {
+    font-size: 16px;
+    text-align: center;
+    border-bottom: 2px solid rgb(236, 228, 238);
+    border-top: 2px solid rgb(236, 228, 238);
+}
+
+.first-column-cell {
+    border-right: 2px solid rgb(236, 228, 238);
 }
 
 mat-checkbox {
@@ -63,4 +82,8 @@ mat-checkbox {
 
 ::ng-deep .errorSnackbar button {
     color: black;
+}
+
+mat-checkbox {
+    margin-bottom: 15px;
 }

@@ -35,8 +35,9 @@ export class DataSetDetailComponent implements OnInit {
           this.chosenDataset.projects[i].fullyAnnotated = true;
         }
       });
-      this.annotationNotificationService.instanceChosen.subscribe(instance => {
+      this.annotationNotificationService.instanceChosen.subscribe(async instance => {
         this.chosenInstance = instance;
+        this.chosenProject = new DataSetProject(await this.projectService.getProject(this.chosenInstance.projectId));
       });
       this.annotationNotificationService.projectChosen.subscribe(res => {
         this.chosenProject = res['project'];
@@ -57,11 +58,11 @@ export class DataSetDetailComponent implements OnInit {
   }
 
   public loadPreviousInstance() {
-      this.annotationNotificationService.previousInstance.emit();
+      this.annotationNotificationService.previousInstance.emit(this.chosenInstance.id);
   }
 
   public loadNextInstance() {
-    this.annotationNotificationService.nextInstance.emit();
+    this.annotationNotificationService.nextInstance.emit(this.chosenInstance.id);
   }
   
   @HostListener('window:keydown', ['$event'])

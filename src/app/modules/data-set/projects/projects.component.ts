@@ -46,7 +46,18 @@ export class ProjectsComponent {
         });
         this.annotationNotificationService.instanceChosen.subscribe(async instance => {
           this.chosenProject = new DataSetProject(await this.projectService.getProject(instance.projectId));
+          this.scrollToSelectedProject();
         });
+    }
+
+    
+    private scrollToSelectedProject() {
+      setTimeout(() => {
+        const selectedRow = document.getElementById('row-'+this.chosenProject.id);
+        if(selectedRow) {
+          selectedRow.scrollIntoView({block: 'center'});
+        }
+      }, 500);
     }
 
     public addProject(): void {

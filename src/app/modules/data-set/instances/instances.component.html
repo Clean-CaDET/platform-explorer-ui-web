@@ -55,7 +55,9 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row matRipple *matRowDef="let row; columns: displayedColumns;" (click)="chooseInstance(row.id)" [class.row-chosen]="row.id == chosenInstance?.id"></tr>
+            <tr mat-row matRipple *matRowDef="let row; columns: displayedColumns;" 
+            (click)="chooseInstance(row.id)" [class.row-chosen]="row.id == chosenInstance?.id"
+            id="row-{{row.id}}"></tr>
         </table>
     </div>
     <form class="filterForm">

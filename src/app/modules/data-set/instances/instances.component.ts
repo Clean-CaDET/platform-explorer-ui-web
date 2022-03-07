@@ -57,12 +57,13 @@ export class InstancesComponent {
         this.annotationNotificationService.instanceChosen.subscribe(instance => {
           this.chosenInstance = instance;
           this.updateCandidates();
+          this.scrollToSelectedInstance();
         });
-        this.annotationNotificationService.nextInstance.subscribe(() => {
-          this.loadNextInstance();
+        this.annotationNotificationService.nextInstance.subscribe((currentInstanceId) => {
+          this.loadNextInstance(currentInstanceId);
         });
-        this.annotationNotificationService.previousInstance.subscribe(() => {
-          this.loadPreviousInstance();
+        this.annotationNotificationService.previousInstance.subscribe((currentInstanceId) => {
+          this.loadPreviousInstance(currentInstanceId);
         });
         this.annotationNotificationService.newAnnotation.subscribe(annotation => {
           this.annotationSubmitted(annotation);
@@ -70,6 +71,15 @@ export class InstancesComponent {
         this.annotationNotificationService.changedAnnotation.subscribe(annotation => {
           this.annotationSubmitted(annotation);
         });
+    }
+
+    private scrollToSelectedInstance() {
+      setTimeout(() => {
+        const selectedRow = document.getElementById('row-'+this.chosenInstance.id);
+        if(selectedRow) {
+          selectedRow.scrollIntoView({block: 'center'});
+        }
+      }, 500);
     }
 
     private async updateCandidates() {
@@ -92,7 +102,9 @@ export class InstancesComponent {
     private annotationSubmitted(annotation: Annotation) {
       this.updateInstancesTable(annotation);
       this.initSeverities();
-      if (this.storageService.getAutoAnnotationMode() == 'true') this.loadNextInstance();
+      if (this.storageService.getAutoAnnotationMode() == 'true') {
+        this.loadNextInstance(this.chosenInstance.id);
+      }
     }
 
     private updateInstancesTable(annotation: Annotation) {
@@ -209,9 +221,9 @@ export class InstancesComponent {
       this.dataSource.data = this.filterInstancesBySmell();
     }
 
-    public loadPreviousInstance() {
+    public loadPreviousInstance(currentInstanceId: number) {
       var projectInstances = this.getProjectInstances(this.chosenProject);
-      var currentInstanceIndex = projectInstances.findIndex(i => i.id == this.chosenInstance.id);
+      var currentInstanceIndex = projectInstances.findIndex(i => i.id == currentInstanceId);
       if (currentInstanceIndex == 0) this.loadPreviousProjectInstance();
       else this.chooseInstance(projectInstances[currentInstanceIndex-1].id);
     }
@@ -254,9 +266,9 @@ export class InstancesComponent {
       }
     }
 
-    public loadNextInstance() {
+    public loadNextInstance(currentInstanceId: number) {
       var projectInstances = this.getProjectInstances(this.chosenProject);
-      var currentInstanceIndex = projectInstances.findIndex(i => i.id == this.chosenInstance.id);
+      var currentInstanceIndex = projectInstances.findIndex(i => i.id == currentInstanceId);
       if (currentInstanceIndex == projectInstances.length-1) this.loadNextProjectInstance();
       else this.chooseInstance(projectInstances[currentInstanceIndex+1].id);
     }

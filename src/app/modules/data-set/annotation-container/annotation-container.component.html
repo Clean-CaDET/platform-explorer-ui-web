@@ -7,9 +7,9 @@
             </a>
         </p>
 
-        <div id="related-instances">
-            <p class="table-title">Related instances:<ng-template #no_related><span class="table-title">None</span></ng-template></p>
-            <table mat-table [dataSource]="dataSourceRelatedInstances" class="mat-elevation-z8" multiTemplateDataRows *ngIf="chosenInstance.relatedInstances.length > 0; else no_related">
+        <div id="related-instances" *ngIf="chosenInstance.relatedInstances.length > 0; else no_related">
+            <p class="table-title">Related instances:</p>
+            <table mat-table [dataSource]="dataSourceRelatedInstances" class="mat-elevation-z8" multiTemplateDataRows >
                 <ng-container matColumnDef="codeSnippetId">
                     <th mat-header-cell *matHeaderCellDef>Code snippet id</th>
                     <td mat-cell *matCellDef="let instance">
@@ -40,6 +40,7 @@
                 <tr mat-row matRipple *matRowDef="let row; columns: displayedColumnsRelatedInstances;"></tr>
             </table>
         </div>
+        <ng-template #no_related><div id="no-related"></div></ng-template>
         <de-annotation-form [codeSmell]="selectedSmell" [instanceId]="chosenInstance.id">
         </de-annotation-form> 
     </div>

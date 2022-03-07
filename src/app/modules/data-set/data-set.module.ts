@@ -15,7 +15,6 @@ import { DataSetComponent } from './data-set.component';
 import { DataSetDetailComponent } from './data-set-detail/data-set-detail.component';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AnnotationFormComponent } from './annotation-form/annotation-form.component';
-import { HeuristicReasonDialogComponent } from './dialogs/heuristic-reason-dialog/heuristic-reason-dialog.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { InstancesComponent } from './instances/instances.component';
 
@@ -29,7 +28,6 @@ import { InstancesComponent } from './instances/instances.component';
     AddDataSetDialogComponent,
     AddProjectDialogComponent,
     ExportDraftDataSetDialogComponent,
-    HeuristicReasonDialogComponent,
     ConfirmDialogComponent,
     UpdateDataSetDialogComponent,
     UpdateProjectDialogComponent,
