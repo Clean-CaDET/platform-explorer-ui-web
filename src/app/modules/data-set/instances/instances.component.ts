@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
@@ -15,6 +15,7 @@ import { AnnotationService } from "../services/annotation.service";
 import { DataSetProjectService } from "../services/data-set-project.service";
 import { NotificationService } from "../services/shared/notification.service";
 import { LocalStorageService } from "../services/shared/local-storage.service";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: 'de-instances',
@@ -22,7 +23,7 @@ import { LocalStorageService } from "../services/shared/local-storage.service";
     styleUrls: ['./instances.component.css']
 })
   
-export class InstancesComponent {
+export class InstancesComponent implements OnInit {
 
     public chosenProject: DataSetProject = new DataSetProject();
     public chosenDataset: DataSet = new DataSet();
@@ -40,37 +41,58 @@ export class InstancesComponent {
     public selectedSmellFormControl = new FormControl('', Validators.required);
     public filter: string = 'All instances';
     
+    private datasetChosenSub: Subscription | undefined;
+    private projectChosenSub: Subscription | undefined;
+    private instanceChosenSub: Subscription | undefined;
+    private nextInstanceSub: Subscription | undefined;
+    private previousInstanceSub: Subscription | undefined;
+    private newAnnotationSub: Subscription | undefined;
+    private changedAnnotationSub: Subscription | undefined;
+    
     constructor(private dialog: MatDialog, private router: Router,
       public storageService: LocalStorageService, private annotationService: AnnotationService,
       private annotationNotificationService: NotificationService,
       private projectService: DataSetProjectService, private location: Location) {
-        this.annotationNotificationService.datasetChosen.subscribe((dataset: DataSet) => {
-          this.chosenDataset = dataset;
+    }
+
+    ngOnInit(): void {
+      this.datasetChosenSub = this.annotationNotificationService.datasetChosen.subscribe((dataset: DataSet) => {
+        this.chosenDataset = dataset;
+      });
+      this.projectChosenSub = this.annotationNotificationService.projectChosen.subscribe((res: any) => {
+        this.chosenProject = res['project'];
+        this.filter = res['filter'];
+        this.filterInstances(this.chosenProject.id).then(() => {
+          this.chooseDefaultInstance();
         });
-        this.annotationNotificationService.projectChosen.subscribe((res: any) => {
-          this.chosenProject = res['project'];
-          this.filter = res['filter'];
-          this.filterInstances(this.chosenProject.id).then(() => {
-            this.chooseDefaultInstance();
-          });
-        });
-        this.annotationNotificationService.instanceChosen.subscribe(instance => {
-          this.chosenInstance = instance;
-          this.updateCandidates();
-          this.scrollToSelectedInstance();
-        });
-        this.annotationNotificationService.nextInstance.subscribe((currentInstanceId) => {
-          this.loadNextInstance(currentInstanceId);
-        });
-        this.annotationNotificationService.previousInstance.subscribe((currentInstanceId) => {
-          this.loadPreviousInstance(currentInstanceId);
-        });
-        this.annotationNotificationService.newAnnotation.subscribe(annotation => {
-          this.annotationSubmitted(annotation);
-        });
-        this.annotationNotificationService.changedAnnotation.subscribe(annotation => {
-          this.annotationSubmitted(annotation);
-        });
+      });
+      this.instanceChosenSub = this.annotationNotificationService.instanceChosen.subscribe(instance => {
+        this.chosenInstance = instance;
+        this.updateCandidates();
+        this.scrollToSelectedInstance();
+      });
+      this.nextInstanceSub = this.annotationNotificationService.nextInstance.subscribe((currentInstanceId) => {
+        this.loadNextInstance(currentInstanceId);
+      });
+      this.previousInstanceSub = this.annotationNotificationService.previousInstance.subscribe((currentInstanceId) => {
+        this.loadPreviousInstance(currentInstanceId);
+      });
+      this.newAnnotationSub = this.annotationNotificationService.newAnnotation.subscribe(annotation => {
+        this.annotationSubmitted(annotation);
+      });
+      this.changedAnnotationSub = this.annotationNotificationService.changedAnnotation.subscribe(annotation => {
+        this.annotationSubmitted(annotation);
+      });
+    }
+
+    ngOnDestroy(): void {
+      this.datasetChosenSub?.unsubscribe();
+      this.projectChosenSub?.unsubscribe();
+      this.instanceChosenSub?.unsubscribe();
+      this.nextInstanceSub?.unsubscribe();
+      this.previousInstanceSub?.unsubscribe();
+      this.newAnnotationSub?.unsubscribe();
+      this.changedAnnotationSub?.unsubscribe();
     }
 
     private scrollToSelectedInstance() {
@@ -103,6 +125,7 @@ export class InstancesComponent {
       this.updateInstancesTable(annotation);
       this.initSeverities();
       if (this.storageService.getAutoAnnotationMode() == 'true') {
+        console.log('auto annotation mode');
         this.loadNextInstance(this.chosenInstance.id);
       }
     }

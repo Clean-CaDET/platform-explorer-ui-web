@@ -8,6 +8,7 @@ import { DataSetService } from '../services/data-set.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 import { NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -25,30 +26,41 @@ export class DataSetDetailComponent implements OnInit {
   public panelOpenState = false;
   public automaticAnnotationMode = false;
 
+  private newAnnotationSub: Subscription | undefined;
+  private instanceChosenSub: Subscription | undefined;
+  private projectChosenSub: Subscription | undefined;
+
   constructor(private route: ActivatedRoute, public storageService: LocalStorageService, 
     private projectService: DataSetProjectService, private datasetService: DataSetService, 
     private annotationNotificationService: NotificationService) {
-      this.annotationNotificationService.newAnnotation.subscribe(annotation => {
-        this.annotatedInstancesNum++;
-        if (this.chosenProject.countAnnotatedInstances() == this.chosenProject.instancesCount) {
-          var i = this.chosenDataset.projects.findIndex(p => p.id == this.chosenProject.id);
-          this.chosenDataset.projects[i].fullyAnnotated = true;
-        }
-      });
-      this.annotationNotificationService.instanceChosen.subscribe(async instance => {
-        this.chosenInstance = instance;
-        this.chosenProject = new DataSetProject(await this.projectService.getProject(this.chosenInstance.projectId));
-      });
-      this.annotationNotificationService.projectChosen.subscribe(res => {
-        this.chosenProject = res['project'];
-      });
   }
 
   public ngOnInit() {
+    this.newAnnotationSub = this.annotationNotificationService.newAnnotation.subscribe(annotation => {
+      this.annotatedInstancesNum++;
+      if (this.chosenProject.countAnnotatedInstances() == this.chosenProject.instancesCount) {
+        var i = this.chosenDataset.projects.findIndex(p => p.id == this.chosenProject.id);
+        this.chosenDataset.projects[i].fullyAnnotated = true;
+      }
+    });
+    this.instanceChosenSub = this.annotationNotificationService.instanceChosen.subscribe(async instance => {
+      this.chosenInstance = instance;
+      this.chosenProject = new DataSetProject(await this.projectService.getProject(this.chosenInstance.projectId));
+    });
+    this.projectChosenSub = this.annotationNotificationService.projectChosen.subscribe(res => {
+      this.chosenProject = res['project'];
+    });
+
     this.storageService.clearAutoAnnotationMode();
     this.route.params.subscribe(async (params: Params) => {
       this.loadDataset(params);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.newAnnotationSub?.unsubscribe();
+    this.instanceChosenSub?.unsubscribe();
+    this.projectChosenSub?.unsubscribe();
   }
 
   private async loadDataset(params: Params) {

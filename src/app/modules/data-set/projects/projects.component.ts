@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator, MatPaginatorIntl } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
+import { Subscription } from "rxjs";
 import { AddProjectDialogComponent } from "../dialogs/add-project-dialog/add-project-dialog.component";
 import { AnnotationConsistencyDialogComponent } from "../dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component";
 import { ConfirmDialogComponent } from "../dialogs/confirm-dialog/confirm-dialog.component";
@@ -21,7 +22,7 @@ import { NotificationService } from "../services/shared/notification.service";
     styleUrls: ['./projects.component.css']
 })
   
-export class ProjectsComponent {
+export class ProjectsComponent implements OnInit {
 
     public chosenDataset: DataSet = new DataSet();
     public chosenProject: DataSetProject = new DataSetProject();
@@ -32,6 +33,9 @@ export class ProjectsComponent {
     public filterFormControl: FormControl = new FormControl('All instances', [Validators.required]);
     public projectState = ProjectState;
 
+    private datasetChosenSub: Subscription | undefined;
+    private instanceChosenSub: Subscription | undefined;
+
     private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
     @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
         this.paginator = mp;
@@ -40,17 +44,24 @@ export class ProjectsComponent {
 
     constructor(private dialog: MatDialog, private projectService: DataSetProjectService,
         private toastr: ToastrService, private annotationNotificationService: NotificationService) {
-        this.annotationNotificationService.datasetChosen.subscribe((dataset: DataSet) => {
-            this.chosenDataset = dataset;
-            this.dataSource.data = this.chosenDataset.projects;
-        });
-        this.annotationNotificationService.instanceChosen.subscribe(async instance => {
-          this.chosenProject = new DataSetProject(await this.projectService.getProject(instance.projectId));
-          this.scrollToSelectedProject();
-        });
     }
 
+    ngOnInit(): void {
+      this.datasetChosenSub = this.annotationNotificationService.datasetChosen.subscribe((dataset: DataSet) => {
+        this.chosenDataset = dataset;
+        this.dataSource.data = this.chosenDataset.projects;
+      });
+      this.instanceChosenSub = this.annotationNotificationService.instanceChosen.subscribe(async instance => {
+        this.chosenProject = new DataSetProject(await this.projectService.getProject(instance.projectId));
+        this.scrollToSelectedProject();
+      });
+    }
     
+    ngOnDestroy(): void {
+      this.datasetChosenSub?.unsubscribe();
+      this.instanceChosenSub?.unsubscribe();
+    }
+
     private scrollToSelectedProject() {
       setTimeout(() => {
         const selectedRow = document.getElementById('row-'+this.chosenProject.id);
