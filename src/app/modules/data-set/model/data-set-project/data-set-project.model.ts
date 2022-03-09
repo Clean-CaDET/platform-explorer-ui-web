@@ -73,4 +73,11 @@ export class DataSetProject {
         if (!codeSmell) return [];
         return this.candidateInstances.find(c => c.codeSmell?.name == codeSmell)?.instances!;
     }
+
+    public getLastInstanceForSmell(codeSmell: string) {
+        var candidateInstances = this.getCandidateInstancesForSmell(codeSmell);
+        if (candidateInstances.length == 0) return null;
+        else return candidateInstances[candidateInstances.length-1];
+        
+    }
 }

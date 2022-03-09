@@ -106,8 +106,7 @@ export class InstancesComponent implements OnInit {
 
     private async updateCandidates() {
       this.chosenProject = new DataSetProject(await this.projectService.getProject(this.chosenInstance.projectId));
-      this.codeSmells = [];
-      this.chosenProject.candidateInstances.forEach(candidate => this.codeSmells.push(candidate.codeSmell?.name!));
+      this.initCodeSmellDropList();
       this.chosenProject.candidateInstances.forEach(candidate => {
         candidate.instances.forEach((instance, index) => {
           candidate.instances[index] = new Instance(this.storageService, instance);
@@ -119,6 +118,11 @@ export class InstancesComponent implements OnInit {
       });
       this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
       this.initSeverities();
+    }
+
+    private initCodeSmellDropList() {
+      this.codeSmells = [];
+      this.chosenProject.candidateInstances.forEach(candidate => this.codeSmells.push(candidate.codeSmell?.name!));
     }
 
     private annotationSubmitted(annotation: Annotation) {
@@ -219,8 +223,7 @@ export class InstancesComponent implements OnInit {
     }
 
     private initSmellSelection() {
-      this.codeSmells = [];
-      this.chosenProject.candidateInstances.forEach(candidate => this.codeSmells.push(candidate.codeSmell?.name!));
+      this.initCodeSmellDropList();
       var currentSmellFilter = this.storageService.getSmellFilter();
       if (!currentSmellFilter) {
         this.storageService.setSmellFilter(this.codeSmells[0]);
@@ -254,15 +257,13 @@ export class InstancesComponent implements OnInit {
       this.initSmellSelection();
       this.initInstances();
       this.initSeverities();
-      this.getLastInstance();
+      this.chooseLastInstance();
     }
 
-    private getLastInstance() {
-      var candidateInstances = this.chosenProject.getCandidateInstancesForSmell(this.selectedSmellFormControl.value);
-      if (candidateInstances.length > 0) {
-        this.chosenInstance = candidateInstances[candidateInstances.length-1];
-        this.router.navigate(['datasets/' + this.chosenDataset.id + '/instances', this.chosenInstance.id]);
-      }
+    private chooseLastInstance() {
+      var lastInstance = this.chosenProject.getLastInstanceForSmell(this.selectedSmellFormControl.value);
+      if (!lastInstance) return;
+      this.chooseInstance(lastInstance.id);
     }
 
     public loadNextInstance(currentInstanceId: number) {
