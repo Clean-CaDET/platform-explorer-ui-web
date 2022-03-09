@@ -117,22 +117,20 @@ export class InstancesComponent implements OnInit {
           }
         });
       });
-      this.dataSource.data = this.filterInstancesBySmell();
+      this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
       this.initSeverities();
     }
 
     private annotationSubmitted(annotation: Annotation) {
       this.updateInstancesTable(annotation);
       this.initSeverities();
-      if (this.storageService.getAutoAnnotationMode() == 'true') {
-        console.log('auto annotation mode');
-        this.loadNextInstance(this.chosenInstance.id);
-      }
+      if (this.storageService.getAutoAnnotationMode() == 'true') this.loadNextInstance(this.chosenInstance.id);
     }
 
     private updateInstancesTable(annotation: Annotation) {
       this.storageService.setSmellFilter(annotation.instanceSmell.name);
-      var annotatedInstance = this.filterInstancesBySmell().find(i => i.id == this.chosenInstance.id);
+      var candidateInstances = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
+      var annotatedInstance = candidateInstances.find(i => i.id == this.chosenInstance.id);
       if (!annotatedInstance) return;
       annotatedInstance.annotationFromLoggedUser = annotation;
       annotatedInstance.hasAnnotationFromLoggedUser = true;
@@ -144,7 +142,7 @@ export class InstancesComponent implements OnInit {
     }
 
     public searchInstances(): void {
-      var instances = this.filterInstancesBySmell();
+      var instances = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
       if (this.selectedSeverity != null) {
         var instancesWithSelectedSeverity = instances.filter(i => i.annotationFromLoggedUser?.severity == this.selectedSeverity)!;
         this.dataSource.data = this.filterInstancesByName(instancesWithSelectedSeverity);
@@ -158,7 +156,7 @@ export class InstancesComponent implements OnInit {
     }
 
     public filterByAnnotationStatus() {
-      var instances = this.filterInstancesBySmell();
+      var instances = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
       switch (this.selectedAnnotationStatus) {
         case AnnotationStatus.Annotated: {
           this.dataSource.data = instances.filter(i => i.hasAnnotationFromLoggedUser)!;
@@ -176,7 +174,7 @@ export class InstancesComponent implements OnInit {
 
     public filterBySeverity() {
       this.selectedAnnotationStatus = AnnotationStatus.All;
-      var instances = this.filterInstancesBySmell();
+      var instances = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
       if (this.selectedSeverity == null) this.dataSource.data = instances;
       else this.dataSource.data = instances.filter(i => i.annotationFromLoggedUser?.severity == this.selectedSeverity)!;
     }
@@ -189,14 +187,10 @@ export class InstancesComponent implements OnInit {
     public smellSelectionChanged() {
       this.searchInput = '';
       this.storageService.setSmellFilter(this.selectedSmellFormControl.value);
-      this.dataSource.data = this.filterInstancesBySmell();
+      this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
       this.initSeverities();
       this.selectedAnnotationStatus = AnnotationStatus.All;
       this.chooseDefaultInstance();
-    }
-
-    private filterInstancesBySmell(): Instance[] {
-      return this.chosenProject.candidateInstances.find(c => c.codeSmell?.name == this.storageService.getSmellFilter())?.instances!;
     }
 
     private initSeverities() {
@@ -241,30 +235,18 @@ export class InstancesComponent implements OnInit {
       this.chosenProject.candidateInstances.forEach(candidate => {
         candidate.instances.forEach((instance, index) => candidate.instances[index] = new Instance(this.storageService, instance));
       });
-      this.dataSource.data = this.filterInstancesBySmell();
+      this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
     }
 
     public loadPreviousInstance(currentInstanceId: number) {
-      var projectInstances = this.getProjectInstances(this.chosenProject);
-      var currentInstanceIndex = projectInstances.findIndex(i => i.id == currentInstanceId);
+      var candidateInstances = this.chosenProject.getCandidateInstancesForSmell(this.selectedSmellFormControl.value);
+      var currentInstanceIndex = candidateInstances.findIndex(i => i.id == currentInstanceId);
       if (currentInstanceIndex == 0) this.loadPreviousProjectInstance();
-      else this.chooseInstance(projectInstances[currentInstanceIndex-1].id);
-    }
-
-    private getProjectInstances(project: DataSetProject): Instance[] {
-      var allInstances: Instance[] = [];
-      project.candidateInstances.forEach(candidate => {
-        if (candidate.codeSmell?.name == this.selectedSmellFormControl.value) {
-          candidate.instances.forEach(instance => {
-            allInstances.push(instance);
-          });
-        }
-      });
-      return allInstances;
+      else this.chooseInstance(candidateInstances[currentInstanceIndex-1].id);
     }
 
     private async loadPreviousProjectInstance() {
-      var previousProject = this.getPreviousProject();
+      var previousProject = this.chosenDataset.getPreviousProject(this.chosenProject.id);
       if (!previousProject) return;
       else this.chosenProject = previousProject;
 
@@ -275,46 +257,34 @@ export class InstancesComponent implements OnInit {
       this.getLastInstance();
     }
 
-    private getPreviousProject() {
-      var currentProjectId = this.chosenDataset.projects.findIndex(p => p.id == this.chosenProject.id);
-      if (currentProjectId == 0) return null;
-      else return this.chosenDataset.projects[currentProjectId-1];
-    }
-
     private getLastInstance() {
-      var projectInstances = this.getProjectInstances(this.chosenProject);
-      if (projectInstances.length > 0) {
-        this.chosenInstance = projectInstances[projectInstances.length-1];
+      var candidateInstances = this.chosenProject.getCandidateInstancesForSmell(this.selectedSmellFormControl.value);
+      if (candidateInstances.length > 0) {
+        this.chosenInstance = candidateInstances[candidateInstances.length-1];
         this.router.navigate(['datasets/' + this.chosenDataset.id + '/instances', this.chosenInstance.id]);
       }
     }
 
     public loadNextInstance(currentInstanceId: number) {
-      var projectInstances = this.getProjectInstances(this.chosenProject);
-      var currentInstanceIndex = projectInstances.findIndex(i => i.id == currentInstanceId);
-      if (currentInstanceIndex == projectInstances.length-1) this.loadNextProjectInstance();
-      else this.chooseInstance(projectInstances[currentInstanceIndex+1].id);
+      var candidateInstances = this.chosenProject.getCandidateInstancesForSmell(this.selectedSmellFormControl.value);
+      var currentInstanceIndex = candidateInstances.findIndex(i => i.id == currentInstanceId);
+      if (currentInstanceIndex == candidateInstances.length-1) this.loadNextProjectInstance();
+      else this.chooseInstance(candidateInstances[currentInstanceIndex+1].id);
     }
 
     private loadNextProjectInstance() {
-      var nextProject = this.getNextProject();
+      var nextProject = this.chosenDataset.getNextProject(this.chosenProject.id);
       if (nextProject) { 
         this.filterInstances(nextProject.id).then(() => {
             this.chooseDefaultInstance();
         }).then(() => {
-            var projectInstances = this.getProjectInstances(this.chosenProject);
-            if (projectInstances.length > 0) {
-            this.chosenInstance = projectInstances[0];
-            this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
-            this.location.replaceState('/datasets/'+this.chosenDataset.id+'/instances/'+this.chosenInstance.id);
+            var candidateInstances = this.chosenProject.getCandidateInstancesForSmell(this.selectedSmellFormControl.value);
+            if (candidateInstances.length > 0) {
+              this.chosenInstance = candidateInstances[0];
+              this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
+              this.location.replaceState('/datasets/'+this.chosenDataset.id+'/instances/'+this.chosenInstance.id);
             }
         });
       }
-    }
-
-    private getNextProject() {
-      var currentProjectId = this.chosenDataset.projects.findIndex(p => p.id == this.chosenProject.id);
-      if (currentProjectId == this.chosenDataset.projects.length-1) return null;
-      else return this.chosenDataset.projects[currentProjectId+1];
     }
 }

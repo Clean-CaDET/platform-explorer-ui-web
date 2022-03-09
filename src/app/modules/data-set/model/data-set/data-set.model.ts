@@ -19,4 +19,16 @@ export class DataSet {
             });
         }
     }
+
+    public getPreviousProject(currentProjectId: number): DataSetProject | null {
+        var currentProjectIndex = this.projects.findIndex(p => p.id == currentProjectId);
+        if (currentProjectIndex == 0) return null;
+        else return this.projects[currentProjectIndex-1];
+    }
+
+    public getNextProject(currentProjectId: number): DataSetProject | null {
+        var currentProjectIndex = this.projects.findIndex(p => p.id == currentProjectId);
+        if (currentProjectIndex == this.projects.length-1) return null;
+        else return this.projects[currentProjectIndex+1];
+    }
 }

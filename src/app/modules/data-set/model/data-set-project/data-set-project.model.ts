@@ -1,5 +1,6 @@
 import { SmellCandidateInstances } from "../smell-candidate-instances/smell-candidate-instances.model";
 import { ProjectState } from "../enums/enums.model";
+import { Instance } from "../instance/instance.model";
 
 export class DataSetProject {
     id: number = 0;
@@ -66,5 +67,10 @@ export class DataSetProject {
 
     public hasInstances(): boolean {
         return this.candidateInstances.length > 0 && this.candidateInstances[0].instances.length > 0;
+    }
+
+    public getCandidateInstancesForSmell(codeSmell: string | null): Instance[] {
+        if (!codeSmell) return [];
+        return this.candidateInstances.find(c => c.codeSmell?.name == codeSmell)?.instances!;
     }
 }
