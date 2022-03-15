@@ -34,7 +34,7 @@ export class DataSetComponent implements OnInit {
 
     constructor(private dialog: MatDialog, private toastr: ToastrService, 
         private datasetService: DataSetService, private router: Router,
-        private storageService: LocalStorageService, private annotationNotificationService: NotificationService) {}
+        private storageService: LocalStorageService) {}
 
     public async ngOnInit(): Promise<void> {
         if (!this.storageService.getLoggedInAnnotator()) this.router.navigate(['/login']);

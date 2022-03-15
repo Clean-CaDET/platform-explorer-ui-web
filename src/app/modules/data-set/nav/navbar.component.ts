@@ -14,8 +14,7 @@ export class NavbarComponent implements OnInit {
 
   public annotationsCounter: boolean = false;
 
-  constructor(private storageService: LocalStorageService, private router: Router,
-    private annotationNotificationService: NotificationService) {
+  constructor(private storageService: LocalStorageService, private router: Router) {
       
   }
 

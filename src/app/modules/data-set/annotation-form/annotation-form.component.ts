@@ -6,7 +6,7 @@ import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model
 import { Instance } from '../model/instance/instance.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
 import { AnnotationService } from '../services/annotation.service';
-import { NotificationService } from '../services/shared/notification.service';
+import { ChangedAnnotationEvent, NewAnnotationEvent, NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 
 
@@ -33,7 +33,7 @@ export class AnnotationFormComponent implements OnInit {
   //
 
   constructor(private annotationService: AnnotationService, private _snackBar: MatSnackBar,
-    private storageService: LocalStorageService, private annotationNotificationService: NotificationService) {}
+    private storageService: LocalStorageService, private notificationService: NotificationService) {}
 
   public ngOnInit(): void {
     this.annotationService.getAvailableHeuristics().subscribe(res => {
@@ -107,7 +107,7 @@ export class AnnotationFormComponent implements OnInit {
     this.annotationService.updateAnnotation(this.instance.annotationFromLoggedUser!.id, this.getSubmittedAnnotation()).subscribe(
       (annotation: Annotation) => {
         this._snackBar.open('Annotation changed!', 'OK', this.successSnackBarOptions);
-        this.annotationNotificationService.changedAnnotation.emit(annotation);
+        this.notificationService.setEvent(new ChangedAnnotationEvent(annotation));
       },
       error => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
     );
@@ -118,7 +118,7 @@ export class AnnotationFormComponent implements OnInit {
       (annotation: Annotation) => {
         this.instance.annotationFromLoggedUser = annotation;
         this._snackBar.open('Annotation added!', 'OK', this.successSnackBarOptions);
-        this.annotationNotificationService.newAnnotation.emit(annotation);
+        this.notificationService.setEvent(new NewAnnotationEvent(annotation));
       },
       error => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
     );

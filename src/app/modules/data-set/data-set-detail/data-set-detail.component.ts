@@ -6,7 +6,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { DataSetProjectService } from '../services/data-set-project.service';
 import { DataSetService } from '../services/data-set.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
-import { NotificationService } from '../services/shared/notification.service';
+import { DatasetChosenEvent, InstanceChosenEvent, NewAnnotationEvent, NextInstanceEvent, NotificationEvent, NotificationService, PreviousInstanceEvent, ProjectChosenEvent } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 import { Subscription } from 'rxjs';
 
@@ -26,69 +26,56 @@ export class DataSetDetailComponent implements OnInit {
   public panelOpenState = false;
   public automaticAnnotationMode = false;
 
-  private newAnnotationSub: Subscription | undefined;
-  private instanceChosenSub: Subscription | undefined;
-  private projectChosenSub: Subscription | undefined;
+  private notificationSubscription: Subscription | undefined;
 
   constructor(private route: ActivatedRoute, public storageService: LocalStorageService, 
     private projectService: DataSetProjectService, private datasetService: DataSetService, 
-    private annotationNotificationService: NotificationService) {
+    private notificationService: NotificationService) {
   }
 
   public ngOnInit() {
-    this.newAnnotationSub = this.annotationNotificationService.newAnnotation.subscribe(annotation => {
-      this.annotatedInstancesNum++;
-      if (this.chosenProject.countAnnotatedInstances() == this.chosenProject.instancesCount) {
-        var i = this.chosenDataset.projects.findIndex(p => p.id == this.chosenProject.id);
-        this.chosenDataset.projects[i].fullyAnnotated = true;
-      }
-    });
-    this.instanceChosenSub = this.annotationNotificationService.instanceChosen.subscribe(async instance => {
-      this.chosenInstance = instance;
-      this.chosenProject = new DataSetProject(await this.projectService.getProject(this.chosenInstance.projectId));
-    });
-    this.projectChosenSub = this.annotationNotificationService.projectChosen.subscribe(res => {
-      this.chosenProject = res['project'];
-    });
+    this.notificationSubscription = this.notificationService.getEvent()
+        .subscribe(async (event: NotificationEvent) => {
+            if (event instanceof NewAnnotationEvent) {
+              this.updateAnnotationInfo();
+            } else if (event instanceof ProjectChosenEvent) {
+              this.chosenProject = event.data['project'];
+            } else if (event instanceof InstanceChosenEvent) {
+              this.loadProjectBasedOnInstance(event.instance);
+            }
+        });
 
     this.storageService.clearAutoAnnotationMode();
-    this.route.params.subscribe(async (params: Params) => {
+    this.route.params.subscribe((params: Params) => {
       this.loadDataset(params);
     });
   }
+  
+  private updateAnnotationInfo() {
+    this.annotatedInstancesNum++;
+    if (this.chosenProject.countAnnotatedInstances() == this.chosenProject.instancesCount) {
+      var i = this.chosenDataset.projects.findIndex(p => p.id == this.chosenProject.id);
+      this.chosenDataset.projects[i].fullyAnnotated = true;
+    }
+  }
+
+  private async loadProjectBasedOnInstance(instance: Instance) {
+    this.chosenInstance = instance;
+    this.chosenProject = new DataSetProject(await this.projectService.getProject(this.chosenInstance.projectId));
+  }
 
   ngOnDestroy(): void {
-    this.newAnnotationSub?.unsubscribe();
-    this.instanceChosenSub?.unsubscribe();
-    this.projectChosenSub?.unsubscribe();
+    this.notificationSubscription?.unsubscribe();
   }
 
-  private async loadDataset(params: Params) {
-    this.chosenDataset = new DataSet(await this.datasetService.getDataSet(params['id']));
-    this.annotationNotificationService.datasetChosen.emit(this.chosenDataset);
-    this.countAnnotatedDatasetInstances();
-  }
-
-  public loadPreviousInstance() {
-      this.annotationNotificationService.previousInstance.emit(this.chosenInstance.id);
-  }
-
-  public loadNextInstance() {
-    this.annotationNotificationService.nextInstance.emit(this.chosenInstance.id);
-  }
-  
-  @HostListener('window:keydown', ['$event'])
-  public next(event: KeyboardEvent) {
-    if (!this.chosenInstance.id) return;
-    if (event.ctrlKey && event.key === 'ArrowRight') {
-      event.preventDefault();
-      event.stopPropagation();
-      this.loadNextInstance();
-    } else if (event.ctrlKey && event.key === 'ArrowLeft') {
-      event.preventDefault();
-      event.stopPropagation();
-      this.loadPreviousInstance();
-    }
+  private loadDataset(params: Params) {
+    this.datasetService.getDataSet(params["id"]).then(dataset => {
+      this.chosenDataset = new DataSet(dataset);
+      this.chosenProject = new DataSetProject();
+      this.chosenInstance = new Instance(this.storageService);
+      this.notificationService.setEvent(new DatasetChosenEvent(this.chosenDataset));
+      this.countAnnotatedDatasetInstances();
+    })
   }
 
   private countAnnotatedDatasetInstances() {
@@ -115,7 +102,29 @@ export class DataSetDetailComponent implements OnInit {
     return counter;
   }
 
+  public loadPreviousInstance() {
+      this.notificationService.setEvent(new PreviousInstanceEvent(this.chosenInstance.id));
+  }
+
+  public loadNextInstance() {
+    this.notificationService.setEvent(new NextInstanceEvent(this.chosenInstance.id));
+  }
+
   public toggleAutomaticMode() {
     this.storageService.setAutoAnnotationMode(this.automaticAnnotationMode);
+  }
+  
+  @HostListener('window:keydown', ['$event'])
+  public next(event: KeyboardEvent) {
+    if (!this.chosenInstance.id) return;
+    if (event.ctrlKey && event.key === 'ArrowRight') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.loadNextInstance();
+    } else if (event.ctrlKey && event.key === 'ArrowLeft') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.loadPreviousInstance();
+    }
   }
 }

@@ -4,7 +4,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Instance } from '../model/instance/instance.model';
 import { RelatedInstance } from '../model/related-instance/related-instance.model';
 import { AnnotationService } from '../services/annotation.service';
-import { NotificationService } from '../services/shared/notification.service';
+import { InstanceChosenEvent, NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 
 
@@ -24,7 +24,7 @@ export class AnnotationContainerComponent implements OnInit {
   
   constructor(private storageService: LocalStorageService, 
     private annotationService: AnnotationService, private route: ActivatedRoute,
-    private annotationNotificationService: NotificationService) { 
+    private notificationService: NotificationService) { 
   }
 
   async ngOnInit() {
@@ -36,7 +36,7 @@ export class AnnotationContainerComponent implements OnInit {
       this.countTotalCoupling();
       if (!this.iframe) this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
       this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
-      this.annotationNotificationService.instanceChosen.emit(this.chosenInstance);
+      this.notificationService.setEvent(new InstanceChosenEvent(this.chosenInstance));
     });
   }
 

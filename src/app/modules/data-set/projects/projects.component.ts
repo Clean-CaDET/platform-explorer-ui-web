@@ -14,7 +14,7 @@ import { DataSetProject } from "../model/data-set-project/data-set-project.model
 import { DataSet } from "../model/data-set/data-set.model";
 import { ProjectState } from "../model/enums/enums.model";
 import { DataSetProjectService } from "../services/data-set-project.service";
-import { NotificationService } from "../services/shared/notification.service";
+import { DatasetChosenEvent, InstanceChosenEvent, NotificationEvent, NotificationService, ProjectChosenEvent } from "../services/shared/notification.service";
 
 @Component({
     selector: 'de-projects',
@@ -33,8 +33,7 @@ export class ProjectsComponent implements OnInit {
     public filterFormControl: FormControl = new FormControl('All instances', [Validators.required]);
     public projectState = ProjectState;
 
-    private datasetChosenSub: Subscription | undefined;
-    private instanceChosenSub: Subscription | undefined;
+    private notificationSubscription: Subscription | undefined;
 
     private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
     @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
@@ -43,23 +42,24 @@ export class ProjectsComponent implements OnInit {
     }
 
     constructor(private dialog: MatDialog, private projectService: DataSetProjectService,
-        private toastr: ToastrService, private annotationNotificationService: NotificationService) {
+        private toastr: ToastrService, private notificationService: NotificationService) {
     }
 
     ngOnInit(): void {
-      this.datasetChosenSub = this.annotationNotificationService.datasetChosen.subscribe((dataset: DataSet) => {
-        this.chosenDataset = dataset;
-        this.dataSource.data = this.chosenDataset.projects;
-      });
-      this.instanceChosenSub = this.annotationNotificationService.instanceChosen.subscribe(async instance => {
-        this.chosenProject = new DataSetProject(await this.projectService.getProject(instance.projectId));
-        this.scrollToSelectedProject();
-      });
+      this.notificationSubscription = this.notificationService.getEvent()
+        .subscribe(async (event: NotificationEvent) => {
+            if (event instanceof DatasetChosenEvent) {
+              this.chosenDataset = event.dataset;
+              this.dataSource.data = this.chosenDataset.projects;
+            } else if (event instanceof InstanceChosenEvent) {
+              this.chosenProject = new DataSetProject(await this.projectService.getProject(event.instance.projectId));
+              this.scrollToSelectedProject();
+            }
+        });
     }
     
     ngOnDestroy(): void {
-      this.datasetChosenSub?.unsubscribe();
-      this.instanceChosenSub?.unsubscribe();
+      this.notificationSubscription?.unsubscribe();
     }
 
     private scrollToSelectedProject() {
@@ -108,7 +108,7 @@ export class ProjectsComponent implements OnInit {
 
     public async chooseProject(id: number) {
         this.chosenProject = new DataSetProject(await this.projectService.getProject(id));
-        this.annotationNotificationService.projectChosen.emit({project: this.chosenProject, filter: this.filterFormControl.value});
+        this.notificationService.setEvent(new ProjectChosenEvent({project: this.chosenProject, filter: this.filterFormControl.value}));
     }
 
     public updateProject(project: DataSetProject): void {
