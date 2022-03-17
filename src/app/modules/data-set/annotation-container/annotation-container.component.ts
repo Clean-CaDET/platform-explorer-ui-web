@@ -6,6 +6,7 @@ import { RelatedInstance } from '../model/related-instance/related-instance.mode
 import { AnnotationService } from '../services/annotation.service';
 import { InstanceChosenEvent, NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
+import { InstanceService } from '../services/instance.service';
 
 
 @Component({
@@ -22,14 +23,14 @@ export class AnnotationContainerComponent implements OnInit {
   public totalCouplingStrength: Map<number, number> = new Map();
   public iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
   
-  constructor(private storageService: LocalStorageService, 
-    private annotationService: AnnotationService, private route: ActivatedRoute,
-    private notificationService: NotificationService) { 
+  constructor(private storageService: LocalStorageService, private instanceService: InstanceService, 
+    private route: ActivatedRoute, private notificationService: NotificationService) { 
   }
 
   async ngOnInit() {
     this.route.params.subscribe(async (params: Params) => {
-      this.chosenInstance = await this.annotationService.getInstanceWithRelatedInstances(params['projectId'], params['instanceId']);
+      this.chosenInstance = await this.instanceService.getInstanceWithRelatedInstances(params['instanceId']);
+      this.chosenInstance.projectId = params['projectId'];
       this.dataSourceRelatedInstances.data = this.chosenInstance.relatedInstances.sort((a, b) => a.relationType.toString().localeCompare(b.relationType.toString())).map(i => new RelatedInstance(i));
       var storedSmell = this.storageService.getSmellFilter();
       if (storedSmell != null) this.selectedSmell = storedSmell;

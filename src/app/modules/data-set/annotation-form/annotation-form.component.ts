@@ -8,6 +8,7 @@ import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
 import { AnnotationService } from '../services/annotation.service';
 import { ChangedAnnotationEvent, NewAnnotationEvent, NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
+import { InstanceService } from '../services/instance.service';
 
 
 @Component({
@@ -33,7 +34,8 @@ export class AnnotationFormComponent implements OnInit {
   //
 
   constructor(private annotationService: AnnotationService, private _snackBar: MatSnackBar,
-    private storageService: LocalStorageService, private notificationService: NotificationService) {}
+    private storageService: LocalStorageService, private notificationService: NotificationService,
+    private instanceService: InstanceService) {}
 
   public ngOnInit(): void {
     this.annotationService.getAvailableHeuristics().subscribe(res => {
@@ -44,7 +46,7 @@ export class AnnotationFormComponent implements OnInit {
   }
 
   public async ngOnChanges(): Promise<void> {
-    this.instance = new Instance(this.storageService, await this.annotationService.getInstanceWithAnnotations(this.instanceId));
+    this.instance = new Instance(this.storageService, await this.instanceService.getInstanceWithAnnotations(this.instanceId));
     this.instance.hasAnnotationFromLoggedUser ? this.setPreviousAnnotation() : this.initAnnotationForm();
   }
 
