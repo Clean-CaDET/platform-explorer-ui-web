@@ -17,50 +17,50 @@ import { LocalStorageService } from './shared/local-storage.service';
 })
 export class DataSetService {
   
-  private datasetPath: string = 'dataset/';
+  private datasetsPath: string = 'datasets/';
 
   constructor(private serverCommunicationService: ServerCommunicationService, 
     private storageService: LocalStorageService) { }
 
   public async getDataSet(id: number): Promise<DatasetDetailDTO> {
-    return await this.serverCommunicationService.getRequestAsync(this.datasetPath + id);
+    return await this.serverCommunicationService.getRequestAsync(this.datasetsPath + id);
   }
 
   public async getAllDataSets(): Promise<DatasetSummaryDTO[]> {
-    return await this.serverCommunicationService.getRequestAsync(this.datasetPath);
+    return await this.serverCommunicationService.getRequestAsync(this.datasetsPath);
   }
 
   public createDataSet(name: string, codeSmells: CodeSmell[]): Observable<DataSet> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    return this.serverCommunicationService.postRequest(this.datasetPath + name, codeSmells, headers);
+    return this.serverCommunicationService.postRequest(this.datasetsPath + name, codeSmells, headers);
   }
   
   public exportDraftDataSet(id: number, exportPath: string): Observable<object> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
     let data = {id: id, annotatorId: this.storageService.getLoggedInAnnotator(), exportPath: exportPath}
-    return this.serverCommunicationService.postRequest(this.datasetPath + 'export', data, headers);
+    return this.serverCommunicationService.postRequest(this.datasetsPath + 'export', data, headers);
   }
   
   public deleteDataSet(id: number): Observable<DataSet> {
-    return this.serverCommunicationService.deleteRequest(this.datasetPath + id);
+    return this.serverCommunicationService.deleteRequest(this.datasetsPath + id);
   }
 
   public updateDataSet(dataSet: DataSet): Observable<DataSet> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    return this.serverCommunicationService.putRequest(this.datasetPath, dataSet, headers);
+    return this.serverCommunicationService.putRequest(this.datasetsPath, dataSet, headers);
   }
   
   public addProjectToDataSet(project: DataSetProject, smellFilters: SmellFilter[], buildSettings: ProjectBuildSettings, dataSetId: number): Observable<DataSet> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
     let data = {project: project, smellFilters: smellFilters, buildSettings: buildSettings};
-    return this.serverCommunicationService.postRequest(this.datasetPath + dataSetId + '/projects', data, headers)
+    return this.serverCommunicationService.postRequest(this.datasetsPath + dataSetId + '/projects', data, headers)
   }
   
   public getDataSetCodeSmells(id: number): Observable<Map<string, string[]>> {
-    return this.serverCommunicationService.getRequest(this.datasetPath + id + '/code-smells');
+    return this.serverCommunicationService.getRequest(this.datasetsPath + id + '/code-smells');
   }
 }

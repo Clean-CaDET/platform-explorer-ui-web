@@ -8,21 +8,23 @@ import { ServerCommunicationService } from 'src/app/server-communication/server-
 })
 export class AnnotationConsistencyService {
 
+  private consistencyPath: string = 'annotation-consistency/';
+
   constructor(private serverCommunicationService: ServerCommunicationService) { }
 
   public getAnnotationConsistencyForAnnotator(projectId: number, annotatorId: number): Observable<Map<string, string>> {
-    return this.serverCommunicationService.getRequest('annotation/consistency/annotator/' + projectId + '/' + annotatorId);
+    return this.serverCommunicationService.getRequest(this.consistencyPath + 'annotator/' + projectId + '/' + annotatorId);
   }
 
   public getAnnotationConsistencyBetweenAnnotatorsForSeverity(projectId: number, severity: number): Observable<Map<string, string>> {
-    return this.serverCommunicationService.getRequest('annotation/consistency/annotators/' + projectId + '/' + severity);
+    return this.serverCommunicationService.getRequest(this.consistencyPath + 'annotators/' + projectId + '/' + severity);
   }
 
   public getMetricsSignificanceInAnnotationsForAnnotator(projectId: number, annotatorId: number): Observable<Map<string, Map<string, string>>> {
-    return this.serverCommunicationService.getRequest('annotation/consistency/metrics/annotator/' + projectId + '/' + annotatorId);
+    return this.serverCommunicationService.getRequest(this.consistencyPath + 'metrics/annotator/' + projectId + '/' + annotatorId);
   }
 
   public getMetricsSignificanceBetweenAnnotatorsForSeverity(projectId: number, severity: number): Observable<Map<string, Map<string, string>>> {
-    return this.serverCommunicationService.getRequest('annotation/consistency/metrics/annotators/' + projectId + '/' + severity);
+    return this.serverCommunicationService.getRequest(this.consistencyPath + 'metrics/annotators/' + projectId + '/' + severity);
   }
 }

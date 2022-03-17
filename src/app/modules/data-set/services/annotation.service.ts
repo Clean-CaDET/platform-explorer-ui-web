@@ -14,48 +14,50 @@ import { LocalStorageService } from './shared/local-storage.service';
 })
 export class AnnotationService {
 
+  private annotationsPath: string = 'annotations/';
+
   constructor(private serverCommunicationService: ServerCommunicationService, 
     private storageService: LocalStorageService) { }
 
   public getAvailableCodeSmells(): Observable<Map<string, string[]>> {
-    return this.serverCommunicationService.getRequest('annotation/available-code-smells');
+    return this.serverCommunicationService.getRequest(this.annotationsPath + 'available-code-smells');
   }
 
   public getAvailableMetrics(): Observable<Map<string, string[]>> {
-    return this.serverCommunicationService.getRequest('annotation/available-metrics');
+    return this.serverCommunicationService.getRequest(this.annotationsPath + 'available-metrics');
   }
 
   public getAvailableHeuristics(): Observable<Map<string, string[]>> {
-    return this.serverCommunicationService.getRequest('annotation/available-heuristics');
+    return this.serverCommunicationService.getRequest(this.annotationsPath + 'available-heuristics');
   }
 
   public addAnnotation(annotation: AnnotationDTO): Observable<Annotation> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Authorization', this.storageService.getLoggedInAnnotator()!);
-    return this.serverCommunicationService.postRequest('annotation', annotation, headers);
+    return this.serverCommunicationService.postRequest(this.annotationsPath, annotation, headers);
   }
 
   public updateAnnotation(annotationId: number, annotation: AnnotationDTO): Observable<Annotation> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Authorization', this.storageService.getLoggedInAnnotator()!);
-    return this.serverCommunicationService.putRequest('annotation/update/' + annotationId, annotation, headers);
+    return this.serverCommunicationService.putRequest(this.annotationsPath + 'update/' + annotationId, annotation, headers);
   }
 
   public async requiringAdditionalAnnotation(id: number): Promise<SmellCandidateInstances[]> {
-    return await this.serverCommunicationService.getRequestAsync('annotation/requiring-additional-annotation/' + id);
+    return await this.serverCommunicationService.getRequestAsync(this.annotationsPath + 'requiring-additional-annotation/' + id);
   }
 
   public async disagreeingAnnotations(id: number): Promise<SmellCandidateInstances[]> {
-      return await this.serverCommunicationService.getRequestAsync('annotation/disagreeing-annotations/' + id);
+      return await this.serverCommunicationService.getRequestAsync(this.annotationsPath + 'disagreeing-annotations/' + id);
   }
 
   public async getInstanceWithRelatedInstances(projectId: number, id: number): Promise<Instance> {
-    return await this.serverCommunicationService.getRequestAsync('annotation/instances/' + projectId + '/' + id);
+    return await this.serverCommunicationService.getRequestAsync(this.annotationsPath + 'instances/' + projectId + '/' + id);
   }
 
   public async getInstanceWithAnnotations(id: number): Promise<Instance> {
-    return await this.serverCommunicationService.getRequestAsync('instances/' + id + '/annotations');
+    return await this.serverCommunicationService.getRequestAsync(this.annotationsPath + 'instances/' + id + '/annotations');
   }
 }
