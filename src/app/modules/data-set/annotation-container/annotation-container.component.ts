@@ -29,7 +29,7 @@ export class AnnotationContainerComponent implements OnInit {
 
   async ngOnInit() {
     this.route.params.subscribe(async (params: Params) => {
-      this.chosenInstance = await this.annotationService.getInstanceWithRelatedInstances(params['instanceId']);
+      this.chosenInstance = await this.annotationService.getInstanceWithRelatedInstances(params['projectId'], params['instanceId']);
       this.dataSourceRelatedInstances.data = this.chosenInstance.relatedInstances.sort((a, b) => a.relationType.toString().localeCompare(b.relationType.toString())).map(i => new RelatedInstance(i));
       var storedSmell = this.storageService.getSmellFilter();
       if (storedSmell != null) this.selectedSmell = storedSmell;

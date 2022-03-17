@@ -51,8 +51,8 @@ export class AnnotationService {
       return await this.serverCommunicationService.getRequestAsync('annotation/disagreeing-annotations/' + id);
   }
 
-  public async getInstanceWithRelatedInstances(id: number): Promise<Instance> {
-    return await this.serverCommunicationService.getRequestAsync('annotation/instances/' + id);
+  public async getInstanceWithRelatedInstances(projectId: number, id: number): Promise<Instance> {
+    return await this.serverCommunicationService.getRequestAsync('annotation/instances/' + projectId + '/' + id);
   }
 
   public async getInstanceWithAnnotations(id: number): Promise<Instance> {

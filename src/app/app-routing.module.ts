@@ -15,7 +15,7 @@ const routes: Routes = [
   { path: 'datasets/:id', 
     component: DataSetDetailComponent,
     children: [
-      { path: 'instances/:instanceId', component: AnnotationContainerComponent },
+      { path: 'projects/:projectId/instances/:instanceId', component: AnnotationContainerComponent },
     ]
   },
 ];

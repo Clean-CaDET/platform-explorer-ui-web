@@ -152,7 +152,7 @@ export class InstancesComponent implements OnInit {
 
     public chooseInstance(id: number): void {
       this.chosenInstance.id = id;
-      this.router.navigate(['datasets/' + this.chosenDataset.id + '/instances', id]);
+      this.router.navigate(['datasets/' + this.chosenDataset.id + '/projects/' + this.chosenProject.id + '/instances', id]);
     }
 
     private loadInstance(instance: Instance) {
@@ -203,7 +203,7 @@ export class InstancesComponent implements OnInit {
             if (candidateInstances.length > 0) {
               this.chosenInstance = candidateInstances[0];
               this.notificationService.setEvent(new InstanceChosenEvent(this.chosenInstance));
-              this.location.replaceState('/datasets/'+this.chosenDataset.id+'/instances/'+this.chosenInstance.id);
+              this.location.replaceState('/datasets/'+this.chosenDataset.id+'/projects/'+this.chosenProject.id+'/instances/'+this.chosenInstance.id);
             }
         });
       }
