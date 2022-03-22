@@ -1,0 +1,64 @@
+.table-container {
+    height: max-content;
+    background-color: white;
+    margin: 10px;
+    width: 100%;
+}
+
+.table-title {
+    padding-left: 0px;
+    margin-left: 10px;
+}
+
+.table-header {
+    margin-left: 10px;
+}
+
+.search {
+    padding: 0px;
+}
+
+.add-button {
+    margin: 5px 20px 0px 0px;
+}
+
+#projects-table-div {
+    height: fit-content;
+    max-height: 290px;
+    overflow: auto;
+    margin: auto;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+.bold-name:hover {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.icon-built-project {
+    color: green;
+}
+
+.icon-failed-project {
+    color: darkred;
+}
+
+.filterForm {
+    border-top: 2px solid lightgray;
+    margin-left: 10px;
+    padding-top: 10px;
+}
+
+.mat-stroked-button {
+    color: rgb(92, 13, 110);
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

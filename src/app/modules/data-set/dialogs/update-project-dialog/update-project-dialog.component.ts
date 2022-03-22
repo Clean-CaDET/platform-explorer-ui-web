@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { DataSetService } from '../../data-set.service';
 import { DataSetProject } from '../../model/data-set-project/data-set-project.model';
+import { DataSetProjectService } from '../../services/data-set-project.service';
+
 
 @Component({
   selector: 'de-update-project-dialog',
@@ -13,7 +14,9 @@ export class UpdateProjectDialogComponent implements OnInit {
 
   private oldName: string = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) public project: DataSetProject, private dialogRef: MatDialogRef<UpdateProjectDialogComponent>, private dataSetService: DataSetService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public project: DataSetProject, 
+  private dialogRef: MatDialogRef<UpdateProjectDialogComponent>, 
+  private projectService: DataSetProjectService) { }
   
   ngOnInit(): void {
     this.oldName = this.project.name;
@@ -21,7 +24,7 @@ export class UpdateProjectDialogComponent implements OnInit {
 
   public updateProject(): void {
     if (!this.isValidInput()) return;
-    this.dataSetService.updateDataSetProject(this.project).subscribe((res: DataSetProject) => this.dialogRef.close(res));
+    this.projectService.updateDataSetProject(this.project).subscribe((res: DataSetProject) => this.dialogRef.close(res));
   }
 
   private isValidInput(): boolean {

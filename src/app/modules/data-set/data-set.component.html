@@ -1,102 +1,50 @@
-<mat-sidenav-container class="drawer-container">
-    <mat-sidenav #drawer mode="side" class="sidenav">
-        <p class="table-title">Datasets</p>
-        <div class="table-header">
-            <mat-form-field appearance="fill" class="search">
-                <mat-label>Search by name</mat-label>
-                <input matInput (keyup)="searchDataSets($event)" placeholder="Dataset name">
-            </mat-form-field>
-            <button class="add-button" mat-mini-fab matTooltip="New dataset" matTooltipPosition="right" (click)="addDataSet()" color="primary">
-                <mat-icon>add</mat-icon>
-            </button>
-        </div>
-        <div id="datasets-table-div">
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef width="60%"> Name </th>
-                    <td mat-cell *matCellDef="let dataSet" width="60%">
-                        <span class="truncate-text">{{dataSet.name}}</span>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="numOfProjects">
-                    <th mat-header-cell *matHeaderCellDef width="30%"class="cell-center">Projects</th>
-                    <td mat-cell *matCellDef="let dataSet" width="30%" class="cell-center">{{dataSet.projects?.length || '0'}}</td>
-                </ng-container>
-                <ng-container matColumnDef="dataSetExport">
-                    <th mat-header-cell *matHeaderCellDef width="30%">Export</th>
-                    <td mat-cell *matCellDef="let dataSet" width="30%">
-                        <button mat-icon-button (click)="exportDraftDataSet(dataSet)" color="primary" class="center-horizontally">
-                            <mat-icon>file_copy</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="dataSetUpdate">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let dataSet">
-                        <button mat-icon-button (click)="updateDataSet(dataSet)" color="primary" class="center-horizontally">
-                            <mat-icon matTooltip="edit">edit</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="dataSetDelete">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let dataSet">
-                        <button mat-icon-button (click)="deleteDataSet(dataSet)" color="primary" class="center-horizontally">
-                            <mat-icon matTooltip="delete">delete</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="chooseDataset(row)" [class.row-chosen]="row.id == chosenDataset.id"></tr>
-            </table>
-        </div>
-        <div class="centered-button">
-            <button mat-stroked-button (click)="drawer.toggle()">
-                OK
-            </button>
-        </div>
-    </mat-sidenav>
-    <div class="mat-toolbar-div">
-        <mat-toolbar>
-            <div class="options-div">
-                <div class="dataset-options-div">
-                    <mat-panel-title>
-                        Dataset: {{chosenDataset.name}}
-                    </mat-panel-title>
-                    <button mat-button (click)="drawer.toggle()" id="edit-button">
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                    <mat-panel-title id="annotations-info">
-                        Annotated {{annotatedInstancesNum}}/{{totalNumInstances}}
-                    </mat-panel-title>
-                </div>
-                <div class="toggle-automatic-mode">
-                    Automatic annotation mode
-                    <mat-slide-toggle color="primary" [(ngModel)]="automaticAnnotationMode"></mat-slide-toggle>
-                    <button mat-button id="logout-button" (click)="logout()">
-                        <mat-icon matTooltip="Logout">exit_to_app</mat-icon>
-                    </button>
-                </div>
-            </div>
-        </mat-toolbar>
-    </div>
-    <div>
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true">
-            <mat-expansion-panel-header>
-                <mat-panel-title id="expansion-title">
-                    <span>Projects and instances</span>
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="all-tables">
-                <de-data-set-project [selectedRow]="chosenProject" [projects]="projectsToShow" [dataset]="chosenDataset" (newProjects)="newProjects($event)" (newFilter)="newFilter($event)" (newCandidates)="newCandidates($event)" (totalInstances)="totalInstances($event)"></de-data-set-project>
-                <de-instance [filter]="filter" [chosenInstance]="instanceToAnnotate" [candidateInstances]="candidateInstances" (instanceToAnnotate)="chosenInstance($event)" (previousAnnotation)="previousAnnotated($event)" (selectedSmell)="smellSelected($event)"></de-instance>
-            </div>
-        </mat-expansion-panel>
-        <de-annotation-container [chosenInstance]="instanceToAnnotate" [selectedCodeSmell]="selectedSmell" [previousAnnotation]="previousAnnotation!" (newAnnotation)="addAnnotation($event)" (changedAnnotation)="changeAnnotation($event)"></de-annotation-container>
-        <div *ngIf="instanceToAnnotate" class="automatic-buttons-div">
-            <button mat-stroked-button color="primary" (click)="loadPreviousInstance()">Previous</button>
-            <button mat-stroked-button color="primary" (click)="loadNextInstanceForAnnotation()">Next</button>
-        </div>
-    </div>
-</mat-sidenav-container>
+<p class="table-title">Datasets</p>
+<div class="table-header">
+    <mat-form-field appearance="fill" class="search">
+        <mat-label>Search by name</mat-label>
+        <input matInput (keyup)="searchDataSets($event)" placeholder="Dataset name">
+    </mat-form-field>
+    <button class="add-button" mat-mini-fab matTooltip="New dataset" matTooltipPosition="right" (click)="addDataSet()" color="primary">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
+<div id="datasets-table-div">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef width="60%"> Name </th>
+            <td mat-cell *matCellDef="let dataSet" width="60%">
+                <span class="truncate-text datasetName" (click)="chooseDataset(dataSet)">{{dataSet.name}}</span>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="numOfProjects">
+            <th mat-header-cell *matHeaderCellDef width="30%"class="cell-center">Projects</th>
+            <td mat-cell *matCellDef="let dataSet" width="30%" class="cell-center">{{dataSet.projectsCount}}</td>
+        </ng-container>
+        <ng-container matColumnDef="dataSetExport">
+            <th mat-header-cell *matHeaderCellDef width="30%">Export</th>
+            <td mat-cell *matCellDef="let dataSet" width="30%">
+                <button mat-icon-button (click)="exportDraftDataSet(dataSet)" color="primary">
+                    <mat-icon>file_copy</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="dataSetUpdate">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let dataSet">
+                <button mat-icon-button (click)="updateDataSet(dataSet)" color="primary">
+                    <mat-icon matTooltip="edit">edit</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="dataSetDelete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let dataSet">
+                <button mat-icon-button (click)="deleteDataSet(dataSet)" color="primary">
+                    <mat-icon matTooltip="delete">delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
