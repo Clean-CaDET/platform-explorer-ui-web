@@ -1,0 +1,31 @@
+<mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true">
+    <mat-expansion-panel-header #panelH>
+        <div class="toolbar">
+            <mat-panel-title id="annotations-info">
+                <span>{{ chosenDataset.name }}</span>
+                <span *ngIf="chosenProject?.id">&ensp;/&ensp;{{ chosenProject.name }}</span>
+                <span *ngIf="chosenInstance?.id">&ensp;/&ensp;{{chosenInstance.codeSnippetId | className}}</span>
+            </mat-panel-title>
+            <mat-panel-title id="annotations-info">
+                Annotated:&ensp;<span>{{annotatedInstancesNum}}/{{chosenDataset.instancesCount}}</span>
+            </mat-panel-title>
+            <div class="toggle-automatic-mode">
+                <mat-panel-title>
+                    Automatic annotation mode
+                    <mat-slide-toggle (click)="panelH._toggle()" color="primary" [(ngModel)]="automaticAnnotationMode" (change)="toggleAutomaticMode()"></mat-slide-toggle>
+                </mat-panel-title>
+            </div>
+        </div>
+    </mat-expansion-panel-header>
+    <div class="horizontal-div">
+        <de-projects></de-projects>
+        <de-instances></de-instances>
+    </div>
+</mat-expansion-panel>
+
+<router-outlet></router-outlet>
+
+<div *ngIf="chosenInstance?.id" class="auto-buttons-div">
+    <button mat-stroked-button color="primary" (click)="loadPreviousInstance()">Back</button>
+    <button mat-stroked-button color="primary" (click)="loadNextInstance()">Next</button>
+</div>

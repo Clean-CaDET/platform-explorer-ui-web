@@ -1,0 +1,83 @@
+mat-expansion-panel-header {
+    padding: 5px;
+    margin: 5px;
+    height: 5px;
+}
+
+mat-expansion-panel-header.mat-expanded {
+    height: 5px;
+}
+
+mat-expansion-panel {
+    background-color:rgb(236, 228, 238);
+}
+
+.toolbar {
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    margin: 10px;
+}
+
+.toggle-automatic-mode {
+    margin-left: 20px;
+    color:rgb(92, 13, 110);
+    border-radius: 2px;
+    font-size: 14px;
+    float: right;
+} 
+
+#annotations-info {
+    font-size: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 550;
+}
+
+mat-slide-toggle {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+mat-panel-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 550;
+}
+
+mat-panel-title>span {
+    font-weight: 650;
+}
+
+.mat-stroked-button {
+    color: rgb(92, 13, 110);
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.horizontal-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.auto-buttons-div {
+    margin-right: 235px;
+    display: flex;
+    justify-content: right;
+}
+
+.auto-buttons-div>button {
+    margin: 5px;
+}
+
+de-instances {
+    width: 55%;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+de-projects {
+    width: 45%;
+}

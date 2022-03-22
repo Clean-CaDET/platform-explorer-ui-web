@@ -1,0 +1,34 @@
+<form>
+    <p>Annotation form</p>
+    <table>
+        <tr>
+            <td class="header-cell first-column-cell">Heuristic</td>
+            <td class="header-cell">Reason</td>
+        </tr>
+        <tr *ngFor="let heuristic of heuristics()">
+            <td class="first-column-cell">
+                <mat-checkbox color="primary" [checked]="isHeuristicApplied(heuristic)" 
+                (change)="checkHeuristicCheckbox(heuristic, $event.checked)"  
+                [disabled]="disableEdit"></mat-checkbox>
+                {{heuristic}}
+            </td>
+            <td>
+                <mat-form-field appearance="outline" class="reason">
+                    <input type="text" matInput value="{{appliedHeuristicsAndReasons.get(heuristic)}}"
+                        (change)="addReasonForHeuristic($event.target!, heuristic)">
+                </mat-form-field>
+            </td>
+        </tr>
+    </table>
+    <mat-form-field floatLabel="always" class="form-field" id="severity" appearance="outline">
+        <mat-label>Severity</mat-label>
+        <input type="number" matInput [formControl]="severityFormControl">
+        <mat-error *ngIf="severityFormControl.hasError('required')">
+            Severity is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="severityFormControl.hasError('min') || severityFormControl.hasError('max')">
+            Severity must be between 0 and 3
+        </mat-error>
+    </mat-form-field>
+    <button id="annotate-button" *ngIf="!disableEdit" mat-stroked-button color="primary" (click)="submitAnnotation()">Annotate</button>
+</form>

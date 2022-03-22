@@ -1,8 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Annotation } from '../model/annotation/annotation.model';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Instance } from '../model/instance/instance.model';
 import { RelatedInstance } from '../model/related-instance/related-instance.model';
+import { AnnotationService } from '../services/annotation.service';
+import { InstanceChosenEvent, NotificationService } from '../services/shared/notification.service';
+import { LocalStorageService } from '../services/shared/local-storage.service';
+import { InstanceService } from '../services/instance.service';
 
 
 @Component({
@@ -12,48 +16,33 @@ import { RelatedInstance } from '../model/related-instance/related-instance.mode
 })
 export class AnnotationContainerComponent implements OnInit {
 
-  @Input() public chosenInstance: Instance | undefined;
-  @Input() public selectedCodeSmell: string = '';
-  @Input() public previousAnnotation: Annotation | undefined;
-
-  @Output() newAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
-  @Output() changedAnnotation: EventEmitter<Annotation> = new EventEmitter<Annotation>();
-
-  public displayedColumnsRelatedInstances: string[] = ['codeSnippetId', 'relationType', 'couplingStrength', 'couplingType'];
+  public selectedSmell: string = '';
+  public chosenInstance: Instance = new Instance(this.storageService);
   public dataSourceRelatedInstances: MatTableDataSource<RelatedInstance> = new MatTableDataSource<RelatedInstance>();
-  public chosenInstanceName: string = '';
-  public iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
+  public displayedColumnsRelatedInstances: string[] = ['codeSnippetId', 'relationType', 'couplingStrength', 'couplingType'];
   public totalCouplingStrength: Map<number, number> = new Map();
+  public iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
   
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private storageService: LocalStorageService, private instanceService: InstanceService, 
+    private route: ActivatedRoute, private notificationService: NotificationService) { 
   }
 
-  public ngAfterContentChecked(): void {
-    if (!this.iframe) this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
-    if (this.iframe && sessionStorage.getItem('changeView')=='true') {
-      this.iframe.srcdoc = '';
-      this.chosenInstance = new Instance();
-      sessionStorage.setItem('changeView', 'false')
-    }
-  }
-
-  public ngOnChanges(): void {
-    if (this.chosenInstance?.link) {
+  async ngOnInit() {
+    this.route.params.subscribe(async (params: Params) => {
+      this.chosenInstance = await this.instanceService.getInstanceWithRelatedInstances(params['instanceId']);
+      this.chosenInstance.projectId = params['projectId'];
+      this.dataSourceRelatedInstances.data = this.chosenInstance.relatedInstances.sort((a, b) => a.relationType.toString().localeCompare(b.relationType.toString())).map(i => new RelatedInstance(i));
+      var storedSmell = this.storageService.getSmellFilter();
+      if (storedSmell != null) this.selectedSmell = storedSmell;
       this.countTotalCoupling();
-      var newSrcDoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
-      if (newSrcDoc != this.iframe.srcdoc) this.iframe.srcdoc = newSrcDoc;
-    }
-    
-    if (this.chosenInstance) { this.dataSourceRelatedInstances.data = this.chosenInstance?.relatedInstances.sort((a, b) => a.relationType.toString().localeCompare(b.relationType.toString())).map(i => new RelatedInstance(i)) }
-
-    var newName = this.chosenInstance?.codeSnippetId.split('.').pop()!;
-    if (newName != this.chosenInstanceName) this.chosenInstanceName = newName;
+      if (!this.iframe) this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
+      this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
+      this.notificationService.setEvent(new InstanceChosenEvent(this.chosenInstance));
+    });
   }
 
   private countTotalCoupling() {
-    this.chosenInstance?.relatedInstances.forEach(instance => {
+    this.chosenInstance.relatedInstances.forEach(instance => {
       this.totalCouplingStrength.set(instance.id, 0);
       Object.entries(instance.couplingTypeAndStrength).forEach(coupling => {
         this.totalCouplingStrength.set(instance.id, this.totalCouplingStrength.get(instance.id)+coupling[1]);
@@ -71,14 +60,6 @@ export class AnnotationContainerComponent implements OnInit {
     url = url.split('_').join(`_${hairSpace}`);
     return url.split('.').join(`.${hairSpace}`);
   }
-
-  public async changeAnnotation(annotation: Annotation) {
-    this.changedAnnotation.emit(annotation);
-  }
-
-  public async addAnnotation(annotation: Annotation): Promise<void> {
-    this.newAnnotation.emit(annotation);
-  }
 }
 
 @Pipe({name: 'couplingDetails'})
@@ -89,5 +70,12 @@ export class CouplingDetailsPipe implements PipeTransform {
       result += coupling[0] + ': ' + coupling[1] + '\n';
     });
     return result;
+  }
+}
+
+@Pipe({name: 'className'})
+export class ClassNamePipe implements PipeTransform {
+  transform(value: string): string {
+    return value.split('.').pop()!;
   }
 }

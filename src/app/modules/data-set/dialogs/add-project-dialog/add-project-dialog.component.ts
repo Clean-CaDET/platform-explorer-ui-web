@@ -1,14 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AnnotationService } from '../../annotation/annotation.service';
-import { DataSetService } from '../../data-set.service';
 import { CodeSmell } from '../../model/code-smell/code-smell.model';
 import { DataSetProject } from '../../model/data-set-project/data-set-project.model';
 import { NumOfInstancesType } from '../../model/enums/enums.model';
 import { MetricThresholds } from '../../model/metric-thresholds/metric-thresholds.model';
 import { ProjectBuildSettings } from '../../model/project-build-settings/project-build-settings.model';
 import { SmellFilter } from '../../model/smell-filter/smell-filter.model';
+import { DataSet } from '../../model/data-set/data-set.model';
+import { DataSetService } from '../../services/data-set.service';
+import { AnnotationService } from '../../services/annotation.service';
 
 @Component({
   selector: 'de-add-project-dialog',
@@ -28,7 +28,8 @@ export class AddProjectDialogComponent implements OnInit {
   public numOfInstancesTypes: NumOfInstancesType[] = [NumOfInstancesType.Percentage, NumOfInstancesType.Number];
   public projectBuildSettings: ProjectBuildSettings = new ProjectBuildSettings({numOfInstances: 100, numOfInstancesType: NumOfInstancesType.Percentage, randomizeClassSelection: true, randomizeMemberSelection: true});
  
-  constructor(@Inject(MAT_DIALOG_DATA) private dataSetId: number, private dataSetService: DataSetService, private annotationService: AnnotationService, private dialogRef: MatDialogRef<AddProjectDialogComponent>) { }
+  constructor(@Inject(MAT_DIALOG_DATA) private dataSetId: number, 
+  private dataSetService: DataSetService, private annotationService: AnnotationService, private dialogRef: MatDialogRef<AddProjectDialogComponent>) { }
 
   ngOnInit(): void {
     if (!this.dataSetId) {
@@ -60,7 +61,7 @@ export class AddProjectDialogComponent implements OnInit {
   public addProjectToDataSet(): void {
     if (this.isValidInput()) {
       this.removeUnselectedMetrics();
-      this.dataSetService.addProjectToDataSet(this.project, this.smellFilters, this.projectBuildSettings, this.dataSetId).subscribe(res => this.dialogRef.close(res));
+      this.dataSetService.addProjectToDataSet(this.project, this.smellFilters, this.projectBuildSettings, this.dataSetId).subscribe((res: DataSet) => this.dialogRef.close(res));
     }
   }
 
