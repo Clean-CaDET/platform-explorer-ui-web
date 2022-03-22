@@ -11,13 +11,20 @@
 .vertical-container {
     display: flex;
     flex-direction: column;
-    max-height: 700px;
 }
 
 #related-instances {
     margin: 10px;
     max-height: inherit;
     overflow: auto;
+    height: 300px;
+    width: 600px;
+    table-layout: fixed;
+}
+
+#no-related {
+    margin: 10px;
+    width: 600px;
 }
 
 .mat-cell,

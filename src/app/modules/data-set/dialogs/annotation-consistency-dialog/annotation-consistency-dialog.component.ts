@@ -1,12 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-
 import { ConsistencyType } from '../../model/enums/enums.model';
+import { AnnotationConsistencyService } from '../../services/annotation-consistency.service';
+import { LocalStorageService } from '../../services/shared/local-storage.service';
 
-import { AnnotationService } from '../../annotation/annotation.service';
-import { AnnotationConsistencyService } from '../../annotation-consistency/annotation-consistency.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'de-annotation-consistency-dialog',
@@ -30,7 +28,9 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   public selectedResult: string = '';
   public resultDescription: string = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) private projectId: number, private annotationConsistencyService: AnnotationConsistencyService, private _snackBar: MatSnackBar) { }
+  constructor(@Inject(MAT_DIALOG_DATA) private projectId: number, 
+    private annotationConsistencyService: AnnotationConsistencyService, 
+    private storageService: LocalStorageService) { }
 
   public ngOnInit(): void {
     this.typeFormControl.markAsTouched();
@@ -84,7 +84,7 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   }
 
   private getAnnotationConsistencyForAnnotator(): void {
-    this.annotationConsistencyService.getAnnotationConsistencyForAnnotator(this.projectId, AnnotationService.getLoggedInAnnotatorId()).subscribe((res: Map<string, string>) => 
+    this.annotationConsistencyService.getAnnotationConsistencyForAnnotator(this.projectId, Number(this.storageService.getLoggedInAnnotator())).subscribe((res: Map<string, string>) => 
       this.results.set('Consistency for my annotations', res));
   }
 
@@ -95,7 +95,7 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   }
 
   private getMetricsSignificanceInAnnotationsForAnnotator(): void {
-    this.annotationConsistencyService.getMetricsSignificanceInAnnotationsForAnnotator(this.projectId, AnnotationService.getLoggedInAnnotatorId()).subscribe((res: Map<string, Map<string, string>>) => 
+    this.annotationConsistencyService.getMetricsSignificanceInAnnotationsForAnnotator(this.projectId, Number(this.storageService.getLoggedInAnnotator())).subscribe((res: Map<string, Map<string, string>>) => 
       this.results.set('Metrics significance for my annotations', res));
   }
 
