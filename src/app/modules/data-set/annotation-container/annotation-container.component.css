@@ -19,7 +19,6 @@
     overflow: auto;
     height: 300px;
     width: 600px;
-    table-layout: fixed;
 }
 
 #no-related {

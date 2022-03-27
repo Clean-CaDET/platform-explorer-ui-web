@@ -10,8 +10,9 @@ form {
 
 #severity {
     width: 80px;
-    margin: auto;
+    margin-left: 153px;
     margin-top: 10px;
+    margin-right: 0px;
 }
 
 .reason {
@@ -26,15 +27,11 @@ form {
     margin: auto !important;
 }
 
-ul {
-    list-style-type: none;
-    padding-right: 20px;
-}
-
 p {
     font-size: 20px;
     color:rgb(92, 13, 110);
     font-weight: 450;
+    text-align: center;
 }
 
 table {
@@ -87,4 +84,14 @@ mat-checkbox {
 
 mat-checkbox {
     margin-bottom: 15px;
+}
+
+.horizontal-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.horizontal-div>button {
+    margin-left: 0px;
+    margin-top: 15px;
 }

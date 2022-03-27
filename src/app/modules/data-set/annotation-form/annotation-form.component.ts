@@ -9,6 +9,10 @@ import { AnnotationService } from '../services/annotation.service';
 import { ChangedAnnotationEvent, NewAnnotationEvent, NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 import { InstanceService } from '../services/instance.service';
+import { DialogConfigService } from '../dialogs/dialog-config.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
+import { AnnotationNoteDialogComponent } from '../dialogs/annotation-note-dialog/annotation-note-dialog.component';
 
 
 @Component({
@@ -24,6 +28,7 @@ export class AnnotationFormComponent implements OnInit {
   public appliedHeuristicsAndReasons: Map<string, string> = new Map();
   public severityFormControl: FormControl = new FormControl('0', [Validators.required, Validators.min(0), Validators.max(3),]);
   private availableHeuristics: Map<string, string[]> = new Map();
+  public note: string = '';
 
   private warningSnackbarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['warningSnackbar']};
   private successSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['successSnackbar']};
@@ -35,7 +40,7 @@ export class AnnotationFormComponent implements OnInit {
 
   constructor(private annotationService: AnnotationService, private _snackBar: MatSnackBar,
     private storageService: LocalStorageService, private notificationService: NotificationService,
-    private instanceService: InstanceService) {}
+    private instanceService: InstanceService, private dialog: MatDialog, private toastr: ToastrService) {}
 
   public ngOnInit(): void {
     this.annotationService.getAvailableHeuristics().subscribe(res => {
@@ -56,6 +61,8 @@ export class AnnotationFormComponent implements OnInit {
     this.instance.annotationFromLoggedUser?.applicableHeuristics.forEach( h => {
       this.appliedHeuristicsAndReasons.set(h.description, h.reasonForApplicability);
     });
+    if (this.instance.annotationFromLoggedUser?.note) this.note = this.instance.annotationFromLoggedUser?.note;
+    else this.note = '';
   }
 
   private initAnnotationForm() {
@@ -110,6 +117,7 @@ export class AnnotationFormComponent implements OnInit {
       (annotation: Annotation) => {
         this._snackBar.open('Annotation changed!', 'OK', this.successSnackBarOptions);
         this.notificationService.setEvent(new ChangedAnnotationEvent(annotation));
+        this.instance.annotationFromLoggedUser!.note = this.note;
       },
       error => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
     );
@@ -119,6 +127,7 @@ export class AnnotationFormComponent implements OnInit {
     this.annotationService.addAnnotation(this.getSubmittedAnnotation()).subscribe(
       (annotation: Annotation) => {
         this.instance.annotationFromLoggedUser = annotation;
+        this.instance.hasAnnotationFromLoggedUser = true;
         this._snackBar.open('Annotation added!', 'OK', this.successSnackBarOptions);
         this.notificationService.setEvent(new NewAnnotationEvent(annotation));
       },
@@ -131,7 +140,8 @@ export class AnnotationFormComponent implements OnInit {
       instanceId: this.instanceId,
       severity: this.severityFormControl.value,
       codeSmell: this.codeSmell,
-      applicableHeuristics: this.getHeuristicsFromInput()
+      applicableHeuristics: this.getHeuristicsFromInput(),
+      note: this.note
     });
   }
 
@@ -149,5 +159,15 @@ export class AnnotationFormComponent implements OnInit {
 
   public addReasonForHeuristic(input: any, heuristic: string) {
     this.appliedHeuristicsAndReasons.set(heuristic, input.value);
+  }
+
+  public openNoteDialog() {
+    let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', this.note);
+    let dialogRef = this.dialog.open(AnnotationNoteDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((note: string) => {
+      if (note) {
+        this.note = note;
+      }
+    });
   }
 } 
