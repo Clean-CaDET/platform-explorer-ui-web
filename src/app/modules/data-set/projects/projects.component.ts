@@ -53,22 +53,12 @@ export class ProjectsComponent implements OnInit {
               this.dataSource.data = this.chosenDataset.projects;
             } else if (event instanceof InstanceChosenEvent) {
               this.chosenProject = new DataSetProject(await this.projectService.getProject(event.instance.projectId));
-              this.scrollToSelectedProject();
             }
         });
     }
     
     ngOnDestroy(): void {
       this.notificationSubscription?.unsubscribe();
-    }
-
-    private scrollToSelectedProject() {
-      setTimeout(() => {
-        const selectedRow = document.getElementById('row-'+this.chosenProject.id);
-        if(selectedRow) {
-          selectedRow.scrollIntoView({block: 'center'});
-        }
-      }, 500);
     }
 
     public addProject(): void {

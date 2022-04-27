@@ -158,7 +158,6 @@ export class InstancesComponent implements OnInit {
     private loadInstance(instance: Instance) {
       this.chosenInstance = instance;
       this.updateCandidates();
-      this.scrollToSelectedInstance();
     }
 
     private async updateCandidates() {
@@ -175,15 +174,6 @@ export class InstancesComponent implements OnInit {
       });
       this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
       this.initSeverities();
-    }
-
-    private scrollToSelectedInstance() {
-      setTimeout(() => {
-        const selectedRow = document.getElementById('row-'+this.chosenInstance.id);
-        if(selectedRow) {
-          selectedRow.scrollIntoView({block: 'center'});
-        }
-      }, 500);
     }
 
     public loadNextInstance(currentInstanceId: number) {
