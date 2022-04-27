@@ -14,14 +14,16 @@ export class SeverityValuesDialogComponent {
   public severityValues: string[] = [];
   public newSeverityValue: string = '';
   public codeSmellDefinition: CodeSmellDefinition | null = null;
-
+  public deletedSeverityValues: string[] = [];
+ 
   constructor(@Inject(MAT_DIALOG_DATA) public data: CodeSmellDefinition, private dialogRef: MatDialogRef<SeverityValuesDialogComponent>,
     public codeSmellDefinitionService: CodeSmellDefinitionService) {
     this.codeSmellDefinition = data;
   }
 
   public removeValue(value: string): void {
-    this.codeSmellDefinition?.severityValues.splice(this.codeSmellDefinition?.severityValues.findIndex(v => v == value), 1);
+    var deletedValues = this.codeSmellDefinition?.severityValues.splice(this.codeSmellDefinition?.severityValues.findIndex(v => v == value), 1);
+    if (deletedValues) this.deletedSeverityValues = deletedValues.concat(this.deletedSeverityValues);
   }
 
   public addSeverityValue(): void {
@@ -34,5 +36,11 @@ export class SeverityValuesDialogComponent {
     this.codeSmellDefinition = numberToSnippetType(this.codeSmellDefinition!);
     this.codeSmellDefinitionService.updateCodeSmellDefinition(this.codeSmellDefinition?.id!, this.codeSmellDefinition!)
     .subscribe((res: CodeSmellDefinition) => this.dialogRef.close(res));
+  }
+
+  public close(): void {
+    var severityValues = this.codeSmellDefinition?.severityValues.concat(this.deletedSeverityValues);
+    this.codeSmellDefinition!.severityValues = Array.from(new Set(severityValues));
+    this.dialogRef.close(this.codeSmellDefinition);
   }
 }
