@@ -1,1 +1,20 @@
+.cell-with-border {
+    border-bottom: 1px solid lightgray;
+}
 
+table {
+    border-collapse: collapse;
+}
+
+tr {
+    margin-top: 10px;
+    display: table;
+}
+
+.wide-tr {
+    width: 100%;
+}
+
+mat-dialog-content {
+    display: unset;
+}

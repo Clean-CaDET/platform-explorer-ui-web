@@ -1,0 +1,56 @@
+.annotation-container {
+    display: flex;
+    flex-direction: row;
+}
+
+#snippet {
+    width: 70%;
+    margin: 20px;
+}
+
+.vertical-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#related-instances {
+    margin: 10px;
+    max-height: inherit;
+    overflow: auto;
+    height: 300px;
+    width: 600px;
+}
+
+#no-related {
+    margin: 10px;
+    width: 600px;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+.mat-table {
+    width: 100%;
+}
+
+.green-icon {
+    color: green;
+}
+
+.orange-icon {
+    color: orange;
+}
+
+.blue-icon {
+    color: rgb(101, 184, 236);
+}
+
+iframe {
+    max-height: 700px;
+}

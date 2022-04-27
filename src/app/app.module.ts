@@ -10,10 +10,12 @@ import { AppComponent } from './app.component';
 import { ServerCommunicationService } from './server-communication/server-communication.service';
 import { ToastrModule } from 'ngx-toastr';
 import { AnnotationSchemaModule } from './modules/annotation-schema/annotation-schema.module';
+import { NavbarComponent } from './modules/data-set/nav/navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,97 @@
+form {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: fit-content;
+    border: 3px solid rgb(236, 228, 238);
+    padding: 10px 60px 20px 60px; 
+    border-radius: 20px;
+}
+
+#severity {
+    width: 80px;
+    margin-left: 153px;
+    margin-top: 10px;
+    margin-right: 0px;
+}
+
+.reason {
+    margin-left: 5px;
+}
+
+.form-field {
+    padding: 0px 5px 0px 5px;
+}
+
+#annotate-button {
+    margin: auto !important;
+}
+
+p {
+    font-size: 20px;
+    color:rgb(92, 13, 110);
+    font-weight: 450;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: 400px;
+    table-layout: fixed;
+}
+
+.header-cell {
+    font-size: 16px;
+    text-align: center;
+    border-bottom: 2px solid rgb(236, 228, 238);
+    border-top: 2px solid rgb(236, 228, 238);
+}
+
+.first-column-cell {
+    border-right: 2px solid rgb(236, 228, 238);
+}
+
+mat-checkbox {
+    font-size: 16px;
+}
+
+::ng-deep .warningSnackbar {
+    background: rgb(230, 178, 81);
+    color: black;
+}
+
+::ng-deep .warningSnackbar button {
+    color: black;
+}
+
+::ng-deep .successSnackbar {
+    background: rgb(137, 231, 137);
+    color: black;
+}
+
+::ng-deep .successSnackbar button {
+    color: black;
+}
+
+::ng-deep .errorSnackbar {
+    background: rgb(214, 95, 95);
+    color: black;
+}
+
+::ng-deep .errorSnackbar button {
+    color: black;
+}
+
+mat-checkbox {
+    margin-bottom: 15px;
+}
+
+.horizontal-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.horizontal-div>button {
+    margin-left: 0px;
+    margin-top: 15px;
+}

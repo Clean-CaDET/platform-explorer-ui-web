@@ -33,3 +33,20 @@ export enum NumOfInstancesType {
     Percentage = 'Percentage',
     Number = 'Number'
 }
+
+export enum RelationType {
+    Referenced = 'Referenced',
+    References = 'References',
+    Parent = 'Parent'
+}
+
+export enum CouplingType {
+    Field = 'Field',
+    MethodInvocation = 'MethodInvocation',
+    Parameter = 'Parameter',
+    ReturnType = 'ReturnType',
+    Variable = 'Variable',
+    Parent = 'Parent',
+    AccessedAccessor = 'AccessedAccessor',
+    AccessedField = 'AccessedField'
+}

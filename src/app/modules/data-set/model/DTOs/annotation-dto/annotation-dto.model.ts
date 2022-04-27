@@ -5,6 +5,7 @@ export class AnnotationDTO {
     severity: number = 0;
     codeSmell: string = '';
     applicableHeuristics: SmellHeuristic[] = [];
+    note: string = '';
 
     constructor(obj?: any) {
         if (obj) {
@@ -12,6 +13,7 @@ export class AnnotationDTO {
             this.severity = obj.severity;
             this.codeSmell = obj.codeSmell;
             this.applicableHeuristics = obj.applicableHeuristics;
+            this.note = obj.note;
         }
     }
 }

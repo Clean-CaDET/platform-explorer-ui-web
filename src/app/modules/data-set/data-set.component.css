@@ -1,28 +1,5 @@
-.all-tables{
-    display: flex;
-    flex-direction: row;
-}
-
-.data-set-container {
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-    margin: 20px 20px 0px 20px;
-    height: max-content;
-    background-color: white;
-}
-
 .add-button {
     margin: 5px 20px 0px 0px;
-}
-
-.cell-center {
-    text-align: center;
-}
-
-.mat-cell,
-.mat-header-cell {
-    padding: 0px 10px 0px 0px;
 }
 
 mat-cell > span.truncate-text {
@@ -31,41 +8,37 @@ mat-cell > span.truncate-text {
     white-space: nowrap;
 }
 
-#datasets-table-div {
-    min-height: fit-content;
-    max-height: 300px;
-    overflow: auto;
-}
-
-mat-expansion-panel {
-    width: 98%;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: rgb(245, 239, 245);
-}
-
-mat-panel-title {
-    font-size: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(92, 13, 110);
-    font-weight: 550;
-    margin: 10px;
-    padding: 10px;
+.cell-center {
     text-align: center;
 }
 
-mat-panel-description {
-    margin: 10px;
-    padding: 10px;
+.datasetName:hover {
+    font-weight: bold;
+    cursor: pointer;
 }
 
-mat-expansion-panel-header,
-mat-expansion-panel-header.mat-expanded:hover {
-    border: 2px solid white;
-    border-radius: 10px;
+.table-title {
+    padding-left: 0px;
+    width: 50%;
+    margin: auto;
+    padding-bottom: 20px;
 }
 
-de-data-set-project {
-    width: 70%;
+.table-header {
+    width: 50%;
+    margin: auto;
+}
+
+.search {
+    padding: 0px;
+}
+
+#datasets-table-div {
+    width: 50%;
+    margin: auto;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
 }
