@@ -61,14 +61,14 @@ export class AnnotationFormComponent implements OnInit {
     this.instance.annotationFromLoggedUser?.applicableHeuristics.forEach( h => {
       this.appliedHeuristicsAndReasons.set(h.description, h.reasonForApplicability);
     });
-    if (this.instance.annotationFromLoggedUser?.note) this.note = this.instance.annotationFromLoggedUser?.note;
-    else this.note = '';
+    this.note = this.instance.annotationFromLoggedUser?.note || '';
   }
 
   private initAnnotationForm() {
     this.severityFormControl.setValue(0);
     // if (this.disableEdit) this.severityFormControl.disable(); // todo check if necessary
     this.appliedHeuristicsAndReasons = new Map();
+    this.note = '';
   }
 
   public heuristics(): string[] {
