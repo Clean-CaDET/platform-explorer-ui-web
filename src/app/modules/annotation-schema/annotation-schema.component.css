@@ -26,3 +26,12 @@ mat-cell > span.truncate-text {
     overflow: hidden; 
     white-space: nowrap;
 }
+
+#snippet-type-filter {
+    width: 150px;
+    margin-right: 10px;
+}
+
+.filters {
+    padding-right: 10px;
+}

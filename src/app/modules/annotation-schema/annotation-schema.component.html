@@ -1,13 +1,23 @@
 <div class="smell-definition-container mat-elevation-z8 container">
-    <p class="table-title">Code smells</p>
+    <div class="table-header">
+        <p class="table-title">Code smells</p>
+        <button class="add-button" mat-mini-fab matTooltip="New code smell" matTooltipPosition="right" (click)="addCodeSmell()" color="primary">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
     <div class="table-header">
         <mat-form-field appearance="fill" class="search">
             <mat-label>Search by name</mat-label>
             <input matInput (keyup)="searchCodeSmells($event)" placeholder="Code smell name">
         </mat-form-field>
-        <button class="add-button" mat-mini-fab matTooltip="New code smell" matTooltipPosition="right" (click)="addCodeSmell()" color="primary">
-            <mat-icon>add</mat-icon>
-        </button>
+        <div class="filters">
+            <mat-form-field appearance="fill"  id="snippet-type-filter">
+                <mat-label>Snippet type</mat-label>
+                <mat-select [(value)]="selectedSnippetType" (selectionChange)="filterBySnippetType()">
+                    <mat-option [value]="type" *ngFor="let type of snippetTypes">{{type}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
     <table mat-table [dataSource]="codeSmellsDataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="name">

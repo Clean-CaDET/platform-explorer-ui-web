@@ -14,7 +14,7 @@ import { UpdateHeuristicDialogComponent } from "./dialogs/update-heuristic-dialo
 import { CodeSmellDefinition } from "./model/code-smell-definition/code-smell-definition.model";
 import { Heuristic } from "./model/heuristic/heuristic.model";
 import { HeuristicDefinitionService } from "./services/heuristic-definition.service";
-import { numberToSnippetType } from "./model/enums/enums.model";
+import { numberToSnippetType, SnippetType } from "./model/enums/enums.model";
 
 
 @Component({
@@ -31,6 +31,8 @@ export class AnnotationSchemaComponent implements OnInit {
   public heuristicsDisplayedColumns = ['name', 'description', 'edit', 'delete'];
   public codeSmellsDataSource = new MatTableDataSource<CodeSmellDefinition>();
   public heuristicsDataSource = new MatTableDataSource<Heuristic>();
+  public selectedSnippetType: SnippetType | null = null;
+  public snippetTypes: string[] = Object.keys(SnippetType);
 
   @ViewChild(MatTable) codeSmellsTable: MatTable<CodeSmellDefinition>;
 
@@ -39,6 +41,7 @@ export class AnnotationSchemaComponent implements OnInit {
     public dialog: MatDialog, private toastr: ToastrService) {}
 
   ngOnInit() {
+    this.snippetTypes.push('All');
     this.codeSmellDefinitionService.getAllCodeSmellDefinitions().subscribe(res => {
       this.codeSmellDefinitions = res;
       this.codeSmellsDataSource.data = this.codeSmellDefinitions.map(cs => numberToSnippetType(cs));
@@ -140,5 +143,16 @@ export class AnnotationSchemaComponent implements OnInit {
         this.heuristicsDataSource.data = this.heuristics;
       });
     });
+  }
+
+  public filterBySnippetType() {
+    this.codeSmellDefinitionService.getAllCodeSmellDefinitions().subscribe(res => {
+      this.codeSmellsDataSource.data = res.map(smell => numberToSnippetType(smell));
+      if (this.snippetTypeSelected()) this.codeSmellsDataSource.data = this.codeSmellsDataSource.data.filter(smell => smell.snippetType == this.selectedSnippetType);
+    });
+  }
+
+  private snippetTypeSelected(): boolean {
+    return this.selectedSnippetType == SnippetType.Class || this.selectedSnippetType == SnippetType.Function;
   }
 }
