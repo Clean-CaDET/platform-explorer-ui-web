@@ -14,6 +14,7 @@ import { UpdateHeuristicDialogComponent } from "./dialogs/update-heuristic-dialo
 import { CodeSmellDefinition } from "./model/code-smell-definition/code-smell-definition.model";
 import { Heuristic } from "./model/heuristic/heuristic.model";
 import { HeuristicDefinitionService } from "./services/heuristic-definition.service";
+import { numberToSnippetType } from "./model/enums/enums.model";
 
 
 @Component({
@@ -26,7 +27,7 @@ export class AnnotationSchemaComponent implements OnInit {
 
   public codeSmellDefinitions: CodeSmellDefinition[] = [];
   public heuristics: Heuristic[] = [];
-  public codeSmellsDisplayedColumns = ['name', 'description', 'heuristics', 'severityRange', 'severityValues', 'edit', 'delete'];
+  public codeSmellsDisplayedColumns = ['name', 'description', 'snippetType', 'heuristics', 'severityRange', 'severityValues', 'edit', 'delete'];
   public heuristicsDisplayedColumns = ['name', 'description', 'edit', 'delete'];
   public codeSmellsDataSource = new MatTableDataSource<CodeSmellDefinition>();
   public heuristicsDataSource = new MatTableDataSource<Heuristic>();
@@ -40,7 +41,7 @@ export class AnnotationSchemaComponent implements OnInit {
   ngOnInit() {
     this.codeSmellDefinitionService.getAllCodeSmellDefinitions().subscribe(res => {
       this.codeSmellDefinitions = res;
-      this.codeSmellsDataSource.data = this.codeSmellDefinitions;
+      this.codeSmellsDataSource.data = this.codeSmellDefinitions.map(cs => numberToSnippetType(cs));
     });
     this.heuristicDefinitionService.getAllHeuristics().subscribe(res => {
       this.heuristics = res;
@@ -53,7 +54,7 @@ export class AnnotationSchemaComponent implements OnInit {
     dialogRef.updateSize('20%');
     dialogRef.afterClosed().subscribe(createdCodeSmell => {
       if (createdCodeSmell == '') return;
-      this.codeSmellsDataSource.data.push(createdCodeSmell);
+      this.codeSmellsDataSource.data.push(numberToSnippetType(createdCodeSmell));
       this.codeSmellsTable.renderRows();
     });
   }
