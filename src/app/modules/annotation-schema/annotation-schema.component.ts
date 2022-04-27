@@ -3,7 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
 import { ConfirmDialogComponent } from "../data-set/dialogs/confirm-dialog/confirm-dialog.component";
-import { AnnotationSchemaService } from "./annotation-schema.service";
+import { CodeSmellDefinitionService } from "./services/code-smell-definition.service";
 import { AddCodeSmellDialogComponent } from "./dialogs/add-code-smell-dialog/add-code-smell-dialog.component";
 import { AddHeuristicDialogComponent } from "./dialogs/add-heuristic-dialog/add-heuristic-dialog.component";
 import { HeuristicsDialogComponent } from "./dialogs/heuristics-dialog/heuristics-dialog.component";
@@ -13,6 +13,7 @@ import { UpdateCodeSmellDialogComponent } from "./dialogs/update-code-smell-dial
 import { UpdateHeuristicDialogComponent } from "./dialogs/update-heuristic-dialog/update-heuristic-dialog.component";
 import { CodeSmellDefinition } from "./model/code-smell-definition/code-smell-definition.model";
 import { Heuristic } from "./model/heuristic/heuristic.model";
+import { HeuristicDefinitionService } from "./services/heuristic-definition.service";
 
 
 @Component({
@@ -32,14 +33,16 @@ export class AnnotationSchemaComponent implements OnInit {
 
   @ViewChild(MatTable) codeSmellsTable: MatTable<CodeSmellDefinition>;
 
-  constructor(private annotationSchemaService: AnnotationSchemaService, public dialog: MatDialog, private toastr: ToastrService) {}
+  constructor(private codeSmellDefinitionService: CodeSmellDefinitionService, 
+    private heuristicDefinitionService: HeuristicDefinitionService,
+    public dialog: MatDialog, private toastr: ToastrService) {}
 
   ngOnInit() {
-    this.annotationSchemaService.getAllCodeSmellDefinitions().subscribe(res => {
+    this.codeSmellDefinitionService.getAllCodeSmellDefinitions().subscribe(res => {
       this.codeSmellDefinitions = res;
       this.codeSmellsDataSource.data = this.codeSmellDefinitions;
     });
-    this.annotationSchemaService.getAllHeuristics().subscribe(res => {
+    this.heuristicDefinitionService.getAllHeuristics().subscribe(res => {
       this.heuristics = res;
       this.heuristicsDataSource.data = this.heuristics;
     });
@@ -95,7 +98,7 @@ export class AnnotationSchemaComponent implements OnInit {
     let dialogRef = this.dialog.open(ConfirmDialogComponent);
     dialogRef.updateSize('20%');
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) this.annotationSchemaService.deleteCodeSmellDefinition(codeSmellDefinition.id).subscribe(deleted => {
+      if (confirmed) this.codeSmellDefinitionService.deleteCodeSmellDefinition(codeSmellDefinition.id).subscribe(deleted => {
         this.codeSmellDefinitions.splice(this.codeSmellDefinitions.findIndex(c => c.id == codeSmellDefinition.id), 1);
         this.codeSmellsDataSource.data = this.codeSmellDefinitions;
       });
@@ -131,7 +134,7 @@ export class AnnotationSchemaComponent implements OnInit {
     let dialogRef = this.dialog.open(ConfirmDialogComponent);
     dialogRef.updateSize('20%');
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) this.annotationSchemaService.deleteHeuristic(heuristic.id).subscribe(deleted => {
+      if (confirmed) this.heuristicDefinitionService.deleteHeuristic(heuristic.id).subscribe(deleted => {
         this.heuristics.splice(this.heuristics.findIndex(h => h.id == heuristic.id), 1);
         this.heuristicsDataSource.data = this.heuristics;
       });

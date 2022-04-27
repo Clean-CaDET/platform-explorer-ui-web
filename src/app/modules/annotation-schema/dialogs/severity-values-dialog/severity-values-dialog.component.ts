@@ -1,6 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { AnnotationSchemaService } from "../../annotation-schema.service";
+import { CodeSmellDefinitionService } from "../../services/code-smell-definition.service";
 import { CodeSmellDefinition } from "../../model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType } from "../../model/enums/enums.model";
 
@@ -16,7 +16,7 @@ export class SeverityValuesDialogComponent {
   public codeSmellDefinition: CodeSmellDefinition | null = null;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: CodeSmellDefinition, private dialogRef: MatDialogRef<SeverityValuesDialogComponent>,
-    public annotationSchemaService: AnnotationSchemaService) {
+    public codeSmellDefinitionService: CodeSmellDefinitionService) {
     this.codeSmellDefinition = data;
   }
 
@@ -32,7 +32,7 @@ export class SeverityValuesDialogComponent {
 
   public save(): void {
     this.codeSmellDefinition = numberToSnippetType(this.codeSmellDefinition!);
-    this.annotationSchemaService.updateCodeSmellDefinition(this.codeSmellDefinition?.id!, this.codeSmellDefinition!)
+    this.codeSmellDefinitionService.updateCodeSmellDefinition(this.codeSmellDefinition?.id!, this.codeSmellDefinition!)
     .subscribe((res: CodeSmellDefinition) => this.dialogRef.close(res));
   }
 }

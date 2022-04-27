@@ -1,10 +1,11 @@
 import { Component, Inject, ViewChild } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
-import { AnnotationSchemaService } from "../../annotation-schema.service";
+import { CodeSmellDefinitionService } from "../../services/code-smell-definition.service";
 import { CodeSmellDefinition } from "../../model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType } from "../../model/enums/enums.model";
 import { Heuristic } from "../../model/heuristic/heuristic.model";
+import { HeuristicDefinitionService } from "../../services/heuristic-definition.service";
 
 @Component({
   selector: 'de-heuristics-dialog',
@@ -22,16 +23,17 @@ export class HeuristicsDialogComponent {
 
   @ViewChild(MatTable) table: MatTable<any>;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: CodeSmellDefinition,  private dialogRef: MatDialogRef<HeuristicsDialogComponent>, 
-  public annotationSchemaService: AnnotationSchemaService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: CodeSmellDefinition, 
+  public heuristicDefinitionService: HeuristicDefinitionService, 
+  private codeSmellDefinitionService: CodeSmellDefinitionService) {
     this.codeSmellDefinition = data;
 
-    this.annotationSchemaService.getHeuristicsForCodeSmell(this.codeSmellDefinition.id).subscribe(res => {
+    this.codeSmellDefinitionService.getHeuristicsForCodeSmell(this.codeSmellDefinition.id).subscribe(res => {
       this.codeSmellHeuristics = res;
       this.dataSource.data =  this.codeSmellHeuristics;
     })
 
-    this.annotationSchemaService.getAllHeuristics().subscribe(res => {
+    this.heuristicDefinitionService.getAllHeuristics().subscribe(res => {
       this.heuristics = res;
     })
   }
@@ -44,7 +46,7 @@ export class HeuristicsDialogComponent {
   public removeHeuristic(heuristic: Heuristic): void {
     this.codeSmellHeuristics.splice(this.codeSmellHeuristics.findIndex(h => h.id == heuristic.id), 1);
     this.codeSmellDefinition = numberToSnippetType(this.codeSmellDefinition!);
-    this.annotationSchemaService.removeHeuristicFromCodeSmell(this.codeSmellDefinition?.id!, heuristic.id)
+    this.codeSmellDefinitionService.removeHeuristicFromCodeSmell(this.codeSmellDefinition?.id!, heuristic.id)
     .subscribe(res => this.table.renderRows());
   }
 
@@ -61,7 +63,7 @@ export class HeuristicsDialogComponent {
     });
     this.dataSource.data = this.codeSmellHeuristics;
     this.codeSmellDefinition = numberToSnippetType(this.codeSmellDefinition!);
-    this.annotationSchemaService.addHeuristicsToCodeSmell(this.codeSmellDefinition?.id!, this.chosenHeuristics)
+    this.codeSmellDefinitionService.addHeuristicsToCodeSmell(this.codeSmellDefinition?.id!, this.chosenHeuristics)
     .subscribe();
     this.showHeuristicSelection = false;
   }

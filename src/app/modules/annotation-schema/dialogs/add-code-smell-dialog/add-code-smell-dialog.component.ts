@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
-import { AnnotationSchemaService } from '../../annotation-schema.service';
+import { CodeSmellDefinitionService } from '../../services/code-smell-definition.service';
 import { CodeSmellDefinition } from '../../model/code-smell-definition/code-smell-definition.model';
 import { SnippetType } from '../../model/enums/enums.model';
 
@@ -18,7 +18,7 @@ export class AddCodeSmellDialogComponent implements OnInit {
   public snippetTypes: SnippetType[] = [SnippetType.Class, SnippetType.Function];
   public chosenSnippetType: SnippetType | null = null;
 
-  constructor(private dialogRef: MatDialogRef<AddCodeSmellDialogComponent>, private annotationSchemaService: AnnotationSchemaService) { }
+  constructor(private dialogRef: MatDialogRef<AddCodeSmellDialogComponent>, private codeSmellDefinitionService: CodeSmellDefinitionService) { }
 
   ngOnInit(): void {
   }
@@ -27,7 +27,7 @@ export class AddCodeSmellDialogComponent implements OnInit {
     if (!this.isValidInput()) return;
     
     let codeSmellDefinition = new CodeSmellDefinition({name: this.name, description: this.description, snippetType: this.chosenSnippetType});
-    this.annotationSchemaService.createCodeSmellDefinition(codeSmellDefinition)
+    this.codeSmellDefinitionService.createCodeSmellDefinition(codeSmellDefinition)
     .subscribe((res: CodeSmellDefinition) => this.dialogRef.close(res));
   }
 

@@ -1,6 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { AnnotationSchemaService } from "../../annotation-schema.service";
+import { CodeSmellDefinitionService } from "../../services/code-smell-definition.service";
 import { CodeSmellDefinition } from "../../model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType } from "../../model/enums/enums.model";
 
@@ -15,7 +15,7 @@ export class UpdateCodeSmellDialogComponent {
   public oldDescription: string = '';
 
   constructor(@Inject(MAT_DIALOG_DATA) public codeSmellDefinition: CodeSmellDefinition,  private dialogRef: MatDialogRef<UpdateCodeSmellDialogComponent>, 
-  public annotationSchemaService: AnnotationSchemaService) {
+  public codeSmellDefinitionService: CodeSmellDefinitionService) {
     this.oldName = codeSmellDefinition.name;
     this.oldDescription = codeSmellDefinition.description;
   }
@@ -23,7 +23,7 @@ export class UpdateCodeSmellDialogComponent {
   public update(): void {
     if (!this.isValidInput()) return;
     this.codeSmellDefinition = numberToSnippetType(this.codeSmellDefinition);
-    this.annotationSchemaService.updateCodeSmellDefinition(this.codeSmellDefinition?.id, this.codeSmellDefinition)
+    this.codeSmellDefinitionService.updateCodeSmellDefinition(this.codeSmellDefinition?.id, this.codeSmellDefinition)
     .subscribe((res: CodeSmellDefinition) => this.dialogRef.close(res));
   }
 
