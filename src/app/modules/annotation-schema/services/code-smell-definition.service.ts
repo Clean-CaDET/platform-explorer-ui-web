@@ -35,10 +35,10 @@ export class CodeSmellDefinitionService {
     return this.serverCommunicationService.deleteRequest(this.codeSmellPath + id);
   }
 
-  public addHeuristicsToCodeSmell(id: number, heuristics: Heuristic[]) {
+  public addHeuristicToCodeSmell(id: number, heuristic: Heuristic) {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
-    return this.serverCommunicationService.postRequest(this.codeSmellPath + id + '/heuristics', heuristics, headers);
+    return this.serverCommunicationService.postRequest(this.codeSmellPath + id + '/heuristics', heuristic, headers);
   }
 
   public getHeuristicsForCodeSmell(id: number) {
@@ -47,5 +47,11 @@ export class CodeSmellDefinitionService {
   
   public removeHeuristicFromCodeSmell(id: number, heuristicId: number) {
     return this.serverCommunicationService.deleteRequest(this.codeSmellPath + id + '/heuristics/' + heuristicId);
+  }
+
+  public updateHeuristicInCodeSmell(smellId: number, heuristic: Heuristic) {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    return this.serverCommunicationService.putRequest(this.codeSmellPath + smellId + '/heuristics/', heuristic, headers);
   }
 }

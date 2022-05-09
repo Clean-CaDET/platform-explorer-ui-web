@@ -19,9 +19,9 @@ import { UpdateHeuristicDialogComponent } from './dialogs/update-heuristic-dialo
     SeverityRangeDialogComponent,
     SeverityValuesDialogComponent,
     UpdateCodeSmellDialogComponent,
+    UpdateHeuristicDialogComponent,
     AddCodeSmellDialogComponent,
-    AddHeuristicDialogComponent,
-    UpdateHeuristicDialogComponent
+    AddHeuristicDialogComponent
   ],
   imports: [
     CommonModule,

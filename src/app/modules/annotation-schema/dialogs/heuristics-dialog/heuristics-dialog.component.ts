@@ -1,11 +1,13 @@
 import { Component, Inject, ViewChild } from "@angular/core";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialog, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { CodeSmellDefinitionService } from "../../services/code-smell-definition.service";
 import { CodeSmellDefinition } from "../../model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType } from "../../model/enums/enums.model";
 import { Heuristic } from "../../model/heuristic/heuristic.model";
-import { HeuristicDefinitionService } from "../../services/heuristic-definition.service";
+import { AddHeuristicDialogComponent } from "../add-heuristic-dialog/add-heuristic-dialog.component";
+import { ToastrService } from "ngx-toastr";
+import { UpdateHeuristicDialogComponent } from "../update-heuristic-dialog/update-heuristic-dialog.component";
 
 @Component({
   selector: 'de-heuristics-dialog',
@@ -15,26 +17,18 @@ import { HeuristicDefinitionService } from "../../services/heuristic-definition.
 export class HeuristicsDialogComponent {
   public codeSmellDefinition: CodeSmellDefinition | null = null;
   public codeSmellHeuristics: Heuristic[] = [];
-  public heuristics: Heuristic[] = [];
-  public chosenHeuristics: Heuristic[] = [];
-  public showHeuristicSelection: boolean = false;
-  public displayedColumns = ['name', 'description', 'delete'];
+  public displayedColumns = ['name', 'description', 'edit', 'delete'];
   public dataSource = new MatTableDataSource<Heuristic>();
 
   @ViewChild(MatTable) table: MatTable<any>;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: CodeSmellDefinition, 
-  public heuristicDefinitionService: HeuristicDefinitionService, 
-  private codeSmellDefinitionService: CodeSmellDefinitionService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: CodeSmellDefinition, private toastr: ToastrService,
+  private codeSmellDefinitionService: CodeSmellDefinitionService, public dialog: MatDialog) {
     this.codeSmellDefinition = data;
 
     this.codeSmellDefinitionService.getHeuristicsForCodeSmell(this.codeSmellDefinition.id).subscribe(res => {
       this.codeSmellHeuristics = res;
       this.dataSource.data =  this.codeSmellHeuristics;
-    })
-
-    this.heuristicDefinitionService.getAllHeuristics().subscribe(res => {
-      this.heuristics = res;
     })
   }
 
@@ -51,20 +45,25 @@ export class HeuristicsDialogComponent {
   }
 
   public addHeuristic(): void {
-    this.showHeuristicSelection = true;
-    this.codeSmellHeuristics.forEach(heuristic => {
-      this.heuristics.splice(this.heuristics.findIndex(h => h.id == heuristic.id), 1);
+    let dialogRef = this.dialog.open(AddHeuristicDialogComponent);
+    dialogRef.updateSize('20%');
+    dialogRef.afterClosed().subscribe(createdHeuristic => {
+      if (createdHeuristic == '') return;
+      this.dataSource.data.push(createdHeuristic);
+      this.table.renderRows();
+      this.codeSmellDefinition = numberToSnippetType(this.codeSmellDefinition!);
+      this.codeSmellDefinitionService.addHeuristicToCodeSmell(this.codeSmellDefinition?.id!, createdHeuristic)
+      .subscribe();
     });
   }
 
-  public addHeuristicsToCodeSmell(): void {
-    this.chosenHeuristics.forEach(h => {
-      this.codeSmellHeuristics.push(h);
+  public updateHeuristic(heuristic: Heuristic): void {
+    let dialogRef = this.dialog.open(UpdateHeuristicDialogComponent, {
+      data: [this.codeSmellDefinition, heuristic]
     });
-    this.dataSource.data = this.codeSmellHeuristics;
-    this.codeSmellDefinition = numberToSnippetType(this.codeSmellDefinition!);
-    this.codeSmellDefinitionService.addHeuristicsToCodeSmell(this.codeSmellDefinition?.id!, this.chosenHeuristics)
-    .subscribe();
-    this.showHeuristicSelection = false;
+    dialogRef.updateSize('20%');
+    dialogRef.afterClosed().subscribe((updated: Heuristic) => {
+      if (updated) this.toastr.success('Updated heuristic ' + updated.name);
+    });
   }
 }

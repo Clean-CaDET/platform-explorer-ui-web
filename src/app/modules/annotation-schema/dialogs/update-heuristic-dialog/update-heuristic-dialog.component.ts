@@ -1,7 +1,8 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { CodeSmellDefinitionService } from "../../services/code-smell-definition.service";
+import { CodeSmellDefinition } from "../../model/code-smell-definition/code-smell-definition.model";
 import { Heuristic } from "../../model/heuristic/heuristic.model";
-import { HeuristicDefinitionService } from "../../services/heuristic-definition.service";
 
 @Component({
   selector: 'de-update-heuristic-dialog',
@@ -13,25 +14,26 @@ export class UpdateHeuristicDialogComponent {
   public oldName: string = '';
   public oldDescription: string = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) public heuristic: Heuristic,  private dialogRef: MatDialogRef<UpdateHeuristicDialogComponent>, 
-  public heuristicDefinitionService: HeuristicDefinitionService) {
-    this.oldName = heuristic.name;
-    this.oldDescription = heuristic.description;
+  constructor(@Inject(MAT_DIALOG_DATA) public smellAndHeuristic: [CodeSmellDefinition, Heuristic], 
+  private dialogRef: MatDialogRef<UpdateHeuristicDialogComponent>, 
+  public codeSmellDefinitionService: CodeSmellDefinitionService) {
+    this.oldName = this.smellAndHeuristic[1].name;
+    this.oldDescription = this.smellAndHeuristic[1].description;
   }
 
   public update(): void {
     if (!this.isValidInput()) return;
-    this.heuristicDefinitionService.updateHeuristic(this.heuristic?.id, this.heuristic)
-    .subscribe((res: Heuristic) => this.dialogRef.close(res));
+    this.codeSmellDefinitionService.updateHeuristicInCodeSmell(this.smellAndHeuristic[0].id, this.smellAndHeuristic[1])
+      .subscribe(() => this.dialogRef.close());
   }
 
   private isValidInput(): boolean {
-    return this.heuristic?.name != '' && this.heuristic?.description != '';
+    return this.smellAndHeuristic[1]?.name != '' && this.smellAndHeuristic[1]?.description != '';
   }
 
   public close(): void {
-    this.heuristic.name = this.oldName;
-    this.heuristic.description = this.oldDescription;
+    this.smellAndHeuristic[1].name = this.oldName;
+    this.smellAndHeuristic[1].description = this.oldDescription;
     this.dialogRef.close();
   }
 }
