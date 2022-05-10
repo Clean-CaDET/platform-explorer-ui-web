@@ -6,13 +6,19 @@ import { DataSetDetailComponent } from './modules/data-set/data-set-detail/data-
 import { DataSetComponent } from './modules/data-set/data-set.component';
 import { AnnotationSchemaComponent } from './modules/annotation-schema/annotation-schema.component';
 import { AnnotationContainerComponent } from './modules/data-set/annotation-container/annotation-container.component';
+import { CodeSmellDetailComponent } from './modules/annotation-schema/code-smell-detail/code-smell-detail.component';
 
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'annotation-schema', component: AnnotationSchemaComponent },
+  { path: 'annotation-schema', 
+    component: AnnotationSchemaComponent,
+    children: [
+      { path: 'code-smells/:id', component: CodeSmellDetailComponent },
+    ]
+  },
   { path: 'datasets', component: DataSetComponent },
   { path: 'datasets/:id', 
     component: DataSetDetailComponent,

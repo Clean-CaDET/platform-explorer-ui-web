@@ -1,3 +1,4 @@
+import { Heuristic } from "../heuristic/heuristic.model";
 import { SeverityRange } from "../severity-range/severity-range.model";
 
 export class CodeSmellDefinition {
@@ -7,7 +8,8 @@ export class CodeSmellDefinition {
     snippetType: string = '';
     severityRange: SeverityRange = new SeverityRange();
     severityValues: string[] = [];
-
+    heuristics: Heuristic[] = [];
+ 
     constructor(obj?: any) {
         if (obj) {
             this.id = obj.id;
@@ -16,6 +18,7 @@ export class CodeSmellDefinition {
             this.snippetType = obj.snippetType;
             this.severityRange = obj.severityRange;
             this.severityValues = obj.severityValues;
+            this.heuristics = obj.heuristics;
         }
     }
 }

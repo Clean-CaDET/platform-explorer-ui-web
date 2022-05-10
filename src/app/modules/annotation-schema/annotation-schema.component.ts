@@ -1,4 +1,4 @@
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
@@ -10,9 +10,7 @@ import { SeverityValuesDialogComponent } from "./dialogs/severity-values-dialog/
 import { UpdateCodeSmellDialogComponent } from "./dialogs/update-code-smell-dialog/update-code-smell-dialog.component";
 import { CodeSmellDefinition } from "./model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType, SnippetType } from "./model/enums/enums.model";
-import { AddHeuristicDialogComponent } from "./dialogs/add-heuristic-dialog/add-heuristic-dialog.component";
-import { Heuristic } from "./model/heuristic/heuristic.model";
-import { UpdateHeuristicDialogComponent } from "./dialogs/update-heuristic-dialog/update-heuristic-dialog.component";
+import { Router } from "@angular/router";
 
 
 @Component({
@@ -28,14 +26,11 @@ export class AnnotationSchemaComponent implements OnInit {
   public codeSmellsDataSource = new MatTableDataSource<CodeSmellDefinition>();
   public selectedSnippetType: SnippetType | null = null;
   public snippetTypes: string[] = Object.keys(SnippetType);
-  public chosenCodeSmellDefinition: CodeSmellDefinition;
-  public heuristics: Heuristic[] = [];
-  public heuristicsDisplayedColumns = ['name', 'description', 'edit', 'delete'];
-  public heuristicsDataSource = new MatTableDataSource<Heuristic>();
+  public chosenCodeSmell: CodeSmellDefinition;
 
-  @ViewChildren(MatTable) public table : QueryList<MatTable<any>>;
+  @ViewChild(MatTable) public table : MatTable<CodeSmellDefinition>;
   constructor(private codeSmellDefinitionService: CodeSmellDefinitionService,
-    public dialog: MatDialog, private toastr: ToastrService) {}
+    public dialog: MatDialog, private toastr: ToastrService, private router: Router) {}
 
   ngOnInit() {
     this.snippetTypes.push('All');
@@ -51,7 +46,7 @@ export class AnnotationSchemaComponent implements OnInit {
     dialogRef.afterClosed().subscribe(createdCodeSmell => {
       if (createdCodeSmell == '') return;
       this.codeSmellsDataSource.data.push(numberToSnippetType(createdCodeSmell));
-      this.table.first.renderRows();
+      this.table.renderRows();
     });
   }
 
@@ -107,44 +102,7 @@ export class AnnotationSchemaComponent implements OnInit {
   }
 
   public chooseCodeSmell(chosenSmell: CodeSmellDefinition) {
-    this.chosenCodeSmellDefinition = chosenSmell;
-    this.codeSmellDefinitionService.getHeuristicsForCodeSmell(this.chosenCodeSmellDefinition.id).subscribe(res => {
-      this.heuristics = res;
-      this.heuristicsDataSource.data =  res;
-    })
-  }
-
-  public searchHeuristics(event: Event): void {
-    const input = (event.target as HTMLInputElement).value;
-    this.heuristicsDataSource.data = this.heuristics.filter(h => h.name.toLowerCase().includes(input.toLowerCase()));
-  }
-
-  public addHeuristic(): void {
-    let dialogRef = this.dialog.open(AddHeuristicDialogComponent);
-    dialogRef.updateSize('20%');
-    dialogRef.afterClosed().subscribe(createdHeuristic => {
-      if (createdHeuristic == '') return;
-      this.heuristicsDataSource.data.push(createdHeuristic);
-      this.table.last.renderRows();
-      this.chosenCodeSmellDefinition = numberToSnippetType(this.chosenCodeSmellDefinition!);
-      this.codeSmellDefinitionService.addHeuristicToCodeSmell(this.chosenCodeSmellDefinition?.id!, createdHeuristic)
-      .subscribe();
-    });
-  }
-
-  public removeHeuristic(heuristic: Heuristic): void {
-    this.heuristicsDataSource.data.splice(this.heuristicsDataSource.data.findIndex(h => h.id == heuristic.id), 1);
-    this.codeSmellDefinitionService.removeHeuristicFromCodeSmell(this.chosenCodeSmellDefinition?.id!, heuristic.id)
-    .subscribe(res => this.table.last.renderRows());
-  }
-
-  public updateHeuristic(heuristic: Heuristic): void {
-    let dialogRef = this.dialog.open(UpdateHeuristicDialogComponent, {
-      data: [this.chosenCodeSmellDefinition, heuristic]
-    });
-    dialogRef.updateSize('20%');
-    dialogRef.afterClosed().subscribe((updated: Heuristic) => {
-      if (updated) this.toastr.success('Updated heuristic ' + updated.name);
-    });
+    this.chosenCodeSmell = chosenSmell;
+    this.router.navigate(['annotation-schema/code-smells/', chosenSmell.id]);
   }
 }

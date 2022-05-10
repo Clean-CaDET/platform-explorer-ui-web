@@ -9,6 +9,8 @@ import { UpdateCodeSmellDialogComponent } from './dialogs/update-code-smell-dial
 import { AddCodeSmellDialogComponent } from './dialogs/add-code-smell-dialog/add-code-smell-dialog.component';
 import { AddHeuristicDialogComponent } from './dialogs/add-heuristic-dialog/add-heuristic-dialog.component';
 import { UpdateHeuristicDialogComponent } from './dialogs/update-heuristic-dialog/update-heuristic-dialog.component';
+import { CodeSmellDetailComponent } from './code-smell-detail/code-smell-detail.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -19,13 +21,15 @@ import { UpdateHeuristicDialogComponent } from './dialogs/update-heuristic-dialo
     UpdateCodeSmellDialogComponent,
     UpdateHeuristicDialogComponent,
     AddCodeSmellDialogComponent,
-    AddHeuristicDialogComponent
+    AddHeuristicDialogComponent,
+    CodeSmellDetailComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule
   ]
 })
 export class AnnotationSchemaModule { }

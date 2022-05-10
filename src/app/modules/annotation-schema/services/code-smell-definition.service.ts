@@ -19,6 +19,10 @@ export class CodeSmellDefinitionService {
     return this.serverCommunicationService.getRequest(this.codeSmellPath);
   }
 
+  public getCodeSmellDefinition(id: number) {
+    return this.serverCommunicationService.getRequest(this.codeSmellPath + id);
+  }
+
   public createCodeSmellDefinition(codeSmellDefinition: CodeSmellDefinition): Observable<CodeSmellDefinition> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
