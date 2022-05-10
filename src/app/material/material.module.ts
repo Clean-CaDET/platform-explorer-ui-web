@@ -18,6 +18,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatRadioModule} from '@angular/material/radio'; 
 
 @NgModule({
   declarations: [],
@@ -39,7 +40,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatExpansionModule,
     MatSidenavModule,
     MatSlideToggleModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatRadioModule
   ],
   exports: [
     MatInputModule,
@@ -58,7 +60,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatExpansionModule,
     MatSidenavModule,
     MatSlideToggleModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatRadioModule
   ]
 })
 export class MaterialModule { }

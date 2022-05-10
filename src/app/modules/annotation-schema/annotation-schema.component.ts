@@ -6,7 +6,6 @@ import { ConfirmDialogComponent } from "../data-set/dialogs/confirm-dialog/confi
 import { CodeSmellDefinitionService } from "./services/code-smell-definition.service";
 import { AddCodeSmellDialogComponent } from "./dialogs/add-code-smell-dialog/add-code-smell-dialog.component";
 import { SeverityRangeDialogComponent } from "./dialogs/severity-range-dialog/severity-range-dialog.component";
-import { SeverityValuesDialogComponent } from "./dialogs/severity-values-dialog/severity-values-dialog.component";
 import { UpdateCodeSmellDialogComponent } from "./dialogs/update-code-smell-dialog/update-code-smell-dialog.component";
 import { CodeSmellDefinition } from "./model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType, SnippetType } from "./model/enums/enums.model";
@@ -22,7 +21,7 @@ import { Router } from "@angular/router";
 export class AnnotationSchemaComponent implements OnInit {
 
   public codeSmellDefinitions: CodeSmellDefinition[] = [];
-  public codeSmellsDisplayedColumns = ['name', 'description', 'snippetType', 'severityRange', 'severityValues', 'edit', 'delete'];
+  public codeSmellsDisplayedColumns = ['name', 'description', 'snippetType', 'severityRange', 'edit', 'delete'];
   public codeSmellsDataSource = new MatTableDataSource<CodeSmellDefinition>();
   public selectedSnippetType: SnippetType | null = null;
   public snippetTypes: string[] = Object.keys(SnippetType);
@@ -57,13 +56,6 @@ export class AnnotationSchemaComponent implements OnInit {
 
   public showSeverityRange(codeSmellDefinition: CodeSmellDefinition): void {
     let dialogRef = this.dialog.open(SeverityRangeDialogComponent, {
-      data: codeSmellDefinition,
-    });
-    dialogRef.updateSize('30%');
-  }
-
-  public showSeverityValues(codeSmellDefinition: CodeSmellDefinition): void {
-    let dialogRef = this.dialog.open(SeverityValuesDialogComponent, {
       data: codeSmellDefinition,
     });
     dialogRef.updateSize('30%');
