@@ -1,0 +1,25 @@
+.severity-type, .severity-values {
+    padding-left: 20px;
+}
+
+mat-radio-group {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-top: 5px;
+}
+
+mat-radio-button {
+    margin-right: 10px;
+}
+
+#radio-group-label {
+    font-size: 18px;
+    color: rgb(80, 80, 80);
+    padding-top: 20px;
+}
+
+.mat-dialog-actions {
+    float: right;
+    margin: 10px;
+}

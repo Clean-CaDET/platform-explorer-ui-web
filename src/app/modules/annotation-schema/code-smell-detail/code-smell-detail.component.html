@@ -45,38 +45,6 @@
         </table>
     </div>
     <div class="mat-elevation-z8 container severity-container">
-        <div class="table-header">
-            <p class="table-title">Severities for {{chosenCodeSmell.name}}</p> 
-        </div>
-        <div class="severity-type">
-            <label id="radio-group-label">Severity type:</label>
-            <mat-radio-group [(ngModel)]="chosenSeverityType">
-                <mat-radio-button value="numerical">Numerical</mat-radio-button>
-                <mat-radio-button value="textual">Textual</mat-radio-button>
-            </mat-radio-group> 
-            <br>
-            <mat-divider></mat-divider>
-        </div> 
-        <div class="severity-values" *ngIf="chosenSeverityType == 'textual'">
-            <ul>
-                <li *ngFor="let value of chosenCodeSmell.severityValues">
-                    {{value}}
-                    <button mat-icon-button color="primary" (click)="removeValue(value)">
-                        <mat-icon matTooltip="Remove">close</mat-icon>
-                    </button>
-                </li>
-            </ul>
-            <mat-form-field appearance="fill">
-                <mat-label>Enter new value</mat-label>
-                <input matInput placeholder="Severity value" [(ngModel)]="newSeverityValue">
-            </mat-form-field>
-            <button mat-icon-button color="primary" (click)="addValue()">
-                <mat-icon matTooltip="Add">check</mat-icon>
-            </button>           
-        </div>
-        <div mat-dialog-actions>
-            <button mat-button (click)="cancel()">Cancel</button>
-            <button mat-button (click)="save()">Save</button>
-        </div>
+        <de-severity [chosenSeverityType]="chosenSeverityType" [chosenCodeSmell]="chosenCodeSmell"></de-severity>
     </div>
 </div>

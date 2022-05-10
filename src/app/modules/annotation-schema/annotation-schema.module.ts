@@ -10,6 +10,7 @@ import { AddHeuristicDialogComponent } from './dialogs/add-heuristic-dialog/add-
 import { UpdateHeuristicDialogComponent } from './dialogs/update-heuristic-dialog/update-heuristic-dialog.component';
 import { CodeSmellDetailComponent } from './code-smell-detail/code-smell-detail.component';
 import { RouterModule } from '@angular/router';
+import { SeverityComponent } from './severity/severity.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { RouterModule } from '@angular/router';
     UpdateHeuristicDialogComponent,
     AddCodeSmellDialogComponent,
     AddHeuristicDialogComponent,
-    CodeSmellDetailComponent
+    CodeSmellDetailComponent,
+    SeverityComponent
   ],
   imports: [
     CommonModule,
