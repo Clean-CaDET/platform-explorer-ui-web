@@ -34,14 +34,6 @@
             <th mat-header-cell *matHeaderCellDef class="cell-center" width="20%">Snippet type</th>
             <td mat-cell *matCellDef="let codeSmellDefinition"class="cell-center">{{codeSmellDefinition.snippetType}}</td>
         </ng-container>
-        <ng-container matColumnDef="severityRange">
-            <th mat-header-cell *matHeaderCellDef class="cell-center"width="10%">Severity range</th>
-            <td mat-cell *matCellDef="let codeSmellDefinition" class="cell-center">
-                <button mat-icon-button color="primary" class="center-horizontally" (click)="showSeverityRange(codeSmellDefinition)">
-                    <mat-icon matTooltip="Show">more_horiz</mat-icon>
-                </button>
-            </td>
-        </ng-container>
         <ng-container matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let codeSmellDefinition">

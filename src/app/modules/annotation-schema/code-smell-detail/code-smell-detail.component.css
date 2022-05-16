@@ -16,10 +16,6 @@
     margin-left: 10px;
 }
 
-.severity-type, .severity-values {
-    padding-left: 20px;
-}
-
 .add-button {
     margin: 5px 20px 0px 0px;
 }
@@ -37,26 +33,4 @@ mat-cell > span.truncate-text {
     text-overflow: clip; 
     overflow: hidden; 
     white-space: nowrap;
-}
-
-mat-radio-group {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    margin-top: 5px;
-}
-
-mat-radio-button {
-    margin-right: 10px;
-}
-
-#radio-group-label {
-    font-size: 18px;
-    color: rgb(80, 80, 80);
-    padding-top: 20px;
-}
-
-.mat-dialog-actions {
-    float: right;
-    margin: 10px;
 }

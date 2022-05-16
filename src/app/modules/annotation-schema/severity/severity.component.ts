@@ -25,7 +25,7 @@ export class SeverityComponent implements OnInit {
 
   @ViewChild(MatTable) public table : MatTable<Heuristic>;
 
-  constructor(private route: ActivatedRoute, private codeSmellDefinitionService: CodeSmellDefinitionService,
+  constructor(private codeSmellDefinitionService: CodeSmellDefinitionService,
     private toastr: ToastrService, public dialog: MatDialog) {
   }
 
@@ -48,6 +48,8 @@ export class SeverityComponent implements OnInit {
     this.chosenCodeSmell = numberToSnippetType(this.chosenCodeSmell);
     this.codeSmellDefinitionService.updateCodeSmellDefinition(this.chosenCodeSmell.id, this.chosenCodeSmell)
       .subscribe(() => {
+        this.deletedSeverityValues = [];
+        this.addedSeverityValues = [];
         this.toastr.success('Updated severity!');
       });
   }

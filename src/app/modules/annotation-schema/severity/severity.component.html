@@ -1,16 +1,7 @@
 <div class="table-header">
     <p class="table-title">Severities for {{chosenCodeSmell.name}}</p> 
 </div>
-<div class="severity-type">
-    <label id="radio-group-label">Severity type:</label>
-    <mat-radio-group [(ngModel)]="chosenSeverityType">
-        <mat-radio-button value="numerical">Numerical</mat-radio-button>
-        <mat-radio-button value="textual">Textual</mat-radio-button>
-    </mat-radio-group> 
-    <br>
-    <mat-divider></mat-divider>
-</div> 
-<div class="severity-values" *ngIf="chosenSeverityType == 'textual'">
+<div>
     <ul>
         <li *ngFor="let value of chosenCodeSmell.severityValues">
             {{value}}
