@@ -21,6 +21,7 @@ export class SeverityComponent implements OnInit {
   public deletedSeverityValues: string[] = [];
   public addedSeverityValues: string[] = [];
   public newSeverityValue: string = '';
+  public changesMade: boolean = false;
 
   @ViewChild(MatTable) public table : MatTable<Heuristic>;
 
@@ -32,12 +33,14 @@ export class SeverityComponent implements OnInit {
   }
 
   public removeSeverityValue(value: string): void {
+    this.changesMade = true;
     var deletedValues = this.chosenCodeSmell.severityValues.splice(this.chosenCodeSmell.severityValues.findIndex(v => v == value), 1);
     if (deletedValues) this.deletedSeverityValues = deletedValues.concat(this.deletedSeverityValues);
   }
 
   public addSeverityValue(): void {
     if (this.newSeverityValue.trim() == '') return;
+    this.changesMade = true;
     this.chosenCodeSmell.severityValues.push(this.newSeverityValue);
     this.addedSeverityValues.push(this.newSeverityValue);
     this.newSeverityValue = '';
@@ -49,11 +52,13 @@ export class SeverityComponent implements OnInit {
       .subscribe(() => {
         this.deletedSeverityValues = [];
         this.addedSeverityValues = [];
+        this.changesMade = false;
         this.toastr.success('Updated severity!');
       });
   }
 
-  public cancel(): void {
+  public discardChanges(): void {
+    this.changesMade = false;
     var severityValues = this.chosenCodeSmell.severityValues.concat(this.deletedSeverityValues);
     this.chosenCodeSmell.severityValues = Array.from(new Set(severityValues));
     this.chosenCodeSmell.severityValues = this.chosenCodeSmell.severityValues.filter(c => !this.addedSeverityValues.includes(c));

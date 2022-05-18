@@ -7,7 +7,7 @@ import { AddCodeSmellDialogComponent } from "./dialogs/add-code-smell-dialog/add
 import { UpdateCodeSmellDialogComponent } from "./dialogs/update-code-smell-dialog/update-code-smell-dialog.component";
 import { CodeSmellDefinition } from "./model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType, SnippetType } from "./model/enums/enums.model";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { AnnotationSchemaService } from "./services/annotation-schema.service";
 
 
@@ -28,7 +28,8 @@ export class AnnotationSchemaComponent implements OnInit {
 
   @ViewChild(MatTable) public table : MatTable<CodeSmellDefinition>;
   constructor(private annotationSchemaService: AnnotationSchemaService,
-    public dialog: MatDialog, private toastr: ToastrService, private router: Router) {}
+    public dialog: MatDialog, private route: ActivatedRoute,
+    private toastr: ToastrService, private router: Router) {}
 
   ngOnInit() {
     this.snippetTypes.push('All');
@@ -36,6 +37,8 @@ export class AnnotationSchemaComponent implements OnInit {
       this.codeSmellDefinitions = res;
       this.codeSmellsDataSource.data = this.codeSmellDefinitions.map(cs => numberToSnippetType(cs));
     });
+    var idFromPath = this.route.firstChild?.snapshot.params["id"];
+    this.annotationSchemaService.getCodeSmellDefinition(idFromPath).subscribe(res => this.chosenCodeSmell = res);
   }
   
   public addCodeSmell(): void {

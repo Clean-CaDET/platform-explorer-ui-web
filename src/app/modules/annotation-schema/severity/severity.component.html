@@ -10,7 +10,7 @@
             </button>
         </li>
     </ul>
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" class="new-severity">
         <mat-label>Enter new value</mat-label>
         <input matInput placeholder="Severity value" [(ngModel)]="newSeverityValue">
     </mat-form-field>
@@ -18,7 +18,7 @@
         <mat-icon matTooltip="Add">check</mat-icon>
     </button>           
 </div>
-<div mat-dialog-actions>
-    <button mat-button (click)="cancel()">Cancel</button>
+<div mat-dialog-actions *ngIf="changesMade">
+    <button mat-button (click)="discardChanges()">Discard changes</button>
     <button mat-button (click)="saveSeverities()">Save</button>
 </div>

@@ -1,4 +1,9 @@
 .mat-dialog-actions {
-    float: right;
+    float: left;
     margin: 10px;
+}
+
+.new-severity {
+    padding: 0px 0px 0px 20px;
+    width: 150px;
 }

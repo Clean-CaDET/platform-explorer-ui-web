@@ -8,12 +8,14 @@
 .table-container {
     width: 50%;
     margin-top: 10px;
+    height: fit-content;
 }
 
 .severity-container {
     width: 50%;
     margin-top: 10px;
     margin-left: 10px;
+    margin-bottom: 50px;
 }
 
 .add-button {
