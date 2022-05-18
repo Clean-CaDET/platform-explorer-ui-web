@@ -7,7 +7,7 @@ import { AddHeuristicDialogComponent } from "../dialogs/add-heuristic-dialog/add
 import { UpdateHeuristicDialogComponent } from "../dialogs/update-heuristic-dialog/update-heuristic-dialog.component";
 import { CodeSmellDefinition } from "../model/code-smell-definition/code-smell-definition.model";
 import { Heuristic } from "../model/heuristic/heuristic.model";
-import { CodeSmellDefinitionService } from "../services/code-smell-definition.service";
+import { AnnotationSchemaService } from "../services/annotation-schema.service";
 
 
 @Component({
@@ -25,7 +25,7 @@ export class CodeSmellDetailComponent implements OnInit {
 
   @ViewChild(MatTable) public table : MatTable<Heuristic>;
 
-  constructor(private route: ActivatedRoute, private codeSmellDefinitionService: CodeSmellDefinitionService,
+  constructor(private route: ActivatedRoute, private annotationSchemaService: AnnotationSchemaService,
     private toastr: ToastrService, public dialog: MatDialog) {
   }
 
@@ -36,7 +36,7 @@ export class CodeSmellDetailComponent implements OnInit {
   }
 
   private loadCodeSmell(params: Params) {
-    this.codeSmellDefinitionService.getCodeSmellDefinition(params["id"]).subscribe(res => {
+    this.annotationSchemaService.getCodeSmellDefinition(params["id"]).subscribe(res => {
       this.chosenCodeSmell = res;
       this.heuristicsDataSource.data = this.chosenCodeSmell.heuristics;
       this.setSeverityType();
@@ -61,7 +61,7 @@ export class CodeSmellDetailComponent implements OnInit {
     dialogRef.updateSize('20%');
     dialogRef.afterClosed().subscribe(createdHeuristic => {
       if (createdHeuristic == '') return;
-      this.codeSmellDefinitionService.addHeuristicToCodeSmell(this.chosenCodeSmell.id, createdHeuristic)
+      this.annotationSchemaService.addHeuristicToCodeSmell(this.chosenCodeSmell.id, createdHeuristic)
       .subscribe(res => {
         this.heuristicsDataSource.data.push(res);
         this.table.renderRows();
@@ -71,7 +71,7 @@ export class CodeSmellDetailComponent implements OnInit {
 
   public removeHeuristic(heuristic: Heuristic): void {
     this.heuristicsDataSource.data.splice(this.heuristicsDataSource.data.findIndex(h => h.id == heuristic.id), 1);
-    this.codeSmellDefinitionService.removeHeuristicFromCodeSmell(this.chosenCodeSmell.id, heuristic.id)
+    this.annotationSchemaService.removeHeuristicFromCodeSmell(this.chosenCodeSmell.id, heuristic.id)
     .subscribe(res => this.table.renderRows());
   }
 

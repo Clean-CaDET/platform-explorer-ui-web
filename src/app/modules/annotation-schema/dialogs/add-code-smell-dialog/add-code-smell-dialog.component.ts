@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from "@angular/material/dialog";
-import { CodeSmellDefinitionService } from '../../services/code-smell-definition.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { ToastrService } from 'ngx-toastr';
 import { CodeSmellDefinition } from '../../model/code-smell-definition/code-smell-definition.model';
 import { SnippetType } from '../../model/enums/enums.model';
+import { AnnotationSchemaService } from '../../services/annotation-schema.service';
 
 
 @Component({
@@ -18,16 +19,22 @@ export class AddCodeSmellDialogComponent implements OnInit {
   public snippetTypes: SnippetType[] = [SnippetType.Class, SnippetType.Function];
   public chosenSnippetType: SnippetType | null = null;
 
-  constructor(private dialogRef: MatDialogRef<AddCodeSmellDialogComponent>, private codeSmellDefinitionService: CodeSmellDefinitionService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public existingCodeSmells: CodeSmellDefinition[],
+    private dialogRef: MatDialogRef<AddCodeSmellDialogComponent>, 
+    private annotationSchemaService: AnnotationSchemaService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
   }
 
   public createCodeSmellDefinition() {
     if (!this.isValidInput()) return;
+    if (this.codeSmellNameExists()) {
+      this.toastr.error('Name already exists!');
+      return;
+    }
     
     let codeSmellDefinition = new CodeSmellDefinition({name: this.name, description: this.description, snippetType: this.chosenSnippetType});
-    this.codeSmellDefinitionService.createCodeSmellDefinition(codeSmellDefinition)
+    this.annotationSchemaService.createCodeSmellDefinition(codeSmellDefinition)
     .subscribe((res: CodeSmellDefinition) => this.dialogRef.close(res));
   }
 
@@ -35,4 +42,7 @@ export class AddCodeSmellDialogComponent implements OnInit {
     return this.name != '' && this.description != '' && this.chosenSnippetType != null;
   }
 
+  private codeSmellNameExists() {
+    return this.existingCodeSmells.find(smell => smell.name == this.name);
+  }
 }

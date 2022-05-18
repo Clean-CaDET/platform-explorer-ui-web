@@ -3,12 +3,12 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
 import { ConfirmDialogComponent } from "../data-set/dialogs/confirm-dialog/confirm-dialog.component";
-import { CodeSmellDefinitionService } from "./services/code-smell-definition.service";
 import { AddCodeSmellDialogComponent } from "./dialogs/add-code-smell-dialog/add-code-smell-dialog.component";
 import { UpdateCodeSmellDialogComponent } from "./dialogs/update-code-smell-dialog/update-code-smell-dialog.component";
 import { CodeSmellDefinition } from "./model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType, SnippetType } from "./model/enums/enums.model";
 import { Router } from "@angular/router";
+import { AnnotationSchemaService } from "./services/annotation-schema.service";
 
 
 @Component({
@@ -27,23 +27,26 @@ export class AnnotationSchemaComponent implements OnInit {
   public chosenCodeSmell: CodeSmellDefinition;
 
   @ViewChild(MatTable) public table : MatTable<CodeSmellDefinition>;
-  constructor(private codeSmellDefinitionService: CodeSmellDefinitionService,
+  constructor(private annotationSchemaService: AnnotationSchemaService,
     public dialog: MatDialog, private toastr: ToastrService, private router: Router) {}
 
   ngOnInit() {
     this.snippetTypes.push('All');
-    this.codeSmellDefinitionService.getAllCodeSmellDefinitions().subscribe(res => {
+    this.annotationSchemaService.getAllCodeSmellDefinitions().subscribe(res => {
       this.codeSmellDefinitions = res;
       this.codeSmellsDataSource.data = this.codeSmellDefinitions.map(cs => numberToSnippetType(cs));
     });
   }
   
   public addCodeSmell(): void {
-    let dialogRef = this.dialog.open(AddCodeSmellDialogComponent);
+    let dialogRef = this.dialog.open(AddCodeSmellDialogComponent, {
+      data: this.codeSmellDefinitions
+    });
     dialogRef.updateSize('20%');
     dialogRef.afterClosed().subscribe(createdCodeSmell => {
       if (createdCodeSmell == '') return;
-      this.codeSmellsDataSource.data.push(numberToSnippetType(createdCodeSmell));
+      this.codeSmellDefinitions.push(numberToSnippetType(createdCodeSmell));
+      this.codeSmellsDataSource.data = this.codeSmellDefinitions;
       this.table.renderRows();
     });
   }
@@ -67,15 +70,16 @@ export class AnnotationSchemaComponent implements OnInit {
     let dialogRef = this.dialog.open(ConfirmDialogComponent);
     dialogRef.updateSize('20%');
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) this.codeSmellDefinitionService.deleteCodeSmellDefinition(codeSmellDefinition.id).subscribe(deleted => {
+      if (confirmed) this.annotationSchemaService.deleteCodeSmellDefinition(codeSmellDefinition.id).subscribe(deleted => {
         this.codeSmellDefinitions.splice(this.codeSmellDefinitions.findIndex(c => c.id == codeSmellDefinition.id), 1);
         this.codeSmellsDataSource.data = this.codeSmellDefinitions;
+        this.router.navigate(['annotation-schema']);
       });
     });
   }
 
   public filterBySnippetType() {
-    this.codeSmellDefinitionService.getAllCodeSmellDefinitions().subscribe(res => {
+    this.annotationSchemaService.getAllCodeSmellDefinitions().subscribe(res => {
       this.codeSmellsDataSource.data = res.map(smell => numberToSnippetType(smell));
       if (this.snippetTypeSelected()) this.codeSmellsDataSource.data = this.codeSmellsDataSource.data.filter(smell => smell.snippetType == this.selectedSnippetType);
     });

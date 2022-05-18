@@ -11,8 +11,9 @@ import { LocalStorageService } from '../services/shared/local-storage.service';
 import { InstanceService } from '../services/instance.service';
 import { DialogConfigService } from '../dialogs/dialog-config.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ToastrService } from 'ngx-toastr';
 import { AnnotationNoteDialogComponent } from '../dialogs/annotation-note-dialog/annotation-note-dialog.component';
+import { Heuristic } from '../../annotation-schema/model/heuristic/heuristic.model';
+import { AnnotationSchemaService } from '../../annotation-schema/services/annotation-schema.service';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class AnnotationFormComponent implements OnInit {
   public instance: Instance = new Instance(this.storageService);
   public appliedHeuristicsAndReasons: Map<string, string> = new Map();
   public severityFormControl: FormControl = new FormControl('0', [Validators.required, Validators.min(0), Validators.max(3),]);
-  private availableHeuristics: Map<string, string[]> = new Map();
+  private availableHeuristics: Map<string, Heuristic[]> = new Map();
   public note: string = '';
 
   private warningSnackbarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['warningSnackbar']};
@@ -40,10 +41,11 @@ export class AnnotationFormComponent implements OnInit {
 
   constructor(private annotationService: AnnotationService, private _snackBar: MatSnackBar,
     private storageService: LocalStorageService, private notificationService: NotificationService,
-    private instanceService: InstanceService, private dialog: MatDialog, private toastr: ToastrService) {}
+    private instanceService: InstanceService, private dialog: MatDialog, 
+    private annotationSchemaService: AnnotationSchemaService) {}
 
   public ngOnInit(): void {
-    this.annotationService.getAvailableHeuristics().subscribe(res => {
+    this.annotationSchemaService.getHeuristicsForEachCodeSmell().subscribe(res => {
       for (let keyValue of Object.entries(res)) {
         this.availableHeuristics.set(keyValue[0], keyValue[1]);
       }
@@ -71,7 +73,7 @@ export class AnnotationFormComponent implements OnInit {
     this.note = '';
   }
 
-  public heuristics(): string[] {
+  public heuristics(): Heuristic[] {
     return this.availableHeuristics.get(this.codeSmell)!;
   }
 

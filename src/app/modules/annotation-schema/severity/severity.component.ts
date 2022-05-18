@@ -1,12 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTable } from "@angular/material/table";
-import { ActivatedRoute } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { CodeSmellDefinition } from "../model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType } from "../model/enums/enums.model";
 import { Heuristic } from "../model/heuristic/heuristic.model";
-import { CodeSmellDefinitionService } from "../services/code-smell-definition.service";
+import { AnnotationSchemaService } from "../services/annotation-schema.service";
 
 
 @Component({
@@ -25,7 +24,7 @@ export class SeverityComponent implements OnInit {
 
   @ViewChild(MatTable) public table : MatTable<Heuristic>;
 
-  constructor(private codeSmellDefinitionService: CodeSmellDefinitionService,
+  constructor(private annotationSchemaService: AnnotationSchemaService,
     private toastr: ToastrService, public dialog: MatDialog) {
   }
 
@@ -46,7 +45,7 @@ export class SeverityComponent implements OnInit {
 
   public saveSeverities(): void {
     this.chosenCodeSmell = numberToSnippetType(this.chosenCodeSmell);
-    this.codeSmellDefinitionService.updateCodeSmellDefinition(this.chosenCodeSmell.id, this.chosenCodeSmell)
+    this.annotationSchemaService.updateCodeSmellDefinition(this.chosenCodeSmell.id, this.chosenCodeSmell)
       .subscribe(() => {
         this.deletedSeverityValues = [];
         this.addedSeverityValues = [];

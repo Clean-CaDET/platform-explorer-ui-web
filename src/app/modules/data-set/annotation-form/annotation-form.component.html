@@ -7,15 +7,15 @@
         </tr>
         <tr *ngFor="let heuristic of heuristics()">
             <td class="first-column-cell">
-                <mat-checkbox color="primary" [checked]="isHeuristicApplied(heuristic)" 
-                (change)="checkHeuristicCheckbox(heuristic, $event.checked)"  
+                <mat-checkbox color="primary" [checked]="isHeuristicApplied(heuristic.name)" 
+                (change)="checkHeuristicCheckbox(heuristic.name, $event.checked)"  
                 [disabled]="disableEdit"></mat-checkbox>
-                {{heuristic}}
+                {{heuristic.name}}
             </td>
             <td>
                 <mat-form-field appearance="outline" class="reason">
-                    <input type="text" matInput value="{{appliedHeuristicsAndReasons.get(heuristic)}}"
-                        (change)="addReasonForHeuristic($event.target!, heuristic)">
+                    <input type="text" matInput value="{{appliedHeuristicsAndReasons.get(heuristic.name)}}"
+                        (change)="addReasonForHeuristic($event.target!, heuristic.name)">
                 </mat-form-field>
             </td>
         </tr>

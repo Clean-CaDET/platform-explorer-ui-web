@@ -9,7 +9,7 @@ import { Heuristic } from '../model/heuristic/heuristic.model';
 @Injectable({
   providedIn: 'root'
 })
-export class CodeSmellDefinitionService {
+export class AnnotationSchemaService {
   
   private codeSmellPath: string = 'annotation-schema/code-smells/';
 
@@ -57,5 +57,9 @@ export class CodeSmellDefinitionService {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
     return this.serverCommunicationService.putRequest(this.codeSmellPath + smellId + '/heuristics/', heuristic, headers);
+  }
+
+  public getHeuristicsForEachCodeSmell(): Observable<Map<string, Heuristic[]>> {
+    return this.serverCommunicationService.getRequest(this.codeSmellPath + 'heuristics');
   }
 }
