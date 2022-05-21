@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+}
+#classGraph {
+  flex-grow: 1;
+  margin: 5px;
+  position: relative;
+}
+table {
+  margin: 5px 5px 5px 0;
+  width: 270px;
+}
+
+.controls {
+  width: 250px;
+  display: block;
+  right: 0;
+  position: absolute
+}
+
+button {
+  margin: 10px;
+  width: 220px;
+  background-color: grey;
+}

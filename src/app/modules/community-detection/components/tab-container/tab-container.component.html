@@ -1,0 +1,9 @@
+<mat-tab-group (selectedTabChange)="onChange($event)">
+  <mat-tab label="Annotation Details">
+    <de-annotation-container></de-annotation-container>
+  </mat-tab>
+  <mat-tab label="Project Graph">
+    <de-project-graph #projectGraph></de-project-graph>
+  </mat-tab>
+  <mat-tab label="Class Graph"> <de-class-graph #classGraph></de-class-graph> </mat-tab>
+</mat-tab-group>

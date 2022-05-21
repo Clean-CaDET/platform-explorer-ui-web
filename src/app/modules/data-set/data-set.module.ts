@@ -10,14 +10,17 @@ import { ExportDraftDataSetDialogComponent } from './dialogs/export-draft-data-s
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { UpdateDataSetDialogComponent } from './dialogs/update-data-set-dialog/update-data-set-dialog.component';
 import { UpdateProjectDialogComponent } from './dialogs/update-project-dialog/update-project-dialog.component';
-import { AnnotationContainerComponent, ClassNamePipe, CouplingDetailsPipe } from './annotation-container/annotation-container.component';
+import {
+  AnnotationContainerComponent,
+  ClassNamePipe,
+  CouplingDetailsPipe,
+} from './annotation-container/annotation-container.component';
 import { DataSetComponent } from './data-set.component';
 import { DataSetDetailComponent } from './data-set-detail/data-set-detail.component';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AnnotationFormComponent } from './annotation-form/annotation-form.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { InstancesComponent } from './instances/instances.component';
-
 
 @NgModule({
   declarations: [
@@ -36,7 +39,7 @@ import { InstancesComponent } from './instances/instances.component';
     AnnotationConsistencyDialogComponent,
     AnnotationContainerComponent,
     CouplingDetailsPipe,
-    ClassNamePipe
+    ClassNamePipe,
   ],
   imports: [
     AppRoutingModule,
@@ -44,6 +47,7 @@ import { InstancesComponent } from './instances/instances.component';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-  ]
+  ],
+  exports: [AnnotationContainerComponent],
 })
-export class DataSetModule { }
+export class DataSetModule {}
