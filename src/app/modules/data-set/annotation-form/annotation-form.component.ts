@@ -27,9 +27,11 @@ export class AnnotationFormComponent implements OnInit {
   @Input() public instanceId: number = 0;
   public instance: Instance = new Instance(this.storageService);
   public appliedHeuristicsAndReasons: Map<string, string> = new Map();
-  public severityFormControl: FormControl = new FormControl('0', [Validators.required, Validators.min(0), Validators.max(3),]);
   private availableHeuristics: Map<string, Heuristic[]> = new Map();
   public note: string = '';
+  public chosenSeverity: number | null = null;
+  public availableSeverities: [] = [];
+  public hasPreviousAnnotation: boolean;
 
   private warningSnackbarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['warningSnackbar']};
   private successSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['successSnackbar']};
@@ -55,11 +57,15 @@ export class AnnotationFormComponent implements OnInit {
   public async ngOnChanges(): Promise<void> {
     this.instance = new Instance(this.storageService, await this.instanceService.getInstanceWithAnnotations(this.instanceId));
     this.instance.hasAnnotationFromLoggedUser ? this.setPreviousAnnotation() : this.initAnnotationForm();
+    this.annotationSchemaService.getCodeSmellDefinitionByName(this.codeSmell).subscribe(res => {
+      this.availableSeverities = res.severityValues;
+    });
   }
 
   private setPreviousAnnotation() {
+    this.hasPreviousAnnotation = true;
     this.appliedHeuristicsAndReasons.clear();
-    this.severityFormControl.setValue(this.instance.annotationFromLoggedUser?.severity);
+    this.chosenSeverity = this.instance.annotationFromLoggedUser?.severity!;
     this.instance.annotationFromLoggedUser?.applicableHeuristics.forEach( h => {
       this.appliedHeuristicsAndReasons.set(h.description, h.reasonForApplicability);
     });
@@ -67,7 +73,8 @@ export class AnnotationFormComponent implements OnInit {
   }
 
   private initAnnotationForm() {
-    this.severityFormControl.setValue(0);
+    this.hasPreviousAnnotation = false;
+    this.chosenSeverity = null;
     // if (this.disableEdit) this.severityFormControl.disable(); // todo check if necessary
     this.appliedHeuristicsAndReasons = new Map();
     this.note = '';
@@ -97,14 +104,14 @@ export class AnnotationFormComponent implements OnInit {
   }
 
   private isValidInput(): boolean {
-    return this.severityFormControl.valid 
-      && !(this.appliedHeuristicsAndReasons.size == 0 && this.severityFormControl.value > 0);
+    return this.chosenSeverity != null
+    && !(this.appliedHeuristicsAndReasons.size == 0 && this.chosenSeverity > 0);
   }
 
   private showErrorInputMessage(): void {
-    if (!this.severityFormControl.valid) {
-      this._snackBar.open('Severity must be between 0 and 3.', 'OK', this.warningSnackbarOptions);
-    } else if (this.appliedHeuristicsAndReasons.keys.length == 0 && this.severityFormControl.value > 0) {
+    if (this.chosenSeverity == null) {
+      this._snackBar.open('You must enter a severity.', 'OK', this.warningSnackbarOptions);
+    } else if (this.appliedHeuristicsAndReasons.keys.length == 0 && this.chosenSeverity > 0) {
       this._snackBar.open("For severity greater than 0 you must add heuristic.", 'OK', this.warningSnackbarOptions);
     }
   }
@@ -120,6 +127,7 @@ export class AnnotationFormComponent implements OnInit {
         this._snackBar.open('Annotation changed!', 'OK', this.successSnackBarOptions);
         this.notificationService.setEvent(new ChangedAnnotationEvent(annotation));
         this.instance.annotationFromLoggedUser!.note = this.note;
+        this.hasPreviousAnnotation = true;
       },
       error => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
     );
@@ -132,6 +140,7 @@ export class AnnotationFormComponent implements OnInit {
         this.instance.hasAnnotationFromLoggedUser = true;
         this._snackBar.open('Annotation added!', 'OK', this.successSnackBarOptions);
         this.notificationService.setEvent(new NewAnnotationEvent(annotation));
+        this.hasPreviousAnnotation = true;
       },
       error => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
     );
@@ -140,7 +149,7 @@ export class AnnotationFormComponent implements OnInit {
   private getSubmittedAnnotation(): AnnotationDTO {
     return new AnnotationDTO({
       instanceId: this.instanceId,
-      severity: this.severityFormControl.value,
+      severity: this.chosenSeverity,
       codeSmell: this.codeSmell,
       applicableHeuristics: this.getHeuristicsFromInput(),
       note: this.note
@@ -167,9 +176,14 @@ export class AnnotationFormComponent implements OnInit {
     let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', this.note);
     let dialogRef = this.dialog.open(AnnotationNoteDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((note: string) => {
-      if (note) {
+      if (note != null) {
         this.note = note;
       }
     });
+  }
+
+  public changeSeverity() {
+    this.chosenSeverity = null;
+    this.hasPreviousAnnotation = false;
   }
 } 

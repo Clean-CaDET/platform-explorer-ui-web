@@ -6,11 +6,12 @@ form {
     border: 3px solid rgb(236, 228, 238);
     padding: 10px 60px 20px 60px; 
     border-radius: 20px;
+    margin-bottom: 30px;
 }
 
 #severity {
-    width: 80px;
-    margin-left: 153px;
+    width: 120px;
+    margin-left: auto;
     margin-top: 10px;
     margin-right: 0px;
 }
@@ -86,12 +87,20 @@ mat-checkbox {
     margin-bottom: 15px;
 }
 
-.horizontal-div {
+.horizontal-div { 
+    border-top: 2px solid rgb(236, 228, 238);
     display: flex;
     flex-direction: row;
+    margin-top: 20px;
+    padding-top: 10px;
+    margin-bottom: 10px;
 }
 
 .horizontal-div>button {
     margin-left: 0px;
-    margin-top: 15px;
+    margin-right: auto;
+}
+
+.chosen-severity-div {
+    margin-left: auto;
 }

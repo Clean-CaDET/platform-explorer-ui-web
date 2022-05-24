@@ -23,6 +23,10 @@ export class AnnotationSchemaService {
     return this.serverCommunicationService.getRequest(this.codeSmellPath + id);
   }
 
+  public getCodeSmellDefinitionByName(name: string) {
+    return this.serverCommunicationService.getRequest(this.codeSmellPath + 'name/' + name);
+  }
+
   public createCodeSmellDefinition(codeSmellDefinition: CodeSmellDefinition): Observable<CodeSmellDefinition> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
