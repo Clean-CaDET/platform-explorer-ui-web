@@ -104,9 +104,7 @@ export class InstancesComponent implements OnInit {
     private filterInstancesForProject(data: any) {
       this.chosenProject = data['project'];
       this.filter = data['filter'];
-      this.filterInstances(this.chosenProject.id).then(() => {
-        this.chooseDefaultInstance();
-      });
+      this.filterInstances(this.chosenProject.id);
     }
 
     public async filterInstances(id: number) {
@@ -174,6 +172,7 @@ export class InstancesComponent implements OnInit {
       });
       this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
       this.initSeverities();
+      this.filterInstances(this.chosenProject.id);
     }
 
     public loadNextInstance(currentInstanceId: number) {
