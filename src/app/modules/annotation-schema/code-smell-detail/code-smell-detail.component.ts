@@ -36,6 +36,7 @@ export class CodeSmellDetailComponent implements OnInit {
   }
 
   private loadCodeSmell(params: Params) {
+    if (params["id"] == undefined) return;
     this.annotationSchemaService.getCodeSmellDefinition(params["id"]).subscribe(res => {
       this.chosenCodeSmell = res;
       this.heuristicsDataSource.data = this.chosenCodeSmell.heuristics;

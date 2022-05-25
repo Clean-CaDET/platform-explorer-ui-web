@@ -25,6 +25,8 @@ export class AnnotationFormComponent implements OnInit {
 
   @Input() public codeSmell: string = '';
   @Input() public instanceId: number = 0;
+  @Input() public disableEdit: boolean = false;
+  @Input() public annotatorId: number;
   public instance: Instance = new Instance(this.storageService);
   public appliedHeuristicsAndReasons: Map<string, string> = new Map();
   private availableHeuristics: Map<string, Heuristic[]> = new Map();
@@ -36,10 +38,6 @@ export class AnnotationFormComponent implements OnInit {
   private warningSnackbarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['warningSnackbar']};
   private successSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['successSnackbar']};
   private errorSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['errorSnackbar']};
-
-  // todo delete unnecessary
-  @Input() public disableEdit: boolean = false;
-  //
 
   constructor(private annotationService: AnnotationService, private _snackBar: MatSnackBar,
     private storageService: LocalStorageService, private notificationService: NotificationService,
@@ -56,26 +54,29 @@ export class AnnotationFormComponent implements OnInit {
 
   public async ngOnChanges(): Promise<void> {
     this.instance = new Instance(this.storageService, await this.instanceService.getInstanceWithAnnotations(this.instanceId));
-    this.instance.hasAnnotationFromLoggedUser ? this.setPreviousAnnotation() : this.initAnnotationForm();
-    this.annotationSchemaService.getCodeSmellDefinitionByName(this.codeSmell).subscribe(res => {
-      this.availableSeverities = res.severityValues;
-    });
+    if (!this.disableEdit) {
+      this.instance.hasAnnotationFromLoggedUser ? this.setPreviousAnnotation(this.instance.annotationFromLoggedUser!) : this.initAnnotationForm();
+      this.annotationSchemaService.getCodeSmellDefinitionByName(this.codeSmell).subscribe(res => {
+        this.availableSeverities = res.severityValues;
+      });
+    } else {
+      this.setPreviousAnnotation(this.instance.annotations.find(a => a.annotator.id == this.annotatorId)!);
+    }
   }
 
-  private setPreviousAnnotation() {
+  private setPreviousAnnotation(previousAnnotation: Annotation) {
     this.hasPreviousAnnotation = true;
     this.appliedHeuristicsAndReasons.clear();
-    this.chosenSeverity = this.instance.annotationFromLoggedUser?.severity!;
-    this.instance.annotationFromLoggedUser?.applicableHeuristics.forEach( h => {
+    this.chosenSeverity = previousAnnotation?.severity!;
+    previousAnnotation?.applicableHeuristics.forEach(h => {
       this.appliedHeuristicsAndReasons.set(h.description, h.reasonForApplicability);
     });
-    this.note = this.instance.annotationFromLoggedUser?.note || '';
+    this.note = previousAnnotation?.note || '';
   }
 
   private initAnnotationForm() {
     this.hasPreviousAnnotation = false;
     this.chosenSeverity = null;
-    // if (this.disableEdit) this.severityFormControl.disable(); // todo check if necessary
     this.appliedHeuristicsAndReasons = new Map();
     this.note = '';
   }
@@ -173,7 +174,7 @@ export class AnnotationFormComponent implements OnInit {
   }
 
   public openNoteDialog() {
-    let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', this.note);
+    let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', {note: this.note, disableEdit: this.disableEdit});
     let dialogRef = this.dialog.open(AnnotationNoteDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((note: string) => {
       if (note != null) {

@@ -10,14 +10,19 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 export class AnnotationNoteDialogComponent {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public note: string, 
+  constructor(@Inject(MAT_DIALOG_DATA) public data: AnnotationNoteDialogData, 
   private dialogRef: MatDialogRef<AnnotationNoteDialogComponent>) { }
   
   public submitNote(): void {
-    this.dialogRef.close(this.note);
+    this.dialogRef.close(this.data.note);
   }
 
   public close(): void {
     this.dialogRef.close(null);
   }
+}
+
+class AnnotationNoteDialogData {
+  note: string;
+  disableEdit: boolean;
 }

@@ -16,6 +16,7 @@ import { DataSetProjectService } from "../services/data-set-project.service";
 import { ChangedAnnotationEvent, DatasetChosenEvent, InstanceChosenEvent, NewAnnotationEvent, NextInstanceEvent, NotificationEvent, NotificationService, PreviousInstanceEvent, ProjectChosenEvent } from "../services/shared/notification.service";
 import { LocalStorageService } from "../services/shared/local-storage.service";
 import { Subscription } from "rxjs";
+import { CodeSmell } from "../model/code-smell/code-smell.model";
 
 @Component({
     selector: 'de-instances',
@@ -110,14 +111,21 @@ export class InstancesComponent implements OnInit {
     public async filterInstances(id: number) {
       if (this.filter == 'All instances') {
         this.chosenProject = new DataSetProject(await this.projectService.getProject(id));
+        this.removeDisagreeingAnnotationsColumn();
       } else if (this.filter == 'Need additional annotations') {
         this.chosenProject.candidateInstances = await this.annotationService.requiringAdditionalAnnotation(id);
+        this.removeDisagreeingAnnotationsColumn();
       } else {
         this.chosenProject.candidateInstances = await this.annotationService.disagreeingAnnotations(id);
+        this.initColumns.push('show-annotations');
       }
       this.initSmellSelection();
       this.initInstances();
       this.initSeverities();
+    }
+
+    private removeDisagreeingAnnotationsColumn() {
+      if (this.initColumns.findIndex(c => c == 'show-annotations') != -1) this.initColumns.pop();
     }
 
     private initSmellSelection() {
@@ -261,7 +269,10 @@ export class InstancesComponent implements OnInit {
       else this.dataSource.data = instances.filter(i => i.annotationFromLoggedUser?.severity == this.selectedSeverity)!;
     }
 
-    public showAllAnnotations(annotations: Annotation[], instanceId: number): void {
+    public showAnnotationsForInstance(annotations: Annotation[], instanceId: number): void {
+      annotations.forEach(ann => {
+        ann.instanceSmell = new CodeSmell({name: this.selectedSmellFormControl.value});
+      });
       let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', {annotations: annotations, instanceId: instanceId});
       this.dialog.open(DisagreeingAnnotationsDialogComponent, dialogConfig);
     }

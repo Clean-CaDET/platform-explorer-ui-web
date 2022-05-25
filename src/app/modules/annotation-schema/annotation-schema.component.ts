@@ -38,7 +38,7 @@ export class AnnotationSchemaComponent implements OnInit {
       this.codeSmellsDataSource.data = this.codeSmellDefinitions.map(cs => numberToSnippetType(cs));
     });
     var idFromPath = this.route.firstChild?.snapshot.params["id"];
-    this.annotationSchemaService.getCodeSmellDefinition(idFromPath).subscribe(res => this.chosenCodeSmell = res);
+    if (idFromPath != undefined) this.annotationSchemaService.getCodeSmellDefinition(idFromPath).subscribe(res => this.chosenCodeSmell = res);
   }
   
   public addCodeSmell(): void {

@@ -5,7 +5,7 @@
             <ng-container *ngFor="let annotation of instanceWithDisagreeingAnnotations.annotations">
                 <tr>
                     <th *ngIf="annotation.annotator.id == loggedAnnotatorId">
-                        Your annotations
+                        Your annotation
                     </th>
                     <th *ngIf="annotation.annotator.id != loggedAnnotatorId">
                         Annotator {{annotation.annotator.id}}
@@ -13,7 +13,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <de-annotation-form [instanceId]="instanceWithDisagreeingAnnotations.instanceId" [disableEdit]="true">
+                        <de-annotation-form [instanceId]="instanceWithDisagreeingAnnotations.instanceId" 
+                            [codeSmell]="annotation.instanceSmell.name" 
+                            [disableEdit]="true"
+                            [annotatorId]="annotation.annotator.id">
                         </de-annotation-form> 
                     </td>
                 </tr>

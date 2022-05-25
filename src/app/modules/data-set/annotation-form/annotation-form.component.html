@@ -15,7 +15,7 @@
             <td>
                 <mat-form-field appearance="outline" class="reason">
                     <input type="text" matInput value="{{appliedHeuristicsAndReasons.get(heuristic.name)}}"
-                        (change)="addReasonForHeuristic($event.target!, heuristic.name)">
+                        (change)="addReasonForHeuristic($event.target!, heuristic.name)" [disabled]="disableEdit">
                 </mat-form-field>
             </td>
         </tr>
@@ -30,12 +30,16 @@
         </mat-form-field>
         <div *ngIf="hasPreviousAnnotation" class="chosen-severity-div">
             <mat-label>Chosen severity</mat-label>
-            <p (click)="changeSeverity()">{{chosenSeverity}}</p>
+            <p *ngIf="!disableEdit" (click)="changeSeverity()">{{chosenSeverity}}</p>
+            <p *ngIf="disableEdit">{{chosenSeverity}}</p>
         </div>
-        <button mat-icon-button matTooltip="Note" matTooltipPosition="right" (click)="openNoteDialog()" color="primary">
+        <button *ngIf="!disableEdit" mat-icon-button matTooltip="Note" matTooltipPosition="right" (click)="openNoteDialog()" color="primary">
             <mat-icon *ngIf="instance.hasAnnotationFromLoggedUser && this.instance.annotationFromLoggedUser?.note">insert_drive_file</mat-icon>
             <mat-icon *ngIf="!instance.hasAnnotationFromLoggedUser || !this.instance.annotationFromLoggedUser?.note">note_add</mat-icon>
         </button>
+        <button *ngIf="disableEdit && note" mat-icon-button matTooltip="Note" matTooltipPosition="right" (click)="openNoteDialog()" color="primary">
+            <mat-icon>insert_drive_file</mat-icon>
+        </button>
     </div>
-    <button id="annotate-button" mat-stroked-button color="primary" (click)="submitAnnotation()">Save</button>
+    <button *ngIf="!disableEdit" id="annotate-button" mat-stroked-button color="primary" (click)="submitAnnotation()">Save</button>
 </form>
