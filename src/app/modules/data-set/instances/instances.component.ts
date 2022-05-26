@@ -134,13 +134,17 @@ export class InstancesComponent implements OnInit {
         this.removeDisagreeingAnnotationsColumn();
       } else {
         this.chosenProject.candidateInstances = await this.annotationService.disagreeingAnnotations(id);
-        this.initColumns.push('show-annotations');
+        this.addDisagreeingAnnotationsColumn();
       }
       this.initSmellSelection();
       this.initInstances();
       this.initSeverities();
     }
 
+    private addDisagreeingAnnotationsColumn() {
+      if (this.initColumns.findIndex(c => c == 'show-annotations') == -1) this.initColumns.push('show-annotations');
+    }
+    
     private removeDisagreeingAnnotationsColumn() {
       if (this.initColumns.findIndex(c => c == 'show-annotations') != -1) this.initColumns.pop();
     }
