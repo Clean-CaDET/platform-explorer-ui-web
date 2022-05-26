@@ -3,7 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { DialogConfigService } from "../dialogs/dialog-config.service";
 import { DisagreeingAnnotationsDialogComponent } from "../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component";
 import { Annotation } from "../model/annotation/annotation.model";
@@ -44,7 +44,7 @@ export class InstancesComponent implements OnInit {
 
     private notificationSubscription: Subscription | undefined;
     
-    constructor(private dialog: MatDialog, private router: Router,
+    constructor(private route: ActivatedRoute, private dialog: MatDialog, private router: Router,
       public storageService: LocalStorageService, private annotationService: AnnotationService,
       private notificationService: NotificationService,
       private projectService: DataSetProjectService, private location: Location) {
@@ -66,7 +66,24 @@ export class InstancesComponent implements OnInit {
             } else if (event instanceof PreviousInstanceEvent) {
               this.loadPreviousInstance(event.currentInstanceId);
             }
+      });
+      this.loadProjectBasedOnUrl();
+    }
+
+    private loadProjectBasedOnUrl() {
+      this.route.firstChild?.params.subscribe(async (params: Params) => {
+        if (params['projectId'] && params['instanceId']) {
+          this.updateCandidates(params['projectId'], params['instanceId']).then(() => this.chooseInstanceBasedOnUrl(params['instanceId']));
+        }
+      });
+    }
+
+    private chooseInstanceBasedOnUrl(instanceId: number) {
+      this.chosenProject.candidateInstances.forEach(candidate => {
+        candidate.instances.forEach(instance => {
+          if (instance.id == instanceId) this.chosenInstance = instance;
         });
+      });
     }
 
     ngOnDestroy(): void {
@@ -163,16 +180,16 @@ export class InstancesComponent implements OnInit {
 
     private loadInstance(instance: Instance) {
       this.chosenInstance = instance;
-      this.updateCandidates();
+      this.updateCandidates(this.chosenInstance.projectId, this.chosenInstance.id);
     }
 
-    private async updateCandidates() {
-      this.chosenProject = new DataSetProject(await this.projectService.getProject(this.chosenInstance.projectId));
+    private async updateCandidates(projectId: number, instanceId: number) {
+      this.chosenProject = new DataSetProject(await this.projectService.getProject(projectId));
       this.initCodeSmellDropList();
       this.chosenProject.candidateInstances.forEach(candidate => {
         candidate.instances.forEach((instance, index) => {
           candidate.instances[index] = new Instance(this.storageService, instance);
-          if (instance.id == this.chosenInstance.id) {
+          if (instance.id == instanceId) {
             this.storageService.setSmellFilter(candidate.codeSmell?.name!);
             this.selectedSmellFormControl.setValue(candidate.codeSmell?.name);
           }
@@ -180,7 +197,7 @@ export class InstancesComponent implements OnInit {
       });
       this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
       this.initSeverities();
-      this.filterInstances(this.chosenProject.id);
+      this.filterInstances(projectId);
     }
 
     public loadNextInstance(currentInstanceId: number) {
