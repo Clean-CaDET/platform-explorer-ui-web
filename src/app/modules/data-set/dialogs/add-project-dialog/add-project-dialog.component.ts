@@ -9,6 +9,8 @@ import { SmellFilter } from '../../model/smell-filter/smell-filter.model';
 import { DataSet } from '../../model/data-set/data-set.model';
 import { DataSetService } from '../../services/data-set.service';
 import { AnnotationService } from '../../services/annotation.service';
+import { CodeSmellDefinition } from 'src/app/modules/annotation-schema/model/code-smell-definition/code-smell-definition.model';
+import { numberToSnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';
 
 @Component({
   selector: 'de-add-project-dialog',
@@ -18,7 +20,7 @@ import { AnnotationService } from '../../services/annotation.service';
 export class AddProjectDialogComponent implements OnInit {
 
   public project: DataSetProject = new DataSetProject({name: '', url: ''});
-  public codeSmells: Map<string, string[]> = new Map<string, string[]>();
+  public codeSmells: CodeSmell[] = [];
   public availableMetrics: Map<string, string[]> = new Map<string, string[]>();
   public metricsForSmells: Map<string, string[]> = new Map<string, string[]>();
   public chosenMetrics: string[][] = [];
@@ -40,17 +42,18 @@ export class AddProjectDialogComponent implements OnInit {
     }
     this.dataSetService.getDataSetCodeSmells(this.dataSetId).subscribe(res => {
       this.codeSmells = res;
-      for (let smell of Object.entries(this.codeSmells)) {
-        this.smellFilters.push(new SmellFilter({codeSmell: new CodeSmell({name:smell[0]}), metricsThresholds: []}))
+      this.codeSmells.map(smell => numberToSnippetType(smell));
+      this.codeSmells.forEach(smell => {
+        this.smellFilters.push(new SmellFilter({codeSmell: smell, metricsThresholds: []}))
         this.chosenMetrics.push([]);
-      }
+      });
     });
     this.annotationService.getAvailableMetrics().subscribe(res => this.availableMetrics = res);
   }
 
   public initMetricsThresholdsForSmell(codeSmell: any) {
     this.selectedSmell = codeSmell.name;
-    var snippetType = Object.entries(this.codeSmells).find(s => s[0] == codeSmell.name)?.[1][0];
+    var snippetType = this.codeSmells.find(smell => smell.name == codeSmell.name)?.snippetType;
     this.metricsForSelection = Object.entries(this.availableMetrics).find(m => m[0] == snippetType)?.[1];
     
     var i = this.smellFilters.findIndex(f => f.codeSmell?.name == codeSmell.name);

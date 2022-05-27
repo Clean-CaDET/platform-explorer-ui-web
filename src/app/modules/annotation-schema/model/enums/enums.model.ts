@@ -1,3 +1,4 @@
+import { CodeSmell } from "src/app/modules/data-set/model/code-smell/code-smell.model";
 import { CodeSmellDefinition } from "../code-smell-definition/code-smell-definition.model";
 
 export enum SnippetType {
@@ -5,8 +6,8 @@ export enum SnippetType {
     Function = 'Function'
 }
 
-export function numberToSnippetType(codeSmellDefinition: CodeSmellDefinition): CodeSmellDefinition {
-    if (codeSmellDefinition.snippetType == '0') codeSmellDefinition.snippetType = SnippetType.Class;
-    else if (codeSmellDefinition.snippetType == '1') codeSmellDefinition.snippetType = SnippetType.Function;
-    return codeSmellDefinition;
+export function numberToSnippetType(codeSmell: any): any {
+    if (codeSmell.snippetType == '0') codeSmell.snippetType = SnippetType.Class;
+    else if (codeSmell.snippetType == '1') codeSmell.snippetType = SnippetType.Function;
+    return codeSmell;
 }

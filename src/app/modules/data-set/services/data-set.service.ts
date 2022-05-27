@@ -10,6 +10,7 @@ import { SmellFilter } from '../model/smell-filter/smell-filter.model';
 import { DatasetSummaryDTO } from '../model/DTOs/dataset-summary-dto/dataset-summary-dto.model';
 import { DatasetDetailDTO } from '../model/DTOs/dataset-detail-dto/dataset-detail-dto.model';
 import { LocalStorageService } from './shared/local-storage.service';
+import { CodeSmellDefinition } from '../../annotation-schema/model/code-smell-definition/code-smell-definition.model';
 
 
 @Injectable({
@@ -60,7 +61,7 @@ export class DataSetService {
     return this.serverCommunicationService.postRequest(this.datasetsPath + dataSetId + '/projects', data, headers)
   }
   
-  public getDataSetCodeSmells(id: number): Observable<Map<string, string[]>> {
+  public getDataSetCodeSmells(id: number): Observable<CodeSmell[]> {
     return this.serverCommunicationService.getRequest(this.datasetsPath + id + '/code-smells');
   }
 }
