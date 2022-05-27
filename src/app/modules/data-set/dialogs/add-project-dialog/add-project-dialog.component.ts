@@ -67,7 +67,7 @@ export class AddProjectDialogComponent implements OnInit {
   public addProjectToDataSet(): void {
     if (this.isValidInput()) {
       this.removeUnselectedMetrics();
-      this.dataSetService.addProjectToDataSet(this.project, this.smellFilters, this.projectBuildSettings, this.dataSetId).subscribe((res: DataSet) => this.dialogRef.close(res));
+      this.dataSetService.addProjectToDataSet(this.project, this.smellFilters, this.projectBuildSettings, this.dataSetId).subscribe((res: DataSetProject) => this.dialogRef.close(res));
     }
   }
 

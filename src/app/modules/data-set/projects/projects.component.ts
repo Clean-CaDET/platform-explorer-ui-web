@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator, MatPaginatorIntl } from "@angular/material/paginator";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
 import { AddProjectDialogComponent } from "../dialogs/add-project-dialog/add-project-dialog.component";
@@ -35,6 +35,7 @@ export class ProjectsComponent implements OnInit {
 
     private notificationSubscription: Subscription | undefined;
 
+    @ViewChild(MatTable) public table : MatTable<DataSetProject>;
     private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
     @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
         this.paginator = mp;
@@ -64,12 +65,14 @@ export class ProjectsComponent implements OnInit {
     public addProject(): void {
         let dialogConfig = DialogConfigService.setDialogConfig('480px', '520px', this.chosenDataset.id);// auto
         let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
-        dialogRef.afterClosed().subscribe((dataset: DataSet) => {
-          if (dataset) {
+        dialogRef.afterClosed().subscribe((project: DataSetProject) => {
+          if (project) {
+            project.state = ProjectState.Processing;
             this.chosenDataset.projectsCount = this.chosenDataset.projects.length;
             this.dataSource.data = this.chosenDataset.projects;
+            this.dataSource.data.push(project);
+            this.table.renderRows();
             this.startPollingProjects();
-            location.reload();
           }
         });
     }

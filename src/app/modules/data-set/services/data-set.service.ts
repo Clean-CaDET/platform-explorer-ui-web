@@ -54,7 +54,7 @@ export class DataSetService {
     return this.serverCommunicationService.putRequest(this.datasetsPath, dataSet, headers);
   }
   
-  public addProjectToDataSet(project: DataSetProject, smellFilters: SmellFilter[], buildSettings: ProjectBuildSettings, dataSetId: number): Observable<DataSet> {
+  public addProjectToDataSet(project: DataSetProject, smellFilters: SmellFilter[], buildSettings: ProjectBuildSettings, dataSetId: number): Observable<DataSetProject> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
     let data = {project: project, smellFilters: smellFilters, buildSettings: buildSettings};
