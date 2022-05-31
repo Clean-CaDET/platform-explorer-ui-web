@@ -2,13 +2,14 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
-import { ConfirmDialogComponent } from "../data-set/dialogs/confirm-dialog/confirm-dialog.component";
 import { AddCodeSmellDialogComponent } from "./dialogs/add-code-smell-dialog/add-code-smell-dialog.component";
 import { UpdateCodeSmellDialogComponent } from "./dialogs/update-code-smell-dialog/update-code-smell-dialog.component";
 import { CodeSmellDefinition } from "./model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType, SnippetType } from "./model/enums/enums.model";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AnnotationSchemaService } from "./services/annotation-schema.service";
+import { ConfirmDialogComponent } from "./dialogs/confirm-dialog/confirm-dialog.component";
+import { DialogConfigService } from "../data-set/dialogs/dialog-config.service";
 
 
 @Component({
@@ -70,7 +71,8 @@ export class AnnotationSchemaComponent implements OnInit {
   }
 
   public deleteCodeSmellDefinition(codeSmellDefinition: CodeSmellDefinition): void {
-    let dialogRef = this.dialog.open(ConfirmDialogComponent);
+    let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', 'Candidate instances and instances annotated for this code smell will be deleted.');
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     dialogRef.updateSize('20%');
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) this.annotationSchemaService.deleteCodeSmellDefinition(codeSmellDefinition.id).subscribe(deleted => {
