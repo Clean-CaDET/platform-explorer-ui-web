@@ -15,12 +15,12 @@
                 <button mat-stroked-button (click)="getConsistencyResults()" color="primary">Check</button>
             </tr>
             <tr>
-                <mat-form-field id="severity" appearance="fill" floatLabel="always" *ngIf="severityNeeded" class="severity">
-                    <mat-label>Severity</mat-label>
-                    <input matInput [formControl]="severityFormControl">
-                    <mat-error *ngIf="severityFormControl.hasError('required')">
-                        Severity is <strong>required</strong>
-                    </mat-error>
+                <mat-form-field floatLabel="always" class="form-field" id="severity" appearance="outline" *ngIf="severityNeeded">
+                    <mat-label>Select severity</mat-label>
+                    <mat-select
+                        [(ngModel)]="chosenSeverity" name="chosenSeverity" id="chosenSeverity">
+                        <mat-option *ngFor="let severity of severities()" [value]="severity.value">{{severity.value}}</mat-option>
+                    </mat-select>
                 </mat-form-field>
             </tr>
         </table>

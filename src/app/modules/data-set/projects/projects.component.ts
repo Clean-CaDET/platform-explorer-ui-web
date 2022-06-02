@@ -14,6 +14,7 @@ import { DataSetProject } from "../model/data-set-project/data-set-project.model
 import { DataSet } from "../model/data-set/data-set.model";
 import { ProjectState } from "../model/enums/enums.model";
 import { DataSetProjectService } from "../services/data-set-project.service";
+import { LocalStorageService } from "../services/shared/local-storage.service";
 import { DatasetChosenEvent, InstanceChosenEvent, NotificationEvent, NotificationService, ProjectChosenEvent } from "../services/shared/notification.service";
 
 @Component({
@@ -43,7 +44,8 @@ export class ProjectsComponent implements OnInit {
     }
 
     constructor(private dialog: MatDialog, private projectService: DataSetProjectService,
-        private toastr: ToastrService, private notificationService: NotificationService) {
+        private toastr: ToastrService, private notificationService: NotificationService,
+        private storageService: LocalStorageService) {
     }
 
     ngOnInit(): void {
@@ -128,7 +130,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     public checkConsistency(projectId: number): void {
-        let dialogConfig = DialogConfigService.setDialogConfig('auto', '600px', projectId); // auto
+        let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', { data: [projectId, this.storageService.getSmellFilter()]});
         this.dialog.open(AnnotationConsistencyDialogComponent, dialogConfig);
     }
 }

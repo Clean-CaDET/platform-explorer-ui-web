@@ -27,10 +27,10 @@ export class AddDataSetDialogComponent implements OnInit {
 
   public createDataSet(): void {
     if (!this.isValidInput()) return;
-    
     let smells: CodeSmell[] = [];
     this.chosenCodeSmells.forEach(codeSmell => {
-      smells.push(new CodeSmell({'name': codeSmell}));
+      var snippetType = this.availableCodeSmells.find(s => s.name == codeSmell)!.snippetType;
+      smells.push(new CodeSmell({'name': codeSmell, 'snippetType': snippetType}));
     });
     this.dataSetService.createDataSet(this.name, smells).subscribe((res: DataSet) => this.dialogRef.close(res));
   }

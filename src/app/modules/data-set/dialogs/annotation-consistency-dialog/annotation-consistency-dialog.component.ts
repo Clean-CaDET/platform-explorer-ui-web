@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Severity } from 'src/app/modules/annotation-schema/model/severity/severity.model';
+import { AnnotationSchemaService } from 'src/app/modules/annotation-schema/services/annotation-schema.service';
 import { ConsistencyType } from '../../model/enums/enums.model';
 import { AnnotationConsistencyService } from '../../services/annotation-consistency.service';
 import { LocalStorageService } from '../../services/shared/local-storage.service';
@@ -16,9 +18,8 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   public consistencyTypes: string[] = Object.values(ConsistencyType);
   public selectedConsistencyType: string = '';
   public severityNeeded: boolean = false;
-  public severityFormControl: FormControl = new FormControl(null, [
-    Validators.required,
-  ]);
+  public availableSeverities: Map<string, Severity[]> = new Map();
+  public chosenSeverity: string | null = null;
   public typeFormControl: FormControl = new FormControl('', Validators.required);
 
   public showResultClicked = false;
@@ -26,12 +27,17 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   public selectedResult: string = '';
   public resultDescription: string = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) private projectId: number, 
+  constructor(@Inject(MAT_DIALOG_DATA) public projectIdAndSmell: [number, string],
     private annotationConsistencyService: AnnotationConsistencyService, 
-    private storageService: LocalStorageService) { }
+    private storageService: LocalStorageService, private annotationSchemaService: AnnotationSchemaService) { }
 
   public ngOnInit(): void {
     this.typeFormControl.markAsTouched();
+    this.annotationSchemaService.getSeveritiesForEachCodeSmell().subscribe(res => {
+      for (let keyValue of Object.entries(res)) {
+        this.availableSeverities.set(keyValue[0], keyValue[1]);
+      }
+    });
   }
 
   public consistencyTypeChanged(): void {
@@ -82,29 +88,31 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   }
 
   private getAnnotationConsistencyForAnnotator(): void {
-    this.annotationConsistencyService.getAnnotationConsistencyForAnnotator(this.projectId, Number(this.storageService.getLoggedInAnnotator())).subscribe((res: Map<string, string>) => 
+    this.annotationConsistencyService.getAnnotationConsistencyForAnnotator(this.projectIdAndSmell[0], Number(this.storageService.getLoggedInAnnotator())).subscribe((res: Map<string, string>) => 
       this.results.set('Consistency for my annotations', res));
   }
 
   private getAnnotationConsistencyBetweenAnnotatorsForSeverity(): void {
-    let severity = this.severityFormControl.value;
-    this.annotationConsistencyService.getAnnotationConsistencyBetweenAnnotatorsForSeverity(this.projectId, severity).subscribe((res: Map<string, string>) => 
-      this.results.set('Consistency between annotators for severity ' + severity, res));
+    this.annotationConsistencyService.getAnnotationConsistencyBetweenAnnotatorsForSeverity(this.projectIdAndSmell[0], this.chosenSeverity!).subscribe((res: Map<string, string>) => 
+      this.results.set('Consistency between annotators for severity ' + this.chosenSeverity, res));
   }
 
   private getMetricsSignificanceInAnnotationsForAnnotator(): void {
-    this.annotationConsistencyService.getMetricsSignificanceInAnnotationsForAnnotator(this.projectId, Number(this.storageService.getLoggedInAnnotator())).subscribe((res: Map<string, Map<string, string>>) => 
+    this.annotationConsistencyService.getMetricsSignificanceInAnnotationsForAnnotator(this.projectIdAndSmell[0], Number(this.storageService.getLoggedInAnnotator())).subscribe((res: Map<string, Map<string, string>>) => 
       this.results.set('Metrics significance for my annotations', res));
   }
 
   private getMetricsSignificanceBetweenAnnotatorsForSeverity(): void {
-    let severity = this.severityFormControl.value;
-    this.annotationConsistencyService.getMetricsSignificanceBetweenAnnotatorsForSeverity(this.projectId, severity).subscribe((res: Map<string, Map<string, string>>) => 
-      this.results.set('Metrics significance between annotators for severity ' + severity, res));
+    this.annotationConsistencyService.getMetricsSignificanceBetweenAnnotatorsForSeverity(this.projectIdAndSmell[0], this.chosenSeverity!).subscribe((res: Map<string, Map<string, string>>) => 
+      this.results.set('Metrics significance between annotators for severity ' + this.chosenSeverity, res));
   }
 
   private isValidInput(): boolean {
-    if (this.severityNeeded) return this.selectedConsistencyType != '' && this.severityFormControl.valid;
+    if (this.severityNeeded) return this.selectedConsistencyType != '' && this.chosenSeverity != null;
     return this.selectedConsistencyType != '';
+  }
+
+  public severities(): Severity[] {
+    return this.availableSeverities.get(this.projectIdAndSmell[1])!;
   }
 }
