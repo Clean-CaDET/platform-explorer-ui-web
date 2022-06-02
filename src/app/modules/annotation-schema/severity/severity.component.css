@@ -1,9 +1,18 @@
-.mat-dialog-actions {
-    float: left;
-    margin: 10px;
+.add-button {
+    margin: 5px 20px 0px 0px;
 }
 
-.new-severity {
-    padding: 0px 0px 0px 20px;
-    width: 150px;
+.cell-center {
+    text-align: center;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
+}
+
+mat-cell > span.truncate-text {
+    text-overflow: clip; 
+    overflow: hidden; 
+    white-space: nowrap;
 }
