@@ -1,24 +1,45 @@
-<div class="table-header">
-    <p class="table-title">Severities for {{chosenCodeSmell.name}}</p> 
-</div>
-<div>
-    <ul>
-        <li *ngFor="let value of chosenCodeSmell.severityValues">
-            {{value}}
-            <button mat-icon-button color="primary" (click)="removeSeverityValue(value)">
-                <mat-icon matTooltip="Remove">close</mat-icon>
-            </button>
-        </li>
-    </ul>
-    <mat-form-field appearance="fill" class="new-severity">
-        <mat-label>Enter new value</mat-label>
-        <input matInput placeholder="Severity value" [(ngModel)]="newSeverityValue">
-    </mat-form-field>
-    <button mat-icon-button color="primary" (click)="addSeverityValue()">
-        <mat-icon matTooltip="Add">check</mat-icon>
-    </button>           
-</div>
-<div mat-dialog-actions *ngIf="changesMade">
-    <button mat-button (click)="discardChanges()">Discard changes</button>
-    <button mat-button (click)="saveSeverities()">Save</button>
+<div class="table-container mat-elevation-z8 container">
+    <div class="table-header">
+        <p class="table-title">Severities for {{chosenCodeSmell.name}}</p>
+    </div>
+    <div class="table-header">
+        <mat-form-field appearance="fill" class="search">
+            <mat-label>Search by name</mat-label>
+            <input matInput (keyup)="searchSeverities($event)" placeholder="Severity name">
+        </mat-form-field>
+        <button class="add-button" mat-mini-fab matTooltip="Add severity" matTooltipPosition="right" (click)="addSeverity()" color="primary">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    
+    <table mat-table [dataSource]="severitiesDataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="value">
+            <th mat-header-cell *matHeaderCellDef width="30%"> Value </th>
+            <td mat-cell *matCellDef="let severity">
+                <span class="truncate-text">{{severity.value}}</span>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef class="cell-center">Description</th>
+            <td mat-cell *matCellDef="let severity"class="cell-center">{{severity.description}}</td>
+        </ng-container>
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef class="cell-center" width="5%"></th>
+            <td mat-cell *matCellDef="let severity" class="cell-center">
+                <button mat-icon-button color="primary" class="center-horizontally" (click)="removeSeverity(severity)">
+                    <mat-icon matTooltip="Delete">delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef class="cell-center"  width="5%"></th>
+            <td mat-cell *matCellDef="let severity" class="cell-center">
+                <button mat-icon-button (click)="updateSeverity(severity)" color="primary" class="center-horizontally">
+                    <mat-icon matTooltip="edit">edit</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="severitiesDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: severitiesDisplayedColumns;"></tr>
+    </table>
 </div>

@@ -17,12 +17,9 @@
             <tr>
                 <mat-form-field id="severity" appearance="fill" floatLabel="always" *ngIf="severityNeeded" class="severity">
                     <mat-label>Severity</mat-label>
-                    <input type="number" matInput [formControl]="severityFormControl">
+                    <input matInput [formControl]="severityFormControl">
                     <mat-error *ngIf="severityFormControl.hasError('required')">
                         Severity is <strong>required</strong>
-                    </mat-error>
-                    <mat-error *ngIf="severityFormControl.hasError('min') || severityFormControl.hasError('max')">
-                        Severity must be between 0 and 3
                     </mat-error>
                 </mat-form-field>
             </tr>

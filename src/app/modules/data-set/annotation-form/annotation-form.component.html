@@ -25,7 +25,7 @@
             <mat-label>Select severity</mat-label>
             <mat-select
                 [(ngModel)]="chosenSeverity" name="chosenSeverity" id="chosenSeverity">
-                <mat-option *ngFor="let severity of availableSeverities" [value]="severity">{{severity}}</mat-option>
+                <mat-option *ngFor="let severity of severities()" [value]="severity.value">{{severity.value}}</mat-option>
             </mat-select>
         </mat-form-field>
         <div *ngIf="hasPreviousAnnotation" class="chosen-severity-div">

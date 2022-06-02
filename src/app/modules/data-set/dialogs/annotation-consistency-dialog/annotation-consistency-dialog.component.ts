@@ -18,8 +18,6 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   public severityNeeded: boolean = false;
   public severityFormControl: FormControl = new FormControl(null, [
     Validators.required,
-    Validators.min(0),
-    Validators.max(3),
   ]);
   public typeFormControl: FormControl = new FormControl('', Validators.required);
 

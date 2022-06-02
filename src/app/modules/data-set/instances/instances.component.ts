@@ -36,8 +36,8 @@ export class InstancesComponent implements OnInit {
     public searchInput: string = '';
     public selectedAnnotationStatus: AnnotationStatus = AnnotationStatus.All;
     public annotationStatuses: string[] = Object.keys(AnnotationStatus);
-    public selectedSeverity: number | null = null;
-    public severityValues: Set<number|null> = new Set();
+    public selectedSeverity: string | null = null;
+    public severities: Set<string|null> = new Set();
     public codeSmells: string[] = [];
     public selectedSmellFormControl = new FormControl('', Validators.required);
     public filter: string = 'All instances';
@@ -106,10 +106,10 @@ export class InstancesComponent implements OnInit {
     }
 
     private initSeverities() {
-      this.severityValues.clear();
-      this.severityValues.add(null);
+      this.severities.clear();
+      this.severities.add(null);
       this.dataSource.data.forEach((i:any) => {
-        if (i.annotationFromLoggedUser?.severity != null) this.severityValues.add(i.annotationFromLoggedUser?.severity);
+        if (i.annotationFromLoggedUser?.severity != null) this.severities.add(i.annotationFromLoggedUser?.severity);
       });
     }
 

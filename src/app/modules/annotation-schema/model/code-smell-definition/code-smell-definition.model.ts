@@ -1,11 +1,12 @@
 import { Heuristic } from "../heuristic/heuristic.model";
+import { Severity } from "../severity/severity.model";
 
 export class CodeSmellDefinition {
     id: number = 0;
     name: string = '';
     description: string = '';
     snippetType: string = '';
-    severityValues: string[] = [];
+    severities: Severity[] = [];
     heuristics: Heuristic[] = [];
  
     constructor(obj?: any) {
@@ -14,7 +15,7 @@ export class CodeSmellDefinition {
             this.name = obj.name;
             this.description = obj.description;
             this.snippetType = obj.snippetType;
-            this.severityValues = obj.severityValues;
+            this.severities = obj.severities;
             this.heuristics = obj.heuristics;
         }
     }

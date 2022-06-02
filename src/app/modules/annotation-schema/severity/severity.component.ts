@@ -1,10 +1,14 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { MatTable } from "@angular/material/table";
+import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
+import { DialogConfigService } from "../../data-set/dialogs/dialog-config.service";
+import { AddSeverityDialogComponent } from "../dialogs/add-severity-dialog/add-severity-dialog.component";
+import { ConfirmDialogComponent } from "../dialogs/confirm-dialog/confirm-dialog.component";
+import { UpdateSeverityDialogComponent } from "../dialogs/update-severity-dialog/update-severity-dialog.component";
 import { CodeSmellDefinition } from "../model/code-smell-definition/code-smell-definition.model";
-import { numberToSnippetType } from "../model/enums/enums.model";
 import { Heuristic } from "../model/heuristic/heuristic.model";
+import { Severity } from "../model/severity/severity.model";
 import { AnnotationSchemaService } from "../services/annotation-schema.service";
 
 
@@ -17,11 +21,8 @@ import { AnnotationSchemaService } from "../services/annotation-schema.service";
 export class SeverityComponent implements OnInit {
 
   @Input() public chosenCodeSmell: CodeSmellDefinition;
-  @Input() public chosenSeverityType: string = '';
-  public deletedSeverityValues: string[] = [];
-  public addedSeverityValues: string[] = [];
-  public newSeverityValue: string = '';
-  public changesMade: boolean = false;
+  public severitiesDisplayedColumns = ['value', 'description', 'edit', 'delete'];
+  public severitiesDataSource = new MatTableDataSource<Severity>();
 
   @ViewChild(MatTable) public table : MatTable<Heuristic>;
 
@@ -32,35 +33,48 @@ export class SeverityComponent implements OnInit {
   public ngOnInit() {
   }
 
-  public removeSeverityValue(value: string): void {
-    this.changesMade = true;
-    var deletedValues = this.chosenCodeSmell.severityValues.splice(this.chosenCodeSmell.severityValues.findIndex(v => v == value), 1);
-    if (deletedValues) this.deletedSeverityValues = deletedValues.concat(this.deletedSeverityValues);
+  public ngOnChanges() {
+    this.severitiesDataSource.data = this.chosenCodeSmell.severities;
   }
 
-  public addSeverityValue(): void {
-    if (this.newSeverityValue.trim() == '') return;
-    this.changesMade = true;
-    this.chosenCodeSmell.severityValues.push(this.newSeverityValue);
-    this.addedSeverityValues.push(this.newSeverityValue);
-    this.newSeverityValue = '';
+  public searchSeverities(event: Event): void {
+    const input = (event.target as HTMLInputElement).value;
+    this.severitiesDataSource.data = this.chosenCodeSmell.severities.filter(s => s.value.toLowerCase().includes(input.toLowerCase()));
   }
 
-  public saveSeverities(): void {
-    this.chosenCodeSmell = numberToSnippetType(this.chosenCodeSmell);
-    this.annotationSchemaService.updateCodeSmellDefinition(this.chosenCodeSmell.id, this.chosenCodeSmell)
-      .subscribe(() => {
-        this.deletedSeverityValues = [];
-        this.addedSeverityValues = [];
-        this.changesMade = false;
-        this.toastr.success('Updated severity!');
+  public addSeverity(): void {
+    let dialogRef = this.dialog.open(AddSeverityDialogComponent);
+    dialogRef.updateSize('20%');
+    dialogRef.afterClosed().subscribe(createdSeverity => {
+      if (createdSeverity == '') return;
+      this.annotationSchemaService.addSeverityToCodeSmell(this.chosenCodeSmell.id, createdSeverity)
+      .subscribe(res => {
+        this.severitiesDataSource.data.push(res);
+        this.table.renderRows();
       });
+    });
   }
 
-  public discardChanges(): void {
-    this.changesMade = false;
-    var severityValues = this.chosenCodeSmell.severityValues.concat(this.deletedSeverityValues);
-    this.chosenCodeSmell.severityValues = Array.from(new Set(severityValues));
-    this.chosenCodeSmell.severityValues = this.chosenCodeSmell.severityValues.filter(c => !this.addedSeverityValues.includes(c));
+  public removeSeverity(severity: Severity): void {
+    let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', 'Annotations containing this severity will be deleted.');
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.updateSize('20%');
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.severitiesDataSource.data.splice(this.severitiesDataSource.data.findIndex(s => s.id == severity.id), 1);
+        this.annotationSchemaService.removeSeverityFromCodeSmell(this.chosenCodeSmell.id, severity.id)
+          .subscribe(() => this.table.renderRows());
+      }
+    });
+  }
+
+  public updateSeverity(severity: Severity): void {
+    let dialogRef = this.dialog.open(UpdateSeverityDialogComponent, {
+      data: [this.chosenCodeSmell, severity]
+    });
+    dialogRef.updateSize('20%');
+    dialogRef.afterClosed().subscribe((updated: Severity) => {
+      if (updated) this.toastr.success('Updated severity ' + updated.value);
+    });
   }
 }

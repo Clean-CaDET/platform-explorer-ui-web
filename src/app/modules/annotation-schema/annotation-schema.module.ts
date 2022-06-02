@@ -11,6 +11,8 @@ import { CodeSmellDetailComponent } from './code-smell-detail/code-smell-detail.
 import { RouterModule } from '@angular/router';
 import { SeverityComponent } from './severity/severity.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { AddSeverityDialogComponent } from './dialogs/add-severity-dialog/add-severity-dialog.component';
+import { UpdateSeverityDialogComponent } from './dialogs/update-severity-dialog/update-severity-dialog.component';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
     AddHeuristicDialogComponent,
     CodeSmellDetailComponent,
     SeverityComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    AddSeverityDialogComponent,
+    UpdateSeverityDialogComponent
   ],
   imports: [
     CommonModule,

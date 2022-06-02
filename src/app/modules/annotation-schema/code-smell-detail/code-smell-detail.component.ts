@@ -23,7 +23,6 @@ export class CodeSmellDetailComponent implements OnInit {
   public chosenCodeSmell: CodeSmellDefinition;
   public heuristicsDisplayedColumns = ['name', 'description', 'edit', 'delete'];
   public heuristicsDataSource = new MatTableDataSource<Heuristic>();
-  public chosenSeverityType: string = '';
 
   @ViewChild(MatTable) public table : MatTable<Heuristic>;
 
@@ -42,16 +41,7 @@ export class CodeSmellDetailComponent implements OnInit {
     this.annotationSchemaService.getCodeSmellDefinition(params["id"]).subscribe(res => {
       this.chosenCodeSmell = res;
       this.heuristicsDataSource.data = this.chosenCodeSmell.heuristics;
-      this.setSeverityType();
     });
-  }
-
-  private setSeverityType() {
-    if (this.chosenCodeSmell.severityValues.length != 0) {
-      this.chosenSeverityType = 'textual';
-    } else {
-      this.chosenSeverityType = 'numerical';
-    }
   }
 
   public searchHeuristics(event: Event): void {

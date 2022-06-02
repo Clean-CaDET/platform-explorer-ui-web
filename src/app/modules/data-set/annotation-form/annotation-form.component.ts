@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Annotation } from '../model/annotation/annotation.model';
 import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
@@ -14,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AnnotationNoteDialogComponent } from '../dialogs/annotation-note-dialog/annotation-note-dialog.component';
 import { Heuristic } from '../../annotation-schema/model/heuristic/heuristic.model';
 import { AnnotationSchemaService } from '../../annotation-schema/services/annotation-schema.service';
+import { Severity } from '../../annotation-schema/model/severity/severity.model';
 
 
 @Component({
@@ -31,8 +31,8 @@ export class AnnotationFormComponent implements OnInit {
   public appliedHeuristicsAndReasons: Map<string, string> = new Map();
   private availableHeuristics: Map<string, Heuristic[]> = new Map();
   public note: string = '';
-  public chosenSeverity: number | null = null;
-  public availableSeverities: [] = [];
+  public chosenSeverity: string | null = null;
+  public availableSeverities: Map<string, Severity[]> = new Map();
   public hasPreviousAnnotation: boolean;
 
   private warningSnackbarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['warningSnackbar']};
@@ -50,15 +50,17 @@ export class AnnotationFormComponent implements OnInit {
         this.availableHeuristics.set(keyValue[0], keyValue[1]);
       }
     });
+    this.annotationSchemaService.getSeveritiesForEachCodeSmell().subscribe(res => {
+      for (let keyValue of Object.entries(res)) {
+        this.availableSeverities.set(keyValue[0], keyValue[1]);
+      }
+    });
   }
 
   public async ngOnChanges(): Promise<void> {
     this.instance = new Instance(this.storageService, await this.instanceService.getInstanceWithAnnotations(this.instanceId));
     if (!this.disableEdit) {
       this.instance.hasAnnotationFromLoggedUser ? this.setPreviousAnnotation(this.instance.annotationFromLoggedUser!) : this.initAnnotationForm();
-      this.annotationSchemaService.getCodeSmellDefinitionByName(this.codeSmell).subscribe(res => {
-        this.availableSeverities = res.severityValues;
-      });
     } else {
       this.setPreviousAnnotation(this.instance.annotations.find(a => a.annotator.id == this.annotatorId)!);
     }
@@ -85,6 +87,10 @@ export class AnnotationFormComponent implements OnInit {
     return this.availableHeuristics.get(this.codeSmell)!;
   }
 
+  public severities(): Severity[] {
+    return this.availableSeverities.get(this.codeSmell)!;
+  }
+
   public checkHeuristicCheckbox(heuristic: string, checked: boolean) {
     checked ? this.appliedHeuristicsAndReasons.set(heuristic, '') : this.appliedHeuristicsAndReasons.delete(heuristic);
   }
@@ -105,16 +111,11 @@ export class AnnotationFormComponent implements OnInit {
   }
 
   private isValidInput(): boolean {
-    return this.chosenSeverity != null
-    && !(this.appliedHeuristicsAndReasons.size == 0 && this.chosenSeverity > 0);
+    return this.chosenSeverity != null;
   }
 
   private showErrorInputMessage(): void {
-    if (this.chosenSeverity == null) {
-      this._snackBar.open('You must enter a severity.', 'OK', this.warningSnackbarOptions);
-    } else if (this.appliedHeuristicsAndReasons.keys.length == 0 && this.chosenSeverity > 0) {
-      this._snackBar.open("For severity greater than 0 you must add heuristic.", 'OK', this.warningSnackbarOptions);
-    }
+    this._snackBar.open('You must enter a severity.', 'OK', this.warningSnackbarOptions);
   }
 
   private annotate() {
