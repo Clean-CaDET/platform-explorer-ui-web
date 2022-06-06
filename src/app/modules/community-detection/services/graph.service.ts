@@ -36,10 +36,10 @@ export class GraphService {
 
   getCommunities(nodes: any, links: any, algorithm: string) {
     return this.http.post(`${environment.apiHost}projects/community-detection`, {
-      'Nodes': nodes,
-      'Links': links,
-      'Algorithm': algorithm
-    })
+      Nodes: nodes,
+      Links: links,
+      Algorithm: algorithm,
+    });
   }
 
   initProjectGraph(project: DataSetProject) {
@@ -91,10 +91,14 @@ export class GraphService {
     let links = this.extractLinks(cohesionGraph);
     let graph: Graph = new Graph();
     for (let node of nodes) {
-      graph.addNode(node);
+      try {
+        graph.addNode(node);
+      } catch (exception) {}
     }
     for (let link of links) {
-      graph.addEdge(link[0], link[1]);
+      try {
+        graph.addEdge(link[0], link[1]);
+      } catch (exception) {}
     }
     return graph;
   }

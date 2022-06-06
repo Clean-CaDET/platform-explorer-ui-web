@@ -3,10 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Instance } from '../model/instance/instance.model';
 import { RelatedInstance } from '../model/related-instance/related-instance.model';
-import {
-  InstanceChosenEvent,
-  NotificationService,
-} from '../services/shared/notification.service';
+import { InstanceChosenEvent, NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 import { InstanceService } from '../services/instance.service';
 
@@ -18,8 +15,7 @@ import { InstanceService } from '../services/instance.service';
 export class AnnotationContainerComponent implements OnInit {
   public selectedSmell: string = '';
   public chosenInstance: Instance = new Instance(this.storageService);
-  public dataSourceRelatedInstances: MatTableDataSource<RelatedInstance> =
-    new MatTableDataSource<RelatedInstance>();
+  public dataSourceRelatedInstances: MatTableDataSource<RelatedInstance> = new MatTableDataSource<RelatedInstance>();
   public displayedColumnsRelatedInstances: string[] = [
     'codeSnippetId',
     'relationType',
@@ -27,9 +23,7 @@ export class AnnotationContainerComponent implements OnInit {
     'couplingType',
   ];
   public totalCouplingStrength: Map<number, number> = new Map();
-  public iframe: HTMLIFrameElement = document.getElementById(
-    'snippet'
-  ) as HTMLIFrameElement;
+  public iframe: HTMLIFrameElement = document.getElementById('snippet') as HTMLIFrameElement;
 
   constructor(
     private storageService: LocalStorageService,
@@ -40,28 +34,17 @@ export class AnnotationContainerComponent implements OnInit {
 
   async ngOnInit() {
     this.route.params.subscribe(async (params: Params) => {
-      this.chosenInstance =
-        await this.instanceService.getInstanceWithRelatedInstances(
-          params['instanceId']
-        );
+      this.chosenInstance = await this.instanceService.getInstanceWithRelatedInstances(params['instanceId']);
       this.chosenInstance.projectId = params['projectId'];
-      this.dataSourceRelatedInstances.data =
-        this.chosenInstance.relatedInstances
-          .sort((a, b) =>
-            a.relationType.toString().localeCompare(b.relationType.toString())
-          )
-          .map((i) => new RelatedInstance(i));
+      this.dataSourceRelatedInstances.data = this.chosenInstance.relatedInstances
+        .sort((a, b) => a.relationType.toString().localeCompare(b.relationType.toString()))
+        .map((i) => new RelatedInstance(i));
       var storedSmell = this.storageService.getSmellFilter();
       if (storedSmell != null) this.selectedSmell = storedSmell;
       this.countTotalCoupling();
-      if (!this.iframe)
-        this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
-      this.iframe.srcdoc = this.createSrcdocFromGithubLink(
-        this.chosenInstance.link
-      );
-      this.notificationService.setEvent(
-        new InstanceChosenEvent(this.chosenInstance)
-      );
+      if (!this.iframe) this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
+      this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
+      this.notificationService.setEvent(new InstanceChosenEvent(this.chosenInstance));
     });
   }
 
@@ -69,10 +52,7 @@ export class AnnotationContainerComponent implements OnInit {
     this.chosenInstance.relatedInstances.forEach((instance) => {
       this.totalCouplingStrength.set(instance.id, 0);
       Object.entries(instance.couplingTypeAndStrength).forEach((coupling) => {
-        this.totalCouplingStrength.set(
-          instance.id,
-          this.totalCouplingStrength.get(instance.id) + coupling[1]
-        );
+        this.totalCouplingStrength.set(instance.id, this.totalCouplingStrength.get(instance.id) + coupling[1]);
       });
     });
   }

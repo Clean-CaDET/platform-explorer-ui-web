@@ -115,15 +115,20 @@ export class ProjectGraphComponent implements OnInit {
       this.projectNodes = this.graphService.extractNodesFromInstances(instances);
       this.projectLinks = this.graphService.extractLinksFromInstances(instances);
       this.projectNodes.forEach((node: ProjectNode) => {
-        this.graph.addNode(node.id);
+        try {
+          this.graph.addNode(node.id);
+        } catch (exception) {}
       });
       let distinctLinks: Link[] = [];
       this.projectLinks.forEach((link: Link) => {
         if (distinctLinks.findIndex((l: Link) => link.source === l.source && link.target === l.target) === -1) {
-          distinctLinks.push(link);
-          this.graph.addEdge(link.source, link.target);
+          try {
+            this.graph.addEdge(link.source, link.target);
+            distinctLinks.push(link);
+          } catch (exception) {}
         }
       });
+
       this.projectLinks = distinctLinks;
       this.communities = this.graphService.extractCommunities(this.graph);
       this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
@@ -157,12 +162,14 @@ export class ProjectGraphComponent implements OnInit {
 
   otherAlgorithms(algorithm: string) {
     const nodes = this.projectNodes.map((node: ProjectNode) => node.fullName);
-    const links = this.projectLinks.map((link: Link) => { return { 'source': link.source, 'target': link.target } });
+    const links = this.projectLinks.map((link: Link) => {
+      return { source: link.source, target: link.target };
+    });
     this.graphService.getCommunities(nodes, links, algorithm).subscribe((data: any) => {
       this.communities = data;
       this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
       this.initGraph();
-    })
+    });
   }
 
   louvain() {

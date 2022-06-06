@@ -31,6 +31,7 @@ export class AddProjectDialogComponent implements OnInit {
     randomizeClassSelection: true,
     randomizeMemberSelection: true,
     foldersToIgnore: [],
+    IgnoreWPFFiles: false,
   });
   public newFolderToIgnore: string = '';
   public ignoreFolders: boolean = false;
