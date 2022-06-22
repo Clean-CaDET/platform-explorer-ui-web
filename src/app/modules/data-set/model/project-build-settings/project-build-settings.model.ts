@@ -6,7 +6,6 @@ export class ProjectBuildSettings {
   randomizeClassSelection: boolean = true;
   randomizeMemberSelection: boolean = true;
   foldersToIgnore: string[] = [];
-  IgnoreWPFFiles: boolean = false;
 
   constructor(obj?: any) {
     if (obj) {
