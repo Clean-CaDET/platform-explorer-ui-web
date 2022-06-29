@@ -79,7 +79,7 @@ export class AnnotationFormComponent implements OnInit {
       await this.instanceService.getInstanceWithAnnotations(this.instanceId)
     );
     this.graphService.getCohesionGraph(this.instanceId).subscribe((cohesionGraph: CohesionGraph) => {
-      this.graphService.initClassGraph(cohesionGraph);
+      this.graphService.initClassGraph(cohesionGraph, this.instance.codeSnippetId);
       this.graphService.setMetricFeatures(this.instance.metricFeatures);
     });
     this.instance.hasAnnotationFromLoggedUser ? this.setPreviousAnnotation() : this.initAnnotationForm();

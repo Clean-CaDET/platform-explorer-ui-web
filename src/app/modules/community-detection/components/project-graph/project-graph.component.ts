@@ -7,6 +7,7 @@ import { Link } from '../../model/link';
 import { ProjectNode } from '../../model/project-node';
 import { D3ForcedGraphService } from '../../services/d3-forced-graph.service';
 import { GraphService } from '../../services/graph.service';
+import { D3CommunityGraph } from '../../model/d3-community-graph';
 
 @Component({
   selector: 'de-project-graph',
@@ -19,20 +20,13 @@ export class ProjectGraphComponent implements OnInit {
   zoom: any;
   width: number = 0;
   height: number = 0;
-  simulation: any;
-  color: any;
-  links: any;
-  nodes: any;
-  circles: any;
-  labels: any;
-  radius: number = 10;
+  D3CommunityGraph!: D3CommunityGraph;
   graph: Graph;
   communities: any = {};
   projectNodes: ProjectNode[] = [];
   projectLinks: Link[] = [];
 
   constructor(private graphService: GraphService, private d3ForcedGraphService: D3ForcedGraphService) {
-    this.color = d3.scaleOrdinal(d3.schemeCategory20);
     this.graph = new Graph();
   }
 
@@ -46,34 +40,15 @@ export class ProjectGraphComponent implements OnInit {
     if (subNodes) this.initSvg(true);
     else this.initSvg(false);
     if (!subNodes) this.initZoom();
-    this.simulation = this.d3ForcedGraphService.initSimulation(this.width, this.height, nodesToDraw, linksToDraw);
-    if (!subNodes) this.calculatePositionsWithoutDrawing();
-    this.links = this.d3ForcedGraphService.initLinks(this.color, this.g, linksToDraw);
-    this.nodes = this.d3ForcedGraphService.initNodes(this.g, nodesToDraw);
-    this.initNodeClick(this.nodes);
-    this.circles = this.d3ForcedGraphService.initCircles(
-      this.nodes,
-      this.color,
-      this.simulation,
-      this.radius,
-      this.width,
-      this.height
-    );
-    this.labels = this.d3ForcedGraphService.initLabeles(this.nodes);
-    this.d3ForcedGraphService.initTitle(this.nodes);
+    this.D3CommunityGraph = new D3CommunityGraph({
+      width: this.width,
+      height: this.height,
+      radius: 35,
+      color: d3.scaleOrdinal(d3.schemeCategory20),
+    });
+    this.D3CommunityGraph.initGraph(this.g, linksToDraw, nodesToDraw, !subNodes);
+    this.initNodeClick(this.D3CommunityGraph.nodes);
     if (!subNodes) this.d3ForcedGraphService.zoomFit(this.g, this.svg, this.zoom);
-    if (subNodes)
-      this.d3ForcedGraphService.startSimulation(
-        this.simulation,
-        nodesToDraw,
-        linksToDraw,
-        this.links,
-        this.circles,
-        this.labels,
-        this.radius,
-        this.width,
-        this.height
-      );
   }
 
   initSvg(forSubGraph: boolean) {
@@ -104,32 +79,13 @@ export class ProjectGraphComponent implements OnInit {
     return subLinks ? _.cloneDeep(subLinks) : _.cloneDeep(this.projectLinks);
   }
 
-  calculatePositionsWithoutDrawing() {
-    for (let i = 0; i < 350; ++i) this.simulation.tick();
-    this.simulation.stop();
-  }
-
   loadProjectGraph() {
     this.graphService.projectClasses$.subscribe((instances: Instance[]) => {
-      this.graph = new Graph();
-      this.projectNodes = this.graphService.extractNodesFromInstances(instances);
-      this.projectLinks = this.graphService.extractLinksFromInstances(instances);
-      this.projectNodes.forEach((node: ProjectNode) => {
-        try {
-          this.graph.addNode(node.id);
-        } catch (exception) {}
-      });
-      let distinctLinks: Link[] = [];
-      this.projectLinks.forEach((link: Link) => {
-        if (distinctLinks.findIndex((l: Link) => link.source === l.source && link.target === l.target) === -1) {
-          try {
-            this.graph.addEdge(link.source, link.target);
-            distinctLinks.push(link);
-          } catch (exception) {}
-        }
-      });
-
-      this.projectLinks = distinctLinks;
+      let ret = this.graphService.loadGraph(instances);
+      this.projectNodes = ret.projectNodes;
+      this.projectLinks = ret.projectLinks;
+      this.graph = ret.graph;
+      this.projectLinks = ret.distinctLinks;
       this.communities = this.graphService.extractCommunities(this.graph);
       this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
     });
@@ -142,19 +98,7 @@ export class ProjectGraphComponent implements OnInit {
   }
 
   initSubGraph(node: string) {
-    let subGraph = new Graph();
-    subGraph.addNode(node);
-    let firstLevelNeighbours = this.graph.neighbors(node);
-    for (let neighbour of firstLevelNeighbours) {
-      subGraph.addNode(neighbour);
-      subGraph.addEdge(node, neighbour);
-    }
-    for (let neighbour of firstLevelNeighbours) {
-      for (let secondLevelNeighbour of this.graph.neighbors(neighbour)) {
-        if (!subGraph.hasNode(secondLevelNeighbour)) subGraph.addNode(secondLevelNeighbour);
-        subGraph.addEdge(neighbour, secondLevelNeighbour);
-      }
-    }
+    let subGraph = this.graphService.loadSubGraph(node, this.graph);
     const subNodes = this.graphService.extractNodesFromGraph(subGraph, this.communities);
     const subLinks = this.graphService.extractExistingLinksFromFullGraph(subGraph, this.projectLinks);
     this.initGraph(subNodes, subLinks);

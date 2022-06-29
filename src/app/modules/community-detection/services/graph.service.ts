@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { DataSetProject } from '../../data-set/model/data-set-project/data-set-project.model';
 import { Instance } from '../../data-set/model/instance/instance.model';
@@ -18,10 +18,12 @@ import louvain from 'graphology-communities-louvain';
 export class GraphService {
   private projectClasses = new Subject<Instance[]>();
   private classMembers = new BehaviorSubject<CohesionGraph>({});
+  private className = new BehaviorSubject<string>('');
   private metricFeatures = new BehaviorSubject<Map<string, number>>(new Map());
 
   projectClasses$ = this.projectClasses.asObservable();
   classMembers$ = this.classMembers.asObservable();
+  className$ = this.className.asObservable();
   metricFeatures$ = this.metricFeatures.asObservable();
 
   constructor(private http: HttpClient) {}
@@ -80,8 +82,9 @@ export class GraphService {
     return links;
   }
 
-  initClassGraph(classGraph: CohesionGraph) {
+  initClassGraph(classGraph: CohesionGraph, className: string) {
     this.classMembers.next(classGraph);
+    this.className.next(this.extractClassNameFromPath(className));
   }
 
   extractGraph(cohesionGraph: CohesionGraph): Graph {
@@ -173,5 +176,43 @@ export class GraphService {
       }
     });
     return links;
+  }
+
+  loadGraph(instances: Instance[]) {
+    let graph = new Graph();
+    let projectNodes = this.extractNodesFromInstances(instances);
+    let projectLinks = this.extractLinksFromInstances(instances);
+    projectNodes.forEach((node: ProjectNode) => {
+      try {
+        graph.addNode(node.id);
+      } catch (exception) {}
+    });
+    let distinctLinks: Link[] = [];
+    projectLinks.forEach((link: Link) => {
+      if (distinctLinks.findIndex((l: Link) => link.source === l.source && link.target === l.target) === -1) {
+        try {
+          graph.addEdge(link.source, link.target);
+          distinctLinks.push(link);
+        } catch (exception) {}
+      }
+    });
+    return { projectNodes, projectLinks, graph, distinctLinks };
+  }
+
+  loadSubGraph(node: string, graph: Graph) {
+    let subGraph = new Graph();
+    subGraph.addNode(node);
+    let firstLevelNeighbours = graph.neighbors(node);
+    for (let neighbour of firstLevelNeighbours) {
+      subGraph.addNode(neighbour);
+      subGraph.addEdge(node, neighbour);
+    }
+    for (let neighbour of firstLevelNeighbours) {
+      for (let secondLevelNeighbour of graph.neighbors(neighbour)) {
+        if (!subGraph.hasNode(secondLevelNeighbour)) subGraph.addNode(secondLevelNeighbour);
+        subGraph.addEdge(neighbour, secondLevelNeighbour);
+      }
+    }
+    return subGraph;
   }
 }

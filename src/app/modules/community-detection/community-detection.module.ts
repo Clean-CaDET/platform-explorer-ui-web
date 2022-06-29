@@ -6,9 +6,10 @@ import { DeviceRoutes } from './community-detection.routes';
 import { TabContainerComponent } from './components/tab-container/tab-container.component';
 import { ProjectGraphComponent } from './components/project-graph/project-graph.component';
 import { ClassGraphComponent } from './components/class-graph/class-graph.component';
+import { ClassGraphNeighboursComponent } from './components/class-graph-neighbours/class-graph-neighbours.component';
 
 @NgModule({
-  declarations: [TabContainerComponent, ProjectGraphComponent, ClassGraphComponent],
+  declarations: [TabContainerComponent, ProjectGraphComponent, ClassGraphComponent, ClassGraphNeighboursComponent],
   imports: [MaterialModule, DataSetModule, RouterModule.forChild(DeviceRoutes)],
   exports: [],
 })
