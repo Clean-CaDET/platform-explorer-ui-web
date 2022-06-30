@@ -10,12 +10,10 @@ import { AppComponent } from './app.component';
 import { ServerCommunicationService } from './server-communication/server-communication.service';
 import { ToastrModule } from 'ngx-toastr';
 import { NavbarComponent } from './modules/data-set/nav/navbar.component';
+import { CommunityDetectionModule } from './modules/community-detection/community-detection.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavbarComponent
-  ],
+  declarations: [AppComponent, NavbarComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -25,11 +23,10 @@ import { NavbarComponent } from './modules/data-set/nav/navbar.component';
     MaterialModule,
     DataSetModule,
     PagesModule,
-    ToastrModule.forRoot()
+    CommunityDetectionModule,
+    ToastrModule.forRoot(),
   ],
-  providers: [
-    ServerCommunicationService,
-  ],
-  bootstrap: [AppComponent]
+  providers: [ServerCommunicationService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

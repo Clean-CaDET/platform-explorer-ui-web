@@ -1,0 +1,27 @@
+<div class="container">
+  <table mat-table [dataSource]="metricFeatures" class="mat-elevation-z8">
+    <ng-container matColumnDef="feature">
+      <th mat-header-cell *matHeaderCellDef>Feature name</th>
+      <td mat-cell *matCellDef="let element">{{ element.feature }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef>Value</th>
+      <td mat-cell *matCellDef="let element">{{ element.value }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <div id="classGraph">
+    <div class="controls">
+      <button mat-button color="primary" (click)="louvain()">Louvain algorithm</button>
+      <button mat-button color="primary" (click)="otherAlgorithms('infomap')">Infomap algorithm</button>
+      <button mat-button color="primary" (click)="otherAlgorithms('girvan_newman')">Girvan-Newman algorithm</button>
+      <button mat-button color="primary" (click)="otherAlgorithms('label_propagation')">
+        Label propagation algorithm
+      </button>
+    </div>
+  </div>
+</div>

@@ -13,11 +13,10 @@ import { AnnotationService } from '../../services/annotation.service';
 @Component({
   selector: 'de-add-project-dialog',
   templateUrl: './add-project-dialog.component.html',
-  styleUrls: ['./add-project-dialog.component.css']
+  styleUrls: ['./add-project-dialog.component.css'],
 })
 export class AddProjectDialogComponent implements OnInit {
-
-  public project: DataSetProject = new DataSetProject({name: '', url: ''});
+  public project: DataSetProject = new DataSetProject({ name: '', url: '' });
   public codeSmells: Map<string, string[]> = new Map<string, string[]>();
   public availableMetrics: Map<string, string[]> = new Map<string, string[]>();
   public metricsForSmells: Map<string, string[]> = new Map<string, string[]>();
@@ -26,37 +25,51 @@ export class AddProjectDialogComponent implements OnInit {
   public metricsForSelection: string[] = [];
   public selectedSmell: string = '';
   public numOfInstancesTypes: NumOfInstancesType[] = [NumOfInstancesType.Percentage, NumOfInstancesType.Number];
-  public projectBuildSettings: ProjectBuildSettings = new ProjectBuildSettings({numOfInstances: 100, numOfInstancesType: NumOfInstancesType.Percentage, randomizeClassSelection: true, randomizeMemberSelection: true, foldersToIgnore: []});
+  public projectBuildSettings: ProjectBuildSettings = new ProjectBuildSettings({
+    numOfInstances: 100,
+    numOfInstancesType: NumOfInstancesType.Percentage,
+    randomizeClassSelection: true,
+    randomizeMemberSelection: true,
+    foldersToIgnore: [],
+  });
   public newFolderToIgnore: string = '';
   public ignoreFolders: boolean = false;
   public setMetricsFilters: boolean = false;
- 
-  constructor(@Inject(MAT_DIALOG_DATA) private dataSetId: number, 
-  private dataSetService: DataSetService, private annotationService: AnnotationService, private dialogRef: MatDialogRef<AddProjectDialogComponent>) { }
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private dataSetId: number,
+    private dataSetService: DataSetService,
+    private annotationService: AnnotationService,
+    private dialogRef: MatDialogRef<AddProjectDialogComponent>
+  ) {}
 
   ngOnInit(): void {
     if (!this.dataSetId) {
       this.dialogRef.close();
     }
-    this.dataSetService.getDataSetCodeSmells(this.dataSetId).subscribe(res => {
+    this.dataSetService.getDataSetCodeSmells(this.dataSetId).subscribe((res) => {
       this.codeSmells = res;
       for (let smell of Object.entries(this.codeSmells)) {
-        this.smellFilters.push(new SmellFilter({codeSmell: new CodeSmell({name:smell[0]}), metricsThresholds: []}))
+        this.smellFilters.push(
+          new SmellFilter({ codeSmell: new CodeSmell({ name: smell[0] }), metricsThresholds: [] })
+        );
         this.chosenMetrics.push([]);
       }
     });
-    this.annotationService.getAvailableMetrics().subscribe(res => this.availableMetrics = res);
+    this.annotationService.getAvailableMetrics().subscribe((res) => (this.availableMetrics = res));
   }
 
   public initMetricsThresholdsForSmell(codeSmell: any) {
     this.selectedSmell = codeSmell.name;
-    var snippetType = Object.entries(this.codeSmells).find(s => s[0] == codeSmell.name)?.[1][0];
-    this.metricsForSelection = Object.entries(this.availableMetrics).find(m => m[0] == snippetType)?.[1];
-    
-    var i = this.smellFilters.findIndex(f => f.codeSmell?.name == codeSmell.name);
+    var snippetType = Object.entries(this.codeSmells).find((s) => s[0] == codeSmell.name)?.[1][0];
+    this.metricsForSelection = Object.entries(this.availableMetrics).find((m) => m[0] == snippetType)?.[1];
+
+    var i = this.smellFilters.findIndex((f) => f.codeSmell?.name == codeSmell.name);
     if (this.smellFilters[i].metricsThresholds.length == 0) {
       for (let metric of this.metricsForSelection) {
-          this.smellFilters[i].metricsThresholds.push(new MetricThresholds({metric: metric, minValue: '', maxValue: ''}));  
+        this.smellFilters[i].metricsThresholds.push(
+          new MetricThresholds({ metric: metric, minValue: '', maxValue: '' })
+        );
       }
     }
   }
@@ -64,16 +77,18 @@ export class AddProjectDialogComponent implements OnInit {
   public addProjectToDataSet(): void {
     if (this.isValidInput()) {
       this.removeUnselectedMetrics();
-      this.dataSetService.addProjectToDataSet(this.project, this.smellFilters, this.projectBuildSettings, this.dataSetId).subscribe((res: DataSet) => this.dialogRef.close(res));
+      this.dataSetService
+        .addProjectToDataSet(this.project, this.smellFilters, this.projectBuildSettings, this.dataSetId)
+        .subscribe((res: DataSet) => this.dialogRef.close(res));
     }
   }
 
   private removeUnselectedMetrics(): void {
     for (let i = 0; i < this.smellFilters.length; i++) {
-      this.smellFilters[i].metricsThresholds.forEach(metricThreshold => {
+      this.smellFilters[i].metricsThresholds.forEach((metricThreshold) => {
         if (!this.chosenMetrics[i].includes(metricThreshold.metric)) {
-          metricThreshold.minValue = "";
-          metricThreshold.maxValue = "";
+          metricThreshold.minValue = '';
+          metricThreshold.maxValue = '';
         }
       });
     }
@@ -84,7 +99,7 @@ export class AddProjectDialogComponent implements OnInit {
   }
 
   public removeFolderToIgnore(folder: string): void {
-    var index = this.projectBuildSettings.foldersToIgnore.findIndex(f => f == folder);
+    var index = this.projectBuildSettings.foldersToIgnore.findIndex((f) => f == folder);
     this.projectBuildSettings.foldersToIgnore.splice(index, 1);
   }
 

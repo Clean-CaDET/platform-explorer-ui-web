@@ -1,110 +1,142 @@
 <h2 mat-dialog-title>Add new project</h2>
 <mat-dialog-content>
-    <table cellspacing="2">
-        <tr>
+  <table cellspacing="2">
+    <tr>
+      <td>
+        <mat-form-field appearance="fill">
+          <mat-label>Project name</mat-label>
+          <input [(ngModel)]="project.name" name="name" type="text" matInput required />
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field appearance="fill">
+          <mat-label>URL</mat-label>
+          <input [(ngModel)]="project.url" name="url" type="url" matInput required />
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr class="wide-tr">
+      <td colspan="2" class="cell-with-border">
+        <mat-checkbox name="ignoreFolders" [(ngModel)]="ignoreFolders" (ngModelChange)="ignoreFoldersCheckboxChanged()"
+          >Ignore some folders</mat-checkbox
+        >
+        <div *ngIf="ignoreFolders">
+          <ul>
+            <li *ngFor="let folder of projectBuildSettings.foldersToIgnore">
+              {{ folder }}
+              <button mat-icon-button color="primary" (click)="removeFolderToIgnore(folder)">
+                <mat-icon matTooltip="Remove">close</mat-icon>
+              </button>
+            </li>
+          </ul>
+          <mat-form-field appearance="fill">
+            <mat-label>Folder name</mat-label>
+            <input matInput [(ngModel)]="newFolderToIgnore" />
+          </mat-form-field>
+          <button mat-icon-button color="primary" (click)="addFolderToIgnore()">
+            <mat-icon matTooltip="Add">check</mat-icon>
+          </button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <mat-checkbox name="randomizeClasses" [(ngModel)]="projectBuildSettings.randomizeClassSelection"
+          >Randomize class selection</mat-checkbox
+        >
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <mat-checkbox name="randomizeMembers" [(ngModel)]="projectBuildSettings.randomizeMemberSelection"
+          >Randomize member selection</mat-checkbox
+        >
+      </td>
+    </tr>
+    <tr>
+      <td class="cell-with-border">
+        <mat-form-field appearance="fill">
+          <mat-label>Number of instances</mat-label>
+          <input
+            [(ngModel)]="projectBuildSettings.numOfInstances"
+            name="numOfInstances"
+            type="number"
+            matInput
+            min="1"
+          />
+        </mat-form-field>
+      </td>
+      <td class="cell-with-border">
+        <mat-form-field appearance="fill">
+          <mat-label>Num of instances type</mat-label>
+          <mat-select [(value)]="projectBuildSettings.numOfInstancesType">
+            <mat-option *ngFor="let type of numOfInstancesTypes" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr>
+      <mat-checkbox name="setMetricsFilters" [(ngModel)]="setMetricsFilters">Set metric filters</mat-checkbox>
+      <div *ngIf="setMetricsFilters">
+        <td *ngFor="let smellFilter of smellFilters">
+          <button
+            *ngIf="smellFilter.codeSmell"
+            (click)="initMetricsThresholdsForSmell(smellFilter.codeSmell)"
+            mat-stroked-button
+          >
+            {{ smellFilter.codeSmell.name }}</button
+          ><br />
+        </td>
+      </div>
+    </tr>
+    <ng-container *ngFor="let smellFilter of smellFilters; let i = index">
+      <tr *ngIf="smellFilter.codeSmell && smellFilter.codeSmell.name == selectedSmell">
+        <mat-form-field appearance="fill">
+          <mat-select
+            multiple
+            [(ngModel)]="chosenMetrics[i]"
+            name="chosenMetrics-{{ i }}"
+            id="chosenMetrics"
+            placeholder="Choose metrics"
+          >
+            <mat-option *ngFor="let metric of metricsForSelection" [value]="metric">{{ metric }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </tr>
+      <ng-container *ngIf="smellFilter.codeSmell && smellFilter.codeSmell.name == selectedSmell">
+        <tr *ngFor="let threshold of smellFilter.metricsThresholds; let j = index">
+          <ng-container *ngIf="chosenMetrics[i]?.includes(threshold.metric)">
             <td>
-                <mat-form-field appearance="fill">
-                    <mat-label>Project name</mat-label>
-                    <input [(ngModel)]="project.name" name="name" type="text" matInput required>
-                </mat-form-field>
+              <mat-form-field appearance="fill">
+                <mat-label>Min value for {{ threshold.metric }}</mat-label>
+                <input
+                  [(ngModel)]="threshold.minValue"
+                  name="minValue-{{ j }}"
+                  matInput
+                  placeholder="{{ threshold.minValue }}"
+                />
+              </mat-form-field>
             </td>
             <td>
-                <mat-form-field appearance="fill">
-                    <mat-label>URL</mat-label>
-                    <input [(ngModel)]="project.url" name="url" type="url" matInput required>
-                </mat-form-field>
+              <mat-form-field appearance="fill">
+                <mat-label>Max value for {{ threshold.metric }}</mat-label>
+                <input
+                  [(ngModel)]="threshold.maxValue"
+                  name="maxValue-{{ j }}"
+                  matInput
+                  placeholder="{{ threshold.maxValue }}"
+                />
+              </mat-form-field>
             </td>
+          </ng-container>
         </tr>
-        <tr class="wide-tr">
-            <td colspan="2" class="cell-with-border">
-                <mat-checkbox name="ignoreFolders" [(ngModel)]="ignoreFolders" (ngModelChange)="ignoreFoldersCheckboxChanged()">Ignore some folders</mat-checkbox>
-                <div *ngIf="ignoreFolders">
-                    <ul>
-                        <li *ngFor="let folder of projectBuildSettings.foldersToIgnore">
-                            {{folder}}
-                            <button mat-icon-button color="primary" (click)="removeFolderToIgnore(folder)">
-                                <mat-icon matTooltip="Remove">close</mat-icon>
-                            </button>
-                        </li>
-                    </ul>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Folder name</mat-label>
-                        <input matInput [(ngModel)]="newFolderToIgnore">
-                    </mat-form-field>
-                    <button mat-icon-button color="primary" (click)="addFolderToIgnore()">
-                        <mat-icon matTooltip="Add">check</mat-icon>
-                    </button>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <mat-checkbox name="randomizeClasses" [(ngModel)]="projectBuildSettings.randomizeClassSelection">Randomize class selection</mat-checkbox>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <mat-checkbox name="randomizeMembers" [(ngModel)]="projectBuildSettings.randomizeMemberSelection">Randomize member selection</mat-checkbox>
-            </td>
-        </tr>
-        <tr>
-            <td class="cell-with-border">
-                <mat-form-field appearance="fill">
-                    <mat-label>Number of instances</mat-label>
-                    <input [(ngModel)]="projectBuildSettings.numOfInstances" name="numOfInstances" type="number" matInput min=1>
-                </mat-form-field>
-            </td>
-            <td class="cell-with-border">
-                <mat-form-field appearance="fill">
-                    <mat-label>Num of instances type</mat-label>
-                    <mat-select [(value)]="projectBuildSettings.numOfInstancesType">
-                        <mat-option *ngFor="let type of numOfInstancesTypes" [value]="type">
-                        {{type}}
-                        </mat-option>
-                    </mat-select>
-                    </mat-form-field>
-            </td>
-        </tr>
-        <tr>
-            <mat-checkbox name="setMetricsFilters" [(ngModel)]="setMetricsFilters">Set metric filters</mat-checkbox>
-            <div *ngIf="setMetricsFilters">
-                <td *ngFor="let smellFilter of smellFilters">
-                    <button *ngIf="smellFilter.codeSmell" (click)="initMetricsThresholdsForSmell(smellFilter.codeSmell)" mat-stroked-button>
-                        {{smellFilter.codeSmell.name}}
-                    </button><br>
-                </td>
-            </div>
-        </tr>
-        <ng-container *ngFor="let smellFilter of smellFilters; let i = index;">
-            <tr *ngIf="smellFilter.codeSmell && smellFilter.codeSmell.name == selectedSmell">
-                <mat-form-field appearance="fill">
-                    <mat-select multiple [(ngModel)]="chosenMetrics[i]" name="chosenMetrics-{{i}}" id="chosenMetrics" placeholder="Choose metrics">
-                        <mat-option *ngFor="let metric of metricsForSelection" [value]="metric">{{metric}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </tr>
-            <ng-container *ngIf="smellFilter.codeSmell && smellFilter.codeSmell.name == selectedSmell">
-                <tr *ngFor="let threshold of smellFilter.metricsThresholds; let j = index;">
-                    <ng-container *ngIf="chosenMetrics[i]?.includes(threshold.metric)">
-                        <td>
-                            <mat-form-field appearance="fill">
-                                <mat-label>Min value for {{threshold.metric}}</mat-label>
-                                <input [(ngModel)]="threshold.minValue" name="minValue-{{j}}" matInput placeholder="{{threshold.minValue}}">
-                            </mat-form-field>
-                        </td>
-                        <td>
-                            <mat-form-field appearance="fill">
-                                <mat-label>Max value for {{threshold.metric}}</mat-label>
-                                <input [(ngModel)]="threshold.maxValue" name="maxValue-{{j}}" matInput placeholder="{{threshold.maxValue}}">
-                            </mat-form-field>
-                        </td>
-                    </ng-container>
-                </tr>
-            </ng-container>
-        </ng-container>
-    </table>
+      </ng-container>
+    </ng-container>
+  </table>
 </mat-dialog-content>
-<mat-dialog-actions  align="end">
-    <button mat-stroked-button color="primary" mat-dialog-close>Cancel</button>
-    <button mat-stroked-button color="primary" (click)="addProjectToDataSet()">Add</button>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button color="primary" mat-dialog-close>Cancel</button>
+  <button mat-stroked-button color="primary" (click)="addProjectToDataSet()">Add</button>
 </mat-dialog-actions>
