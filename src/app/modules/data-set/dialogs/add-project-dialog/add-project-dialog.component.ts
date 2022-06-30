@@ -6,16 +6,14 @@ import { NumOfInstancesType } from '../../model/enums/enums.model';
 import { MetricThresholds } from '../../model/metric-thresholds/metric-thresholds.model';
 import { ProjectBuildSettings } from '../../model/project-build-settings/project-build-settings.model';
 import { SmellFilter } from '../../model/smell-filter/smell-filter.model';
-import { DataSet } from '../../model/data-set/data-set.model';
 import { DataSetService } from '../../services/data-set.service';
 import { AnnotationService } from '../../services/annotation.service';
-import { CodeSmellDefinition } from 'src/app/modules/annotation-schema/model/code-smell-definition/code-smell-definition.model';
 import { numberToSnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';
 
 @Component({
   selector: 'de-add-project-dialog',
   templateUrl: './add-project-dialog.component.html',
-  styleUrls: ['./add-project-dialog.component.css']
+  styleUrls: ['./add-project-dialog.component.css'],
 })
 export class AddProjectDialogComponent implements OnInit {
 
@@ -28,19 +26,23 @@ export class AddProjectDialogComponent implements OnInit {
   public metricsForSelection: string[] = [];
   public selectedSmell: string = '';
   public numOfInstancesTypes: NumOfInstancesType[] = [NumOfInstancesType.Percentage, NumOfInstancesType.Number];
-  public projectBuildSettings: ProjectBuildSettings = new ProjectBuildSettings({numOfInstances: 100, numOfInstancesType: NumOfInstancesType.Percentage, randomizeClassSelection: true, randomizeMemberSelection: true, foldersToIgnore: []});
+  public projectBuildSettings: ProjectBuildSettings = new ProjectBuildSettings({numOfInstances: 100, numOfInstancesType: NumOfInstancesType.Percentage, randomizeClassSelection: true, randomizeMemberSelection: true, ignoredFolders: []});
   public newFolderToIgnore: string = '';
   public ignoreFolders: boolean = false;
   public setMetricsFilters: boolean = false;
- 
-  constructor(@Inject(MAT_DIALOG_DATA) private dataSetId: number, 
-  private dataSetService: DataSetService, private annotationService: AnnotationService, private dialogRef: MatDialogRef<AddProjectDialogComponent>) { }
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private dataSetId: number,
+    private dataSetService: DataSetService,
+    private annotationService: AnnotationService,
+    private dialogRef: MatDialogRef<AddProjectDialogComponent>
+  ) {}
 
   ngOnInit(): void {
     if (!this.dataSetId) {
       this.dialogRef.close();
     }
-    this.dataSetService.getDataSetCodeSmells(this.dataSetId).subscribe(res => {
+    this.dataSetService.getDataSetCodeSmells(this.dataSetId).subscribe((res) => {
       this.codeSmells = res;
       this.codeSmells.map(smell => numberToSnippetType(smell));
       this.codeSmells.forEach(smell => {
@@ -48,7 +50,7 @@ export class AddProjectDialogComponent implements OnInit {
         this.chosenMetrics.push([]);
       });
     });
-    this.annotationService.getAvailableMetrics().subscribe(res => this.availableMetrics = res);
+    this.annotationService.getAvailableMetrics().subscribe((res) => (this.availableMetrics = res));
   }
 
   public initMetricsThresholdsForSmell(codeSmell: any) {
@@ -59,7 +61,9 @@ export class AddProjectDialogComponent implements OnInit {
     var i = this.smellFilters.findIndex(f => f.codeSmell?.name == codeSmell.name);
     if (this.smellFilters[i].metricsThresholds.length == 0) {
       for (let metric of this.metricsForSelection) {
-          this.smellFilters[i].metricsThresholds.push(new MetricThresholds({metric: metric, minValue: '', maxValue: ''}));  
+        this.smellFilters[i].metricsThresholds.push(
+          new MetricThresholds({ metric: metric, minValue: '', maxValue: '' })
+        );
       }
     }
   }
@@ -73,10 +77,10 @@ export class AddProjectDialogComponent implements OnInit {
 
   private removeUnselectedMetrics(): void {
     for (let i = 0; i < this.smellFilters.length; i++) {
-      this.smellFilters[i].metricsThresholds.forEach(metricThreshold => {
+      this.smellFilters[i].metricsThresholds.forEach((metricThreshold) => {
         if (!this.chosenMetrics[i].includes(metricThreshold.metric)) {
-          metricThreshold.minValue = "";
-          metricThreshold.maxValue = "";
+          metricThreshold.minValue = '';
+          metricThreshold.maxValue = '';
         }
       });
     }
@@ -87,18 +91,18 @@ export class AddProjectDialogComponent implements OnInit {
   }
 
   public removeFolderToIgnore(folder: string): void {
-    var index = this.projectBuildSettings.foldersToIgnore.findIndex(f => f == folder);
-    this.projectBuildSettings.foldersToIgnore.splice(index, 1);
+    var index = this.projectBuildSettings.ignoredFolders.findIndex(f => f == folder);
+    this.projectBuildSettings.ignoredFolders.splice(index, 1);
   }
 
   public addFolderToIgnore(): void {
     if (this.newFolderToIgnore) {
-      this.projectBuildSettings.foldersToIgnore.push(this.newFolderToIgnore);
+      this.projectBuildSettings.ignoredFolders.push(this.newFolderToIgnore);
       this.newFolderToIgnore = '';
     }
   }
 
   public ignoreFoldersCheckboxChanged() {
-    if (!this.ignoreFolders) this.projectBuildSettings.foldersToIgnore = [];
+    if (!this.ignoreFolders) this.projectBuildSettings.ignoredFolders = [];
   }
 }

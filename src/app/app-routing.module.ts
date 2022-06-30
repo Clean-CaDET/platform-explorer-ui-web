@@ -5,9 +5,8 @@ import { HomeComponent } from './modules/pages/home/home.component';
 import { DataSetDetailComponent } from './modules/data-set/data-set-detail/data-set-detail.component';
 import { DataSetComponent } from './modules/data-set/data-set.component';
 import { AnnotationSchemaComponent } from './modules/annotation-schema/annotation-schema.component';
-import { AnnotationContainerComponent } from './modules/data-set/annotation-container/annotation-container.component';
 import { CodeSmellDetailComponent } from './modules/annotation-schema/code-smell-detail/code-smell-detail.component';
-
+import { TabContainerComponent } from './modules/community-detection/components/tab-container/tab-container.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,16 +19,20 @@ const routes: Routes = [
     ]
   },
   { path: 'datasets', component: DataSetComponent },
-  { path: 'datasets/:id', 
+  {
+    path: 'datasets/:id',
     component: DataSetDetailComponent,
     children: [
-      { path: 'projects/:projectId/instances/:instanceId', component: AnnotationContainerComponent },
-    ]
+      {
+        path: 'projects/:projectId/instances/:instanceId',
+        component: TabContainerComponent,
+      },
+    ],
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

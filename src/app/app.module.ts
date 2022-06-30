@@ -11,12 +11,10 @@ import { ServerCommunicationService } from './server-communication/server-commun
 import { ToastrModule } from 'ngx-toastr';
 import { AnnotationSchemaModule } from './modules/annotation-schema/annotation-schema.module';
 import { NavbarComponent } from './modules/data-set/nav/navbar.component';
+import { CommunityDetectionModule } from './modules/community-detection/community-detection.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavbarComponent
-  ],
+  declarations: [AppComponent, NavbarComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -26,11 +24,10 @@ import { NavbarComponent } from './modules/data-set/nav/navbar.component';
     DataSetModule,
     AnnotationSchemaModule,
     PagesModule,
-    ToastrModule.forRoot()
+    CommunityDetectionModule,
+    ToastrModule.forRoot(),
   ],
-  providers: [
-    ServerCommunicationService,
-  ],
-  bootstrap: [AppComponent]
+  providers: [ServerCommunicationService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

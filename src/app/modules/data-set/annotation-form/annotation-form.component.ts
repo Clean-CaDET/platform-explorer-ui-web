@@ -5,7 +5,11 @@ import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model
 import { Instance } from '../model/instance/instance.model';
 import { SmellHeuristic } from '../model/smell-heuristic/smell-heuristic.model';
 import { AnnotationService } from '../services/annotation.service';
-import { ChangedAnnotationEvent, NewAnnotationEvent, NotificationService } from '../services/shared/notification.service';
+import {
+  ChangedAnnotationEvent,
+  NewAnnotationEvent,
+  NotificationService,
+} from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 import { InstanceService } from '../services/instance.service';
 import { DialogConfigService } from '../dialogs/dialog-config.service';
@@ -15,14 +19,15 @@ import { Heuristic } from '../../annotation-schema/model/heuristic/heuristic.mod
 import { AnnotationSchemaService } from '../../annotation-schema/services/annotation-schema.service';
 import { Severity } from '../../annotation-schema/model/severity/severity.model';
 
+import { GraphService } from '../../community-detection/services/graph.service';
+import { CohesionGraph } from '../../community-detection/model/cohesion-graph';
 
 @Component({
   selector: 'de-annotation-form',
   templateUrl: './annotation-form.component.html',
-  styleUrls: ['./annotation-form.component.css']
+  styleUrls: ['./annotation-form.component.css'],
 })
 export class AnnotationFormComponent implements OnInit {
-
   @Input() public codeSmell: string = '';
   @Input() public instanceId: number = 0;
   @Input() public disableEdit: boolean = false;
@@ -35,14 +40,30 @@ export class AnnotationFormComponent implements OnInit {
   public availableSeverities: Map<string, Severity[]> = new Map();
   public hasPreviousAnnotation: boolean;
 
-  private warningSnackbarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['warningSnackbar']};
-  private successSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['successSnackbar']};
-  private errorSnackBarOptions: any = {horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000, panelClass: ['errorSnackbar']};
+  private warningSnackbarOptions: any = {
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom',
+    duration: 3000,
+    panelClass: ['warningSnackbar'],
+  };
+  private successSnackBarOptions: any = {
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom',
+    duration: 3000,
+    panelClass: ['successSnackbar'],
+  };
+  private errorSnackBarOptions: any = {
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom',
+    duration: 3000,
+    panelClass: ['errorSnackbar'],
+  };
 
   constructor(private annotationService: AnnotationService, private _snackBar: MatSnackBar,
     private storageService: LocalStorageService, private notificationService: NotificationService,
     private instanceService: InstanceService, private dialog: MatDialog, 
-    private annotationSchemaService: AnnotationSchemaService) {}
+    private annotationSchemaService: AnnotationSchemaService,
+    private graphService: GraphService) {}
 
   public ngOnInit(): void {
     this.annotationSchemaService.getHeuristicsForEachCodeSmell().subscribe(res => {
@@ -64,6 +85,10 @@ export class AnnotationFormComponent implements OnInit {
     } else {
       this.setPreviousAnnotation(this.instance.annotations.find(a => a.annotator.id == this.annotatorId)!);
     }
+    this.graphService.getCohesionGraph(this.instanceId).subscribe((cohesionGraph: CohesionGraph) => {
+      this.graphService.initClassGraph(cohesionGraph, this.instance.codeSnippetId);
+      this.graphService.setMetricFeatures(this.instance.metricFeatures);
+    });
   }
 
   private setPreviousAnnotation(previousAnnotation: Annotation) {
@@ -105,9 +130,9 @@ export class AnnotationFormComponent implements OnInit {
     else this.annotate();
     this.setAnnotateButtonDisableProperty(false);
   }
-  
+
   private setAnnotateButtonDisableProperty(value: boolean) {
-    (<HTMLInputElement> document.getElementById("annotate-button")).disabled = value;
+    (<HTMLInputElement>document.getElementById('annotate-button')).disabled = value;
   }
 
   private isValidInput(): boolean {
@@ -144,7 +169,7 @@ export class AnnotationFormComponent implements OnInit {
         this.notificationService.setEvent(new NewAnnotationEvent(annotation));
         this.hasPreviousAnnotation = true;
       },
-      error => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
+      (error) => this._snackBar.open('ERROR:\n' + error.error.message, 'OK', this.errorSnackBarOptions)
     );
   }
 
@@ -154,18 +179,20 @@ export class AnnotationFormComponent implements OnInit {
       severity: this.chosenSeverity,
       codeSmell: this.codeSmell,
       applicableHeuristics: this.getHeuristicsFromInput(),
-      note: this.note
+      note: this.note,
     });
   }
 
   private getHeuristicsFromInput(): SmellHeuristic[] {
     let ret: SmellHeuristic[] = [];
     for (let heuristic of this.appliedHeuristicsAndReasons.keys()) {
-      ret.push(new SmellHeuristic({
-        description: heuristic,
-        isApplicable: true,
-        reasonForApplicability: this.appliedHeuristicsAndReasons.get(heuristic)
-      }));
+      ret.push(
+        new SmellHeuristic({
+          description: heuristic,
+          isApplicable: true,
+          reasonForApplicability: this.appliedHeuristicsAndReasons.get(heuristic),
+        })
+      );
     }
     return ret;
   }
