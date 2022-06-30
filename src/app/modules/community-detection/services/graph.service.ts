@@ -11,12 +11,14 @@ import { CohesionGraph } from '../model/cohesion-graph';
 import { CohesionGraphField } from '../model/cohesion-graph-field';
 import Graph from 'graphology';
 import louvain from 'graphology-communities-louvain';
+import { GraphInstance } from '../../data-set/model/graph-instance/graph-instance.model';
+import { GraphRelatedInstance } from '../../data-set/model/graph-related-instance/graph-related-instance.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GraphService {
-  private projectClasses = new Subject<Instance[]>();
+  private projectClasses = new Subject<GraphInstance[]>();
   private classMembers = new BehaviorSubject<CohesionGraph>({});
   private className = new BehaviorSubject<string>('');
   private metricFeatures = new BehaviorSubject<Map<string, number>>(new Map());
@@ -45,11 +47,11 @@ export class GraphService {
   }
 
   initProjectGraph(project: DataSetProject) {
-    this.projectClasses.next(project.candidateInstances[0].instances);
+    this.projectClasses.next(project.graphInstances);
   }
 
-  extractNodesFromInstances(instances: Instance[]): ProjectNode[] {
-    return instances.map((instance: Instance) => {
+  extractNodesFromInstances(instances: GraphInstance[]): ProjectNode[] {
+    return instances.map((instance: GraphInstance) => {
       return {
         id: this.extractClassNameFromPath(instance.codeSnippetId),
         fullName: instance.codeSnippetId,
@@ -63,10 +65,10 @@ export class GraphService {
     return paths[paths.length - 1];
   }
 
-  extractLinksFromInstances(instances: Instance[]): Link[] {
+  extractLinksFromInstances(instances: GraphInstance[]): Link[] {
     let links: Link[] = [];
-    instances.forEach((instance: Instance) => {
-      instance.relatedInstances.forEach((relatedInstance: RelatedInstance) => {
+    instances.forEach((instance: GraphInstance) => {
+      instance.relatedInstances.forEach((relatedInstance: GraphRelatedInstance) => {
         let weight = 0;
         let couplingStrength = relatedInstance.couplingTypeAndStrength as any;
         for (let key in couplingStrength) {
@@ -178,7 +180,7 @@ export class GraphService {
     return links;
   }
 
-  loadGraph(instances: Instance[]) {
+  loadGraph(instances: GraphInstance[]) {
     let graph = new Graph();
     let projectNodes = this.extractNodesFromInstances(instances);
     let projectLinks = this.extractLinksFromInstances(instances);

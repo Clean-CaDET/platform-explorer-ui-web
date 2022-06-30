@@ -8,6 +8,7 @@ import { ProjectNode } from '../../model/project-node';
 import { GraphService } from '../../services/graph.service';
 import { D3CommunityGraph } from '../../model/d3-community-graph';
 import { Subscription } from 'rxjs';
+import { GraphInstance } from 'src/app/modules/data-set/model/graph-instance/graph-instance.model';
 
 @Component({
   selector: 'de-class-graph-neighbours',
@@ -61,7 +62,7 @@ export class ClassGraphNeighboursComponent implements OnInit {
   }
 
   loadProjectGraph() {
-    this.graphService.projectClasses$.subscribe((instances: Instance[]) => {
+    this.graphService.projectClasses$.subscribe((instances: GraphInstance[]) => {
       let ret = this.graphService.loadGraph(instances);
       this.projectNodes = ret.projectNodes;
       this.projectLinks = ret.projectLinks;

@@ -1,12 +1,14 @@
 import { SmellCandidateInstances } from "../smell-candidate-instances/smell-candidate-instances.model";
 import { ProjectState } from "../enums/enums.model";
 import { Instance } from "../instance/instance.model";
+import { GraphInstance } from "../graph-instance/graph-instance.model";
 
 export class DataSetProject {
     id: number = 0;
     name: string = '';
     url: string = '';
     candidateInstances: SmellCandidateInstances[] = [];
+    graphInstances: GraphInstance[] = [];
     state: ProjectState = ProjectState.Processing;
     fullyAnnotated: boolean = false;
     instancesCount: number = 0;
@@ -17,6 +19,7 @@ export class DataSetProject {
             this.name = obj.name;
             this.url = obj.url;
             this.candidateInstances = obj.candidateInstances;
+            this.graphInstances = obj.graphInstances;
             this.setProjectState(obj.state);
             this.fullyAnnotated = obj.fullyAnnotated;
             this.countInstances(obj.instancesCount);
