@@ -81,8 +81,6 @@ export class DataSetDetailComponent implements OnInit {
     this.chosenProject = new DataSetProject(
       await this.projectService.getProject(this.chosenInstance.projectId)
     );
-    if (this.chosenProject)
-      this.graphService.initProjectGraph(this.chosenProject);
   }
 
   ngOnDestroy(): void {

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 import Graph from 'graphology';
-import { Instance } from 'src/app/modules/data-set/model/instance/instance.model';
 import { Link } from '../../model/link';
 import { ProjectNode } from '../../model/project-node';
 import { D3ForcedGraphService } from '../../services/d3-forced-graph.service';
@@ -15,7 +14,7 @@ import { GraphInstance } from 'src/app/modules/data-set/model/graph-instance/gra
   templateUrl: './project-graph.component.html',
   styleUrls: ['./project-graph.component.css'],
 })
-export class ProjectGraphComponent implements OnInit {
+export class ProjectGraphComponent {
   svg: any;
   g: any;
   zoom: any;
@@ -29,10 +28,6 @@ export class ProjectGraphComponent implements OnInit {
 
   constructor(private graphService: GraphService, private d3ForcedGraphService: D3ForcedGraphService) {
     this.graph = new Graph();
-  }
-
-  ngOnInit(): void {
-    this.loadProjectGraph();
   }
 
   initGraph(subNodes?: ProjectNode[] | null, subLinks?: Link[] | null) {
@@ -89,6 +84,7 @@ export class ProjectGraphComponent implements OnInit {
       this.projectLinks = ret.distinctLinks;
       this.communities = this.graphService.extractCommunities(this.graph);
       this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
+      this.initGraph();
     });
   }
 

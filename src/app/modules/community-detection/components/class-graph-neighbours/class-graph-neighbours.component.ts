@@ -105,7 +105,6 @@ export class ClassGraphNeighboursComponent implements OnInit {
   louvain() {
     this.communities = this.graphService.extractCommunities(this.subGraph);
     this.projectNodes = this.graphService.extractNodesFromGraph(this.subGraph, this.communities);
-    console.log(this.projectNodes);
     this.initGraph();
   }
 }

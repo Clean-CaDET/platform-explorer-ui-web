@@ -46,8 +46,10 @@ export class GraphService {
     });
   }
 
-  initProjectGraph(project: DataSetProject) {
-    this.projectClasses.next(project.graphInstances);
+  initProjectGraph(projectId: number) {
+    this.http.get<DataSetProject>(`${environment.apiHost}projects/${projectId}/graph`).subscribe(project => {
+      this.projectClasses.next(project.graphInstances);
+    });
   }
 
   extractNodesFromInstances(instances: GraphInstance[]): ProjectNode[] {
