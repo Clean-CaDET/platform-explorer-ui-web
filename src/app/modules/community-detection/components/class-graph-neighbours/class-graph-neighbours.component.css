@@ -1,5 +1,6 @@
 .container {
   display: flex;
+  height: 1000px;
 }
 
 #classGraphNeighbours {

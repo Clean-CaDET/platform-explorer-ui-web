@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import Graph from 'graphology';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
-import { Instance } from 'src/app/modules/data-set/model/instance/instance.model';
 import { Link } from '../../model/link';
 import { ProjectNode } from '../../model/project-node';
 import { GraphService } from '../../services/graph.service';
@@ -26,6 +25,7 @@ export class ClassGraphNeighboursComponent implements OnInit {
   communities: any = {};
   projectNodes: ProjectNode[] = [];
   projectLinks: Link[] = [];
+  initialProjectLinks: Link[] = [];
 
   constructor(private graphService: GraphService) {
     this.graph = new Graph();
@@ -65,8 +65,8 @@ export class ClassGraphNeighboursComponent implements OnInit {
     this.graphService.projectClasses$.subscribe((instances: GraphInstance[]) => {
       let ret = this.graphService.loadGraph(instances);
       this.projectNodes = ret.projectNodes;
-      this.projectLinks = ret.projectLinks;
       this.graph = ret.graph;
+      this.initialProjectLinks = ret.distinctLinks;
       this.projectLinks = ret.distinctLinks;
       this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
     });
@@ -77,7 +77,7 @@ export class ClassGraphNeighboursComponent implements OnInit {
       this.subGraph = this.graphService.loadSubGraph(className, this.graph);
       this.communities = this.graphService.extractCommunities(this.subGraph);
       this.projectNodes = this.graphService.extractNodesFromGraph(this.subGraph, this.communities);
-      this.projectLinks = this.graphService.extractExistingLinksFromFullGraph(this.subGraph, this.projectLinks);
+      this.projectLinks = this.graphService.extractExistingLinksFromFullGraph(this.subGraph, this.initialProjectLinks);
       this.initGraph();
     });
   }
