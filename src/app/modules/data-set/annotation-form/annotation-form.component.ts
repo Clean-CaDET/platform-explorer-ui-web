@@ -132,7 +132,7 @@ export class AnnotationFormComponent implements OnInit {
   }
 
   private setAnnotateButtonDisableProperty(value: boolean) {
-    (<HTMLInputElement>document.getElementById('annotate-button')).disabled = value;
+    (<HTMLInputElement>document.getElementById('save-button')).disabled = value;
   }
 
   private isValidInput(): boolean {
