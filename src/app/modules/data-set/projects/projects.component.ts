@@ -102,6 +102,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     public async chooseProject(id: number) {
+        this.storageService.clearAnnotationNoteFlag();
         this.chosenProject = new DataSetProject(await this.projectService.getProject(id));
         this.notificationService.setEvent(new ProjectChosenEvent({project: this.chosenProject, filter: this.filterFormControl.value}));
     }

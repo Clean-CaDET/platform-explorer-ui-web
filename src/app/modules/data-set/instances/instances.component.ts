@@ -107,6 +107,7 @@ export class InstancesComponent implements OnInit {
     }
 
     private initSeverities() {
+      this.annotationNoteExists = this.storageService.getAnnotationNoteFlag() == 'true';
       this.severities.clear();
       this.severities.add(null);
       this.dataSource.data.forEach((i:any) => {
@@ -140,8 +141,6 @@ export class InstancesComponent implements OnInit {
       this.initSmellSelection();
       this.initInstances();
       this.initSeverities();
-      this.storageService.clearAnnotationNoteFlag();
-      this.annotationNoteExists = false;
     }
 
     private addDisagreeingAnnotationsColumn() {
@@ -314,7 +313,7 @@ export class InstancesComponent implements OnInit {
 
     public filterByAnnotationNote() {
       this.storageService.setAnnotationNoteFlag(this.annotationNoteExists);
-      if (this.annotationNoteExists) this.dataSource.data = this.dataSource.data.filter(i => i.annotationFromLoggedUser?.note != null)!;
+      if (this.annotationNoteExists) this.dataSource.data = this.dataSource.data.filter(i => i.hasNote())!;
       else this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
     }
 }
