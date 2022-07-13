@@ -19,6 +19,7 @@ import {
 import { LocalStorageService } from '../services/shared/local-storage.service';
 import { Subscription } from 'rxjs';
 import { GraphService } from '../../community-detection/services/graph.service';
+import { Annotation } from '../model/annotation/annotation.model';
 
 @Component({
   selector: 'de-data-set-detail',
@@ -49,7 +50,7 @@ export class DataSetDetailComponent implements OnInit {
       .getEvent()
       .subscribe(async (event: NotificationEvent) => {
         if (event instanceof NewAnnotationEvent) {
-          this.updateAnnotationInfo();
+          this.updateAnnotationInfo(event.annotation);
         } else if (event instanceof ProjectChosenEvent) {
           this.chosenProject = event.data['project'];
         } else if (event instanceof InstanceChosenEvent) {
@@ -63,10 +64,12 @@ export class DataSetDetailComponent implements OnInit {
     });
   }
 
-  private updateAnnotationInfo() {
+  private updateAnnotationInfo(newAnnotation: Annotation) {
     this.annotatedInstancesNum++;
+    if (this.chosenInstance.annotations == null) this.chosenInstance.annotations = [];
+    this.chosenInstance.annotations.push(newAnnotation);
     if (
-      this.chosenProject.countAnnotatedInstances() ==
+      this.chosenProject.countAnnotatedInstances(this.storageService, this.chosenInstance) ==
       this.chosenProject.instancesCount
     ) {
       var i = this.chosenDataset.projects.findIndex(

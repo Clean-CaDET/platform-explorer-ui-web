@@ -2,6 +2,7 @@ import { SmellCandidateInstances } from "../smell-candidate-instances/smell-cand
 import { ProjectState } from "../enums/enums.model";
 import { Instance } from "../instance/instance.model";
 import { GraphInstance } from "../graph-instance/graph-instance.model";
+import { LocalStorageService } from "../../services/shared/local-storage.service";
 
 export class DataSetProject {
     id: number = 0;
@@ -57,8 +58,9 @@ export class DataSetProject {
         }
     }
 
-    public countAnnotatedInstances(): number {
+    public countAnnotatedInstances(storageService: LocalStorageService, annotatedInstance: Instance): number {
         if (this.candidateInstances == undefined) return 0;
+        this.replaceInstanceWithAnnotatedInstance(storageService, annotatedInstance);
         var counter = 0;
         this.candidateInstances.forEach(candidate => {
             candidate.instances.forEach(instance => {
@@ -66,6 +68,21 @@ export class DataSetProject {
             });
         });
         return counter;
+    }
+
+    private replaceInstanceWithAnnotatedInstance(storageService: LocalStorageService, annotatedInstance: Instance) {
+        this.candidateInstances.forEach(candidate => {
+            candidate.instances.forEach((instance, index) => {
+                if (instance.id == annotatedInstance.id)  {
+                    candidate.instances[index] = annotatedInstance;
+                }
+            });
+        });
+        this.candidateInstances.forEach(candidate => {
+            candidate.instances.forEach((instance, index) => {
+                    candidate.instances[index] = new Instance(storageService, instance);
+            });
+        });
     }
 
     public hasInstances(): boolean {
