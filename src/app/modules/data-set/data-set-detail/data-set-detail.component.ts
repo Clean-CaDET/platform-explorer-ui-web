@@ -153,11 +153,11 @@ export class DataSetDetailComponent implements OnInit {
   @HostListener('window:keydown', ['$event'])
   public next(event: KeyboardEvent) {
     if (!this.chosenInstance.id) return;
-    if (event.ctrlKey && event.key === 'ArrowRight') {
+    if (event.altKey && event.key === 'ArrowRight') {
       event.preventDefault();
       event.stopPropagation();
       this.loadNextInstance();
-    } else if (event.ctrlKey && event.key === 'ArrowLeft') {
+    } else if (event.altKey && event.key === 'ArrowLeft') {
       event.preventDefault();
       event.stopPropagation();
       this.loadPreviousInstance();
