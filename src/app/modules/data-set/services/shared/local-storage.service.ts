@@ -8,6 +8,7 @@ export class LocalStorageService {
     private annotatorId: string = 'annotatorId';
     private smellFilter: string = 'smellFilter';
     private autoAnnotationMode: string = 'autoAnnotationMode';
+    private annotationNoteFlag: string = 'annotationNoteFlag';
 
     public getLoggedInAnnotator() {
         return localStorage.getItem(this.annotatorId);
@@ -39,6 +40,18 @@ export class LocalStorageService {
 
     public clearAutoAnnotationMode() {
         localStorage.removeItem(this.autoAnnotationMode);
+    }
+    
+    public setAnnotationNoteFlag(annotationNoteFlag: boolean) {
+        localStorage.setItem(this.annotationNoteFlag, annotationNoteFlag+'');
+    }
+
+    public getAnnotationNoteFlag() {
+        return localStorage.getItem(this.annotationNoteFlag);
+    }
+
+    public clearAnnotationNoteFlag() {
+        localStorage.removeItem(this.annotationNoteFlag);
     }
 
     public clearLocalStorage() {

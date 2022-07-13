@@ -10,6 +10,11 @@
     margin-left: 10px;
 }
 
+.vertical-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .table-header {
     margin-left: 10px;
 }
@@ -81,4 +86,9 @@
     color: rgb(92, 13, 110);
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.annotation-note {
+    float: right;
+    margin-left: auto;
 }

@@ -41,6 +41,7 @@ export class InstancesComponent implements OnInit {
     public codeSmells: string[] = [];
     public selectedSmellFormControl = new FormControl('', Validators.required);
     public filter: string = 'All instances';
+    public annotationNoteExists = false;
 
     private notificationSubscription: Subscription | undefined;
     
@@ -139,6 +140,8 @@ export class InstancesComponent implements OnInit {
       this.initSmellSelection();
       this.initInstances();
       this.initSeverities();
+      this.storageService.clearAnnotationNoteFlag();
+      this.annotationNoteExists = false;
     }
 
     private addDisagreeingAnnotationsColumn() {
@@ -183,8 +186,10 @@ export class InstancesComponent implements OnInit {
     }
 
     private loadInstance(instance: Instance) {
-      this.chosenInstance = instance;
-      this.updateCandidates(this.chosenInstance.projectId, this.chosenInstance.id);
+      if (this.chosenInstance.id != instance.id) {
+        this.chosenInstance = instance;
+        this.updateCandidates(this.chosenInstance.projectId, this.chosenInstance.id);
+      }
     }
 
     private async updateCandidates(projectId: number, instanceId: number) {
@@ -305,5 +310,11 @@ export class InstancesComponent implements OnInit {
       this.initSeverities();
       this.selectedAnnotationStatus = AnnotationStatus.All;
       this.chooseDefaultInstance();
+    }
+
+    public filterByAnnotationNote() {
+      this.storageService.setAnnotationNoteFlag(this.annotationNoteExists);
+      if (this.annotationNoteExists) this.dataSource.data = this.dataSource.data.filter(i => i.annotationFromLoggedUser?.note != null)!;
+      else this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
     }
 }

@@ -5,19 +5,31 @@
             <mat-label>Search by code snippet id</mat-label>
             <input matInput [(ngModel)]="searchInput" (keyup)="searchInstances()" placeholder="Code snippet id">
         </mat-form-field>
-        <div class="filters">
-            <mat-form-field appearance="fill"  id="ann-status-filter">
-                <mat-label>Annotation status</mat-label>
-                <mat-select [(value)]="selectedAnnotationStatus" (selectionChange)="filterByAnnotationStatus()">
-                    <mat-option [value]="status" *ngFor="let status of annotationStatuses">{{status}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="fill" id="severity-filter" *ngIf="selectedAnnotationStatus != 'Not_Annotated'">
-                <mat-label>Severity</mat-label>
-                <mat-select [(value)]="selectedSeverity" (selectionChange)="filterBySeverity()">
-                    <mat-option [value]="severity" *ngFor="let severity of severities">{{severity}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <div class="vertical-container"> 
+            <div class="filters">
+                <mat-form-field appearance="fill"  id="ann-status-filter">
+                    <mat-label>Annotation status</mat-label>
+                    <mat-select [(value)]="selectedAnnotationStatus" (selectionChange)="filterByAnnotationStatus()">
+                        <mat-option [value]="status" *ngFor="let status of annotationStatuses">{{status}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" id="severity-filter" *ngIf="selectedAnnotationStatus != 'Not_Annotated'">
+                    <mat-label>Severity</mat-label>
+                    <mat-select [(value)]="selectedSeverity" (selectionChange)="filterBySeverity()">
+                        <mat-option [value]="severity" *ngFor="let severity of severities">{{severity}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="annotation-note">
+                <mat-panel-title>
+                Annotation note
+                <mat-slide-toggle
+                    color="primary"
+                    [(ngModel)]="annotationNoteExists"
+                    (change)="filterByAnnotationNote()"
+                ></mat-slide-toggle>
+                </mat-panel-title>
+            </div>
         </div>
     </div>
     <div id="instances-table-div">
