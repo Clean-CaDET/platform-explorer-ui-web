@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataSet } from '../model/data-set/data-set.model';
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { Instance } from '../model/instance/instance.model';
@@ -137,33 +137,7 @@ export class DataSetDetailComponent implements OnInit {
     return counter;
   }
 
-  public loadPreviousInstance() {
-    this.notificationService.setEvent(
-      new PreviousInstanceEvent(this.chosenInstance.id)
-    );
-  }
-
-  public loadNextInstance() {
-    this.notificationService.setEvent(
-      new NextInstanceEvent(this.chosenInstance.id)
-    );
-  }
-
   public toggleAutomaticMode() {
     this.storageService.setAutoAnnotationMode(this.automaticAnnotationMode);
-  }
-
-  @HostListener('window:keydown', ['$event'])
-  public next(event: KeyboardEvent) {
-    if (!this.chosenInstance.id) return;
-    if (event.altKey && event.key === 'ArrowRight') {
-      event.preventDefault();
-      event.stopPropagation();
-      this.loadNextInstance();
-    } else if (event.altKey && event.key === 'ArrowLeft') {
-      event.preventDefault();
-      event.stopPropagation();
-      this.loadPreviousInstance();
-    }
   }
 }

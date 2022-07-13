@@ -1,10 +1,9 @@
 form {
     display: flex;
     flex-direction: column;
-    margin: auto;
-    width: fit-content;
+    margin: 5px;
     border: 3px solid rgb(236, 228, 238);
-    padding: 10px 60px 20px 60px; 
+    padding: 10px 20px 0px 20px;
     border-radius: 20px;
     margin-bottom: 30px;
 }
@@ -16,16 +15,8 @@ form {
     margin-right: 0px;
 }
 
-.reason {
-    margin-left: 5px;
-}
-
 .form-field {
     padding: 0px 5px 0px 5px;
-}
-
-#annotate-button {
-    margin: auto !important;
 }
 
 p {
@@ -37,19 +28,21 @@ p {
 
 table {
     border-collapse: collapse;
-    width: 400px;
     table-layout: fixed;
 }
 
-.header-cell {
+.header-cell-center {
     font-size: 16px;
     text-align: center;
     border-bottom: 2px solid rgb(236, 228, 238);
     border-top: 2px solid rgb(236, 228, 238);
 }
 
-.first-column-cell {
-    border-right: 2px solid rgb(236, 228, 238);
+.header-cell {
+    font-size: 16px;
+    border-bottom: 2px solid rgb(236, 228, 238);
+    border-top: 2px solid rgb(236, 228, 238);
+    padding-left: 20px;
 }
 
 mat-checkbox {
@@ -88,19 +81,30 @@ mat-checkbox {
 }
 
 .horizontal-div { 
-    border-top: 2px solid rgb(236, 228, 238);
+    margin: auto;
     display: flex;
     flex-direction: row;
-    margin-top: 20px;
-    padding-top: 10px;
-    margin-bottom: 10px;
+
 }
 
 .horizontal-div>button {
     margin-left: 0px;
-    margin-right: auto;
 }
 
 .chosen-severity-div {
     margin-left: auto;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+#save-button {
+    margin-top: auto;
+    margin-bottom: auto;
+    height: fit-content;
+}
+
+.cell-center > .mat-form-field {
+    display: contents;
 }

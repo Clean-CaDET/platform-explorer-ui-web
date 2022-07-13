@@ -2,8 +2,8 @@
     <p>Annotation form</p>
     <table>
         <tr>
-            <td class="header-cell first-column-cell">Heuristic</td>
-            <td class="header-cell">Reason</td>
+            <td class="header-cell">Heuristic</td>
+            <td class="header-cell-center">Reason</td>
         </tr>
         <tr *ngFor="let heuristic of heuristics()">
             <td class="first-column-cell">
@@ -12,8 +12,8 @@
                 [disabled]="disableEdit"></mat-checkbox>
                 {{heuristic.name}}
             </td>
-            <td>
-                <mat-form-field appearance="outline" class="reason">
+            <td class="cell-center">
+                <mat-form-field appearance="outline">
                     <input type="text" matInput value="{{appliedHeuristicsAndReasons.get(heuristic.name)}}"
                         (change)="addReasonForHeuristic($event.target!, heuristic.name)" [disabled]="disableEdit">
                 </mat-form-field>
@@ -40,6 +40,6 @@
         <button *ngIf="disableEdit && note" mat-icon-button matTooltip="Note" matTooltipPosition="right" (click)="openNoteDialog()" color="primary">
             <mat-icon>insert_drive_file</mat-icon>
         </button>
+        <button *ngIf="!disableEdit" id="save-button" mat-stroked-button color="primary" (click)="submitAnnotation()">Save</button>
     </div>
-    <button *ngIf="!disableEdit" id="annotate-button" mat-stroked-button color="primary" (click)="submitAnnotation()">Save</button>
 </form>

@@ -5,7 +5,7 @@
 
 #snippet {
     width: 70%;
-    margin: 20px;
+    margin-top: 20px;
 }
 
 .vertical-container {
@@ -51,6 +51,12 @@
     color: rgb(101, 184, 236);
 }
 
-iframe {
-    max-height: 700px;
+.auto-buttons-div {
+    margin-right: 235px;
+    display: flex;
+    justify-content: right;
+}
+
+.auto-buttons-div>button {
+    margin: 5px;
 }
