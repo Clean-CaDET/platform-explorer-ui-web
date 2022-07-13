@@ -40,8 +40,7 @@
 
 <router-outlet></router-outlet>
 
-<!-- Ovo mi se uopste ne prikazuje!! -->
-<!-- <div *ngIf="chosenInstance?.id" class="auto-buttons-div">
-    <button mat-stroked-button color="primary" (click)="loadPreviousInstance()">Back</button>
-    <button mat-stroked-button color="primary" (click)="loadNextInstance()">Next</button>
-</div> -->
+<div *ngIf="chosenInstance?.id" class="auto-buttons-div">
+  <button mat-stroked-button color="primary" (click)="loadPreviousInstance()">Back</button>
+  <button mat-stroked-button color="primary" (click)="loadNextInstance()">Next</button>
+</div>
