@@ -76,22 +76,4 @@ export class ClassGraphComponent implements OnInit {
   linksToDraw(): Link[] {
     return _.cloneDeep(this.projectLinks);
   }
-
-  otherAlgorithms(algorithm: string) {
-    const nodes = this.projectNodes.map((node: ProjectNode) => node.fullName);
-    const links = this.projectLinks.map((link: Link) => {
-      return { source: link.source, target: link.target };
-    });
-    this.graphService.getCommunities(nodes, links, algorithm).subscribe((data: any) => {
-      this.communities = data;
-      this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
-      this.initGraph();
-    });
-  }
-
-  louvain() {
-    this.communities = this.graphService.extractCommunities(this.graph);
-    this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
-    this.initGraph();
-  }
 }
