@@ -30,7 +30,9 @@ export class TabContainerComponent implements OnInit {
     } else if (tab === 'Class Graph') {
       this.classGraph.subscribeToMembers();
     } else if (tab === 'Class Neighbours') {
-      this.classGraphNeighbours.subscribeToClassNeighbours();
+      this.route.params.subscribe((params: Params) => {
+        this.classGraphNeighbours.show(params['projectId'], params['instanceId']);
+      });
     }
   }
 

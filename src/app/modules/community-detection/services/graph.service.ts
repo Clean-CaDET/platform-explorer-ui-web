@@ -13,6 +13,7 @@ import Graph from 'graphology';
 import louvain from 'graphology-communities-louvain';
 import { GraphInstance } from '../../data-set/model/graph-instance/graph-instance.model';
 import { GraphRelatedInstance } from '../../data-set/model/graph-related-instance/graph-related-instance.model';
+import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +29,7 @@ export class GraphService {
   className$ = this.className.asObservable();
   metricFeatures$ = this.metricFeatures.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private serverCommunicationService: ServerCommunicationService) {}
 
   setMetricFeatures(metricFeatures: Map<string, number>) {
     this.metricFeatures.next(metricFeatures);
@@ -38,9 +39,9 @@ export class GraphService {
     return this.http.get<CohesionGraph>(`${environment.apiHost}instances/${instanceId}/cohesion-graph`);
   }
 
-  getCommunities(nodes: any, links: any, algorithm: string) {
+    getCommunities(nodes: any, links: any, algorithm: string) {
     return this.http.post(`${environment.apiHost}projects/community-detection`, {
-      Nodes: nodes,
+      Nodes: nodes.map((n:any) => n.id),
       Links: links,
       Algorithm: algorithm,
     });
@@ -50,6 +51,10 @@ export class GraphService {
     this.http.get<DataSetProject>(`${environment.apiHost}projects/${projectId}/graph`).subscribe(project => {
       this.projectClasses.next(project.graphInstances);
     });
+  }
+
+  public async getGraphInstanceWithNeighbours(projectId: number, instanceId: number): Promise<GraphInstance> {
+    return await this.serverCommunicationService.getRequestAsync(`projects/${projectId}/instances/${instanceId}/graph`);
   }
 
   extractNodesFromInstances(instances: GraphInstance[]): ProjectNode[] {
@@ -70,18 +75,20 @@ export class GraphService {
   extractLinksFromInstances(instances: GraphInstance[]): Link[] {
     let links: Link[] = [];
     instances.forEach((instance: GraphInstance) => {
-      instance.relatedInstances.forEach((relatedInstance: GraphRelatedInstance) => {
-        let weight = 0;
-        let couplingStrength = relatedInstance.couplingTypeAndStrength as any;
-        for (let key in couplingStrength) {
-          weight += couplingStrength[key];
-        }
-        links.push({
-          source: this.extractClassNameFromPath(instance.codeSnippetId),
-          target: this.extractClassNameFromPath(relatedInstance.codeSnippetId),
-          weight: weight,
+      if (instance.relatedInstances != undefined) {
+        instance.relatedInstances.forEach((relatedInstance: GraphRelatedInstance) => {
+          let weight = 0;
+          let couplingStrength = relatedInstance.couplingTypeAndStrength as any;
+          for (let key in couplingStrength) {
+            weight += couplingStrength[key];
+          }
+          links.push({
+            source: this.extractClassNameFromPath(instance.codeSnippetId),
+            target: this.extractClassNameFromPath(relatedInstance.codeSnippetId),
+            weight: weight,
+          });
         });
-      });
+      }
     });
     return links;
   }

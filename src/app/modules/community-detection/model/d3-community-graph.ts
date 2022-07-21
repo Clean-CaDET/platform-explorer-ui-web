@@ -12,6 +12,7 @@ export class D3CommunityGraph {
   circles: any;
   labels: any;
   radius: number;
+  projectLinks: Link[] = [];
 
   constructor(obj: any) {
     this.width = obj.width;
@@ -25,7 +26,8 @@ export class D3CommunityGraph {
     if (fullProject) this.calculatePositionsWithoutDrawing();
     this.initLinks(svg, projectLinks);
     this.initNodes(svg, projectNodes);
-    this.initCircles();
+    this.projectLinks = projectLinks;
+    this.initCircles(svg);
     this.initLabeles();
     this.initTitle();
     if (!fullProject) this.startSimulation(projectNodes, projectLinks);
@@ -87,8 +89,14 @@ export class D3CommunityGraph {
     this.nodes = svg.append('g').attr('class', 'nodes').selectAll('g').data(projectNodes).enter().append('g');
   }
 
-  public initCircles() {
+  public initCircles(svg: any) {
     const self = this;
+
+    var grad = svg.append("defs").append("linearGradient").attr("id", "grad")
+              .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
+            grad.append("stop").attr("offset", "50%").style("stop-color", "#008000");
+            grad.append("stop").attr("offset", "50%").style("stop-color", "#ffa500");
+
     this.circles = this.nodes
       .append('circle')
       .attr('r', 20)
@@ -99,7 +107,11 @@ export class D3CommunityGraph {
         return (d.y = Math.max(self.radius, Math.min(self.height - self.radius, d.y)));
       })
       .attr('fill', function (d: any) {
-        return self.color(d.group);
+        if (d.group == 0) return '#FF0000';
+        else if (d.group == 1) return '#ffa500';
+        else if (d.group == 2) return "#008000";
+        else if (d.group == 3) return '#65b8ec';
+        else return "url(#grad)";
       })
       .style('stroke-width', 5)
       .style('stroke', function (d: any) {
@@ -138,7 +150,19 @@ export class D3CommunityGraph {
         return d.y;
       })
       .text(function (d: any) {
-        return d.id;
+        if (d.group == 0) return d.id;
+
+        var links: Link[] = [];
+        self.projectLinks.forEach(l => {
+          var target = l.target as unknown as ProjectNode;
+          if (target.fullName == d.fullName) links.push(l);
+        });
+        
+        var sumOfWeights = 0;
+        links.forEach(link => {
+          sumOfWeights += link.weight!;
+        });
+        return d.id + "(" + sumOfWeights + ")";
       });
   }
 

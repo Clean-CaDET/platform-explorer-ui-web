@@ -72,14 +72,75 @@ export class ClassGraphNeighboursComponent implements OnInit {
     });
   }
 
-  subscribeToClassNeighbours() {
-    this.classNameSubscription = this.graphService.className$.subscribe((className: string) => {
-      this.subGraph = this.graphService.loadSubGraph(className, this.graph);
-      this.communities = this.graphService.extractCommunities(this.subGraph);
-      this.projectNodes = this.graphService.extractNodesFromGraph(this.subGraph, this.communities);
-      this.projectLinks = this.graphService.extractExistingLinksFromFullGraph(this.subGraph, this.initialProjectLinks);
+  show(projectId: string, instanceId: string) {
+    this.graphService.getGraphInstanceWithNeighbours(Number(projectId), Number(instanceId)).then(graphInstance => {
+      var graphData = this.graphService.loadGraph(this.getGraphInstancesAndRelated(graphInstance));
+      this.projectNodes = graphData.projectNodes;
+      this.setNodeGroups(graphInstance);
+      this.removeDuplicateNodes();
+      this.projectLinks = graphData.projectLinks;
       this.initGraph();
+    })
+  }
+
+  private getGraphInstancesAndRelated(graphInstance: GraphInstance) {
+    var instances = [];
+    instances.push(graphInstance);
+    graphInstance.relatedInstances.forEach(relatedInstance => {
+      instances.push(relatedInstance);
     });
+    return instances;
+  }
+
+  private setNodeGroups(graphInstance: GraphInstance) {
+    this.setMainNodeGroup(graphInstance);
+    this.setRelatedNodeGroup(graphInstance);  
+    this.setMultipleRelatedNodeGroup(graphInstance);
+  }
+
+  private setMainNodeGroup(graphInstance: GraphInstance) {
+    var mainNodeIndex = this.projectNodes.findIndex(n => n.fullName == graphInstance.codeSnippetId);
+    var mainNode = this.projectNodes.find(n => n.fullName == graphInstance.codeSnippetId);
+    mainNode!.group = 0;
+    this.projectNodes[mainNodeIndex] = mainNode!;
+  }
+
+  private setRelatedNodeGroup(graphInstance: GraphInstance) {
+    graphInstance.relatedInstances.forEach(relatedInstance => {
+      var relatedNodeIndex = this.projectNodes.findIndex(n => n.fullName == relatedInstance.codeSnippetId);
+      var relatedNode = this.projectNodes.find(n => n.fullName == relatedInstance.codeSnippetId);
+      if (relatedInstance.relationType == '0') relatedNode!.group = 1;
+      else if (relatedInstance.relationType == '1') relatedNode!.group = 2;
+      else if (relatedInstance.relationType == '2') relatedNode!.group = 3;
+      this.projectNodes[relatedNodeIndex] = relatedNode!;
+    });
+  }
+
+  private setMultipleRelatedNodeGroup(graphInstance: GraphInstance) {
+    var multipleRelatedInstanceIds = this.getMultipleRelatedInstanceIds(graphInstance);
+    multipleRelatedInstanceIds.forEach(codeSnippetId => {
+      var relatedNodeIndex = this.projectNodes.findIndex(n => n.fullName == codeSnippetId);
+      var relatedNode = this.projectNodes.find(n => n.fullName == codeSnippetId);
+      relatedNode!.group = 4;
+      this.projectNodes[relatedNodeIndex] = relatedNode!;
+    });
+  }
+
+  private getMultipleRelatedInstanceIds(graphInstance: GraphInstance) {
+    var duplicateIds = graphInstance.relatedInstances
+      .map(relatedInstance => relatedInstance.codeSnippetId)
+      .filter((relatedInstance, i, ids) => ids.indexOf(relatedInstance) !== i)
+    var duplicates = graphInstance.relatedInstances
+      .filter(instance => duplicateIds.includes(instance.codeSnippetId));
+    return [...new Set(duplicates.map(item => item.codeSnippetId))];
+  }
+
+  private removeDuplicateNodes() {
+    this.projectNodes = this.projectNodes.filter((node, index, self) =>
+      index === self.findIndex((t) => (
+        t.fullName === node.fullName
+      ))
+    )
   }
 
   nodesToDraw(): ProjectNode[] {
@@ -88,23 +149,5 @@ export class ClassGraphNeighboursComponent implements OnInit {
 
   linksToDraw(subLinks?: Link[] | null): Link[] {
     return _.cloneDeep(this.projectLinks);
-  }
-
-  otherAlgorithms(algorithm: string) {
-    const nodes = this.projectNodes.map((node: ProjectNode) => node.fullName);
-    const links = this.projectLinks.map((link: Link) => {
-      return { source: link.source, target: link.target };
-    });
-    this.graphService.getCommunities(nodes, links, algorithm).subscribe((data: any) => {
-      this.communities = data;
-      this.projectNodes = this.graphService.extractNodesFromGraph(this.subGraph, this.communities);
-      this.initGraph();
-    });
-  }
-
-  louvain() {
-    this.communities = this.graphService.extractCommunities(this.subGraph);
-    this.projectNodes = this.graphService.extractNodesFromGraph(this.subGraph, this.communities);
-    this.initGraph();
   }
 }
