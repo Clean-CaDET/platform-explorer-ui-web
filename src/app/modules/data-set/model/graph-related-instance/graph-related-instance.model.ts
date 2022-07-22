@@ -5,6 +5,7 @@ export class GraphRelatedInstance {
     codeSnippetId: string = '';
     relationType: string = '';
     couplingTypeAndStrength: Map<CouplingType, number> = new Map();
+    link: string = '';
 
     constructor(obj?: any) {
         if (obj) {
@@ -12,6 +13,7 @@ export class GraphRelatedInstance {
             this.codeSnippetId = obj.codeSnippetId;
             this.setRelationType(obj.relationType);
             this.couplingTypeAndStrength = obj.couplingTypeAndStrength;
+            this.link = obj.link;
         }
     }
 
