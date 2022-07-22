@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute, Params } from '@angular/router';
 import { GraphService } from '../../services/graph.service';
-import { ClassGraphNeighboursComponent } from '../class-graph-neighbours/class-graph-neighbours.component';
 import { ClassGraphComponent } from '../class-graph/class-graph.component';
+import { NeighboursGraphComponent } from '../neighbours-graph/neighbours-graph.component';
 import { ProjectGraphComponent } from '../project-graph/project-graph.component';
 
 @Component({
@@ -14,7 +14,7 @@ import { ProjectGraphComponent } from '../project-graph/project-graph.component'
 export class TabContainerComponent implements OnInit {
   @ViewChild('projectGraph') projectGraph!: ProjectGraphComponent;
   @ViewChild('classGraph') classGraph!: ClassGraphComponent;
-  @ViewChild('classGraphNeighbours') classGraphNeighbours!: ClassGraphNeighboursComponent;
+  @ViewChild('neighboursGraph') neighboursGraph!: NeighboursGraphComponent;
   private projectId: string = '';
 
   constructor(private route: ActivatedRoute, private graphService: GraphService) {}
@@ -31,7 +31,7 @@ export class TabContainerComponent implements OnInit {
       this.classGraph.subscribeToMembers();
     } else if (tab === 'Class Neighbours') {
       this.route.params.subscribe((params: Params) => {
-        this.classGraphNeighbours.show(params['projectId'], params['instanceId']);
+        this.neighboursGraph.show(params['projectId'], params['instanceId']);
       });
     }
   }

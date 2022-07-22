@@ -18,9 +18,9 @@ import { AnnotationNoteDialogComponent } from '../dialogs/annotation-note-dialog
 import { Heuristic } from '../../annotation-schema/model/heuristic/heuristic.model';
 import { AnnotationSchemaService } from '../../annotation-schema/services/annotation-schema.service';
 import { Severity } from '../../annotation-schema/model/severity/severity.model';
-
 import { GraphService } from '../../community-detection/services/graph.service';
-import { CohesionGraph } from '../../community-detection/model/cohesion-graph';
+import { GraphDataService } from '../../community-detection/services/graph-data.service';
+import { ClassGraph } from '../../community-detection/model/class-graph';
 
 @Component({
   selector: 'de-annotation-form',
@@ -63,7 +63,7 @@ export class AnnotationFormComponent implements OnInit {
     private storageService: LocalStorageService, private notificationService: NotificationService,
     private instanceService: InstanceService, private dialog: MatDialog, 
     private annotationSchemaService: AnnotationSchemaService,
-    private graphService: GraphService) {}
+    private graphService: GraphService, private graphDataService: GraphDataService) {}
 
   public ngOnInit(): void {
     this.annotationSchemaService.getHeuristicsForEachCodeSmell().subscribe(res => {
@@ -85,9 +85,9 @@ export class AnnotationFormComponent implements OnInit {
     } else {
       this.setPreviousAnnotation(this.instance.annotations.find(a => a.annotator.id == this.annotatorId)!);
     }
-    this.graphService.getCohesionGraph(this.instanceId).subscribe((cohesionGraph: CohesionGraph) => {
-      this.graphService.initClassGraph(cohesionGraph, this.instance.codeSnippetId);
-      this.graphService.setMetricFeatures(this.instance.metricFeatures);
+    this.graphService.getClassGraph(this.instanceId).subscribe((classGraph: ClassGraph) => {
+      this.graphService.initClassGraph(classGraph, this.instance.codeSnippetId);
+      this.graphDataService.setMetricFeatures(this.instance.metricFeatures);
     });
   }
 
