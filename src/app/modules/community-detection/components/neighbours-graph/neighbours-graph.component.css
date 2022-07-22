@@ -3,7 +3,7 @@
   height: 1000px;
 }
 
-#classGraphNeighbours {
+#neighboursGraph {
   flex-grow: 1;
   margin: 5px;
   position: relative;
