@@ -46,11 +46,11 @@ export class NeighboursGraphComponent {
   }
 
   initSvg() {
-    document.getElementById('classGraphNeighboursSvg')?.remove();
+    document.getElementById('neighboursGraph')?.remove();
     this.svg = d3
-      .select('#classGraphNeighbours')
+      .select('#neighboursGraph')
       .append('svg')
-      .attr('id', 'classGraphNeighboursSvg')
+      .attr('id', 'neighboursGraph')
       .attr('width', '100%')
       .attr('height', 1300);
     this.width = this.svg.node().getBoundingClientRect().width;
@@ -59,7 +59,6 @@ export class NeighboursGraphComponent {
 
   show(projectId: string, instanceId: string) {
     this.graphDataService.getGraphInstanceWithNeighbours(Number(projectId), Number(instanceId)).then(graphInstance => {
-      console.log('graph instance with related', graphInstance);
       var graph = this.graphService.getGraphBasedOnData(this.graphDataService.getGraphInstancesAndRelated(graphInstance));
       this.projectNodes = graph.projectNodes;
       this.graphDataService.setNodeGroups(graphInstance, this.projectNodes);
