@@ -42,7 +42,7 @@ export class ProjectGraphComponent {
       radius: 35,
       color: d3.scaleOrdinal(d3.schemeCategory20),
     });
-    this.d3GraphService.initGraph(this.g, linksToDraw, nodesToDraw, !subNodes);
+    this.d3GraphService.initGraph(this.g, linksToDraw, nodesToDraw, !subNodes, false);
     this.initNodeClick(this.d3GraphService.nodes);
     if (!subNodes) this.d3GraphService.zoomFit(this.g, this.svg, this.zoom);
   }
@@ -77,11 +77,11 @@ export class ProjectGraphComponent {
 
   loadProjectGraph() {
     this.graphService.projectClasses$.subscribe((instances: GraphInstance[]) => {
-      let ret = this.graphService.getGraphBasedOnData(instances);
-      this.projectNodes = ret.projectNodes;
-      this.projectLinks = ret.projectLinks;
-      this.graph = ret.graph;
-      this.projectLinks = ret.distinctLinks;
+      let graph = this.graphService.getGraphBasedOnData(instances);
+      this.projectNodes = graph.projectNodes;
+      this.projectLinks = graph.projectLinks;
+      this.graph = graph.graph;
+      this.projectLinks = graph.distinctLinks;
       this.communities = this.graphService.getCommunities(this.graph);
       this.projectNodes = this.graphService.getNodesFromGraph(this.graph, this.communities);
       this.initGraph();

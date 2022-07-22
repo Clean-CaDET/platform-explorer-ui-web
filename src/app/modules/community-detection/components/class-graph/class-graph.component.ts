@@ -43,7 +43,7 @@ export class ClassGraphComponent {
       radius: 35,
       color: d3.scaleOrdinal(d3.schemeCategory20),
     });
-    this.d3GraphService.initGraph(this.svg, linksToDraw, nodesToDraw, false);
+    this.d3GraphService.initGraph(this.svg, linksToDraw, nodesToDraw, false, false);
   }
 
   subscribeToMembers() {

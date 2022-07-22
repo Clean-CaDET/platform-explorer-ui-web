@@ -85,5 +85,6 @@ export class GraphDataService {
             t.fullName === node.fullName
           ))
         )
+        return projectNodes;
     }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { ActivatedRoute, Params, Router } from "@angular/router";
-import * as d3 from "d3";import { GraphInstance } from "../../data-set/model/graph-instance/graph-instance.model";
-import { Link } from "../model/link";
+import { Router } from "@angular/router";
+import * as d3 from "d3";import { Link } from "../model/link";
 import { ProjectNode } from "../model/project-node";
 import { GraphDataService } from "./graph-data.service";
 import { GraphService } from "./graph.service";
@@ -33,14 +32,14 @@ export class D3GraphService {
         this.radius = obj.radius;
     }
 
-    public initGraph(svg: any, projectLinks: Link[], projectNodes: ProjectNode[], fullProject: boolean) {
+    public initGraph(svg: any, projectLinks: Link[], projectNodes: ProjectNode[], fullProject: boolean, isNeighboursGraph: boolean) {
         this.initSimulation(projectNodes, projectLinks);
         if (fullProject) this.calculatePositionsWithoutDrawing();
         this.initLinks(svg, projectLinks);
         this.initNodes(svg, projectNodes);
         this.projectLinks = projectLinks;
-        this.initCircles(svg);
-        this.initLabeles();
+        this.initCircles(svg, isNeighboursGraph);
+        this.initLabeles(isNeighboursGraph);
         this.initTitle();
         if (!fullProject) this.startSimulation(projectNodes, projectLinks);
       }
@@ -101,7 +100,7 @@ export class D3GraphService {
         this.nodes = svg.append('g').attr('class', 'nodes').selectAll('g').data(projectNodes).enter().append('g');
       }
     
-      public initCircles(svg: any) {
+      public initCircles(svg: any, isNeighboursGraph: boolean) {
         const self = this;
     
         var grad = svg.append("defs").append("linearGradient").attr("id", "grad")
@@ -119,11 +118,14 @@ export class D3GraphService {
             return (d.y = Math.max(self.radius, Math.min(self.height - self.radius, d.y)));
           })
           .attr('fill', function (d: any) {
-            if (d.group == 0) return '#FF0000';
-            else if (d.group == 1) return '#ffa500';
-            else if (d.group == 2) return "#008000";
-            else if (d.group == 3) return '#65b8ec';
-            else return "url(#grad)";
+            if (isNeighboursGraph) { 
+              if (d.group == 0) return '#FF0000';
+              else if (d.group == 1) return '#ffa500';
+              else if (d.group == 2) return "#008000";
+              else if (d.group == 3) return '#65b8ec';
+              return "url(#grad)";
+            }
+            return self.color(d.group);
           })
           .on("dblclick", (d:any) => {
             d3.event.preventDefault();
@@ -181,7 +183,7 @@ export class D3GraphService {
         radius: 35,
         color: d3.scaleOrdinal(d3.schemeCategory20),
       });
-      this.initGraph(this.svg, this.projectLinks, this.projectNodes, false);
+      this.initGraph(this.svg, this.projectLinks, this.projectNodes, false, true);
     }
 
     private initSvg() {
@@ -196,7 +198,7 @@ export class D3GraphService {
       this.height = this.svg.node().getBoundingClientRect().height;
     }
 
-      public initLabeles() {
+      public initLabeles(isNeighboursGraph: boolean) {
         const self = this;
         this.labels = self.nodes
           .append('text')
@@ -216,12 +218,17 @@ export class D3GraphService {
               if (target.fullName == d.fullName) links.push(l);
             });
             
-            var sumOfWeights = 0;
-            links.forEach(link => {
-              sumOfWeights += link.weight!;
-            });
-            return d.id + "(" + sumOfWeights + ")";
+            if (isNeighboursGraph) return self.idAndWeightsSum(d, links);
+            return d.id;
           });
+      }
+
+      private idAndWeightsSum(d: any, links: Link[]) {
+        var sumOfWeights = 0;
+        links.forEach(link => {
+          sumOfWeights += link.weight!;
+        });
+        return d.id + "(" + sumOfWeights + ")";;
       }
     
       public initTitle() {

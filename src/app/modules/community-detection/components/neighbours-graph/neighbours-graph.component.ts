@@ -42,15 +42,15 @@ export class NeighboursGraphComponent {
       radius: 35,
       color: d3.scaleOrdinal(d3.schemeCategory20),
     });
-    this.d3GraphService.initGraph(this.svg, linksToDraw, nodesToDraw, false);
+    this.d3GraphService.initGraph(this.svg, linksToDraw, nodesToDraw, false, true);
   }
 
   initSvg() {
-    document.getElementById('neighboursGraph')?.remove();
+    document.getElementById('neighboursGraphSvg')?.remove();
     this.svg = d3
       .select('#neighboursGraph')
       .append('svg')
-      .attr('id', 'neighboursGraph')
+      .attr('id', 'neighboursGraphSvg')
       .attr('width', '100%')
       .attr('height', 1300);
     this.width = this.svg.node().getBoundingClientRect().width;
@@ -62,7 +62,7 @@ export class NeighboursGraphComponent {
       var graph = this.graphService.getGraphBasedOnData(this.graphDataService.getGraphInstancesAndRelated(graphInstance));
       this.projectNodes = graph.projectNodes;
       this.graphDataService.setNodeGroups(graphInstance, this.projectNodes);
-      this.graphDataService.removeDuplicateNodes(this.projectNodes);
+      this.projectNodes = this.graphDataService.removeDuplicateNodes(this.projectNodes);
       this.projectLinks = graph.projectLinks;
       this.initGraph();
     })
