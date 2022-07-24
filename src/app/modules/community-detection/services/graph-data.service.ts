@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { ServerCommunicationService } from "src/app/server-communication/server-communication.service";
 import { GraphInstance } from "../../data-set/model/graph-instance/graph-instance.model";
+import { GroupType } from "../model/enums/enums.model";
 import { ProjectNode } from "../model/project-node";
 
 @Injectable({
@@ -44,7 +45,7 @@ export class GraphDataService {
     private setMainNodeGroup(graphInstance: GraphInstance, projectNodes: ProjectNode[]) {
         var mainNodeIndex = projectNodes.findIndex(n => n.fullName == graphInstance.codeSnippetId);
         var mainNode = projectNodes.find(n => n.fullName == graphInstance.codeSnippetId);
-        mainNode!.group = 0;
+        mainNode!.group = GroupType.Main.toString();
         projectNodes[mainNodeIndex] = mainNode!;
     }
     
@@ -52,39 +53,61 @@ export class GraphDataService {
         graphInstance.relatedInstances.forEach(relatedInstance => {
           var relatedNodeIndex = projectNodes.findIndex(n => n.fullName == relatedInstance.codeSnippetId);
           var relatedNode = projectNodes.find(n => n.fullName == relatedInstance.codeSnippetId);
-          if (relatedInstance.relationType == '0') relatedNode!.group = 1;
-          else if (relatedInstance.relationType == '1') relatedNode!.group = 2;
-          else if (relatedInstance.relationType == '2') relatedNode!.group = 3;
+          if (relatedInstance.relationType == '0') relatedNode!.group = GroupType.Referenced.toString();
+          else if (relatedInstance.relationType == '1') relatedNode!.group = GroupType.References.toString();
+          else if (relatedInstance.relationType == '2') relatedNode!.group = GroupType.Parent.toString();
           relatedNode!.link = relatedInstance.link;
           projectNodes[relatedNodeIndex] = relatedNode!;
         });
     }
     
     private setMultipleRelatedNodeGroup(graphInstance: GraphInstance, projectNodes: ProjectNode[]) {
-        var multipleRelatedInstanceIds = this.getMultipleRelatedInstanceIds(graphInstance);
-        multipleRelatedInstanceIds.forEach(codeSnippetId => {
-          var relatedNodeIndex = projectNodes.findIndex(n => n.fullName == codeSnippetId);
-          var relatedNode = projectNodes.find(n => n.fullName == codeSnippetId);
-          relatedNode!.group = 4;
+        var multipleRelatedInstances = this.getMultipleRelatedInstances(graphInstance);
+        multipleRelatedInstances.forEach((value, key) => {
+          var relatedNodeIndex = projectNodes.findIndex(n => n.fullName == key);
+          var relatedNode = projectNodes.find(n => n.fullName == key);
+          if (value.includes(GroupType.Parent) && value.includes(GroupType.Referenced)) {
+            relatedNode!.group = GroupType.ParentAndReferenced;
+          } else if (value.includes(GroupType.Parent) && value.includes(GroupType.References)) {
+            relatedNode!.group = GroupType.ParentAndReferences;
+          } else if (value.includes(GroupType.Referenced) && value.includes(GroupType.References)) {
+            relatedNode!.group = GroupType.ReferencedAndReferences;
+          }
           projectNodes[relatedNodeIndex] = relatedNode!;
         });
     }
     
-    private getMultipleRelatedInstanceIds(graphInstance: GraphInstance) {
+    private getMultipleRelatedInstances(graphInstance: GraphInstance): Map<string, GroupType[]> {
         var duplicateIds = graphInstance.relatedInstances
           .map(relatedInstance => relatedInstance.codeSnippetId)
           .filter((relatedInstance, i, ids) => ids.indexOf(relatedInstance) !== i)
         var duplicates = graphInstance.relatedInstances
           .filter(instance => duplicateIds.includes(instance.codeSnippetId));
-        return [...new Set(duplicates.map(item => item.codeSnippetId))];
+
+        var result: Map<string, GroupType[]> = new Map<string, GroupType[]>();
+        duplicates.forEach(duplicate => {
+          if (!result.has(duplicate.codeSnippetId)) result.set(duplicate.codeSnippetId, []);
+          if (duplicate.relationType == '2') {
+            var types = result.get(duplicate.codeSnippetId);
+            types?.push(GroupType.Parent);
+            result.set(duplicate.codeSnippetId, types!);
+          } else if (duplicate.relationType == '1') {
+            var types = result.get(duplicate.codeSnippetId);
+            types?.push(GroupType.References);
+            result.set(duplicate.codeSnippetId, types!);
+          } else if (duplicate.relationType == '0') {
+            var types = result.get(duplicate.codeSnippetId);
+            types?.push(GroupType.Referenced);
+            result.set(duplicate.codeSnippetId, types!);
+          }
+        });
+        return result;
     }
     
     public removeDuplicateNodes(projectNodes: ProjectNode[]) {
-        projectNodes = projectNodes.filter((node, index, self) =>
-          index === self.findIndex((t) => (
-            t.fullName === node.fullName
-          ))
-        )
-        return projectNodes;
+      projectNodes = projectNodes.filter(node => {
+        return node.group != '0' && node.group != '1' && node.group != '2';
+      })
+      return projectNodes;
     }
 }

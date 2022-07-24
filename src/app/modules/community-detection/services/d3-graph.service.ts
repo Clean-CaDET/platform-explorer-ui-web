@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import * as d3 from "d3";import { Link } from "../model/link";
+import * as d3 from "d3";import { GroupType } from "../model/enums/enums.model";
+import { Link } from "../model/link";
 import { ProjectNode } from "../model/project-node";
 import { GraphDataService } from "./graph-data.service";
 import { GraphService } from "./graph.service";
@@ -102,11 +103,9 @@ export class D3GraphService {
     
       public initCircles(svg: any, isNeighboursGraph: boolean) {
         const self = this;
-    
-        var grad = svg.append("defs").append("linearGradient").attr("id", "grad")
-                  .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
-                grad.append("stop").attr("offset", "50%").style("stop-color", "#008000");
-                grad.append("stop").attr("offset", "50%").style("stop-color", "#ffa500");
+        var refAndRef = this.getRefAndRefColor(svg);
+        var parentAndReferenced = this.getParentAndReferencedColor(svg);
+        var parentAndReferences = this.getParentAndReferencesColor(svg);
     
         this.circles = this.nodes
           .append('circle')
@@ -118,13 +117,7 @@ export class D3GraphService {
             return (d.y = Math.max(self.radius, Math.min(self.height - self.radius, d.y)));
           })
           .attr('fill', function (d: any) {
-            if (isNeighboursGraph) { 
-              if (d.group == 0) return '#FF0000';
-              else if (d.group == 1) return '#ffa500';
-              else if (d.group == 2) return "#008000";
-              else if (d.group == 3) return '#65b8ec';
-              return "url(#grad)";
-            }
+            if (isNeighboursGraph) return self.getGroupColor(d);
             return self.color(d.group);
           })
           .on("dblclick", (d:any) => {
@@ -159,11 +152,44 @@ export class D3GraphService {
           d.fy = null;
         }
       }
+
+    private getRefAndRefColor(svg: any) {
+      var refAndRef = svg.append("defs").append("linearGradient").attr("id", "refAndRef")
+          .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
+        refAndRef.append("stop").attr("offset", "50%").style("stop-color", "#008000");
+        refAndRef.append("stop").attr("offset", "50%").style("stop-color", "#ffa500");
+      return refAndRef;
+    }
+
+    private getParentAndReferencedColor(svg: any) {
+      var parentAndReferenced = svg.append("defs").append("linearGradient").attr("id", "parentAndReferenced")
+        .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
+        parentAndReferenced.append("stop").attr("offset", "50%").style("stop-color", "#65b8ec");
+        parentAndReferenced.append("stop").attr("offset", "50%").style("stop-color", "#ffa500");                
+      return parentAndReferenced;
+    }
+
+    private getParentAndReferencesColor(svg: any) {
+      var parentAndReferences = svg.append("defs").append("linearGradient").attr("id", "parentAndReferences")
+        .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
+        parentAndReferences.append("stop").attr("offset", "50%").style("stop-color", "#65b8ec");
+        parentAndReferences.append("stop").attr("offset", "50%").style("stop-color", "#ffa500");                
+      return parentAndReferences;
+    }
+
+    private getGroupColor(d: any) {
+      if (d.group == GroupType.Main.toString()) return '#FF0000';
+      else if (d.group == GroupType.Referenced.toString()) return '#FFA500';
+      else if (d.group == GroupType.References.toString()) return "#008000";
+      else if (d.group == GroupType.Parent.toString()) return '#65b8ec';
+      else if (d.group == GroupType.ParentAndReferenced.toString()) return 'url(#parentAndReferenced)';
+      else if (d.group == GroupType.ParentAndReferences.toString()) return 'url(#parentAndReferences)';
+      else return 'url(#refAndRef)';
+    }
       
     showExtended(extendInstance: any) {
         var pathSegments = this.router.url.split('/');
         var projectId = pathSegments[4];
-        var mainInstanceId = pathSegments[6];
 
         this.graphDataService.getGraphInstanceWithNeighboursExtended(Number(projectId), extendInstance.fullName).then(graphInstance => {
           var graphData = this.graphService.getGraphBasedOnData(this.graphDataService.getGraphInstancesAndRelated(graphInstance));
@@ -210,7 +236,7 @@ export class D3GraphService {
             return d.y;
           })
           .text(function (d: any) {
-            if (d.group == 0) return d.id;
+            if (d.group == GroupType.Main) return d.id;
     
             var links: Link[] = [];
             self.projectLinks.forEach(l => {

@@ -172,7 +172,7 @@ export class GraphService {
       return {
         id: this.getClassNameFromPath(instance.codeSnippetId),
         fullName: instance.codeSnippetId,
-        group: 0,
+        group: '0',
         link: instance.link
       };
     });

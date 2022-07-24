@@ -1,6 +1,6 @@
 export interface ProjectNode {
   id: string;
   fullName: string;
-  group: number;
+  group: string;
   link: string;
 }
