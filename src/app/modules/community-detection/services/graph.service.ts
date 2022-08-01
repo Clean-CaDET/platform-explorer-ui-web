@@ -170,7 +170,7 @@ export class GraphService {
   private extractNodesFromInstances(instances: GraphInstance[]): ProjectNode[] {
     return instances.map((instance: GraphInstance) => {
       return {
-        id: this.getClassNameFromPath(instance.codeSnippetId),
+        id: instance.codeSnippetId,
         fullName: instance.codeSnippetId,
         group: '0',
         link: instance.link
@@ -189,8 +189,8 @@ export class GraphService {
             weight += couplingStrength[key];
           }
           links.push({
-            source: this.getClassNameFromPath(instance.codeSnippetId),
-            target: this.getClassNameFromPath(relatedInstance.codeSnippetId),
+            source: instance.codeSnippetId,
+            target: relatedInstance.codeSnippetId,
             weight: weight
           });
         });

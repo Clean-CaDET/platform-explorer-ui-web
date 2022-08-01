@@ -24,7 +24,7 @@ export class DataSetComponent implements OnInit {
 
     private datasets: DataSet[] = [];
     public dataSource = new MatTableDataSource<DataSet>();
-    public displayedColumns = ['name', 'numOfProjects', 'dataSetExport', 'dataSetUpdate', 'dataSetDelete'];
+    public displayedColumns = ['name', 'numOfProjects', 'actions'];
 
     private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
     @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {

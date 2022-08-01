@@ -19,6 +19,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatChipsModule } from '@angular/material/chips'
 
 @NgModule({
   declarations: [],
@@ -41,7 +43,9 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatSidenavModule,
     MatSlideToggleModule,
     MatToolbarModule,
-    MatRadioModule
+    MatRadioModule,
+    MatMenuModule,
+    MatChipsModule
   ],
   exports: [
     MatInputModule,
@@ -62,7 +66,9 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatSlideToggleModule,
     MatToolbarModule,
     MatRadioModule,
-    MatTabsModule
+    MatTabsModule,
+    MatMenuModule,
+    MatChipsModule
   ]
 })
 export class MaterialModule {}

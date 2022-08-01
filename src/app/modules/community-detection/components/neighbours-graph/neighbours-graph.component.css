@@ -21,3 +21,24 @@ button {
   width: 220px;
   background-color: grey;
 }
+
+.red-circle{
+  color: red;
+}
+
+.blue-circle {
+  color: #65b8ec;
+}
+
+.yellow-circle {
+  color: #ffa500;
+}
+
+.green-circle {
+  color: #008000;
+}
+
+.chips{
+  display: flex;
+  flex-direction: column;
+}

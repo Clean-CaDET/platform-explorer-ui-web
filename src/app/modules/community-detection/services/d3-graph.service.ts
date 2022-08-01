@@ -173,7 +173,7 @@ export class D3GraphService {
       var parentAndReferences = svg.append("defs").append("linearGradient").attr("id", "parentAndReferences")
         .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
         parentAndReferences.append("stop").attr("offset", "50%").style("stop-color", "#65b8ec");
-        parentAndReferences.append("stop").attr("offset", "50%").style("stop-color", "#ffa500");                
+        parentAndReferences.append("stop").attr("offset", "50%").style("stop-color", "#008000");                
       return parentAndReferences;
     }
 
@@ -236,7 +236,7 @@ export class D3GraphService {
             return d.y;
           })
           .text(function (d: any) {
-            if (d.group == GroupType.Main) return d.id;
+            if (d.group == GroupType.Main) return self.getClassNameFromPath(d.id);
     
             var links: Link[] = [];
             self.projectLinks.forEach(l => {
@@ -245,7 +245,7 @@ export class D3GraphService {
             });
             
             if (isNeighboursGraph) return self.idAndWeightsSum(d, links);
-            return d.id;
+            return self.getClassNameFromPath(d.id);
           });
       }
 
@@ -254,13 +254,18 @@ export class D3GraphService {
         links.forEach(link => {
           sumOfWeights += link.weight!;
         });
-        return d.id + "(" + sumOfWeights + ")";;
+        return this.getClassNameFromPath(d.id) + "(" + sumOfWeights + ")";;
+      }
+
+      private getClassNameFromPath(fullName: string): string {
+        const paths = fullName.split('.');
+        return paths[paths.length - 1];
       }
     
       public initTitle() {
         const self = this;
         self.nodes.append('title').text(function (d: any) {
-          return d.id;
+          return self.getClassNameFromPath(d.id);
         });
       }
     

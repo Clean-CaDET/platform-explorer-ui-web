@@ -9,6 +9,16 @@
             <mat-icon>add</mat-icon>
         </button>
     </div>
+    <div class="toggle-annotation-info">
+        <mat-panel-title>
+            Annotation info
+            <mat-slide-toggle
+            color="primary"
+            [(ngModel)]="showAnnotationInfo"
+            (click)="toggleAnnotationInfo()"
+            ></mat-slide-toggle>
+        </mat-panel-title>
+    </div>
     <div id="projects-table-div">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <ng-container matColumnDef="name">
@@ -29,7 +39,7 @@
                 <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Instances</th>
                 <td mat-cell *matCellDef="let project" width="5%" class="cell-center">{{project.instancesCount}}</td>
             </ng-container>
-            <ng-container matColumnDef="fullyAnnotated">
+            <ng-container matColumnDef="fullyAnnotated" *ngIf="! showAnnotationInfo">
                 <th mat-header-cell *matHeaderCellDef class="cell-center" width="10%" >Fully annotated by me</th>
                 <td mat-cell *matCellDef="let project" class="cell-center" width="10%" >
                     <ng-container *ngIf="project.state == projectState.Built && project.fullyAnnotated">
@@ -43,28 +53,12 @@
                     </ng-container>
                 </td>
             </ng-container>
-            <ng-container matColumnDef="consistency">
+            <ng-container matColumnDef="consistency" *ngIf="!showAnnotationInfo">
                 <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Annotation consistency</th>
                 <td mat-cell *matCellDef="let project" width="5%" class="cell-center">
                     <ng-container *ngIf="project.instancesCount > 0">
                         <button mat-stroked-button color="primary" (click)="checkConsistency(project.id)">Check</button>
                     </ng-container>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="projectUpdate">
-                <th mat-header-cell *matHeaderCellDef width="5%" ></th>
-                <td mat-cell *matCellDef="let project" width="5%">
-                    <button mat-icon-button (click)="updateProject(project)" color="primary">
-                        <mat-icon matTooltip="edit">edit</mat-icon>
-                    </button>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="projectDelete">
-                <th mat-header-cell *matHeaderCellDef width="5%"></th>
-                <td mat-cell *matCellDef="let project" width="5%">
-                    <button mat-icon-button (click)="deleteProject(project.id)" color="primary">
-                        <mat-icon matTooltip="delete">delete</mat-icon>
-                    </button>
                 </td>
             </ng-container>
             <ng-container matColumnDef="status">
@@ -80,6 +74,24 @@
                     <ng-container *ngIf="project.state == projectState.Failed">
                         <mat-icon matTooltip="failed" class="icon-failed-project">highlight_off</mat-icon>
                     </ng-container>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef width="5%"></th>
+                <td mat-cell *matCellDef="let project" width="5%">
+                    <button mat-icon-button  [matMenuTriggerFor]="menu" color="primary">
+                        <mat-icon matTooltip="actions">more_horiz</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="updateProject(project)" color="primary">
+                            <mat-icon matTooltip="edit">edit</mat-icon>
+                            <span>Update</span>
+                        </button>
+                        <button mat-menu-item (click)="deleteProject(project.id)" color="primary">
+                            <mat-icon matTooltip="delete">delete</mat-icon>
+                            <span>Delete</span>
+                        </button>
+                    </mat-menu>
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

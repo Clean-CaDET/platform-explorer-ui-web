@@ -28,11 +28,14 @@ export class ProjectsComponent implements OnInit {
     public chosenDataset: DataSet = new DataSet();
     public chosenProject: DataSetProject = new DataSetProject();
     public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.chosenDataset.projects);
-    public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
+    public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'actions'];
+    public basicInfoColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'actions'];
+    public annotationInfoColumns: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'status', 'actions'];
     private pollingCycleDurationInSeconds: number = 10;
     public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"];
     public filterFormControl: FormControl = new FormControl('All instances', [Validators.required]);
     public projectState = ProjectState;
+    public showAnnotationInfo: boolean = false;
 
     private notificationSubscription: Subscription | undefined;
 
@@ -49,6 +52,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+      this.showAnnotationInfo = false;
       this.notificationSubscription = this.notificationService.getEvent()
         .subscribe(async (event: NotificationEvent) => {
             if (event instanceof DatasetChosenEvent) {
@@ -133,5 +137,10 @@ export class ProjectsComponent implements OnInit {
     public checkConsistency(projectId: number): void {
         let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', { data: [projectId, this.storageService.getSmellFilter()]});
         this.dialog.open(AnnotationConsistencyDialogComponent, dialogConfig);
+    }
+
+    public toggleAnnotationInfo() {
+      if (this.showAnnotationInfo) this.displayedColumns = this.basicInfoColumns;     
+      else this.displayedColumns = this.annotationInfoColumns;
     }
 }
