@@ -22,7 +22,7 @@
         >
         <div *ngIf="ignoreFolders">
           <ul>
-            <li *ngFor="let folder of projectBuildSettings.foldersToIgnore">
+            <li *ngFor="let folder of projectBuildSettings.ignoredFolders">
               {{ folder }}
               <button mat-icon-button color="primary" (click)="removeFolderToIgnore(folder)">
                 <mat-icon matTooltip="Remove">close</mat-icon>
@@ -41,16 +41,12 @@
     </tr>
     <tr>
       <td>
-        <mat-checkbox name="randomizeClasses" [(ngModel)]="projectBuildSettings.randomizeClassSelection"
-          >Randomize class selection</mat-checkbox
-        >
+        <mat-checkbox name="randomizeClasses" [(ngModel)]="projectBuildSettings.randomizeClassSelection">Randomize class selection</mat-checkbox>
       </td>
     </tr>
     <tr>
       <td>
-        <mat-checkbox name="randomizeMembers" [(ngModel)]="projectBuildSettings.randomizeMemberSelection"
-          >Randomize member selection</mat-checkbox
-        >
+        <mat-checkbox name="randomizeMembers" [(ngModel)]="projectBuildSettings.randomizeMemberSelection">Randomize member selection</mat-checkbox>
       </td>
     </tr>
     <tr>

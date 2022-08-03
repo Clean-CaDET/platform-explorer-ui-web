@@ -1,0 +1,39 @@
+.smell-detail-container {
+    margin: auto;
+    width: 70%;
+    margin-top: 10px;
+    display: flex;   
+}
+
+.table-container {
+    width: 50%;
+    margin-top: 10px;
+    height: fit-content;
+    margin-bottom: 50px;
+}
+
+.severity-container {
+    width: 50%;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 50px;
+}
+
+.add-button {
+    margin: 5px 20px 0px 0px;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
+}
+
+mat-cell > span.truncate-text {
+    text-overflow: clip; 
+    overflow: hidden; 
+    white-space: nowrap;
+}

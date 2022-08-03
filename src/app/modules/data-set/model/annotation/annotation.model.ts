@@ -5,7 +5,7 @@ import { SmellHeuristic } from "../smell-heuristic/smell-heuristic.model";
 export class Annotation {
     id: number = 0;
     instanceSmell: CodeSmell = new CodeSmell();
-    severity: number = 0;
+    severity: string = '';
     applicableHeuristics: SmellHeuristic[] = [];
     annotator: Annotator = new Annotator();
     note: string = '';

@@ -49,19 +49,15 @@ export class DataSetService {
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.serverCommunicationService.putRequest(this.datasetsPath, dataSet, headers);
   }
-
-  public addProjectToDataSet(
-    project: DataSetProject,
-    smellFilters: SmellFilter[],
-    buildSettings: ProjectBuildSettings,
-    dataSetId: number
-  ): Observable<DataSet> {
-    let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    let data = { project: project, smellFilters: smellFilters, buildSettings: buildSettings };
-    return this.serverCommunicationService.postRequest(this.datasetsPath + dataSetId + '/projects', data, headers);
+  
+  public addProjectToDataSet(project: DataSetProject, smellFilters: SmellFilter[], buildSettings: ProjectBuildSettings, dataSetId: number): Observable<DataSetProject> {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    let data = {project: project, smellFilters: smellFilters, buildSettings: buildSettings};
+    return this.serverCommunicationService.postRequest(this.datasetsPath + dataSetId + '/projects', data, headers)
   }
-
-  public getDataSetCodeSmells(id: number): Observable<Map<string, string[]>> {
+  
+  public getDataSetCodeSmells(id: number): Observable<CodeSmell[]> {
     return this.serverCommunicationService.getRequest(this.datasetsPath + id + '/code-smells');
   }
 }

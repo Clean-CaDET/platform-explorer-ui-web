@@ -2,7 +2,7 @@ import { SmellHeuristic } from "../../smell-heuristic/smell-heuristic.model";
 
 export class AnnotationDTO {
     instanceId: number = 0;
-    severity: number = 0;
+    severity: string = '';
     codeSmell: string = '';
     applicableHeuristics: SmellHeuristic[] = [];
     note: string = '';

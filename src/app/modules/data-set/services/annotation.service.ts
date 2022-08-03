@@ -5,7 +5,6 @@ import { Annotation } from '../model/annotation/annotation.model';
 import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service'; 
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
 import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
-import { Instance } from '../model/instance/instance.model';
 import { LocalStorageService } from './shared/local-storage.service';
 
 
@@ -19,18 +18,10 @@ export class AnnotationService {
   constructor(private serverCommunicationService: ServerCommunicationService, 
     private storageService: LocalStorageService) { }
 
-  public getAvailableCodeSmells(): Observable<Map<string, string[]>> {
-    return this.serverCommunicationService.getRequest(this.annotationsPath + 'available-code-smells');
-  }
-
   public getAvailableMetrics(): Observable<Map<string, string[]>> {
     return this.serverCommunicationService.getRequest(this.annotationsPath + 'available-metrics');
   }
-
-  public getAvailableHeuristics(): Observable<Map<string, string[]>> {
-    return this.serverCommunicationService.getRequest(this.annotationsPath + 'available-heuristics');
-  }
-
+  
   public addAnnotation(annotation: AnnotationDTO): Observable<Annotation> {
     let headers = new HttpHeaders()
       .set('Content-Type', 'application/json')

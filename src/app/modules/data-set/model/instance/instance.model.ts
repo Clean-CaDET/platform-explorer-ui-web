@@ -59,4 +59,8 @@ export class Instance {
             }
         }
     }
+
+    public hasNote(): boolean {
+        return this.annotationFromLoggedUser?.note != null && this.annotationFromLoggedUser?.note != '';
+    }
 }

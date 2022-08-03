@@ -62,16 +62,6 @@ mat-panel-title>span {
     flex-direction: row;
 }
 
-.auto-buttons-div {
-    margin-right: 235px;
-    display: flex;
-    justify-content: right;
-}
-
-.auto-buttons-div>button {
-    margin: 5px;
-}
-
 de-instances {
     width: 55%;
     margin-left: 20px;

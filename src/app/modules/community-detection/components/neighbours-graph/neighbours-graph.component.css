@@ -1,8 +1,9 @@
 .container {
   display: flex;
+  height: 1000px;
 }
 
-#classGraphNeighbours {
+#neighboursGraph {
   flex-grow: 1;
   margin: 5px;
   position: relative;
@@ -19,4 +20,25 @@ button {
   margin: 10px;
   width: 220px;
   background-color: grey;
+}
+
+.red-circle{
+  color: red;
+}
+
+.blue-circle {
+  color: #65b8ec;
+}
+
+.yellow-circle {
+  color: #ffa500;
+}
+
+.green-circle {
+  color: #008000;
+}
+
+.chips{
+  display: flex;
+  flex-direction: column;
 }

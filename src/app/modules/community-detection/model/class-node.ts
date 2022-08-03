@@ -4,5 +4,5 @@ export interface ClassNode {
   id: string;
   fullName: string;
   type: ClassNodeType;
-  group: number;
+  group: string;
 }
