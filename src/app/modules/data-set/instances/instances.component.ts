@@ -36,7 +36,7 @@ export class InstancesComponent implements OnInit {
     public searchInput: string = '';
     public selectedAnnotationStatus: AnnotationStatus = AnnotationStatus.All;
     public annotationStatuses: string[] = Object.keys(AnnotationStatus);
-    public selectedSeverity: string | null = null;
+    public selectedSeverity: string = 'All';
     public severities: Set<string|null> = new Set();
     public codeSmells: string[] = [];
     public selectedSmellFormControl = new FormControl('', Validators.required);
@@ -109,7 +109,7 @@ export class InstancesComponent implements OnInit {
     private initSeverities() {
       this.annotationNoteExists = this.storageService.getAnnotationNoteFlag() == 'true';
       this.severities.clear();
-      this.severities.add(null);
+      this.severities.add('All');
       this.dataSource.data.forEach((i:any) => {
         if (i.annotationFromLoggedUser?.severity != null) this.severities.add(i.annotationFromLoggedUser?.severity);
       });
@@ -122,6 +122,7 @@ export class InstancesComponent implements OnInit {
     }
 
     private filterInstancesForProject(data: any) {
+      this.selectedSeverity = 'All';
       this.chosenProject = data['project'];
       this.filter = data['filter'];
       this.filterInstances(this.chosenProject.id);
@@ -258,7 +259,7 @@ export class InstancesComponent implements OnInit {
 
     public searchInstances(): void {
       var instances = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
-      if (this.selectedSeverity != null) {
+      if (this.selectedSeverity != 'All') {
         var instancesWithSelectedSeverity = instances.filter(i => i.annotationFromLoggedUser?.severity == this.selectedSeverity)!;
         this.dataSource.data = this.filterInstancesByName(instancesWithSelectedSeverity);
       } else {
@@ -290,7 +291,7 @@ export class InstancesComponent implements OnInit {
     public filterBySeverity() {
       this.selectedAnnotationStatus = AnnotationStatus.All;
       var instances = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
-      if (this.selectedSeverity == null) this.dataSource.data = instances;
+      if (this.selectedSeverity == 'All') this.dataSource.data = instances;
       else this.dataSource.data = instances.filter(i => i.annotationFromLoggedUser?.severity == this.selectedSeverity)!;
     }
 
