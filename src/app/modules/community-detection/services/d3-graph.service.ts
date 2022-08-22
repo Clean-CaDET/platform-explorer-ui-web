@@ -219,7 +219,7 @@ export class D3GraphService {
         .append('svg')
         .attr('id', 'neighboursGraphSvg')
         .attr('width', '100%')
-        .attr('height', 1300);
+        .attr('height', 500);
       this.width = this.svg.node().getBoundingClientRect().width;
       this.height = this.svg.node().getBoundingClientRect().height;
     }
