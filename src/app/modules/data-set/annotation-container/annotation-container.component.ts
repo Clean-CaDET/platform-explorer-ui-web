@@ -111,7 +111,10 @@ export class CouplingDetailsPipe implements PipeTransform {
 
 @Pipe({ name: 'className' })
 export class ClassNamePipe implements PipeTransform {
-  transform(value: string): string {
-    return value.split('.').pop()!;
+  transform(instance: Instance): string {
+    if (instance.type.toString() == '0') return instance.codeSnippetId.split('.').pop()!;
+    var methodName = instance.codeSnippetId.split('(')[0].split('.').pop()!;
+    if (instance.codeSnippetId.includes('()')) return methodName + '()';
+    return methodName + '(...)';
   }
 }
