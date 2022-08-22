@@ -72,6 +72,8 @@ export class GraphDataService {
             relatedNode!.group = GroupType.ParentAndReferences;
           } else if (value.includes(GroupType.Referenced) && value.includes(GroupType.References)) {
             relatedNode!.group = GroupType.ReferencedAndReferences;
+          } else if (value.includes(GroupType.Referenced) && value.includes(GroupType.References) && value.includes(GroupType.Parent)) {
+            relatedNode!.group = GroupType.ParentAndReferencedAndReferences;
           }
           projectNodes[relatedNodeIndex] = relatedNode!;
         });

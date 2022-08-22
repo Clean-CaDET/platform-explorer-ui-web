@@ -106,6 +106,7 @@ export class D3GraphService {
         var refAndRef = this.getRefAndRefColor(svg);
         var parentAndReferenced = this.getParentAndReferencedColor(svg);
         var parentAndReferences = this.getParentAndReferencesColor(svg);
+        var parentAndRefAndRef = this.getParentAndRefAndRefColor(svg);
     
         this.circles = this.nodes
           .append('circle')
@@ -177,6 +178,15 @@ export class D3GraphService {
       return parentAndReferences;
     }
 
+    private getParentAndRefAndRefColor(svg: any) {
+      var parentAndRefAndRef = svg.append("defs").append("linearGradient").attr("id", "parentAndRefAndRef")
+        .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
+        parentAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#65b8ec");
+        parentAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#008000");                
+        parentAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#ffa500");                
+      return parentAndRefAndRef;
+    }
+
     private getGroupColor(d: any) {
       if (d.group == GroupType.Main.toString()) return '#FF0000';
       else if (d.group == GroupType.Referenced.toString()) return '#FFA500';
@@ -184,6 +194,7 @@ export class D3GraphService {
       else if (d.group == GroupType.Parent.toString()) return '#65b8ec';
       else if (d.group == GroupType.ParentAndReferenced.toString()) return 'url(#parentAndReferenced)';
       else if (d.group == GroupType.ParentAndReferences.toString()) return 'url(#parentAndReferences)';
+      else if (d.group == GroupType.ParentAndReferencedAndReferences.toString()) return 'url(#parentAndRefAndRef)';
       else return 'url(#refAndRef)';
     }
       
@@ -195,7 +206,7 @@ export class D3GraphService {
           var graphData = this.graphService.getGraphBasedOnData(this.graphDataService.getGraphInstancesAndRelated(graphInstance));
           this.projectNodes = graphData.projectNodes;
           this.graphDataService.setNodeGroups(graphInstance, this.projectNodes);
-          this.graphDataService.removeDuplicateNodes(this.projectNodes);
+          this.projectNodes = this.graphDataService.removeDuplicateNodes(this.projectNodes);
           this.projectLinks = graphData.projectLinks;
           this.initializeGraph();
         })
