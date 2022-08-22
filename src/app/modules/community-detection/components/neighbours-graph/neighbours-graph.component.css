@@ -1,12 +1,32 @@
 .container {
-  display: flex;
-  height: 1000px;
+  height: 600px;
+  width: 80%;
 }
 
 #neighboursGraph {
   flex-grow: 1;
   margin: 5px;
   position: relative;
+}
+
+.tip {
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 25px;
+  padding: 2px;
+  margin: 2px;
+  width: 250px;
+}
+
+span {
+  position: absolute;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+mat-icon {
+  margin-top: 2px;
+  margin-left: 5px;
 }
 
 .controls {
@@ -38,7 +58,18 @@ button {
   color: #008000;
 }
 
-.chips{
+.node-types{
   display: flex;
   flex-direction: column;
+}
+
+.horizontal-div { 
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.legend-div {
+  width: 20%;
+  margin-top: 10px;
 }
