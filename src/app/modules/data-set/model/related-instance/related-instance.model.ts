@@ -31,6 +31,10 @@ export class RelatedInstance {
                 this.relationType = RelationType.Parent;
                 break; 
             } 
+            case 3: {
+                this.relationType = RelationType.BelongsTo;
+                break;
+            }
             default: {
                 this.relationType = type as RelationType;
                 break;

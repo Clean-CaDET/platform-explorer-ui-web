@@ -51,6 +51,10 @@
     color: rgb(101, 184, 236);
 }
 
+.purple-icon {
+    color: rgb(144, 101, 236);
+}
+
 .auto-buttons-div {
     margin-right: 235px;
     display: flex;
