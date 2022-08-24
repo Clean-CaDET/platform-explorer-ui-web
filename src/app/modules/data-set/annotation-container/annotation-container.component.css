@@ -40,15 +40,19 @@
 }
 
 .green-icon {
-    color: green;
+    color: #63c663;
 }
 
 .orange-icon {
-    color: orange;
+    color: #efbf67;
 }
 
 .blue-icon {
     color: rgb(101, 184, 236);
+}
+
+.pink-icon {
+    color: #ed90d9;
 }
 
 .purple-icon {

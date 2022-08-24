@@ -52,7 +52,7 @@ export class NeighboursGraphComponent {
       .append('svg')
       .attr('id', 'neighboursGraphSvg')
       .attr('width', '100%')
-      .attr('height', 500);
+      .attr('height', '600');
     this.width = this.svg.node().getBoundingClientRect().width;
     this.height = this.svg.node().getBoundingClientRect().height;
   }

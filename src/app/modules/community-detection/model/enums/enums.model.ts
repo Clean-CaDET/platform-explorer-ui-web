@@ -6,5 +6,9 @@ export enum GroupType {
   ParentAndReferenced = 'Parent&Referenced',
   ParentAndReferences = 'Parent&References',
   ReferencedAndReferences = 'Referenced&References',
-  ParentAndReferencedAndReferences = 'Parent&Referenced&References'
+  ParentAndReferencedAndReferences = 'Parent&Referenced&References',
+  Subclass = 'Subclass',
+  SubclassAndReferenced = 'Subclass&Referenced',
+  SubclassAndReferences = 'Subclass&References',
+  SubclassAndReferencedAndReferences = 'Subclass&Referenced&References'
 }

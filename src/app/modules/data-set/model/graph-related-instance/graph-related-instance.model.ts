@@ -35,6 +35,10 @@ export class GraphRelatedInstance {
                 this.relationType = RelationType.BelongsTo;
                 break;
             }
+            case 4: {
+                this.relationType = RelationType.Subclass;
+                break;
+            }
             default: {
                 this.relationType = type as RelationType;
                 break;

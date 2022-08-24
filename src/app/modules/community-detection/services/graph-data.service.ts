@@ -56,6 +56,7 @@ export class GraphDataService {
           if (relatedInstance.relationType == '0') relatedNode!.group = GroupType.Referenced.toString();
           else if (relatedInstance.relationType == '1') relatedNode!.group = GroupType.References.toString();
           else if (relatedInstance.relationType == '2') relatedNode!.group = GroupType.Parent.toString();
+          else if (relatedInstance.relationType == '4') relatedNode!.group = GroupType.Subclass.toString();
           relatedNode!.link = relatedInstance.link;
           projectNodes[relatedNodeIndex] = relatedNode!;
         });
@@ -74,6 +75,12 @@ export class GraphDataService {
             relatedNode!.group = GroupType.ReferencedAndReferences;
           } else if (value.includes(GroupType.Referenced) && value.includes(GroupType.References) && value.includes(GroupType.Parent)) {
             relatedNode!.group = GroupType.ParentAndReferencedAndReferences;
+          } else if (value.includes(GroupType.Subclass) && value.includes(GroupType.Referenced)) {
+            relatedNode!.group = GroupType.SubclassAndReferenced;
+          } else if (value.includes(GroupType.Subclass) && value.includes(GroupType.References)) {
+            relatedNode!.group = GroupType.SubclassAndReferences;
+          } else if (value.includes(GroupType.Referenced) && value.includes(GroupType.References) && value.includes(GroupType.Subclass)) {
+            relatedNode!.group = GroupType.SubclassAndReferencedAndReferences;
           }
           projectNodes[relatedNodeIndex] = relatedNode!;
         });
@@ -100,6 +107,10 @@ export class GraphDataService {
           } else if (duplicate.relationType == '0') {
             var types = result.get(duplicate.codeSnippetId);
             types?.push(GroupType.Referenced);
+            result.set(duplicate.codeSnippetId, types!);
+          } else if (duplicate.relationType == '4') {
+            var types = result.get(duplicate.codeSnippetId);
+            types?.push(GroupType.Subclass);
             result.set(duplicate.codeSnippetId, types!);
           }
         });

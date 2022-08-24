@@ -107,6 +107,9 @@ export class D3GraphService {
         var parentAndReferenced = this.getParentAndReferencedColor(svg);
         var parentAndReferences = this.getParentAndReferencesColor(svg);
         var parentAndRefAndRef = this.getParentAndRefAndRefColor(svg);
+        var subclassAndReferenced = this.getSubclassAndReferencedColor(svg);
+        var subclassAndReferences = this.getSubclassAndReferencesColor(svg);
+        var subclassAndRefAndRef = this.getSubclassAndRefAndRefColor(svg);
     
         this.circles = this.nodes
           .append('circle')
@@ -130,11 +133,7 @@ export class D3GraphService {
             window.open(d.link, "_blank");
           })
           .style('stroke-width', 5)
-          .style('stroke', function (d: any) {
-            if (d.type === 'field') return '#DE3163';
-            else return '#FFBF00';
-          })
-          .call(d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended));
+          .call(d3.drag().on('start', dragstarted).on('drag', dragged));
     
         function dragstarted(d: any) {
           if (!d3.event.active) self.simulation.alphaTarget(0.3).restart();
@@ -146,19 +145,13 @@ export class D3GraphService {
           d.fx = d3.event.x;
           d.fy = d3.event.y;
         }
-    
-        function dragended(d: any) {
-          if (!d3.event.active) self.simulation.alphaTarget(0);
-          d.fx = null;
-          d.fy = null;
-        }
       }
 
     private getRefAndRefColor(svg: any) {
       var refAndRef = svg.append("defs").append("linearGradient").attr("id", "refAndRef")
           .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
-        refAndRef.append("stop").attr("offset", "50%").style("stop-color", "#008000");
-        refAndRef.append("stop").attr("offset", "50%").style("stop-color", "#ffa500");
+        refAndRef.append("stop").attr("offset", "50%").style("stop-color", "#63c663");
+        refAndRef.append("stop").attr("offset", "50%").style("stop-color", "#efbf67");
       return refAndRef;
     }
 
@@ -166,7 +159,7 @@ export class D3GraphService {
       var parentAndReferenced = svg.append("defs").append("linearGradient").attr("id", "parentAndReferenced")
         .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
         parentAndReferenced.append("stop").attr("offset", "50%").style("stop-color", "#65b8ec");
-        parentAndReferenced.append("stop").attr("offset", "50%").style("stop-color", "#ffa500");                
+        parentAndReferenced.append("stop").attr("offset", "50%").style("stop-color", "#efbf67");                
       return parentAndReferenced;
     }
 
@@ -174,7 +167,7 @@ export class D3GraphService {
       var parentAndReferences = svg.append("defs").append("linearGradient").attr("id", "parentAndReferences")
         .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
         parentAndReferences.append("stop").attr("offset", "50%").style("stop-color", "#65b8ec");
-        parentAndReferences.append("stop").attr("offset", "50%").style("stop-color", "#008000");                
+        parentAndReferences.append("stop").attr("offset", "50%").style("stop-color", "#63c663");                
       return parentAndReferences;
     }
 
@@ -182,19 +175,49 @@ export class D3GraphService {
       var parentAndRefAndRef = svg.append("defs").append("linearGradient").attr("id", "parentAndRefAndRef")
         .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
         parentAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#65b8ec");
-        parentAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#008000");                
-        parentAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#ffa500");                
+        parentAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#63c663");                
+        parentAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#efbf67");                
       return parentAndRefAndRef;
     }
 
+    private getSubclassAndReferencedColor(svg: any) {
+      var subclassAndReferenced = svg.append("defs").append("linearGradient").attr("id", "subclassAndReferenced")
+        .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
+        subclassAndReferenced.append("stop").attr("offset", "50%").style("stop-color", "#ed90d9");
+        subclassAndReferenced.append("stop").attr("offset", "50%").style("stop-color", "#efbf67");                
+      return subclassAndReferenced;
+    }
+
+    private getSubclassAndReferencesColor(svg: any) {
+      var subclassAndReferences = svg.append("defs").append("linearGradient").attr("id", "subclassAndReferences")
+        .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
+        subclassAndReferences.append("stop").attr("offset", "50%").style("stop-color", "#ed90d9");
+        subclassAndReferences.append("stop").attr("offset", "50%").style("stop-color", "#63c663");                
+      return subclassAndReferences;
+    }
+
+    private getSubclassAndRefAndRefColor(svg: any) {
+      var subclassAndRefAndRef = svg.append("defs").append("linearGradient").attr("id", "subclassAndRefAndRef")
+        .attr("x1", "0%").attr("x2", "0%").attr("y1", "100%").attr("y2", "0%");
+        subclassAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#ed90d9");
+        subclassAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#63c663");                
+        subclassAndRefAndRef.append("stop").attr("offset", "33%").style("stop-color", "#efbf67");                
+      return subclassAndRefAndRef;
+    }
+
+
     private getGroupColor(d: any) {
-      if (d.group == GroupType.Main.toString()) return '#FF0000';
-      else if (d.group == GroupType.Referenced.toString()) return '#FFA500';
-      else if (d.group == GroupType.References.toString()) return "#008000";
+      if (d.group == GroupType.Main.toString()) return '#e77272';
+      else if (d.group == GroupType.Referenced.toString()) return '#efbf67';
+      else if (d.group == GroupType.References.toString()) return "#63c663";
       else if (d.group == GroupType.Parent.toString()) return '#65b8ec';
       else if (d.group == GroupType.ParentAndReferenced.toString()) return 'url(#parentAndReferenced)';
       else if (d.group == GroupType.ParentAndReferences.toString()) return 'url(#parentAndReferences)';
       else if (d.group == GroupType.ParentAndReferencedAndReferences.toString()) return 'url(#parentAndRefAndRef)';
+      else if (d.group == GroupType.Subclass.toString()) return '#ed90d9';
+      else if (d.group == GroupType.SubclassAndReferenced.toString()) return 'url(#subclassAndReferenced)';
+      else if (d.group == GroupType.SubclassAndReferences.toString()) return 'url(#subclassAndReferences)';
+      else if (d.group == GroupType.SubclassAndReferencedAndReferences.toString()) return 'url(#subclassAndRefAndRef)';
       else return 'url(#refAndRef)';
     }
       
@@ -230,7 +253,7 @@ export class D3GraphService {
         .append('svg')
         .attr('id', 'neighboursGraphSvg')
         .attr('width', '100%')
-        .attr('height', 500);
+        .attr('height', '600');
       this.width = this.svg.node().getBoundingClientRect().width;
       this.height = this.svg.node().getBoundingClientRect().height;
     }

@@ -38,7 +38,8 @@ export enum RelationType {
     Referenced = 'Referenced',
     References = 'References',
     Parent = 'Parent',
-    BelongsTo = "BelongsTo"
+    BelongsTo = "BelongsTo",
+    Subclass = "Subclass"
 }
 
 export enum CouplingType {
@@ -50,5 +51,6 @@ export enum CouplingType {
     Parent = 'Parent',
     AccessedAccessor = 'AccessedAccessor',
     AccessedField = 'AccessedField',
-    BelongsTo = 'BelongsTo'
+    BelongsTo = 'BelongsTo',
+    Subclass = "Subclass"
 }

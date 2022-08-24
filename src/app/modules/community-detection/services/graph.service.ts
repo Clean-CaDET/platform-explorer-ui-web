@@ -33,17 +33,7 @@ export class GraphService {
   public getClassGraph(instanceId: number): Observable<ClassGraph> {
     return this.serverCommunicationService.getRequest(`instances/${instanceId}/class-cohesion-graph`);
   }
-
-  //   getCommunities(nodes: any, links: any, algorithm: string) {
-  //   return this.http.post(`${environment.apiHost}projects/community-detection`, {
-  //     Nodes: nodes.map((n:any) => n.id),
-  //     Links: links,
-  //     Algorithm: algorithm,
-  //   });
-  // }
-
   
-
   public initClassGraph(classGraph: ClassGraph, className: string) {
     this.classMembers.next(classGraph);
     this.className.next(this.getClassNameFromPath(className));

@@ -1,8 +1,3 @@
-.container {
-  height: 600px;
-  width: 80%;
-}
-
 #neighboursGraph {
   flex-grow: 1;
   margin: 5px;
@@ -43,7 +38,7 @@ button {
 }
 
 .red-circle{
-  color: red;
+  color: #e77272;
 }
 
 .blue-circle {
@@ -51,11 +46,15 @@ button {
 }
 
 .yellow-circle {
-  color: #ffa500;
+  color: #efbf67;
 }
 
 .green-circle {
-  color: #008000;
+  color: #63c663;
+}
+
+.pink-circle {
+  color: #ed90d9;
 }
 
 .node-types{

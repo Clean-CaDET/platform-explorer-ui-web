@@ -32,6 +32,7 @@
                         <mat-icon *ngIf="instance.relationType=='Referenced'" class="orange-icon" matTooltip="referenced by {{chosenInstance | className}}">call_made</mat-icon>
                         <mat-icon *ngIf="instance.relationType=='Parent'" class="blue-icon" matTooltip="parent">arrow_upward</mat-icon>
                         <mat-icon *ngIf="instance.relationType=='BelongsTo'" class="purple-icon" matTooltip="{{chosenInstance | className}} belongs to">arrow_upward</mat-icon>
+                        <mat-icon *ngIf="instance.relationType=='Subclass'" class="pink-icon" matTooltip="subclass of {{chosenInstance | className}}">arrow_downward</mat-icon>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="couplingStrength">
