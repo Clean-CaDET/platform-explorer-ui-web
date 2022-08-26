@@ -8,6 +8,8 @@ import { GraphService } from '../../services/graph.service';
 import { Subscription } from 'rxjs';
 import { D3GraphService } from '../../services/d3-graph.service';
 import { GraphDataService } from '../../services/graph-data.service';
+import { GraphInstance } from 'src/app/modules/data-set/model/graph-instance/graph-instance.model';
+import { SnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';
 
 @Component({
   selector: 'de-neighbours-graph',
@@ -57,15 +59,19 @@ export class NeighboursGraphComponent {
     this.height = this.svg.node().getBoundingClientRect().height;
   }
 
-  show(projectId: string, instanceId: string) {
+  show(projectId: string, instanceId: string, snippetType: SnippetType) {
     this.graphDataService.getGraphInstanceWithNeighbours(Number(projectId), Number(instanceId)).then(graphInstance => {
-      var graph = this.graphService.getGraphBasedOnData(this.graphDataService.getGraphInstancesAndRelated(graphInstance));
-      this.projectNodes = graph.projectNodes;
-      this.graphDataService.setNodeGroups(graphInstance, this.projectNodes);
-      this.projectNodes = this.graphDataService.removeDuplicateNodes(this.projectNodes);
-      this.projectLinks = graph.projectLinks;
-      this.initGraph();
+      this.showGraphInstance(graphInstance, snippetType);
     })
+  }
+
+  showGraphInstance(graphInstance: GraphInstance, snippetType: SnippetType) {
+    var graph = this.graphService.getGraphBasedOnData(this.graphDataService.getGraphInstancesAndRelated(graphInstance));
+    this.projectNodes = graph.projectNodes;
+    this.graphDataService.setNodeGroups(graphInstance, this.projectNodes, snippetType);
+    this.projectNodes = this.graphDataService.removeDuplicateNodes(this.projectNodes);
+    this.projectLinks = graph.projectLinks;
+    this.initGraph();
   }
 
   nodesToDraw(): ProjectNode[] {

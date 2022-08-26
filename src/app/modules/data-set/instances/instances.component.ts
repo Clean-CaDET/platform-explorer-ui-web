@@ -217,19 +217,16 @@ export class InstancesComponent implements OnInit {
     }
 
     private loadNextProjectInstance() {
-      var nextProject = this.chosenDataset.getNextProject(this.chosenProject.id);
-      if (nextProject) { 
-        this.filterInstances(nextProject.id).then(() => {
-            this.chooseDefaultInstance();
-        }).then(() => {
-            var candidateInstances = this.chosenProject.getCandidateInstancesForSmell(this.selectedSmellFormControl.value);
-            if (candidateInstances.length > 0) {
-              this.chosenInstance = candidateInstances[0];
-              this.notificationService.setEvent(new InstanceChosenEvent(this.chosenInstance));
-              this.location.replaceState('/datasets/'+this.chosenDataset.id+'/projects/'+this.chosenProject.id+'/instances/'+this.chosenInstance.id);
-            }
-        });
-      }
+      this.chosenProject = this.chosenDataset.getNextProject(this.chosenProject.id)!;
+      if (this.chosenProject == null) return;
+
+      this.filterInstances(this.chosenProject.id).then(() => {
+          var candidateInstances = this.chosenProject.getCandidateInstancesForSmell(this.selectedSmellFormControl.value);
+          if (candidateInstances.length == 0) return; 
+          this.chooseDefaultInstance();
+          this.notificationService.setEvent(new InstanceChosenEvent(this.chosenInstance));
+          this.location.replaceState('/datasets/'+this.chosenDataset.id+'/projects/'+this.chosenProject.id+'/instances/'+this.chosenInstance.id);
+      });
     }
 
     public loadPreviousInstance(currentInstanceId: number) {

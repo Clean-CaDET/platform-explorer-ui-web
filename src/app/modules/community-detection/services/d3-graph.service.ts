@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import * as d3 from "d3";import { GroupType } from "../model/enums/enums.model";
+import * as d3 from "d3";import { SnippetType } from "../../annotation-schema/model/enums/enums.model";
+import { GroupType } from "../model/enums/enums.model";
 import { Link } from "../model/link";
 import { ProjectNode } from "../model/project-node";
 import { GraphDataService } from "./graph-data.service";
@@ -218,6 +219,7 @@ export class D3GraphService {
       else if (d.group == GroupType.SubclassAndReferenced.toString()) return 'url(#subclassAndReferenced)';
       else if (d.group == GroupType.SubclassAndReferences.toString()) return 'url(#subclassAndReferences)';
       else if (d.group == GroupType.SubclassAndReferencedAndReferences.toString()) return 'url(#subclassAndRefAndRef)';
+      else if (d.group == GroupType.BelongsTo.toString()) return '#a483eb';
       else return 'url(#refAndRef)';
     }
       
@@ -228,7 +230,7 @@ export class D3GraphService {
         this.graphDataService.getGraphInstanceWithNeighboursExtended(Number(projectId), extendInstance.fullName).then(graphInstance => {
           var graphData = this.graphService.getGraphBasedOnData(this.graphDataService.getGraphInstancesAndRelated(graphInstance));
           this.projectNodes = graphData.projectNodes;
-          this.graphDataService.setNodeGroups(graphInstance, this.projectNodes);
+          this.graphDataService.setNodeGroups(graphInstance, this.projectNodes, SnippetType.Class);
           this.projectNodes = this.graphDataService.removeDuplicateNodes(this.projectNodes);
           this.projectLinks = graphData.projectLinks;
           this.initializeGraph();
@@ -270,7 +272,7 @@ export class D3GraphService {
             return d.y;
           })
           .text(function (d: any) {
-            if (d.group == GroupType.Main) return self.getClassNameFromPath(d.id);
+            if (d.group == GroupType.Main || d.group == GroupType.BelongsTo) return self.getClassNameFromPath(d.id);
     
             var links: Link[] = [];
             self.projectLinks.forEach(l => {

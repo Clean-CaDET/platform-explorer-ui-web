@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { ServerCommunicationService } from "src/app/server-communication/server-communication.service";
+import { SnippetType } from "../../annotation-schema/model/enums/enums.model";
 import { GraphInstance } from "../../data-set/model/graph-instance/graph-instance.model";
 import { GroupType } from "../model/enums/enums.model";
 import { ProjectNode } from "../model/project-node";
@@ -36,16 +37,17 @@ export class GraphDataService {
         return instances;
     }
     
-    public setNodeGroups(graphInstance: GraphInstance, projectNodes: ProjectNode[]) {
-        this.setMainNodeGroup(graphInstance, projectNodes);
+    public setNodeGroups(graphInstance: GraphInstance, projectNodes: ProjectNode[], snippetType: SnippetType) {
+        this.setMainNodeGroup(graphInstance, projectNodes, snippetType);
         this.setRelatedNodeGroup(graphInstance, projectNodes);  
         this.setMultipleRelatedNodeGroup(graphInstance, projectNodes);
     }
     
-    private setMainNodeGroup(graphInstance: GraphInstance, projectNodes: ProjectNode[]) {
+    private setMainNodeGroup(graphInstance: GraphInstance, projectNodes: ProjectNode[], snippetType: SnippetType) {
         var mainNodeIndex = projectNodes.findIndex(n => n.fullName == graphInstance.codeSnippetId);
         var mainNode = projectNodes.find(n => n.fullName == graphInstance.codeSnippetId);
-        mainNode!.group = GroupType.Main.toString();
+        if (snippetType == SnippetType.Class)mainNode!.group = GroupType.Main.toString();
+        else mainNode!.group = GroupType.BelongsTo.toString();
         projectNodes[mainNodeIndex] = mainNode!;
     }
     
@@ -56,6 +58,7 @@ export class GraphDataService {
           if (relatedInstance.relationType == '0') relatedNode!.group = GroupType.Referenced.toString();
           else if (relatedInstance.relationType == '1') relatedNode!.group = GroupType.References.toString();
           else if (relatedInstance.relationType == '2') relatedNode!.group = GroupType.Parent.toString();
+          else if (relatedInstance.relationType == '3') relatedNode!.group = GroupType.BelongsTo.toString();
           else if (relatedInstance.relationType == '4') relatedNode!.group = GroupType.Subclass.toString();
           relatedNode!.link = relatedInstance.link;
           projectNodes[relatedNodeIndex] = relatedNode!;
@@ -111,6 +114,10 @@ export class GraphDataService {
           } else if (duplicate.relationType == '4') {
             var types = result.get(duplicate.codeSnippetId);
             types?.push(GroupType.Subclass);
+            result.set(duplicate.codeSnippetId, types!);
+          } else if (duplicate.relationType == '3') {
+            var types = result.get(duplicate.codeSnippetId);
+            types?.push(GroupType.BelongsTo);
             result.set(duplicate.codeSnippetId, types!);
           }
         });

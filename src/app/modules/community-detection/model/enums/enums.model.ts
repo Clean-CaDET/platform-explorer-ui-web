@@ -10,5 +10,6 @@ export enum GroupType {
   Subclass = 'Subclass',
   SubclassAndReferenced = 'Subclass&Referenced',
   SubclassAndReferences = 'Subclass&References',
-  SubclassAndReferencedAndReferences = 'Subclass&Referenced&References'
+  SubclassAndReferencedAndReferences = 'Subclass&Referenced&References',
+  BelongsTo = 'BelongsTo'
 }
