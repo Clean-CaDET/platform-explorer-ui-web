@@ -36,12 +36,12 @@
     padding-right: 10px;
 }
 
-#ann-status-filter {
-    width: 150px;
+#ann-status-filter, #severity-filter {
+    width: 100px;
     margin-right: 10px;
 }
 
-#severity-filter {
+#note-filter {
     width: 100px;
 }
 

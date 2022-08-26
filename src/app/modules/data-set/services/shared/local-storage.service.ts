@@ -42,18 +42,6 @@ export class LocalStorageService {
         localStorage.removeItem(this.autoAnnotationMode);
     }
     
-    public setAnnotationNoteFlag(annotationNoteFlag: boolean) {
-        localStorage.setItem(this.annotationNoteFlag, annotationNoteFlag+'');
-    }
-
-    public getAnnotationNoteFlag() {
-        return localStorage.getItem(this.annotationNoteFlag);
-    }
-
-    public clearAnnotationNoteFlag() {
-        localStorage.removeItem(this.annotationNoteFlag);
-    }
-
     public clearLocalStorage() {
         localStorage.clear();
     }

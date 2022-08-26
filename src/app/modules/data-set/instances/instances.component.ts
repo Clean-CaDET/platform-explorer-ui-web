@@ -36,12 +36,13 @@ export class InstancesComponent implements OnInit {
     public searchInput: string = '';
     public selectedAnnotationStatus: AnnotationStatus = AnnotationStatus.All;
     public annotationStatuses: string[] = Object.keys(AnnotationStatus);
+    public noteStatuses: string[] = ['All', 'Has note', 'No note'];
     public selectedSeverity: string = 'All';
+    public selectedNoteStatus: string = 'All';
     public severities: Set<string|null> = new Set();
     public codeSmells: string[] = [];
     public selectedSmellFormControl = new FormControl('', Validators.required);
     public filter: string = 'All instances';
-    public annotationNoteExists = false;
 
     private notificationSubscription: Subscription | undefined;
     
@@ -107,9 +108,9 @@ export class InstancesComponent implements OnInit {
     }
 
     private initSeverities() {
-      this.annotationNoteExists = this.storageService.getAnnotationNoteFlag() == 'true';
       this.severities.clear();
       this.severities.add('All');
+      this.selectedNoteStatus = 'All';
       this.dataSource.data.forEach((i:any) => {
         if (i.annotationFromLoggedUser?.severity != null) this.severities.add(i.annotationFromLoggedUser?.severity);
       });
@@ -309,9 +310,9 @@ export class InstancesComponent implements OnInit {
       this.chooseDefaultInstance();
     }
 
-    public filterByAnnotationNote() {
-      this.storageService.setAnnotationNoteFlag(this.annotationNoteExists);
-      if (this.annotationNoteExists) this.dataSource.data = this.dataSource.data.filter(i => i.hasNote())!;
-      else this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
+    public filterByNote() {
+      this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
+      if (this.selectedNoteStatus == 'Has note') this.dataSource.data = this.dataSource.data.filter(i => i.hasNote())!;
+      else if (this.selectedNoteStatus == 'No note') this.dataSource.data = this.dataSource.data.filter(i => !i.hasNote())!;
     }
 }
