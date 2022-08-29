@@ -24,7 +24,7 @@
         <mat-form-field floatLabel="always" class="form-field" id="severity" appearance="outline" *ngIf="!hasPreviousAnnotation">
             <mat-label>Select severity</mat-label>
             <mat-select
-                [(ngModel)]="chosenSeverity" name="chosenSeverity" id="chosenSeverity">
+                [(ngModel)]="chosenSeverity" name="chosenSeverity" id="chosenSeverity" matTooltip="CTRL + Space">
                 <mat-option *ngFor="let severity of severities()" [value]="severity.value">{{severity.value}}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -40,6 +40,6 @@
         <button *ngIf="disableEdit && note" mat-icon-button matTooltip="Note" matTooltipPosition="right" (click)="openNoteDialog()" color="primary">
             <mat-icon>insert_drive_file</mat-icon>
         </button>
-        <button *ngIf="!disableEdit" id="save-button" mat-stroked-button color="primary" (click)="submitAnnotation()">Save</button>
+        <button *ngIf="!disableEdit" id="save-button" matTooltip="CTRL + S" mat-stroked-button color="primary" (click)="submitAnnotation()">Save</button>
     </div>
 </form>

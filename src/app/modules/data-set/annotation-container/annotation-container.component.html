@@ -12,8 +12,8 @@
         </de-annotation-form> 
 
         <div *ngIf="chosenInstance?.id" class="auto-buttons-div">
-            <button mat-stroked-button color="primary" (click)="loadPreviousInstance()">Back</button>
-            <button mat-stroked-button color="primary" (click)="loadNextInstance()">Next</button>
+            <button mat-stroked-button color="primary" (click)="loadPreviousInstance()" matTooltip="ALT + left_arrow">Back</button>
+            <button mat-stroked-button color="primary" (click)="loadNextInstance()" matTooltip="ALT + right_arrow">Next</button>
         </div>
 
         <p class="table-title">Related instances:</p>

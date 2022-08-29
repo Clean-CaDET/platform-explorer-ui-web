@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Annotation } from '../model/annotation/annotation.model';
 import { AnnotationDTO } from '../model/DTOs/annotation-dto/annotation-dto.model';
@@ -214,5 +214,18 @@ export class AnnotationFormComponent implements OnInit {
   public changeSeverity() {
     this.chosenSeverity = null;
     this.hasPreviousAnnotation = false;
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  public next(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === 's') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.submitAnnotation();
+    } else if (event.ctrlKey && event.key == ' ') {
+      event.preventDefault();
+      event.stopPropagation();
+      document.getElementById('chosenSeverity')?.click();
+    }
   }
 } 
