@@ -32,7 +32,7 @@
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
             <ng-container matColumnDef="codeSnippetId">
                 <th mat-header-cell *matHeaderCellDef width="65%">Code snippet id</th>
-                <td mat-cell class="bold-name" *matCellDef="let instance" width="65%">{{instance.codeSnippetId}}</td>
+                <td mat-cell class="bold-name" *matCellDef="let instance" width="65%">{{instance | instanceName}}</td>
             </ng-container>
             <ng-container matColumnDef="annotated">
                 <th mat-header-cell *matHeaderCellDef width="5%" class="cell-center">Annotated</th>

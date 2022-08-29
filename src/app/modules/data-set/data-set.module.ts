@@ -20,7 +20,7 @@ import { DataSetDetailComponent } from './data-set-detail/data-set-detail.compon
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AnnotationFormComponent } from './annotation-form/annotation-form.component';
 import { ProjectsComponent } from './projects/projects.component';
-import { InstancesComponent } from './instances/instances.component';
+import { InstanceNamePipe, InstancesComponent } from './instances/instances.component';
 import { AnnotationNoteDialogComponent } from './dialogs/annotation-note-dialog/annotation-note-dialog.component';
 
 @NgModule({
@@ -42,6 +42,7 @@ import { AnnotationNoteDialogComponent } from './dialogs/annotation-note-dialog/
     AnnotationContainerComponent,
     CouplingDetailsPipe,
     ClassNamePipe,
+    InstanceNamePipe
   ],
   imports: [
     AppRoutingModule,

@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
@@ -315,4 +315,17 @@ export class InstancesComponent implements OnInit {
       if (this.selectedNoteStatus == 'Has note') this.dataSource.data = this.dataSource.data.filter(i => i.hasNote())!;
       else if (this.selectedNoteStatus == 'No note') this.dataSource.data = this.dataSource.data.filter(i => !i.hasNote())!;
     }
+}
+
+@Pipe({ name: 'instanceName' })
+export class InstanceNamePipe implements PipeTransform {
+  transform(instance: Instance): string {
+    if (instance.type.toString() == '0') return instance.codeSnippetId;
+    var codeSnippetId = instance.codeSnippetId.split('(')[0].split('.');
+    var methodName = codeSnippetId[codeSnippetId.length-1];
+    if (instance.codeSnippetId.includes('()')) methodName += '()';
+    else methodName += '(...)';
+    codeSnippetId[codeSnippetId.length-1] = methodName;
+    return codeSnippetId.join('.');
+  }
 }
