@@ -1,13 +1,13 @@
 <div class="annotation-container">
-    <iframe frameborder=0 id="snippet"></iframe>
-    <div class="vertical-container"> 
-        <p class="table-title">Check the instance on GitHub!
+    <div class="vertical-container2">
+        <p class="github-link">Check the instance on GitHub!
             <a href="{{chosenInstance?.link}}" target="_blank">
                 <mat-icon>open_in_new</mat-icon>
             </a>
         </p>
-
-        
+        <iframe frameborder=0 id="snippet"></iframe>
+    </div>  
+    <div class="vertical-container">
         <de-annotation-form [codeSmell]="selectedSmell" [instanceId]="chosenInstance.id">
         </de-annotation-form> 
 

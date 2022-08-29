@@ -4,8 +4,13 @@
 }
 
 #snippet {
+    height: 70%;
+}
+
+.vertical-container2 {
+    display: flex;
+    flex-direction: column;
     width: 70%;
-    margin-top: 20px;
 }
 
 .vertical-container {
@@ -67,4 +72,14 @@
 
 .auto-buttons-div>button {
     margin: 5px;
+}
+
+.github-link {
+    font-size: 18px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(92, 13, 110);
+    font-weight: 550;
+    padding-top: 5px;
+    padding-left: 20px;
+    margin-bottom: 0px;
 }

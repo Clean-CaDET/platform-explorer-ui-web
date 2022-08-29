@@ -108,3 +108,7 @@ mat-checkbox {
 .cell-center > .mat-form-field {
     display: contents;
 }
+
+form {
+    margin-top: 40px;
+}
