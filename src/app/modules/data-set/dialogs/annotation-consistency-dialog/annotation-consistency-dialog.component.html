@@ -12,7 +12,7 @@
                         Consistency type is <strong>required</strong>
                     </mat-error>
                 </mat-form-field>
-                <button mat-stroked-button (click)="getConsistencyResults()" color="primary">Check</button>
+                <button mat-stroked-button (click)="getConsistencyResults()">Check</button>
             </tr>
             <tr>
                 <mat-form-field floatLabel="always" class="form-field" id="severity" appearance="outline" *ngIf="severityNeeded">
@@ -31,7 +31,7 @@
         <ng-container *ngFor="let resultDescription of results.keys()">
             <tr>
                 <div class="show-result">
-                    <button mat-stroked-button color="primary" (click)="showResult(resultDescription)">{{resultDescription}}</button>
+                    <button mat-stroked-button (click)="showResult(resultDescription)">{{resultDescription}}</button>
                 </div>
             </tr>
         </ng-container>
@@ -42,5 +42,5 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-dialog-close mat-stroked-button color="primary">Cancel</button>
+    <button mat-dialog-close mat-stroked-button>Cancel</button>
 </mat-dialog-actions>

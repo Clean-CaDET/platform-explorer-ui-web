@@ -21,7 +21,7 @@ import { AnnotationSchemaService } from "../services/annotation-schema.service";
 export class SeverityComponent implements OnInit {
 
   @Input() public chosenCodeSmell: CodeSmellDefinition;
-  public severitiesDisplayedColumns = ['value', 'description', 'edit', 'delete'];
+  public severitiesDisplayedColumns = ['value', 'description', 'actions'];
   public severitiesDataSource = new MatTableDataSource<Severity>();
 
   @ViewChild(MatTable) public table : MatTable<Heuristic>;

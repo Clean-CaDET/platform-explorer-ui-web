@@ -21,9 +21,9 @@ import { DialogConfigService } from "../data-set/dialogs/dialog-config.service";
 export class AnnotationSchemaComponent implements OnInit {
 
   public codeSmellDefinitions: CodeSmellDefinition[] = [];
-  public codeSmellsDisplayedColumns = ['name', 'description', 'snippetType', 'edit', 'delete'];
+  public codeSmellsDisplayedColumns = ['name', 'description', 'snippetType', 'actions'];
   public codeSmellsDataSource = new MatTableDataSource<CodeSmellDefinition>();
-  public selectedSnippetType: SnippetType | null = null;
+  public selectedSnippetType: string = 'All';
   public snippetTypes: string[] = Object.keys(SnippetType);
   public chosenCodeSmell: CodeSmellDefinition;
 

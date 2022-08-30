@@ -57,7 +57,7 @@
                 <th mat-header-cell *matHeaderCellDef width="5%"> Annotations </th>
                 <td mat-cell *matCellDef="let instance" width="5%">
                     <ng-container *ngIf="instance.annotations.length">
-                        <button mat-stroked-button color="primary" (click)="showAnnotationsForInstance(instance.annotations, instance.id)">Show</button>
+                        <button mat-stroked-button (click)="showAnnotationsForInstance(instance.annotations, instance.id)">Show</button>
                     </ng-container>
                 </td>
             </ng-container>

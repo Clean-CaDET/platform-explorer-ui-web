@@ -18,8 +18,8 @@
 }
 
 h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(92, 13, 110);
+    font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif;
+    color: #382110;
     text-align: center;
 }
 
@@ -39,4 +39,8 @@ h1 {
 p {
     font-size: 18px;
     padding-left: 10px;
+}
+
+.mat-stroked-button {
+    color: #382110;
 }

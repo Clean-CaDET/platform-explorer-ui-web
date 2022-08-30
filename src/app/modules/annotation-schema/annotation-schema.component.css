@@ -2,14 +2,23 @@
     margin: auto;
     width: 70%;
     margin-top: 10px;
+    border-radius: 3px;
+    border: #DCD6CC 1px solid;
+    background-color: white;
 }
 
-table {
+table { 
     width: 100%;
 }
 
 .add-button {
     margin: 5px 20px 0px 0px;
+    color: #8f786f;
+    background-color: #e4cdc4;
+}
+
+.mat-icon-button {
+    color: #8f786f;
 }
 
 .cell-center {
@@ -34,4 +43,8 @@ mat-cell > span.truncate-text {
 
 .filters {
     padding-right: 10px;
+}
+
+mat-icon {
+    color: #8f786f;
 }

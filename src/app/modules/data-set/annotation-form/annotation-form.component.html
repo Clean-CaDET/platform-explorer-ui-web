@@ -7,7 +7,7 @@
         </tr>
         <tr *ngFor="let heuristic of heuristics()">
             <td class="first-column-cell">
-                <mat-checkbox color="primary" [checked]="isHeuristicApplied(heuristic.name)" 
+                <mat-checkbox [checked]="isHeuristicApplied(heuristic.name)" 
                 (change)="checkHeuristicCheckbox(heuristic.name, $event.checked)"  
                 [disabled]="disableEdit"></mat-checkbox>
                 {{heuristic.name}}
@@ -33,13 +33,13 @@
             <p *ngIf="!disableEdit" (click)="changeSeverity()">{{chosenSeverity}}</p>
             <p *ngIf="disableEdit">{{chosenSeverity}}</p>
         </div>
-        <button *ngIf="!disableEdit" mat-icon-button matTooltip="Note" matTooltipPosition="right" (click)="openNoteDialog()" color="primary">
+        <button *ngIf="!disableEdit" mat-icon-button matTooltip="Note" matTooltipPosition="right" (click)="openNoteDialog()">
             <mat-icon *ngIf="instance.hasAnnotationFromLoggedUser && this.instance.annotationFromLoggedUser?.note">insert_drive_file</mat-icon>
             <mat-icon *ngIf="!instance.hasAnnotationFromLoggedUser || !this.instance.annotationFromLoggedUser?.note">note_add</mat-icon>
         </button>
-        <button *ngIf="disableEdit && note" mat-icon-button matTooltip="Note" matTooltipPosition="right" (click)="openNoteDialog()" color="primary">
+        <button *ngIf="disableEdit && note" mat-icon-button matTooltip="Note" matTooltipPosition="right" (click)="openNoteDialog()">
             <mat-icon>insert_drive_file</mat-icon>
         </button>
-        <button *ngIf="!disableEdit" id="save-button" matTooltip="CTRL + S" mat-stroked-button color="primary" (click)="submitAnnotation()">Save</button>
+        <button *ngIf="!disableEdit" id="save-button" matTooltip="CTRL + S" mat-stroked-button (click)="submitAnnotation()">Save</button>
     </div>
 </form>

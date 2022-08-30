@@ -10,6 +10,6 @@
     </mat-card>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-stroked-button color="primary" (click)="close()">Cancel</button>
-    <button mat-stroked-button color="primary" (click)="submitNote()" *ngIf="!data.disableEdit">Update</button>
+    <button mat-stroked-button (click)="close()">Cancel</button>
+    <button mat-stroked-button (click)="submitNote()" *ngIf="!data.disableEdit">Update</button>
 </mat-dialog-actions>

@@ -21,7 +21,7 @@ import { AnnotationSchemaService } from "../services/annotation-schema.service";
 export class CodeSmellDetailComponent implements OnInit {
 
   public chosenCodeSmell: CodeSmellDefinition;
-  public heuristicsDisplayedColumns = ['name', 'description', 'edit', 'delete'];
+  public heuristicsDisplayedColumns = ['name', 'description', 'actions'];
   public heuristicsDataSource = new MatTableDataSource<Heuristic>();
 
   @ViewChild(MatTable) public table : MatTable<Heuristic>;

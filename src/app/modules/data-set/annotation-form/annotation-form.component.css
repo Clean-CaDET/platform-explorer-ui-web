@@ -2,10 +2,10 @@ form {
     display: flex;
     flex-direction: column;
     margin: 5px;
-    border: 3px solid rgb(236, 228, 238);
     padding: 10px 20px 0px 20px;
-    border-radius: 20px;
-    margin-bottom: 30px;
+    border-radius: 2px;
+    border: 1px solid #D8D8D8;
+    background-color: #FFFFFF;
 }
 
 #severity {
@@ -21,8 +21,7 @@ form {
 
 p {
     font-size: 20px;
-    color:rgb(92, 13, 110);
-    font-weight: 450;
+    color:#382110;
     text-align: center;
 }
 
@@ -34,14 +33,14 @@ table {
 .header-cell-center {
     font-size: 16px;
     text-align: center;
-    border-bottom: 2px solid rgb(236, 228, 238);
-    border-top: 2px solid rgb(236, 228, 238);
+    border-bottom: 2px solid #F4F1EA;
+    border-top: 2px solid #F4F1EA;
 }
 
 .header-cell {
     font-size: 16px;
-    border-bottom: 2px solid rgb(236, 228, 238);
-    border-top: 2px solid rgb(236, 228, 238);
+    border-bottom: 2px solid #F4F1EA;
+    border-top: 2px solid #F4F1EA;
     padding-left: 20px;
 }
 
@@ -111,4 +110,17 @@ mat-checkbox {
 
 form {
     margin-top: 40px;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    opacity: 0.03 !important;
+    background-color: #8f786f!important;
+  }
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #8f786f;
+  }
+
+.mat-icon-button, .mat-stroked-button {
+    color: #8f786f;
 }

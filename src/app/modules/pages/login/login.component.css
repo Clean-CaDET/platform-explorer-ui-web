@@ -2,3 +2,7 @@ button {
     margin: auto;
     display: flex;
 }
+
+.mat-stroked-button {
+    color: #382110;
+}

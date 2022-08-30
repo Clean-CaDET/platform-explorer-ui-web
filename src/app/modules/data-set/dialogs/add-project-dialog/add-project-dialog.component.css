@@ -18,3 +18,11 @@ tr {
 mat-dialog-content {
     display: unset;
 }
+
+.mat-icon-button {
+    color: #8f786f;
+}
+
+.mat-stroked-button {
+    color: #382110;
+}
