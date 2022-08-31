@@ -8,6 +8,7 @@ import { Annotator } from "../model/annotator/annotator.model";
     providedIn: 'root'
 })
 export class AuthService {
+
     private authPath: string = 'auth/';
 
     constructor(private serverCommunicationService: ServerCommunicationService) { }
@@ -19,6 +20,10 @@ export class AuthService {
     }
 
     public getAnnotatorByEmail(email: string): Observable<Annotator> {
-        return this.serverCommunicationService.getRequest(this.authPath + email);
+        return this.serverCommunicationService.getRequest(this.authPath + 'email/' + email);
+    }
+
+    public getAnnotatorById(id: number): Observable<Annotator> {
+        return this.serverCommunicationService.getRequest(this.authPath + 'id/' + id);
     }
 }
