@@ -39,3 +39,21 @@ mat-toolbar {
     font-size: 15px;
     line-height: 17px;
 }
+
+mat-card {
+    width: 0px;
+    margin-right: 50px;
+    padding: 0px;
+    margin-top: 5px;
+}
+
+#avatar {
+    background-color: #bba59c;
+    border: none;
+    float: right;
+}
+
+.mat-card-avatar {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+}

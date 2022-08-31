@@ -26,4 +26,11 @@ export class AuthService {
     public getAnnotatorById(id: number): Observable<Annotator> {
         return this.serverCommunicationService.getRequest(this.authPath + 'id/' + id);
     }
+
+    public updateAnnotator(annotator: Annotator): Observable<Annotator> {
+        let headers = new HttpHeaders()
+        .set('Content-Type', 'application/json');
+        var data = {'name': annotator.name, 'email': annotator.email, 'yearsOfExperience': annotator.yearsOfExperience, 'ranking': annotator.ranking};
+        return this.serverCommunicationService.putRequest(this.authPath + annotator.id, data, headers);
+    }
 }

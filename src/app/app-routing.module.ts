@@ -8,11 +8,13 @@ import { AnnotationSchemaComponent } from './modules/annotation-schema/annotatio
 import { CodeSmellDetailComponent } from './modules/annotation-schema/code-smell-detail/code-smell-detail.component';
 import { TabContainerComponent } from './modules/community-detection/components/tab-container/tab-container.component';
 import { RegisterComponent } from './modules/pages/register/register.component';
+import { ProfileComponent } from './modules/pages/profile/profile.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'annotation-schema', 
     component: AnnotationSchemaComponent,

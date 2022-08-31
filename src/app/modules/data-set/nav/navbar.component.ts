@@ -31,4 +31,8 @@ export class NavbarComponent {
   public goToAnnotationSchema() {
     this.router.navigate(['/annotation-schema']);
   }
+
+  public goToAnnotatorProfile() {
+    this.router.navigate(['/profile']);
+  }
 }
