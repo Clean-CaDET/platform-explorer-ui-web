@@ -11,7 +11,6 @@ import { ExportDraftDataSetDialogComponent } from "./dialogs/export-draft-data-s
 import { UpdateDataSetDialogComponent } from "./dialogs/update-data-set-dialog/update-data-set-dialog.component";
 import { DataSet } from "./model/data-set/data-set.model";
 import { DataSetService } from "./services/data-set.service";
-import { NotificationService } from "./services/shared/notification.service";
 import { LocalStorageService } from "./services/shared/local-storage.service";
 
 

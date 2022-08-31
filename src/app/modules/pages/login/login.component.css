@@ -6,3 +6,42 @@ button {
 .mat-stroked-button {
     color: #382110;
 }
+
+a {
+    color: #00635d; 
+}
+
+.link, mat-form-field{
+    display: block;
+    width: 40%;
+    margin: auto;
+}
+
+mat-card-title {
+    width: 20%;
+    margin: auto;
+    margin-bottom: 40px;
+}
+
+.mat-card {
+    width: 20%;
+}
+
+div {
+    height: 60%;
+}
+
+
+::ng-deep .successSnackbar button, ::ng-deep .errorSnackbar button {
+    color: black;
+}
+
+::ng-deep .successSnackbar {
+    background: rgb(137, 231, 137);
+    color: black;
+}
+
+::ng-deep .errorSnackbar {
+    background: rgb(214, 95, 95);
+    color: black;
+}

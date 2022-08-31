@@ -22,6 +22,7 @@ import { AnnotationFormComponent } from './annotation-form/annotation-form.compo
 import { ProjectsComponent } from './projects/projects.component';
 import { InstanceNamePipe, InstancesComponent } from './instances/instances.component';
 import { AnnotationNoteDialogComponent } from './dialogs/annotation-note-dialog/annotation-note-dialog.component';
+import { ForgotIdDialogComponent } from './dialogs/forgot-id-dialog/forgot-id-dialog.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { AnnotationNoteDialogComponent } from './dialogs/annotation-note-dialog/
     AnnotationContainerComponent,
     CouplingDetailsPipe,
     ClassNamePipe,
-    InstanceNamePipe
+    InstanceNamePipe,
+    ForgotIdDialogComponent
   ],
   imports: [
     AppRoutingModule,

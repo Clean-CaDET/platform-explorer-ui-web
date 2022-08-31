@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { NotificationService } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 
 @Component({
@@ -9,18 +7,13 @@ import { LocalStorageService } from '../services/shared/local-storage.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   public annotationsCounter: boolean = false;
 
   constructor(
     private storageService: LocalStorageService,
     private router: Router
   ) {}
-
-  public ngOnInit(): void {
-    if (!this.storageService.getLoggedInAnnotator())
-      this.router.navigate(['/login']);
-  }
 
   public logout() {
     this.storageService.clearLocalStorage();

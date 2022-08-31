@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { ForgotIdDialogComponent } from '../../data-set/dialogs/forgot-id-dialog/forgot-id-dialog.component';
 import { LocalStorageService } from '../../data-set/services/shared/local-storage.service';
 
 
@@ -16,7 +19,21 @@ export class LoginComponent implements OnInit {
     Validators.min(1),
   ]);
 
-  constructor(private router: Router, private storageService: LocalStorageService) { }
+  private successSnackBarOptions: any = {
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom',
+    duration: 10000,
+    panelClass: ['successSnackbar'],
+  };
+  private errorSnackBarOptions: any = {
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom',
+    duration: 3000,
+    panelClass: ['errorSnackbar'],
+  };
+
+  constructor(private router: Router, private storageService: LocalStorageService,
+    private _snackBar: MatSnackBar,private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.storageService.getLoggedInAnnotator() ? this.router.navigate(['/datasets']) : this.router.navigate(['/login']);
@@ -29,4 +46,11 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  public forgotId() {
+    let dialogRef = this.dialog.open(ForgotIdDialogComponent);
+    dialogRef.afterClosed().subscribe((id: number) => {
+        if (id) this._snackBar.open('Your annotator ID is ' + id + '', 'OK', this.successSnackBarOptions);
+        else this._snackBar.open('Annotator ID for this email does not exist.', 'OK', this.errorSnackBarOptions);
+    });
+  }
 }

@@ -12,7 +12,10 @@
                     Annotator ID is <strong>required</strong>
                 </mat-error>
             </mat-form-field>
+            <button mat-stroked-button (click)='login()'>Login</button>
         </mat-card-content>
-        <button mat-stroked-button (click)='login()'>Login</button>
+        <div class="link">Or <a href="/register">create an account!</a></div>
+        <br>
+        <div class="link"><a href="" (click)="$event.preventDefault(); forgotId()">Forgot annotation id?</a></div>
     </mat-card>
 </div>

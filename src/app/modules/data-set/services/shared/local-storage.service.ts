@@ -8,7 +8,6 @@ export class LocalStorageService {
     private annotatorId: string = 'annotatorId';
     private smellFilter: string = 'smellFilter';
     private autoAnnotationMode: string = 'autoAnnotationMode';
-    private annotationNoteFlag: string = 'annotationNoteFlag';
 
     public getLoggedInAnnotator() {
         return localStorage.getItem(this.annotatorId);
