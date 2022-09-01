@@ -320,7 +320,7 @@ export class InstancesComponent implements OnInit {
 @Pipe({ name: 'instanceName' })
 export class InstanceNamePipe implements PipeTransform {
   transform(instance: Instance): string {
-    if (instance.type.toString() == '0') return instance.codeSnippetId;
+    if (instance.type.toString() == '0' || instance.type.toString() == 'Class') return instance.codeSnippetId;
     var codeSnippetId = instance.codeSnippetId.split('(')[0].split('.');
     var methodName = codeSnippetId[codeSnippetId.length-1];
     if (instance.codeSnippetId.includes('()')) methodName += '()';
