@@ -85,10 +85,11 @@ export class AnnotationFormComponent implements OnInit {
     } else {
       this.setPreviousAnnotation(this.instance.annotations.find(a => a.annotator.id == this.annotatorId)!);
     }
-    this.graphService.getClassGraph(this.instanceId).subscribe((classGraph: ClassGraph) => {
-      this.graphService.initClassGraph(classGraph, this.instance.codeSnippetId);
-      this.graphDataService.setMetricFeatures(this.instance.metricFeatures);
-    });
+    // TODO - class graph tab is not visible at the moment
+    // this.graphService.getClassGraph(this.instanceId).subscribe((classGraph: ClassGraph) => {
+    //   this.graphService.initClassGraph(classGraph, this.instance.codeSnippetId);
+    //   this.graphDataService.setMetricFeatures(this.instance.metricFeatures);
+    // });
   }
 
   private setPreviousAnnotation(previousAnnotation: Annotation) {
