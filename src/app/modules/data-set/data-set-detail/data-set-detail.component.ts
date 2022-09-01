@@ -93,8 +93,6 @@ export class DataSetDetailComponent implements OnInit {
   private loadDataset(params: Params) {
     this.datasetService.getDataSet(params['id']).then((dataset) => {
       this.chosenDataset = new DataSet(dataset);
-      this.chosenProject = new DataSetProject();
-      this.chosenInstance = new Instance(this.storageService);
       this.notificationService.setEvent(
         new DatasetChosenEvent(this.chosenDataset)
       );

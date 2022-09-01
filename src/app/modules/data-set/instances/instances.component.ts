@@ -43,7 +43,6 @@ export class InstancesComponent implements OnInit {
     public codeSmells: string[] = [];
     public selectedSmellFormControl = new FormControl('', Validators.required);
     public filter: string = 'All instances';
-
     private notificationSubscription: Subscription | undefined;
     
     constructor(private route: ActivatedRoute, private dialog: MatDialog, private router: Router,
@@ -62,7 +61,7 @@ export class InstancesComponent implements OnInit {
             } else if (event instanceof ProjectChosenEvent) {
               this.filterInstancesForProject(event.data);
             } else if (event instanceof InstanceChosenEvent) {
-              if (this.chosenDataset.name != "") this.loadInstance(event.instance);
+              this.loadInstance(event.instance);
             } else if (event instanceof NextInstanceEvent) {
               this.loadNextInstance(event.currentInstanceId);
             } else if (event instanceof PreviousInstanceEvent) {
@@ -118,8 +117,6 @@ export class InstancesComponent implements OnInit {
 
     private datasetChosen(dataset: DataSet) {
       this.chosenDataset = dataset;
-      this.chosenProject = new DataSetProject();
-      this.chosenInstance = new Instance(this.storageService);
     }
 
     private filterInstancesForProject(data: any) {
