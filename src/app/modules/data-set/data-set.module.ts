@@ -23,6 +23,7 @@ import { ProjectsComponent } from './projects/projects.component';
 import { InstanceNamePipe, InstancesComponent } from './instances/instances.component';
 import { AnnotationNoteDialogComponent } from './dialogs/annotation-note-dialog/annotation-note-dialog.component';
 import { ForgotIdDialogComponent } from './dialogs/forgot-id-dialog/forgot-id-dialog.component';
+import { ExportCompleteDataSetDialogComponent } from './dialogs/export-complete-data-set-dialog/export-complete-data-set-dialog.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { ForgotIdDialogComponent } from './dialogs/forgot-id-dialog/forgot-id-di
     AddDataSetDialogComponent,
     AddProjectDialogComponent,
     ExportDraftDataSetDialogComponent,
+    ExportCompleteDataSetDialogComponent,
     ConfirmDialogComponent,
     UpdateDataSetDialogComponent,
     UpdateProjectDialogComponent,

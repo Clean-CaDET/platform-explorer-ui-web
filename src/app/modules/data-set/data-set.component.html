@@ -30,7 +30,11 @@
                 <mat-menu #menu="matMenu">
                     <button mat-menu-item (click)="exportDraftDataSet(dataSet)">
                         <mat-icon>file_copy</mat-icon>
-                        <span>Export</span>
+                        <span>Export draft dataset</span>
+                    </button>
+                    <button mat-menu-item (click)="exportCompleteDataSet(dataSet)">
+                        <mat-icon>file_copy</mat-icon>
+                        <span>Export complete dataset</span>
                     </button>
                     <button mat-menu-item (click)="updateDataSet(dataSet)">
                         <mat-icon matTooltip="edit">edit</mat-icon>

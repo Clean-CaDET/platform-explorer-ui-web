@@ -7,9 +7,11 @@ import { ToastrService } from "ngx-toastr";
 import { AddDataSetDialogComponent } from "./dialogs/add-data-set-dialog/add-data-set-dialog.component";
 import { ConfirmDialogComponent } from "./dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogConfigService } from "./dialogs/dialog-config.service";
+import { ExportCompleteDataSetDialogComponent } from "./dialogs/export-complete-data-set-dialog/export-complete-data-set-dialog.component";
 import { ExportDraftDataSetDialogComponent } from "./dialogs/export-draft-data-set-dialog/export-draft-data-set-dialog.component";
 import { UpdateDataSetDialogComponent } from "./dialogs/update-data-set-dialog/update-data-set-dialog.component";
 import { DataSet } from "./model/data-set/data-set.model";
+import { CompleteDataSetExportDTO } from "./model/DTOs/complete-dataset-export-dto/complete-dataset-export-dto.model";
 import { DataSetService } from "./services/data-set.service";
 import { LocalStorageService } from "./services/shared/local-storage.service";
 
@@ -76,6 +78,17 @@ export class DataSetComponent implements OnInit {
         dialogRef.afterClosed().subscribe((exportPath: string) => {
             if (exportPath == '') return;
             this.datasetService.exportDraftDataSet(dataset.id, exportPath).subscribe(res => {
+                let message = new Map(Object.entries(res)).get('successes')[0]['message'];
+                this.toastr.success(message);
+            });
+        });
+    }
+
+    public exportCompleteDataSet(dataset: DataSet): void {
+        let dialogRef = this.dialog.open(ExportCompleteDataSetDialogComponent);
+        dialogRef.afterClosed().subscribe((exportDTO: CompleteDataSetExportDTO) => {
+            if (exportDTO.exportPath == '') return;
+            this.datasetService.exportCompleteDataSet(dataset.id, exportDTO).subscribe(res => {
                 let message = new Map(Object.entries(res)).get('successes')[0]['message'];
                 this.toastr.success(message);
             });
