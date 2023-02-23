@@ -36,6 +36,10 @@
                         <mat-icon>file_copy</mat-icon>
                         <span>Export complete dataset</span>
                     </button>
+                    <button mat-menu-item (click)="cleanCodeAnalysis(dataSet)">
+                        <mat-icon>search</mat-icon>
+                        <span>Clean code analysis</span>
+                    </button>
                     <button mat-menu-item (click)="updateDataSet(dataSet)">
                         <mat-icon matTooltip="edit">edit</mat-icon>
                         <span>Update</span>

@@ -82,6 +82,10 @@
                         <mat-icon matTooltip="actions">more_horiz</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="cleanCodeAnalysis(project.id)">
+                            <mat-icon matTooltip="analyze">search</mat-icon>
+                            <span>Clean code analysis</span>
+                        </button>
                         <button mat-menu-item (click)="updateProject(project)">
                             <mat-icon matTooltip="edit">edit</mat-icon>
                             <span>Update</span>

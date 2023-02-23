@@ -11,6 +11,7 @@ import { DatasetSummaryDTO } from '../model/DTOs/dataset-summary-dto/dataset-sum
 import { DatasetDetailDTO } from '../model/DTOs/dataset-detail-dto/dataset-detail-dto.model';
 import { LocalStorageService } from './shared/local-storage.service';
 import { CompleteDataSetExportDTO } from '../model/DTOs/complete-dataset-export-dto/complete-dataset-export-dto.model';
+import { CleanCodeAnalysisDTO } from '../model/DTOs/clean-code-analysis-export-dto/clean-code-analysis-export-dto.model';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +46,11 @@ export class DataSetService {
   public exportCompleteDataSet(datasetId: number, exportDTO: CompleteDataSetExportDTO): Observable<object> {
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.serverCommunicationService.postRequest(this.datasetsPath + datasetId + '/export-complete', exportDTO, headers);
+  }
+
+  public cleanCodeAnalysis(datasetId: number, exportDTO: CleanCodeAnalysisDTO): Observable<object> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.serverCommunicationService.postRequest(this.datasetsPath + datasetId + '/export-clean-code-analysis', exportDTO, headers);
   }
 
   public deleteDataSet(id: number): Observable<DataSet> {

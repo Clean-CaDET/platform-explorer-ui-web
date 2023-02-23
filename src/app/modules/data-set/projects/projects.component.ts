@@ -7,11 +7,13 @@ import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
 import { AddProjectDialogComponent } from "../dialogs/add-project-dialog/add-project-dialog.component";
 import { AnnotationConsistencyDialogComponent } from "../dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component";
+import { CleanCodeAnalysisDialogComponent } from "../dialogs/clean-code-analysis-dialog/clean-code-analysis-dialog.component";
 import { ConfirmDialogComponent } from "../dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogConfigService } from "../dialogs/dialog-config.service";
 import { UpdateProjectDialogComponent } from "../dialogs/update-project-dialog/update-project-dialog.component";
 import { DataSetProject } from "../model/data-set-project/data-set-project.model";
 import { DataSet } from "../model/data-set/data-set.model";
+import { CleanCodeAnalysisDTO } from "../model/DTOs/clean-code-analysis-export-dto/clean-code-analysis-export-dto.model";
 import { ProjectState } from "../model/enums/enums.model";
 import { DataSetProjectService } from "../services/data-set-project.service";
 import { LocalStorageService } from "../services/shared/local-storage.service";
@@ -108,6 +110,17 @@ export class ProjectsComponent implements OnInit {
     public async chooseProject(id: number) {
         this.chosenProject = new DataSetProject(await this.projectService.getProject(id));
         this.notificationService.setEvent(new ProjectChosenEvent({project: this.chosenProject, filter: this.filterFormControl.value}));
+    }
+
+    public cleanCodeAnalysis(projectId: number) {
+        let dialogRef = this.dialog.open(CleanCodeAnalysisDialogComponent);
+          dialogRef.afterClosed().subscribe((analysisOptions: CleanCodeAnalysisDTO) => {
+            if (analysisOptions.exportPath == '') return;
+            this.projectService.cleanCodeAnalysis(projectId, analysisOptions).subscribe(res => {
+                let message = new Map(Object.entries(res)).get('successes')[0]['message'];
+                this.toastr.success(message);
+            });
+        });
     }
 
     public updateProject(project: DataSetProject): void {

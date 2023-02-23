@@ -24,6 +24,7 @@ import { InstanceNamePipe, InstancesComponent } from './instances/instances.comp
 import { AnnotationNoteDialogComponent } from './dialogs/annotation-note-dialog/annotation-note-dialog.component';
 import { ForgotIdDialogComponent } from './dialogs/forgot-id-dialog/forgot-id-dialog.component';
 import { ExportCompleteDataSetDialogComponent } from './dialogs/export-complete-data-set-dialog/export-complete-data-set-dialog.component';
+import { CleanCodeAnalysisDialogComponent } from './dialogs/clean-code-analysis-dialog/clean-code-analysis-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ExportCompleteDataSetDialogComponent } from './dialogs/export-complete-
     AddProjectDialogComponent,
     ExportDraftDataSetDialogComponent,
     ExportCompleteDataSetDialogComponent,
+    CleanCodeAnalysisDialogComponent,
     ConfirmDialogComponent,
     UpdateDataSetDialogComponent,
     UpdateProjectDialogComponent,
