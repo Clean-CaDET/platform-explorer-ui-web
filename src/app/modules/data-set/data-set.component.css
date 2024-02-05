@@ -1,5 +1,7 @@
 .add-button {
     margin: 5px 20px 0px 0px;
+    color: #8f786f;
+    background-color: #e4cdc4;
 }
 
 mat-cell > span.truncate-text {
@@ -18,15 +20,12 @@ mat-cell > span.truncate-text {
 }
 
 .table-title {
-    padding-left: 0px;
-    width: 50%;
-    margin: auto;
+    margin-left: 10px;
     padding-bottom: 20px;
 }
 
 .table-header {
-    width: 50%;
-    margin: auto;
+    margin-left: 10px;
 }
 
 .search {
@@ -36,9 +35,17 @@ mat-cell > span.truncate-text {
 #datasets-table-div {
     width: 50%;
     margin: auto;
+    margin-top: 20px;
+    border-radius: 3px;
+    border: #DCD6CC 1px solid;
+    background-color: white;
 }
 
 .mat-cell,
 .mat-header-cell {
     padding: 0px 10px 0px 0px;
+}
+
+.mat-icon {
+    color: #8f786f;
 }

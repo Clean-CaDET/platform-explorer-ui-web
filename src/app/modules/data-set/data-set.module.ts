@@ -20,8 +20,11 @@ import { DataSetDetailComponent } from './data-set-detail/data-set-detail.compon
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AnnotationFormComponent } from './annotation-form/annotation-form.component';
 import { ProjectsComponent } from './projects/projects.component';
-import { InstancesComponent } from './instances/instances.component';
+import { InstanceNamePipe, InstancesComponent } from './instances/instances.component';
 import { AnnotationNoteDialogComponent } from './dialogs/annotation-note-dialog/annotation-note-dialog.component';
+import { ForgotIdDialogComponent } from './dialogs/forgot-id-dialog/forgot-id-dialog.component';
+import { ExportCompleteDataSetDialogComponent } from './dialogs/export-complete-data-set-dialog/export-complete-data-set-dialog.component';
+import { CleanCodeAnalysisDialogComponent } from './dialogs/clean-code-analysis-dialog/clean-code-analysis-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +35,8 @@ import { AnnotationNoteDialogComponent } from './dialogs/annotation-note-dialog/
     AddDataSetDialogComponent,
     AddProjectDialogComponent,
     ExportDraftDataSetDialogComponent,
+    ExportCompleteDataSetDialogComponent,
+    CleanCodeAnalysisDialogComponent,
     ConfirmDialogComponent,
     UpdateDataSetDialogComponent,
     UpdateProjectDialogComponent,
@@ -42,6 +47,8 @@ import { AnnotationNoteDialogComponent } from './dialogs/annotation-note-dialog/
     AnnotationContainerComponent,
     CouplingDetailsPipe,
     ClassNamePipe,
+    InstanceNamePipe,
+    ForgotIdDialogComponent
   ],
   imports: [
     AppRoutingModule,

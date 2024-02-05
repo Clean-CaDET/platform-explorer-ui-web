@@ -1,0 +1,56 @@
+button {
+    margin: auto;
+    display: flex;
+}
+
+.mat-stroked-button {
+    color: #382110;
+}
+
+mat-card-content {
+    flex-direction: column;
+    display: flex;
+}
+
+::ng-deep .warningSnackbar {
+    background: rgb(230, 178, 81);
+    color: black;
+}
+
+::ng-deep .warningSnackbar button, ::ng-deep .successSnackbar button, ::ng-deep .errorSnackbar button {
+    color: black;
+}
+
+::ng-deep .successSnackbar {
+    background: rgb(137, 231, 137);
+    color: black;
+}
+
+::ng-deep .errorSnackbar {
+    background: rgb(214, 95, 95);
+    color: black;
+}
+
+div {
+    height: 85%;
+}
+
+.mat-card {
+    width: 20%;
+}
+
+mat-card-title {
+    width: 30%;
+    margin: auto;
+    margin-bottom: 40px;
+}
+
+.login-link, mat-form-field{
+    display: block;
+    width: 60%;
+    margin: auto;
+}
+
+a {
+    color: #00635d; 
+}

@@ -3,6 +3,8 @@
     background-color: white;
     margin: 10px;
     width: 100%;
+    border-radius: 3px;
+    border: #DCD6CC 1px solid;
 }
 
 .table-title {
@@ -20,6 +22,8 @@
 
 .add-button {
     margin: 5px 20px 0px 0px;
+    color: #8f786f;
+    background-color: #e4cdc4;
 }
 
 #projects-table-div {
@@ -58,7 +62,15 @@
 }
 
 .mat-stroked-button {
-    color: rgb(92, 13, 110);
+    color: #382110;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.toggle-annotation-info {
+    margin-left: 20px;
+}
+
+.mat-menu-item>mat-icon,.mat-icon-button, mat-slide-toggle, mat-icon {
+    color: #382110;
 }

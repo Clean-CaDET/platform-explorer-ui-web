@@ -9,6 +9,7 @@ import { PagesModule } from './modules/pages/pages.module';
 import { AppComponent } from './app.component';
 import { ServerCommunicationService } from './server-communication/server-communication.service';
 import { ToastrModule } from 'ngx-toastr';
+import { AnnotationSchemaModule } from './modules/annotation-schema/annotation-schema.module';
 import { NavbarComponent } from './modules/data-set/nav/navbar.component';
 import { CommunityDetectionModule } from './modules/community-detection/community-detection.module';
 
@@ -18,10 +19,10 @@ import { CommunityDetectionModule } from './modules/community-detection/communit
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
     HttpClientModule,
     MaterialModule,
     DataSetModule,
+    AnnotationSchemaModule,
     PagesModule,
     CommunityDetectionModule,
     ToastrModule.forRoot(),

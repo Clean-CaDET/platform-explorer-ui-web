@@ -37,7 +37,9 @@ export enum NumOfInstancesType {
 export enum RelationType {
     Referenced = 'Referenced',
     References = 'References',
-    Parent = 'Parent'
+    Parent = 'Parent',
+    BelongsTo = "BelongsTo",
+    Subclass = "Subclass"
 }
 
 export enum CouplingType {
@@ -48,5 +50,7 @@ export enum CouplingType {
     Variable = 'Variable',
     Parent = 'Parent',
     AccessedAccessor = 'AccessedAccessor',
-    AccessedField = 'AccessedField'
+    AccessedField = 'AccessedField',
+    BelongsTo = 'BelongsTo',
+    Subclass = "Subclass"
 }

@@ -1,12 +1,15 @@
 import { SmellCandidateInstances } from "../smell-candidate-instances/smell-candidate-instances.model";
 import { ProjectState } from "../enums/enums.model";
 import { Instance } from "../instance/instance.model";
+import { GraphInstance } from "../graph-instance/graph-instance.model";
+import { LocalStorageService } from "../../services/shared/local-storage.service";
 
 export class DataSetProject {
     id: number = 0;
     name: string = '';
     url: string = '';
     candidateInstances: SmellCandidateInstances[] = [];
+    graphInstances: GraphInstance[] = [];
     state: ProjectState = ProjectState.Processing;
     fullyAnnotated: boolean = false;
     instancesCount: number = 0;
@@ -17,6 +20,7 @@ export class DataSetProject {
             this.name = obj.name;
             this.url = obj.url;
             this.candidateInstances = obj.candidateInstances;
+            this.graphInstances = obj.graphInstances;
             this.setProjectState(obj.state);
             this.fullyAnnotated = obj.fullyAnnotated;
             this.countInstances(obj.instancesCount);
@@ -54,8 +58,9 @@ export class DataSetProject {
         }
     }
 
-    public countAnnotatedInstances(): number {
+    public countAnnotatedInstances(storageService: LocalStorageService, annotatedInstance: Instance): number {
         if (this.candidateInstances == undefined) return 0;
+        this.replaceInstanceWithAnnotatedInstance(storageService, annotatedInstance);
         var counter = 0;
         this.candidateInstances.forEach(candidate => {
             candidate.instances.forEach(instance => {
@@ -63,6 +68,21 @@ export class DataSetProject {
             });
         });
         return counter;
+    }
+
+    private replaceInstanceWithAnnotatedInstance(storageService: LocalStorageService, annotatedInstance: Instance) {
+        this.candidateInstances.forEach(candidate => {
+            candidate.instances.forEach((instance, index) => {
+                if (instance.id == annotatedInstance.id)  {
+                    candidate.instances[index] = annotatedInstance;
+                }
+            });
+        });
+        this.candidateInstances.forEach(candidate => {
+            candidate.instances.forEach((instance, index) => {
+                    candidate.instances[index] = new Instance(storageService, instance);
+            });
+        });
     }
 
     public hasInstances(): boolean {

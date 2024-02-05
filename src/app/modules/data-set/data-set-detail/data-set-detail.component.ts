@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataSet } from '../model/data-set/data-set.model';
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { Instance } from '../model/instance/instance.model';
@@ -19,6 +19,7 @@ import {
 import { LocalStorageService } from '../services/shared/local-storage.service';
 import { Subscription } from 'rxjs';
 import { GraphService } from '../../community-detection/services/graph.service';
+import { Annotation } from '../model/annotation/annotation.model';
 
 @Component({
   selector: 'de-data-set-detail',
@@ -49,7 +50,7 @@ export class DataSetDetailComponent implements OnInit {
       .getEvent()
       .subscribe(async (event: NotificationEvent) => {
         if (event instanceof NewAnnotationEvent) {
-          this.updateAnnotationInfo();
+          this.updateAnnotationInfo(event.annotation);
         } else if (event instanceof ProjectChosenEvent) {
           this.chosenProject = event.data['project'];
         } else if (event instanceof InstanceChosenEvent) {
@@ -63,10 +64,12 @@ export class DataSetDetailComponent implements OnInit {
     });
   }
 
-  private updateAnnotationInfo() {
+  private updateAnnotationInfo(newAnnotation: Annotation) {
     this.annotatedInstancesNum++;
+    if (this.chosenInstance.annotations == null) this.chosenInstance.annotations = [];
+    this.chosenInstance.annotations.push(newAnnotation);
     if (
-      this.chosenProject.countAnnotatedInstances() ==
+      this.chosenProject.countAnnotatedInstances(this.storageService, this.chosenInstance) ==
       this.chosenProject.instancesCount
     ) {
       var i = this.chosenDataset.projects.findIndex(
@@ -81,8 +84,6 @@ export class DataSetDetailComponent implements OnInit {
     this.chosenProject = new DataSetProject(
       await this.projectService.getProject(this.chosenInstance.projectId)
     );
-    if (this.chosenProject)
-      this.graphService.initProjectGraph(this.chosenProject);
   }
 
   ngOnDestroy(): void {
@@ -92,8 +93,6 @@ export class DataSetDetailComponent implements OnInit {
   private loadDataset(params: Params) {
     this.datasetService.getDataSet(params['id']).then((dataset) => {
       this.chosenDataset = new DataSet(dataset);
-      this.chosenProject = new DataSetProject();
-      this.chosenInstance = new Instance(this.storageService);
       this.notificationService.setEvent(
         new DatasetChosenEvent(this.chosenDataset)
       );
@@ -136,33 +135,7 @@ export class DataSetDetailComponent implements OnInit {
     return counter;
   }
 
-  public loadPreviousInstance() {
-    this.notificationService.setEvent(
-      new PreviousInstanceEvent(this.chosenInstance.id)
-    );
-  }
-
-  public loadNextInstance() {
-    this.notificationService.setEvent(
-      new NextInstanceEvent(this.chosenInstance.id)
-    );
-  }
-
   public toggleAutomaticMode() {
     this.storageService.setAutoAnnotationMode(this.automaticAnnotationMode);
-  }
-
-  @HostListener('window:keydown', ['$event'])
-  public next(event: KeyboardEvent) {
-    if (!this.chosenInstance.id) return;
-    if (event.ctrlKey && event.key === 'ArrowRight') {
-      event.preventDefault();
-      event.stopPropagation();
-      this.loadNextInstance();
-    } else if (event.ctrlKey && event.key === 'ArrowLeft') {
-      event.preventDefault();
-      event.stopPropagation();
-      this.loadPreviousInstance();
-    }
   }
 }

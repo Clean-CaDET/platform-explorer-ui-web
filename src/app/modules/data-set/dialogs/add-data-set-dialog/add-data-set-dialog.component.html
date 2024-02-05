@@ -10,14 +10,14 @@
             <mat-form-field appearance="fill" floatLabel="always" class="form-field">
                 <mat-label>Select code smells</mat-label>
                 <mat-select multiple
-                    [(ngModel)]="codeSmells" name="codeSmells" id="codeSmells">
-                    <mat-option *ngFor="let smell of availableCodeSmells" [value]="smell">{{smell}}</mat-option>
+                    [(ngModel)]="chosenCodeSmells" name="chosenCodeSmells" id="chosenCodeSmells">
+                    <mat-option *ngFor="let smell of availableCodeSmells" [value]="smell.name">{{smell.name}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </mat-card-content>
     </mat-card>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-stroked-button mat-dialog-close color="primary">Cancel</button>
-    <button mat-stroked-button color="primary" (click)="createDataSet()">Add</button>
+    <button mat-stroked-button mat-dialog-close>Cancel</button>
+    <button mat-stroked-button (click)="createDataSet()">Add</button>
 </mat-dialog-actions>

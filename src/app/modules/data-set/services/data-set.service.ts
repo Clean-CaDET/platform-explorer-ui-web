@@ -10,6 +10,8 @@ import { SmellFilter } from '../model/smell-filter/smell-filter.model';
 import { DatasetSummaryDTO } from '../model/DTOs/dataset-summary-dto/dataset-summary-dto.model';
 import { DatasetDetailDTO } from '../model/DTOs/dataset-detail-dto/dataset-detail-dto.model';
 import { LocalStorageService } from './shared/local-storage.service';
+import { CompleteDataSetExportDTO } from '../model/DTOs/complete-dataset-export-dto/complete-dataset-export-dto.model';
+import { CleanCodeAnalysisDTO } from '../model/DTOs/clean-code-analysis-export-dto/clean-code-analysis-export-dto.model';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +40,17 @@ export class DataSetService {
   public exportDraftDataSet(id: number, exportPath: string): Observable<object> {
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
     let data = { id: id, annotatorId: this.storageService.getLoggedInAnnotator(), exportPath: exportPath };
-    return this.serverCommunicationService.postRequest(this.datasetsPath + 'export', data, headers);
+    return this.serverCommunicationService.postRequest(this.datasetsPath + 'export-draft', data, headers);
+  }
+
+  public exportCompleteDataSet(datasetId: number, exportDTO: CompleteDataSetExportDTO): Observable<object> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.serverCommunicationService.postRequest(this.datasetsPath + datasetId + '/export-complete', exportDTO, headers);
+  }
+
+  public cleanCodeAnalysis(datasetId: number, exportDTO: CleanCodeAnalysisDTO): Observable<object> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.serverCommunicationService.postRequest(this.datasetsPath + datasetId + '/export-clean-code-analysis', exportDTO, headers);
   }
 
   public deleteDataSet(id: number): Observable<DataSet> {
@@ -49,19 +61,15 @@ export class DataSetService {
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.serverCommunicationService.putRequest(this.datasetsPath, dataSet, headers);
   }
-
-  public addProjectToDataSet(
-    project: DataSetProject,
-    smellFilters: SmellFilter[],
-    buildSettings: ProjectBuildSettings,
-    dataSetId: number
-  ): Observable<DataSet> {
-    let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    let data = { project: project, smellFilters: smellFilters, buildSettings: buildSettings };
-    return this.serverCommunicationService.postRequest(this.datasetsPath + dataSetId + '/projects', data, headers);
+  
+  public addProjectToDataSet(project: DataSetProject, smellFilters: SmellFilter[], buildSettings: ProjectBuildSettings, dataSetId: number): Observable<DataSetProject> {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    let data = {project: project, smellFilters: smellFilters, buildSettings: buildSettings};
+    return this.serverCommunicationService.postRequest(this.datasetsPath + dataSetId + '/projects', data, headers)
   }
-
-  public getDataSetCodeSmells(id: number): Observable<Map<string, string[]>> {
+  
+  public getDataSetCodeSmells(id: number): Observable<CodeSmell[]> {
     return this.serverCommunicationService.getRequest(this.datasetsPath + id + '/code-smells');
   }
 }

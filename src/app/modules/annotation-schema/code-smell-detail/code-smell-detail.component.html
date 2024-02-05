@@ -1,0 +1,52 @@
+<div class="smell-detail-container" *ngIf="chosenCodeSmell">
+    <div class="table-container container">
+        <div class="table-header">
+            <p class="table-title">Heuristics for {{chosenCodeSmell.name}}</p>
+        </div>
+        <div class="table-header">
+            <mat-form-field appearance="fill" class="search">
+                <mat-label>Search by name</mat-label>
+                <input matInput (keyup)="searchHeuristics($event)" placeholder="Heuristic name">
+            </mat-form-field>
+            <button class="add-button" mat-mini-fab matTooltip="Add heuristic" matTooltipPosition="right" (click)="addHeuristic()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        
+        <table mat-table [dataSource]="heuristicsDataSource">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef width="30%"> Name </th>
+                <td mat-cell *matCellDef="let heuristic">
+                    <span class="truncate-text">{{heuristic.name}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef class="cell-center">Description</th>
+                <td mat-cell *matCellDef="let heuristic"class="cell-center">{{heuristic.description}}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef width="5%"></th>
+                <td mat-cell *matCellDef="let heuristic" width="5%">
+                    <button mat-icon-button  [matMenuTriggerFor]="menu">
+                        <mat-icon matTooltip="actions">more_horiz</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="updateHeuristic(heuristic)">
+                            <mat-icon matTooltip="edit">edit</mat-icon>
+                            <span>Update</span>
+                        </button>
+                        <button mat-menu-item (click)="removeHeuristic(heuristic)">
+                            <mat-icon matTooltip="delete">delete</mat-icon>
+                            <span>Delete</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="heuristicsDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: heuristicsDisplayedColumns;"></tr>
+        </table>
+    </div>
+    <div class="container severity-container">
+        <de-severity [chosenCodeSmell]="chosenCodeSmell"></de-severity>
+    </div>
+</div>

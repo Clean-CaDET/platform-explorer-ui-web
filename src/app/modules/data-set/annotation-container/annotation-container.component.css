@@ -1,24 +1,38 @@
 .annotation-container {
     display: flex;
     flex-direction: row;
+    background-color: #f7f5f1;
+}
+
+.table-container {
+    height: max-content;
+    margin: 5px;
+    border-radius: 2px;
+    border: 1px solid #D8D8D8;
+    background-color: #FFFFFF;
+    margin-bottom: 20px;
+}
+
+#related-instances-table-div {
+    max-height: 290px;
+    overflow: auto;
+    width: 600px;
+    margin: 5px;
 }
 
 #snippet {
+    height: 70%;
+}
+
+.vertical-container2 {
+    display: flex;
+    flex-direction: column;
     width: 70%;
-    margin: 20px;
 }
 
 .vertical-container {
     display: flex;
     flex-direction: column;
-}
-
-#related-instances {
-    margin: 10px;
-    max-height: inherit;
-    overflow: auto;
-    height: 300px;
-    width: 600px;
 }
 
 #no-related {
@@ -40,17 +54,53 @@
 }
 
 .green-icon {
-    color: green;
+    color: #63c663;
 }
 
 .orange-icon {
-    color: orange;
+    color: #efbf67;
 }
 
 .blue-icon {
     color: rgb(101, 184, 236);
 }
 
-iframe {
-    max-height: 700px;
+.pink-icon {
+    color: #ed90d9;
+}
+
+.purple-icon {
+    color: rgb(164, 131, 235);
+}
+
+.auto-buttons-div {
+    margin-right: 235px;
+    display: flex;
+    justify-content: right;
+}
+
+.auto-buttons-div>button {
+    margin: 5px;
+}
+
+.github-link {
+    font-size: 18px;
+    font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif;
+    color: #382110;
+    padding-top: 5px;
+    padding-left: 20px;
+    margin-bottom: 0px;
+}
+
+.mat-stroked-button {
+    color: #8f786f;
+    background-color: white;
+}
+
+mat-icon {
+    color: #382110;
+}
+
+a {
+    color: #00635d; 
 }

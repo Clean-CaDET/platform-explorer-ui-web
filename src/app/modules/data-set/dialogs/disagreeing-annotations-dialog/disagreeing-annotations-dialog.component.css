@@ -1,3 +1,7 @@
 h1, th {
     text-align: left;
 }
+
+.mat-stroked-button {
+    color: #382110;
+}

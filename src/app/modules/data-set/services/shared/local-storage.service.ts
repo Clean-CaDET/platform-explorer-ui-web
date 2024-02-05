@@ -40,7 +40,7 @@ export class LocalStorageService {
     public clearAutoAnnotationMode() {
         localStorage.removeItem(this.autoAnnotationMode);
     }
-
+    
     public clearLocalStorage() {
         localStorage.clear();
     }

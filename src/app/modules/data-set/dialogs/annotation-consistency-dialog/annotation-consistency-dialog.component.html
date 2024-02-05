@@ -12,18 +12,15 @@
                         Consistency type is <strong>required</strong>
                     </mat-error>
                 </mat-form-field>
-                <button mat-stroked-button (click)="getConsistencyResults()" color="primary">Check</button>
+                <button mat-stroked-button (click)="getConsistencyResults()">Check</button>
             </tr>
             <tr>
-                <mat-form-field id="severity" appearance="fill" floatLabel="always" *ngIf="severityNeeded" class="severity">
-                    <mat-label>Severity</mat-label>
-                    <input type="number" matInput [formControl]="severityFormControl">
-                    <mat-error *ngIf="severityFormControl.hasError('required')">
-                        Severity is <strong>required</strong>
-                    </mat-error>
-                    <mat-error *ngIf="severityFormControl.hasError('min') || severityFormControl.hasError('max')">
-                        Severity must be between 0 and 3
-                    </mat-error>
+                <mat-form-field floatLabel="always" class="form-field" id="severity" appearance="outline" *ngIf="severityNeeded">
+                    <mat-label>Select severity</mat-label>
+                    <mat-select
+                        [(ngModel)]="chosenSeverity" name="chosenSeverity" id="chosenSeverity">
+                        <mat-option *ngFor="let severity of severities()" [value]="severity.value">{{severity.value}}</mat-option>
+                    </mat-select>
                 </mat-form-field>
             </tr>
         </table>
@@ -34,7 +31,7 @@
         <ng-container *ngFor="let resultDescription of results.keys()">
             <tr>
                 <div class="show-result">
-                    <button mat-stroked-button color="primary" (click)="showResult(resultDescription)">{{resultDescription}}</button>
+                    <button mat-stroked-button (click)="showResult(resultDescription)">{{resultDescription}}</button>
                 </div>
             </tr>
         </ng-container>
@@ -45,5 +42,5 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-dialog-close mat-stroked-button color="primary">Cancel</button>
+    <button mat-dialog-close mat-stroked-button>Cancel</button>
 </mat-dialog-actions>

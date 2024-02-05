@@ -5,15 +5,18 @@
             <ng-container *ngFor="let annotation of instanceWithDisagreeingAnnotations.annotations">
                 <tr>
                     <th *ngIf="annotation.annotator.id == loggedAnnotatorId">
-                        Your annotations
+                        Your annotation
                     </th>
                     <th *ngIf="annotation.annotator.id != loggedAnnotatorId">
-                        Annotator {{annotation.annotator.id}}
+                        Annotator: {{annotation.annotator.name}}
                     </th>
                 </tr>
                 <tr>
                     <td>
-                        <de-annotation-form [instanceId]="instanceWithDisagreeingAnnotations.instanceId" [disableEdit]="true">
+                        <de-annotation-form [instanceId]="instanceWithDisagreeingAnnotations.instanceId" 
+                            [codeSmell]="annotation.instanceSmell.name" 
+                            [disableEdit]="true"
+                            [annotatorId]="annotation.annotator.id">
                         </de-annotation-form> 
                     </td>
                 </tr>
@@ -22,5 +25,5 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-stroked-button mat-dialog-close color="primary">Close</button>
+    <button mat-stroked-button mat-dialog-close>Close</button>
 </mat-dialog-actions>

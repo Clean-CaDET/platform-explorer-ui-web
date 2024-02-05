@@ -1,0 +1,30 @@
+.add-button {
+    margin: 5px 20px 0px 0px;
+    color: #8f786f;
+    background-color: #e4cdc4;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
+}
+
+mat-cell > span.truncate-text {
+    text-overflow: clip; 
+    overflow: hidden; 
+    white-space: nowrap;
+}
+
+.mat-icon-button, mat-icon {
+    color: #8f786f;
+}
+
+.table-container {
+    background-color: white;
+    border-radius: 3px;
+    border: #DCD6CC 1px solid;
+}

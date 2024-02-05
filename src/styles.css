@@ -5,7 +5,8 @@ body {
 
 body {
     margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #f7f5f1;
 }
 
 .search {
@@ -31,9 +32,8 @@ body {
 
 .table-title {
     font-size: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(92, 13, 110);
-    font-weight: 550;
+    font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif;
+    color: #382110;
     padding-top: 20px;
     padding-left: 20px;
 }
@@ -49,5 +49,5 @@ tr.mat-row:hover {
 }
 
 .row-chosen, tr.mat-row.row-chosen:hover {
-    background: rgb(219, 209, 228);
+    background: #F4F1EA;
 }

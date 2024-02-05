@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Add code smell definition</h2>
+<mat-dialog-content class="mat-typography">
+    <mat-card>
+        <mat-card-content fxLayout="column">
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input [(ngModel)]="name" type="text" matInput required>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <mat-label>Description</mat-label>
+                <input [(ngModel)]="description" type="text" matInput required>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="fill" floatLabel="always" class="form-field">
+                <mat-label>Select snippet type</mat-label>
+                <mat-select
+                    [(ngModel)]="chosenSnippetType" name="chosenSnippetType" id="chosenSnippetType">
+                    <mat-option *ngFor="let type of snippetTypes" [value]="type">{{type}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-card-content>
+    </mat-card>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-button (click)="createCodeSmellDefinition()">Add</button>
+</mat-dialog-actions>

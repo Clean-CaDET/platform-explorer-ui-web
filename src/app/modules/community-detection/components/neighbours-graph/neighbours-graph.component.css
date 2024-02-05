@@ -1,0 +1,78 @@
+#neighboursGraph {
+  flex-grow: 1;
+  margin: 5px;
+  position: relative;
+}
+
+.tip {
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 25px;
+  padding: 2px;
+  margin: 2px;
+  width: 250px;
+}
+
+span {
+  position: absolute;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+mat-icon {
+  margin-top: 2px;
+  margin-left: 5px;
+}
+
+.controls {
+  width: 250px;
+  display: block;
+  right: 0;
+  position: absolute;
+}
+
+button {
+  margin: 10px;
+  width: 220px;
+  background-color: grey;
+}
+
+.red-circle{
+  color: #e77272;
+}
+
+.blue-circle {
+  color: #65b8ec;
+}
+
+.yellow-circle {
+  color: #efbf67;
+}
+
+.green-circle {
+  color: #63c663;
+}
+
+.pink-circle {
+  color: #ed90d9;
+}
+
+.purple-circle {
+  color: #a483eb;
+}
+
+.node-types{
+  display: flex;
+  flex-direction: column;
+}
+
+.horizontal-div { 
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.legend-div {
+  width: 20%;
+  margin-top: 10px;
+}

@@ -4,12 +4,12 @@
         <mat-card-content fxLayout="column">
             <mat-form-field appearance="fill">
                 <mat-label>Note</mat-label>
-                <textarea matInput [(ngModel)]="note" name="note"></textarea>
+                <textarea matInput [(ngModel)]="data.note" name="note"></textarea>
             </mat-form-field>
         </mat-card-content>
     </mat-card>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-stroked-button color="primary" (click)="close()">Cancel</button>
-    <button mat-stroked-button color="primary" (click)="submitNote()">Update</button>
+    <button mat-stroked-button (click)="close()">Cancel</button>
+    <button mat-stroked-button (click)="submitNote()" *ngIf="!data.disableEdit">Update</button>
 </mat-dialog-actions>

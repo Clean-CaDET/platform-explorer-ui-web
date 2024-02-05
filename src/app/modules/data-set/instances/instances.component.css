@@ -3,11 +3,18 @@
     background-color: white;
     margin: 10px;
     width: 100%;
+    border-radius: 3px;
+    border: #DCD6CC 1px solid;
 }
 
 .table-title {
     padding-left: 0px;
     margin-left: 10px;
+}
+
+.vertical-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .table-header {
@@ -31,12 +38,12 @@
     padding-right: 10px;
 }
 
-#ann-status-filter {
-    width: 150px;
+#ann-status-filter, #severity-filter {
+    width: 100px;
     margin-right: 10px;
 }
 
-#severity-filter {
+#note-filter {
     width: 100px;
 }
 
@@ -68,7 +75,6 @@
     margin-left: auto;
     margin-right: 20px;
     margin-top: 20px;
-    font-weight: bold;
     font-size: 15px;
 }
 
@@ -78,7 +84,13 @@
 }
 
 .mat-stroked-button {
-    color: rgb(92, 13, 110);
+    background-color: white;
+    color: #8f786f;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.annotation-note {
+    float: right;
+    margin-left: auto;
 }

@@ -1,54 +1,47 @@
 form {
     display: flex;
     flex-direction: column;
-    margin: auto;
-    width: fit-content;
-    border: 3px solid rgb(236, 228, 238);
-    padding: 10px 60px 20px 60px; 
-    border-radius: 20px;
+    margin: 5px;
+    padding: 10px 20px 0px 20px;
+    border-radius: 2px;
+    border: 1px solid #D8D8D8;
+    background-color: #FFFFFF;
 }
 
 #severity {
-    width: 80px;
-    margin-left: 153px;
+    width: 120px;
+    margin-left: auto;
     margin-top: 10px;
     margin-right: 0px;
-}
-
-.reason {
-    margin-left: 5px;
 }
 
 .form-field {
     padding: 0px 5px 0px 5px;
 }
 
-#annotate-button {
-    margin: auto !important;
-}
-
 p {
     font-size: 20px;
-    color:rgb(92, 13, 110);
-    font-weight: 450;
+    color:#382110;
     text-align: center;
 }
 
 table {
     border-collapse: collapse;
-    width: 400px;
     table-layout: fixed;
+}
+
+.header-cell-center {
+    font-size: 16px;
+    text-align: center;
+    border-bottom: 2px solid #F4F1EA;
+    border-top: 2px solid #F4F1EA;
 }
 
 .header-cell {
     font-size: 16px;
-    text-align: center;
-    border-bottom: 2px solid rgb(236, 228, 238);
-    border-top: 2px solid rgb(236, 228, 238);
-}
-
-.first-column-cell {
-    border-right: 2px solid rgb(236, 228, 238);
+    border-bottom: 2px solid #F4F1EA;
+    border-top: 2px solid #F4F1EA;
+    padding-left: 20px;
 }
 
 mat-checkbox {
@@ -86,12 +79,48 @@ mat-checkbox {
     margin-bottom: 15px;
 }
 
-.horizontal-div {
+.horizontal-div { 
+    margin: auto;
     display: flex;
     flex-direction: row;
+
 }
 
 .horizontal-div>button {
     margin-left: 0px;
-    margin-top: 15px;
+}
+
+.chosen-severity-div {
+    margin-left: auto;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+#save-button {
+    margin-top: auto;
+    margin-bottom: auto;
+    height: fit-content;
+}
+
+.cell-center > .mat-form-field {
+    display: contents;
+}
+
+form {
+    margin-top: 40px;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    opacity: 0.03 !important;
+    background-color: #8f786f!important;
+  }
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #8f786f;
+  }
+
+.mat-icon-button, .mat-stroked-button {
+    color: #8f786f;
 }

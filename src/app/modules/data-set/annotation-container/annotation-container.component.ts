@@ -1,9 +1,9 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, HostListener, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Instance } from '../model/instance/instance.model';
 import { RelatedInstance } from '../model/related-instance/related-instance.model';
-import { InstanceChosenEvent, NotificationService } from '../services/shared/notification.service';
+import { InstanceChosenEvent, NextInstanceEvent, NotificationService, PreviousInstanceEvent } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 import { InstanceService } from '../services/instance.service';
 
@@ -70,6 +70,32 @@ export class AnnotationContainerComponent implements OnInit {
     url = url.split('_').join(`_${hairSpace}`);
     return url.split('.').join(`.${hairSpace}`);
   }
+
+  public loadPreviousInstance() {
+    this.notificationService.setEvent(
+      new PreviousInstanceEvent(this.chosenInstance.id)
+    );
+  }
+
+  public loadNextInstance() {
+    this.notificationService.setEvent(
+      new NextInstanceEvent(this.chosenInstance.id)
+    );
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  public next(event: KeyboardEvent) {
+    if (!this.chosenInstance.id) return;
+    if (event.altKey && event.key === 'ArrowRight') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.loadNextInstance();
+    } else if (event.altKey && event.key === 'ArrowLeft') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.loadPreviousInstance();
+    }
+  }
 }
 
 @Pipe({ name: 'couplingDetails' })
@@ -85,7 +111,10 @@ export class CouplingDetailsPipe implements PipeTransform {
 
 @Pipe({ name: 'className' })
 export class ClassNamePipe implements PipeTransform {
-  transform(value: string): string {
-    return value.split('.').pop()!;
+  transform(instance: Instance): string {
+    if (instance.type.toString() == '0') return instance.codeSnippetId.split('.').pop()!;
+    var methodName = instance.codeSnippetId.split('(')[0].split('.').pop()!;
+    if (instance.codeSnippetId.includes('()')) return methodName + '()';
+    return methodName + '(...)';
   }
 }

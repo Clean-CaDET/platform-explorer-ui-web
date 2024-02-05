@@ -1,0 +1,50 @@
+.table-container {
+    margin: auto;
+    width: 70%;
+    margin-top: 10px;
+    border-radius: 3px;
+    border: #DCD6CC 1px solid;
+    background-color: white;
+}
+
+table { 
+    width: 100%;
+}
+
+.add-button {
+    margin: 5px 20px 0px 0px;
+    color: #8f786f;
+    background-color: #e4cdc4;
+}
+
+.mat-icon-button {
+    color: #8f786f;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+.mat-cell,
+.mat-header-cell {
+    padding: 0px 10px 0px 0px;
+}
+
+mat-cell > span.truncate-text {
+    text-overflow: clip; 
+    overflow: hidden; 
+    white-space: nowrap;
+}
+
+#snippet-type-filter {
+    width: 150px;
+    margin-right: 10px;
+}
+
+.filters {
+    padding-right: 10px;
+}
+
+mat-icon {
+    color: #8f786f;
+}

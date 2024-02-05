@@ -11,7 +11,7 @@
           >&ensp;/&ensp;{{ chosenProject.name }}</span
         >
         <span *ngIf="chosenInstance?.id"
-          >&ensp;/&ensp;{{ chosenInstance.codeSnippetId | className }}</span
+          >&ensp;/&ensp;{{ chosenInstance | className }}</span
         >
       </mat-panel-title>
       <mat-panel-title id="annotations-info">
@@ -24,7 +24,6 @@
           Automatic annotation mode
           <mat-slide-toggle
             (click)="panelH._toggle()"
-            color="primary"
             [(ngModel)]="automaticAnnotationMode"
             (change)="toggleAutomaticMode()"
           ></mat-slide-toggle>
@@ -39,9 +38,3 @@
 </mat-expansion-panel>
 
 <router-outlet></router-outlet>
-
-<!-- Ovo mi se uopste ne prikazuje!! -->
-<!-- <div *ngIf="chosenInstance?.id" class="auto-buttons-div">
-    <button mat-stroked-button color="primary" (click)="loadPreviousInstance()">Back</button>
-    <button mat-stroked-button color="primary" (click)="loadNextInstance()">Next</button>
-</div> -->

@@ -1,37 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 import Graph from 'graphology';
-import { Instance } from 'src/app/modules/data-set/model/instance/instance.model';
 import { Link } from '../../model/link';
 import { ProjectNode } from '../../model/project-node';
-import { D3ForcedGraphService } from '../../services/d3-forced-graph.service';
 import { GraphService } from '../../services/graph.service';
-import { D3CommunityGraph } from '../../model/d3-community-graph';
+import { GraphInstance } from 'src/app/modules/data-set/model/graph-instance/graph-instance.model';
+import { NotificationService } from 'src/app/modules/data-set/services/shared/notification.service';
+import { D3GraphService } from '../../services/d3-graph.service';
 
 @Component({
   selector: 'de-project-graph',
   templateUrl: './project-graph.component.html',
   styleUrls: ['./project-graph.component.css'],
 })
-export class ProjectGraphComponent implements OnInit {
+export class ProjectGraphComponent {
   svg: any;
   g: any;
   zoom: any;
   width: number = 0;
   height: number = 0;
-  D3CommunityGraph!: D3CommunityGraph;
   graph: Graph;
   communities: any = {};
   projectNodes: ProjectNode[] = [];
   projectLinks: Link[] = [];
 
-  constructor(private graphService: GraphService, private d3ForcedGraphService: D3ForcedGraphService) {
+  constructor(private graphService: GraphService,
+    private d3GraphService: D3GraphService) {
     this.graph = new Graph();
-  }
-
-  ngOnInit(): void {
-    this.loadProjectGraph();
   }
 
   initGraph(subNodes?: ProjectNode[] | null, subLinks?: Link[] | null) {
@@ -40,15 +36,15 @@ export class ProjectGraphComponent implements OnInit {
     if (subNodes) this.initSvg(true);
     else this.initSvg(false);
     if (!subNodes) this.initZoom();
-    this.D3CommunityGraph = new D3CommunityGraph({
+    this.d3GraphService.setAttributes({
       width: this.width,
       height: this.height,
       radius: 35,
       color: d3.scaleOrdinal(d3.schemeCategory20),
     });
-    this.D3CommunityGraph.initGraph(this.g, linksToDraw, nodesToDraw, !subNodes);
-    this.initNodeClick(this.D3CommunityGraph.nodes);
-    if (!subNodes) this.d3ForcedGraphService.zoomFit(this.g, this.svg, this.zoom);
+    this.d3GraphService.initGraph(this.g, linksToDraw, nodesToDraw, !subNodes, false);
+    this.initNodeClick(this.d3GraphService.nodes);
+    if (!subNodes) this.d3GraphService.zoomFit(this.g, this.svg, this.zoom);
   }
 
   initSvg(forSubGraph: boolean) {
@@ -80,14 +76,15 @@ export class ProjectGraphComponent implements OnInit {
   }
 
   loadProjectGraph() {
-    this.graphService.projectClasses$.subscribe((instances: Instance[]) => {
-      let ret = this.graphService.loadGraph(instances);
-      this.projectNodes = ret.projectNodes;
-      this.projectLinks = ret.projectLinks;
-      this.graph = ret.graph;
-      this.projectLinks = ret.distinctLinks;
-      this.communities = this.graphService.extractCommunities(this.graph);
-      this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
+    this.graphService.projectClasses$.subscribe((instances: GraphInstance[]) => {
+      let graph = this.graphService.getGraphBasedOnData(instances);
+      this.projectNodes = graph.projectNodes;
+      this.projectLinks = graph.projectLinks;
+      this.graph = graph.graph;
+      this.projectLinks = graph.distinctLinks;
+      this.communities = this.graphService.getCommunities(this.graph);
+      this.projectNodes = this.graphService.getNodesFromGraph(this.graph, this.communities);
+      this.initGraph();
     });
   }
 
@@ -99,32 +96,14 @@ export class ProjectGraphComponent implements OnInit {
 
   initSubGraph(node: string) {
     let subGraph = this.graphService.loadSubGraph(node, this.graph);
-    const subNodes = this.graphService.extractNodesFromGraph(subGraph, this.communities);
-    const subLinks = this.graphService.extractExistingLinksFromFullGraph(subGraph, this.projectLinks);
+    const subNodes = this.graphService.getNodesFromGraph(subGraph, this.communities);
+    const subLinks = this.graphService.getExistingLinksFromGraph(subGraph, this.projectLinks);
     this.initGraph(subNodes, subLinks);
   }
 
-  otherAlgorithms(algorithm: string) {
-    const nodes = this.projectNodes.map((node: ProjectNode) => node.fullName);
-    const links = this.projectLinks.map((link: Link) => {
-      return { source: link.source, target: link.target };
-    });
-    this.graphService.getCommunities(nodes, links, algorithm).subscribe((data: any) => {
-      this.communities = data;
-      this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
-      this.initGraph();
-    });
-  }
-
-  louvain() {
-    this.communities = this.graphService.extractCommunities(this.graph);
-    this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
-    this.initGraph();
-  }
-
   showFullGraph() {
-    this.communities = this.graphService.extractCommunities(this.graph);
-    this.projectNodes = this.graphService.extractNodesFromGraph(this.graph, this.communities);
+    this.communities = this.graphService.getCommunities(this.graph);
+    this.projectNodes = this.graphService.getNodesFromGraph(this.graph, this.communities);
     this.initGraph();
   }
 }

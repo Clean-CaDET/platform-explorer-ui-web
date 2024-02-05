@@ -1,5 +1,5 @@
 mat-toolbar {
-    background-color: rgb(223, 206, 228);
+    background-color: #bba59c;
 }
 
 .mat-toolbar-row, .mat-toolbar-single-row {
@@ -14,7 +14,7 @@ mat-toolbar {
 }
 
 .toggle-option {
-    color: rgb(92, 13, 110);   
+    color: #382110;   
 }
 
 .options-div {
@@ -27,7 +27,10 @@ mat-toolbar {
 }
 
 .mat-button {
-    color: rgb(92, 13, 110);
+    color: #382110;
+    font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif;
+    font-size: 16px;
+    line-height: 50px;
 }
 
 .vertical-div {
@@ -35,4 +38,22 @@ mat-toolbar {
     flex-direction: column;
     font-size: 15px;
     line-height: 17px;
+}
+
+mat-card {
+    width: 0px;
+    margin-right: 50px;
+    padding: 0px;
+    margin-top: 5px;
+}
+
+#avatar {
+    background-color: #bba59c;
+    border: none;
+    float: right;
+}
+
+.mat-card-avatar {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
 }

@@ -22,9 +22,9 @@
         >
         <div *ngIf="ignoreFolders">
           <ul>
-            <li *ngFor="let folder of projectBuildSettings.foldersToIgnore">
+            <li *ngFor="let folder of projectBuildSettings.ignoredFolders">
               {{ folder }}
-              <button mat-icon-button color="primary" (click)="removeFolderToIgnore(folder)">
+              <button mat-icon-button (click)="removeFolderToIgnore(folder)">
                 <mat-icon matTooltip="Remove">close</mat-icon>
               </button>
             </li>
@@ -33,7 +33,7 @@
             <mat-label>Folder name</mat-label>
             <input matInput [(ngModel)]="newFolderToIgnore" />
           </mat-form-field>
-          <button mat-icon-button color="primary" (click)="addFolderToIgnore()">
+          <button mat-icon-button (click)="addFolderToIgnore()">
             <mat-icon matTooltip="Add">check</mat-icon>
           </button>
         </div>
@@ -41,16 +41,12 @@
     </tr>
     <tr>
       <td>
-        <mat-checkbox name="randomizeClasses" [(ngModel)]="projectBuildSettings.randomizeClassSelection"
-          >Randomize class selection</mat-checkbox
-        >
+        <mat-checkbox name="randomizeClasses" [(ngModel)]="projectBuildSettings.randomizeClassSelection">Randomize class selection</mat-checkbox>
       </td>
     </tr>
     <tr>
       <td>
-        <mat-checkbox name="randomizeMembers" [(ngModel)]="projectBuildSettings.randomizeMemberSelection"
-          >Randomize member selection</mat-checkbox
-        >
+        <mat-checkbox name="randomizeMembers" [(ngModel)]="projectBuildSettings.randomizeMemberSelection">Randomize member selection</mat-checkbox>
       </td>
     </tr>
     <tr>
@@ -137,6 +133,6 @@
   </table>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-stroked-button color="primary" mat-dialog-close>Cancel</button>
-  <button mat-stroked-button color="primary" (click)="addProjectToDataSet()">Add</button>
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-stroked-button (click)="addProjectToDataSet()">Add</button>
 </mat-dialog-actions>

@@ -4,13 +4,24 @@ import { LoginComponent } from './modules/pages/login/login.component';
 import { HomeComponent } from './modules/pages/home/home.component';
 import { DataSetDetailComponent } from './modules/data-set/data-set-detail/data-set-detail.component';
 import { DataSetComponent } from './modules/data-set/data-set.component';
-import { AnnotationContainerComponent } from './modules/data-set/annotation-container/annotation-container.component';
+import { AnnotationSchemaComponent } from './modules/annotation-schema/annotation-schema.component';
+import { CodeSmellDetailComponent } from './modules/annotation-schema/code-smell-detail/code-smell-detail.component';
 import { TabContainerComponent } from './modules/community-detection/components/tab-container/tab-container.component';
+import { RegisterComponent } from './modules/pages/register/register.component';
+import { ProfileComponent } from './modules/pages/profile/profile.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'annotation-schema', 
+    component: AnnotationSchemaComponent,
+    children: [
+      { path: 'code-smells/:id', component: CodeSmellDetailComponent },
+    ]
+  },
   { path: 'datasets', component: DataSetComponent },
   {
     path: 'datasets/:id',

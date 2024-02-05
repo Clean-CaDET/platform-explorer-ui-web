@@ -16,7 +16,7 @@ export class AnnotationConsistencyService {
     return this.serverCommunicationService.getRequest(this.consistencyPath + 'annotator/' + projectId + '/' + annotatorId);
   }
 
-  public getAnnotationConsistencyBetweenAnnotatorsForSeverity(projectId: number, severity: number): Observable<Map<string, string>> {
+  public getAnnotationConsistencyBetweenAnnotatorsForSeverity(projectId: number, severity: string): Observable<Map<string, string>> {
     return this.serverCommunicationService.getRequest(this.consistencyPath + 'annotators/' + projectId + '/' + severity);
   }
 
@@ -24,7 +24,7 @@ export class AnnotationConsistencyService {
     return this.serverCommunicationService.getRequest(this.consistencyPath + 'metrics/annotator/' + projectId + '/' + annotatorId);
   }
 
-  public getMetricsSignificanceBetweenAnnotatorsForSeverity(projectId: number, severity: number): Observable<Map<string, Map<string, string>>> {
+  public getMetricsSignificanceBetweenAnnotatorsForSeverity(projectId: number, severity: string): Observable<Map<string, Map<string, string>>> {
     return this.serverCommunicationService.getRequest(this.consistencyPath + 'metrics/annotators/' + projectId + '/' + severity);
   }
 }

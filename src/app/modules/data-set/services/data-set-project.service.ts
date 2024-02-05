@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ServerCommunicationService } from 'src/app/server-communication/server-communication.service';
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
+import { CleanCodeAnalysisDTO } from '../model/DTOs/clean-code-analysis-export-dto/clean-code-analysis-export-dto.model';
 
 
 @Injectable({
@@ -16,6 +17,11 @@ export class DataSetProjectService {
 
   public async getProject(id: number): Promise<DataSetProject> {
     return await this.serverCommunicationService.getRequestAsync(this.projectsPath + id);
+  }
+
+  public cleanCodeAnalysis(projectId: number, exportDTO: CleanCodeAnalysisDTO): Observable<object> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.serverCommunicationService.postRequest(this.projectsPath + projectId + '/export-clean-code-analysis', exportDTO, headers);
   }
   
   public updateDataSetProject(project: DataSetProject): Observable<DataSetProject> {

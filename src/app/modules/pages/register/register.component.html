@@ -1,0 +1,26 @@
+<div class="center">
+    <mat-card fxFlex="30%">
+        <mat-card-title>Register</mat-card-title>
+        <mat-card-content fxLayout="column">
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input [(ngModel)]="name" type="text" matInput required>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input [(ngModel)]="email" type="text" matInput required>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Years of experience</mat-label>
+                <input [(ngModel)]="experience" type="number" matInput required>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Ranking</mat-label>
+                <input [(ngModel)]="ranking" type="number" matInput required>
+            </mat-form-field>
+        </mat-card-content>
+        <button mat-stroked-button (click)='register()'>Register</button>
+        <br>
+        <div class="login-link">Already have an account? <a href="/login">Login!</a></div>
+    </mat-card>
+</div>

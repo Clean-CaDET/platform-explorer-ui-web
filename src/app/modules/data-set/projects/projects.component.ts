@@ -2,18 +2,21 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator, MatPaginatorIntl } from "@angular/material/paginator";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
 import { AddProjectDialogComponent } from "../dialogs/add-project-dialog/add-project-dialog.component";
 import { AnnotationConsistencyDialogComponent } from "../dialogs/annotation-consistency-dialog/annotation-consistency-dialog.component";
+import { CleanCodeAnalysisDialogComponent } from "../dialogs/clean-code-analysis-dialog/clean-code-analysis-dialog.component";
 import { ConfirmDialogComponent } from "../dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogConfigService } from "../dialogs/dialog-config.service";
 import { UpdateProjectDialogComponent } from "../dialogs/update-project-dialog/update-project-dialog.component";
 import { DataSetProject } from "../model/data-set-project/data-set-project.model";
 import { DataSet } from "../model/data-set/data-set.model";
+import { CleanCodeAnalysisDTO } from "../model/DTOs/clean-code-analysis-export-dto/clean-code-analysis-export-dto.model";
 import { ProjectState } from "../model/enums/enums.model";
 import { DataSetProjectService } from "../services/data-set-project.service";
+import { LocalStorageService } from "../services/shared/local-storage.service";
 import { DatasetChosenEvent, InstanceChosenEvent, NotificationEvent, NotificationService, ProjectChosenEvent } from "../services/shared/notification.service";
 
 @Component({
@@ -27,14 +30,18 @@ export class ProjectsComponent implements OnInit {
     public chosenDataset: DataSet = new DataSet();
     public chosenProject: DataSetProject = new DataSetProject();
     public dataSource: MatTableDataSource<DataSetProject> = new MatTableDataSource<DataSetProject>(this.chosenDataset.projects);
-    public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'projectUpdate', 'projectDelete', 'status'];
+    public displayedColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'actions'];
+    public basicInfoColumns: string[] = ['name', 'url', 'numOfInstances', 'status', 'actions'];
+    public annotationInfoColumns: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'status', 'actions'];
     private pollingCycleDurationInSeconds: number = 10;
     public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"];
     public filterFormControl: FormControl = new FormControl('All instances', [Validators.required]);
     public projectState = ProjectState;
+    public showAnnotationInfo: boolean = false;
 
     private notificationSubscription: Subscription | undefined;
 
+    @ViewChild(MatTable) public table : MatTable<DataSetProject>;
     private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
     @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
         this.paginator = mp;
@@ -42,10 +49,12 @@ export class ProjectsComponent implements OnInit {
     }
 
     constructor(private dialog: MatDialog, private projectService: DataSetProjectService,
-        private toastr: ToastrService, private notificationService: NotificationService) {
+        private toastr: ToastrService, private notificationService: NotificationService,
+        private storageService: LocalStorageService) {
     }
 
     ngOnInit(): void {
+      this.showAnnotationInfo = false;
       this.notificationSubscription = this.notificationService.getEvent()
         .subscribe(async (event: NotificationEvent) => {
             if (event instanceof DatasetChosenEvent) {
@@ -64,12 +73,14 @@ export class ProjectsComponent implements OnInit {
     public addProject(): void {
         let dialogConfig = DialogConfigService.setDialogConfig('480px', '520px', this.chosenDataset.id);// auto
         let dialogRef = this.dialog.open(AddProjectDialogComponent, dialogConfig);
-        dialogRef.afterClosed().subscribe((dataset: DataSet) => {
-          if (dataset) {
+        dialogRef.afterClosed().subscribe((project: DataSetProject) => {
+          if (project) {
+            project.state = ProjectState.Processing;
             this.chosenDataset.projectsCount = this.chosenDataset.projects.length;
             this.dataSource.data = this.chosenDataset.projects;
+            this.dataSource.data.push(project);
+            this.table.renderRows();
             this.startPollingProjects();
-            location.reload();
           }
         });
     }
@@ -101,6 +112,17 @@ export class ProjectsComponent implements OnInit {
         this.notificationService.setEvent(new ProjectChosenEvent({project: this.chosenProject, filter: this.filterFormControl.value}));
     }
 
+    public cleanCodeAnalysis(projectId: number) {
+        let dialogRef = this.dialog.open(CleanCodeAnalysisDialogComponent);
+          dialogRef.afterClosed().subscribe((analysisOptions: CleanCodeAnalysisDTO) => {
+            if (analysisOptions.exportPath == '') return;
+            this.projectService.cleanCodeAnalysis(projectId, analysisOptions).subscribe(res => {
+                let message = new Map(Object.entries(res)).get('successes')[0]['message'];
+                this.toastr.success(message);
+            });
+        });
+    }
+
     public updateProject(project: DataSetProject): void {
         let dialogConfig = DialogConfigService.setDialogConfig('250px', '300px', project);//auto
         let dialogRef = this.dialog.open(UpdateProjectDialogComponent, dialogConfig);
@@ -125,7 +147,12 @@ export class ProjectsComponent implements OnInit {
     }
 
     public checkConsistency(projectId: number): void {
-        let dialogConfig = DialogConfigService.setDialogConfig('auto', '600px', projectId); // auto
+        let dialogConfig = DialogConfigService.setDialogConfig('auto', 'auto', { data: [projectId, this.storageService.getSmellFilter()]});
         this.dialog.open(AnnotationConsistencyDialogComponent, dialogConfig);
+    }
+
+    public toggleAnnotationInfo() {
+      if (this.showAnnotationInfo) this.displayedColumns = this.basicInfoColumns;     
+      else this.displayedColumns = this.annotationInfoColumns;
     }
 }
