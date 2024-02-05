@@ -32,8 +32,8 @@ export class TabContainerComponent implements OnInit {
   onChange(event: MatTabChangeEvent) {
     const tab = event.tab.textLabel;
     if (tab === 'Project Graph' && this.projectGraph) this.showProjectGraph();
-    else if (tab === 'Class Graph') this.showClassGraph();
-    else if (tab === 'Class Neighbours') this.showNeighboursGraph();
+    else if (tab === 'Structural Metrics') this.showClassGraph();
+    else if (tab === 'Relationships Graph') this.showNeighboursGraph();
   }
 
   private showProjectGraph() {

@@ -47,13 +47,13 @@ export class ClassGraphComponent {
   }
 
   subscribeToMembers() {
-    this.graphSubscription = this.graphService.classMembers$.subscribe((classGraph: ClassGraph) => {
-      this.graph = this.graphService.getGraphFromClassGraph(classGraph);
-      this.communities = this.graphService.getCommunities(this.graph);
-      this.projectNodes = this.graphService.getNodesFromGraph(this.graph, this.communities);
-      this.projectLinks = this.graphService.getLinksFromGraph(this.graph);
-      this.initGraph();
-    });
+    // this.graphSubscription = this.graphService.classMembers$.subscribe((classGraph: ClassGraph) => {
+    //   this.graph = this.graphService.getGraphFromClassGraph(classGraph);
+    //   this.communities = this.graphService.getCommunities(this.graph);
+    //   this.projectNodes = this.graphService.getNodesFromGraph(this.graph, this.communities);
+    //   this.projectLinks = this.graphService.getLinksFromGraph(this.graph);
+    //   this.initGraph();
+    // });
     this.metricFeaturesSubscription = this.graphDataService.metricFeatures$.subscribe(
       (metricFeatures: Map<string, number>) => {
         let newFeatures: MetricFeature[] = [];
