@@ -88,22 +88,22 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   }
 
   private getAnnotationConsistencyForAnnotator(): void {
-    this.annotationConsistencyService.getAnnotationConsistencyForAnnotator(this.projectIdAndSmell[0], Number(this.storageService.getLoggedInAnnotator())).subscribe((res: Map<string, string>) => 
+    this.annotationConsistencyService.getAnnotationConsistencyForAnnotator(Object(this.projectIdAndSmell)["data"][0], Number(this.storageService.getLoggedInAnnotator())).subscribe((res: Map<string, string>) => 
       this.results.set('Consistency for my annotations', res));
   }
 
   private getAnnotationConsistencyBetweenAnnotatorsForSeverity(): void {
-    this.annotationConsistencyService.getAnnotationConsistencyBetweenAnnotatorsForSeverity(this.projectIdAndSmell[0], this.chosenSeverity!).subscribe((res: Map<string, string>) => 
+    this.annotationConsistencyService.getAnnotationConsistencyBetweenAnnotatorsForSeverity(Object(this.projectIdAndSmell)["data"][0], this.chosenSeverity!).subscribe((res: Map<string, string>) => 
       this.results.set('Consistency between annotators for severity ' + this.chosenSeverity, res));
   }
 
   private getMetricsSignificanceInAnnotationsForAnnotator(): void {
-    this.annotationConsistencyService.getMetricsSignificanceInAnnotationsForAnnotator(this.projectIdAndSmell[0], Number(this.storageService.getLoggedInAnnotator())).subscribe((res: Map<string, Map<string, string>>) => 
+    this.annotationConsistencyService.getMetricsSignificanceInAnnotationsForAnnotator(Object(this.projectIdAndSmell)["data"][0], Number(this.storageService.getLoggedInAnnotator())).subscribe((res: Map<string, Map<string, string>>) => 
       this.results.set('Metrics significance for my annotations', res));
   }
 
   private getMetricsSignificanceBetweenAnnotatorsForSeverity(): void {
-    this.annotationConsistencyService.getMetricsSignificanceBetweenAnnotatorsForSeverity(this.projectIdAndSmell[0], this.chosenSeverity!).subscribe((res: Map<string, Map<string, string>>) => 
+    this.annotationConsistencyService.getMetricsSignificanceBetweenAnnotatorsForSeverity(Object(this.projectIdAndSmell)["data"][0], this.chosenSeverity!).subscribe((res: Map<string, Map<string, string>>) => 
       this.results.set('Metrics significance between annotators for severity ' + this.chosenSeverity, res));
   }
 

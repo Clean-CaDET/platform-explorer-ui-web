@@ -6,7 +6,13 @@
             <input matInput (keyup)="searchProjects($event)" placeholder="Project name">
         </mat-form-field>
         <button class="add-button" mat-mini-fab matTooltip="New project" matTooltipPosition="right" (click)="addProject()">
-            <mat-icon>add</mat-icon>
+            <mat-icon>control_point</mat-icon>
+        </button>
+    </div>
+    <div class="table-header">
+        <div></div>
+        <button class="add-multiple-button" mat-mini-fab matTooltip="Multiple new projects" matTooltipPosition="right" (click)="addMultipleProjects()">
+            <mat-icon>control_point_duplicate</mat-icon>
         </button>
     </div>
     <div class="toggle-annotation-info">

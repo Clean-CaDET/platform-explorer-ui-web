@@ -18,6 +18,7 @@ import { ProjectState } from "../model/enums/enums.model";
 import { DataSetProjectService } from "../services/data-set-project.service";
 import { LocalStorageService } from "../services/shared/local-storage.service";
 import { DatasetChosenEvent, InstanceChosenEvent, NotificationEvent, NotificationService, ProjectChosenEvent } from "../services/shared/notification.service";
+import { AddMultipleProjectsDialogComponent } from "../dialogs/add-multiple-projects-dialog/add-multiple-projects-dialog.component";
 
 @Component({
     selector: 'de-projects',
@@ -84,6 +85,24 @@ export class ProjectsComponent implements OnInit {
           }
         });
     }
+
+    public addMultipleProjects(): void {
+      let dialogConfig = DialogConfigService.setDialogConfig('480px', '520px', this.chosenDataset.id);
+      let dialogRef = this.dialog.open(AddMultipleProjectsDialogComponent, dialogConfig);
+      dialogRef.afterClosed().subscribe((dataset: DataSet) => {
+        if (dataset) {
+          this.chosenDataset.projectsCount = dataset.projects.length;
+          dataset.projects.forEach(p => {
+            p.state = ProjectState.Built;
+            let instancesCount = 0;
+            p.candidateInstances.forEach(c => instancesCount += c.instances.length);
+            p.instancesCount = instancesCount;
+          })
+          this.dataSource.data = dataset.projects;
+          this.table.renderRows();
+        }
+      });
+  }
 
     private startPollingProjects(): void {
         let secondsToWait: number = 0;

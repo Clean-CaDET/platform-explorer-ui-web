@@ -68,6 +68,13 @@ export class DataSetService {
     let data = {project: project, smellFilters: smellFilters, buildSettings: buildSettings};
     return this.serverCommunicationService.postRequest(this.datasetsPath + dataSetId + '/projects', data, headers)
   }
+
+  public addMultipleProjectsToDataSet(filePath: string, dataSetId: number, smellFilters: SmellFilter[]) {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
+    let data = {filePath: filePath, smellFilters: smellFilters};
+    return this.serverCommunicationService.postRequest(this.datasetsPath + dataSetId + '/multipleProjects', data, headers)
+  }
   
   public getDataSetCodeSmells(id: number): Observable<CodeSmell[]> {
     return this.serverCommunicationService.getRequest(this.datasetsPath + id + '/code-smells');

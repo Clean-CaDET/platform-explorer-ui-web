@@ -26,6 +26,12 @@
     background-color: #e4cdc4;
 }
 
+.add-multiple-button {
+    margin: 5px 20px 0px 0px;
+    color: #8f786f;
+    background-color: #e4cdc4;
+}
+
 #projects-table-div {
     height: fit-content;
     max-height: 290px;

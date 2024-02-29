@@ -25,6 +25,7 @@ import { AnnotationNoteDialogComponent } from './dialogs/annotation-note-dialog/
 import { ForgotIdDialogComponent } from './dialogs/forgot-id-dialog/forgot-id-dialog.component';
 import { ExportCompleteDataSetDialogComponent } from './dialogs/export-complete-data-set-dialog/export-complete-data-set-dialog.component';
 import { CleanCodeAnalysisDialogComponent } from './dialogs/clean-code-analysis-dialog/clean-code-analysis-dialog.component';
+import { AddMultipleProjectsDialogComponent } from './dialogs/add-multiple-projects-dialog/add-multiple-projects-dialog.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { CleanCodeAnalysisDialogComponent } from './dialogs/clean-code-analysis-
     InstancesComponent,
     AddDataSetDialogComponent,
     AddProjectDialogComponent,
+    AddMultipleProjectsDialogComponent,
     ExportDraftDataSetDialogComponent,
     ExportCompleteDataSetDialogComponent,
     CleanCodeAnalysisDialogComponent,
