@@ -9,7 +9,7 @@ Steps:
 3. run command **docker build -t angular-docker .**
 4. run command **docker run -p 4200:4200 angular-docker**
 
-The application is available at http://localhost:4200
+The application is available at http://localhost:4200 but it is necessary to start the back-end of application so that the functionalities are available. The instructions for the back-end are [here](https://github.com/Clean-CaDET/dataset-explorer/blob/master/SETUP.md).
 
 
 # Start-up guide for developers
