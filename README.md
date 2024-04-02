@@ -1,3 +1,6 @@
+# Start-up guide for users
+
+Tested on Windows 10
 Requirements: Docker
 
 Steps:
@@ -5,3 +8,12 @@ Steps:
 2. position terminal in **platform-explorer-ui-web** folder
 3. run command **docker build -t angular-docker .**
 4. run command **docker run -p 4200:4200 angular-docker**
+
+
+# Start-up guide for developers
+
+Tested on Windows 10
+Requirements: 
+
+Steps:
+
