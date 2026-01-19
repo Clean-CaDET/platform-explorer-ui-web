@@ -18,6 +18,7 @@ export class AddMultipleProjectsDialogComponent implements OnInit {
   public codeSmells: CodeSmell[] = [];
   public smellFilters: SmellFilter[] = [];
   public chosenMetrics: string[][] = [];
+  selectedFile: File | null = null;
   
 
   constructor(
@@ -40,11 +41,32 @@ export class AddMultipleProjectsDialogComponent implements OnInit {
     });
   }
 
-  public addMultipleProjectsToDataSet(): void {
-    if (this.isValidInput()) {
-      this.dataSetService.addMultipleProjectsToDataSet(this.filePath, this.dataSetId, this.smellFilters).subscribe((res: DataSet) => this.dialogRef.close(res));
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      this.selectedFile = null;
+      return;
     }
+
+    const file = input.files[0];
+
+    if (!file.name.endsWith('.xlsx')) {
+      this.selectedFile = null;
+      return;
+    }
+
+    this.selectedFile = file;
   }
+
+  public addMultipleProjectsToDataSet(): void {
+    if (!this.selectedFile) {
+      return;
+    }
+
+    this.dataSetService.importProjectsToDataSet(this.dataSetId, this.selectedFile, this.smellFilters).subscribe((res: DataSet) => this.dialogRef.close(res));
+  }
+
   private isValidInput(): boolean {
     return this.filePath != '';
   }

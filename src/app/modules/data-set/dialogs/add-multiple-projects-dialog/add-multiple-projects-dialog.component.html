@@ -5,7 +5,31 @@
       <td>
         <mat-form-field appearance="fill">
           <mat-label>Projects file path</mat-label>
-          <input [(ngModel)]="filePath" name="filePath" type="text" matInput required />
+
+          <input
+            matInput
+            [value]="selectedFile?.name || ''"
+            placeholder="Select .xlsx file"
+            readonly
+            (click)="fileInput.click()"
+          />
+
+          <input
+            #fileInput
+            type="file"
+            accept=".xlsx"
+            hidden
+            (change)="onFileSelected($event)"
+          />
+
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="fileInput.click()"
+          >
+            📁
+          </button>
         </mat-form-field>
       </td>
     </tr>
@@ -13,5 +37,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-stroked-button mat-dialog-close>Cancel</button>
-  <button mat-stroked-button (click)="addMultipleProjectsToDataSet()">Add</button>
+  <button mat-stroked-button (click)="addMultipleProjectsToDataSet()"  [disabled]="!selectedFile">Add</button>
 </mat-dialog-actions>
