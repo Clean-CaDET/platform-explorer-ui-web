@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiHost: 'http://localhost:51834/api/',
+  apiHost: 'http://localhost:5000/api/', //dockerized BE
+  //apiHost: 'http://localhost:51834/api/', //local BE
 };
 
 /*

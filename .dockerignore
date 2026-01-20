@@ -1,11 +1,48 @@
-node_modules
+# Dependencies
+node_modules/
 npm-debug.log
-Dockerfile*
-docker-compose*
-.dockerignore
-.git
+yarn-error.log
+
+# Build outputs
+dist/
+out-tsc/
+.angular/
+
+# Testing
+*.spec.ts
+karma.conf.js
+coverage/
+e2e/
+
+# IDE & Editor configs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git/
 .gitignore
+.gitattributes
+
+# Documentation
 README.md
-LICENSE
-.vscode
-.idea
+*.md
+docs/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Environment files (keep local dev configs out)
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+
+# OS files
+Thumbs.db
