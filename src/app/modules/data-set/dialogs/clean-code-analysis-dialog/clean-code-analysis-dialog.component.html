@@ -2,18 +2,15 @@
 <mat-dialog-content class="mat-typography">
     <mat-card fxFlex="30%">
         <mat-card-content fxLayout="column">
-            <mat-form-field>
-                <mat-label>Export path</mat-label>
-                <input [(ngModel)]="exportPath" type="text" matInput required>
-            </mat-form-field>
-            <br>
-            <mat-form-field appearance="fill" floatLabel="always" class="form-field">
-                <mat-label>Select clean code options</mat-label>
-                <mat-select multiple
-                    [(ngModel)]="chosenCleanCodeOptions" name="chosenCleanCodeOptions" id="chosenCleanCodeOptions">
-                    <mat-option *ngFor="let option of cleanCodeOptions" [value]="option">{{option}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+            <p class="export-info">Files will be exported to your Downloads folder.</p>
+            <div class="checkbox-group">
+                <label class="checkbox-label">Select clean code options:</label>
+                <mat-checkbox *ngFor="let option of cleanCodeOptions"
+                              [(ngModel)]="option.checked"
+                              class="checkbox-option">
+                    {{option.name}}
+                </mat-checkbox>
+            </div>
         </mat-card-content>
     </mat-card>
 </mat-dialog-content>

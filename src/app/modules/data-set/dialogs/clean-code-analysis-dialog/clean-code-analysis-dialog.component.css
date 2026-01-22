@@ -1,3 +1,24 @@
 .mat-stroked-button {
     color: #382110;
 }
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #382110;
+}
+
+.checkbox-option {
+    margin-left: 10px;
+}
+
+.export-info {
+    margin-bottom: 15px;
+    color: #666;
+}

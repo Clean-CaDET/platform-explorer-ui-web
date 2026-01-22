@@ -39,8 +39,10 @@ export class ProjectsComponent implements OnInit {
     public filterFormControl: FormControl = new FormControl('All instances', [Validators.required]);
     public projectState = ProjectState;
     public showAnnotationInfo: boolean = false;
+    public isExporting: boolean = false;
 
     private notificationSubscription: Subscription | undefined;
+    private exportSubscription: Subscription | null = null;
 
     @ViewChild(MatTable) public table : MatTable<DataSetProject>;
     private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
@@ -134,12 +136,31 @@ export class ProjectsComponent implements OnInit {
     public cleanCodeAnalysis(projectId: number) {
         let dialogRef = this.dialog.open(CleanCodeAnalysisDialogComponent);
           dialogRef.afterClosed().subscribe((analysisOptions: CleanCodeAnalysisDTO) => {
-            if (analysisOptions.exportPath == '') return;
-            this.projectService.cleanCodeAnalysis(projectId, analysisOptions).subscribe(res => {
-                let message = new Map(Object.entries(res)).get('successes')[0]['message'];
-                this.toastr.success(message);
+            if (!analysisOptions) return;
+            this.isExporting = true;
+            this.exportSubscription = this.projectService.cleanCodeAnalysis(projectId, analysisOptions).subscribe({
+                next: (res) => {
+                    let message = new Map(Object.entries(res)).get('successes')[0]['message'];
+                    this.toastr.success(message);
+                    this.isExporting = false;
+                    this.exportSubscription = null;
+                },
+                error: (err) => {
+                    this.toastr.error('Export failed. Please check the logs for details.');
+                    this.isExporting = false;
+                    this.exportSubscription = null;
+                }
             });
         });
+    }
+
+    public cancelExport(): void {
+        if (this.exportSubscription) {
+            this.exportSubscription.unsubscribe();
+            this.exportSubscription = null;
+            this.isExporting = false;
+            this.toastr.info('Export cancelled. Files that were already generated will remain in your Downloads folder.');
+        }
     }
 
     public updateProject(project: DataSetProject): void {

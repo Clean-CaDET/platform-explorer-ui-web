@@ -1,4 +1,14 @@
 
+<div *ngIf="isExporting" class="export-overlay">
+    <div class="export-spinner-container">
+        <mat-spinner></mat-spinner>
+        <p class="export-message">Exporting clean code analysis... This may take several minutes.</p>
+        <button mat-raised-button color="warn" (click)="cancelExport()" class="cancel-button">
+            Cancel Export
+        </button>
+    </div>
+</div>
+
 <div id="datasets-table-div">
     <p class="table-title">Datasets</p>
     <div class="table-header">
