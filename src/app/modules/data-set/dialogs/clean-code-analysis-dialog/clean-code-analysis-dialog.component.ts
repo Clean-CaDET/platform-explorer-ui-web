@@ -8,18 +8,23 @@ import { CleanCodeAnalysisDTO } from "../../model/DTOs/clean-code-analysis-expor
     styleUrls: ['./clean-code-analysis-dialog.component.css']
   })
 export class CleanCodeAnalysisDialogComponent {
-    public exportPath: string = '';
-    public chosenCleanCodeOptions: string[] = [];
-    public cleanCodeOptions: string[] = ['Clean names', 'Clean functions', 'Clean classes'];
-    
+    public cleanCodeOptions = [
+        { name: 'Clean names', checked: true },
+        { name: 'Clean functions', checked: true },
+        { name: 'Clean classes', checked: true }
+    ];
+
     constructor(private dialogRef: MatDialogRef<CleanCodeAnalysisDialogComponent>){}
 
     public exportAnalysis() {
         if (!this.isValidInput()) return;
-        this.dialogRef.close(new CleanCodeAnalysisDTO({'exportPath': this.exportPath, 'cleanCodeOptions': this.chosenCleanCodeOptions}));
+        const selectedOptions = this.cleanCodeOptions
+            .filter(option => option.checked)
+            .map(option => option.name);
+        this.dialogRef.close(new CleanCodeAnalysisDTO({'cleanCodeOptions': selectedOptions}));
     }
 
     private isValidInput(): boolean {
-        return this.exportPath != '' && this.cleanCodeOptions.length > 0;
+        return this.cleanCodeOptions.some(option => option.checked);
     }
 }

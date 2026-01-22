@@ -4,6 +4,7 @@ import { MatPaginator, MatPaginatorIntl } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
+import { Subscription } from "rxjs";
 import { AddDataSetDialogComponent } from "./dialogs/add-data-set-dialog/add-data-set-dialog.component";
 import { CleanCodeAnalysisDialogComponent } from "./dialogs/clean-code-analysis-dialog/clean-code-analysis-dialog.component";
 import { ConfirmDialogComponent } from "./dialogs/confirm-dialog/confirm-dialog.component";
@@ -28,6 +29,8 @@ export class DataSetComponent implements OnInit {
     private datasets: DataSet[] = [];
     public dataSource = new MatTableDataSource<DataSet>();
     public displayedColumns = ['name', 'numOfProjects', 'actions'];
+    public isExporting: boolean = false;
+    private exportSubscription: Subscription | null = null;
 
     private paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
     @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
@@ -100,12 +103,31 @@ export class DataSetComponent implements OnInit {
     public cleanCodeAnalysis(dataset: DataSet): void {
         let dialogRef = this.dialog.open(CleanCodeAnalysisDialogComponent);
         dialogRef.afterClosed().subscribe((analysisOptions: CleanCodeAnalysisDTO) => {
-            if (analysisOptions.exportPath == '') return;
-            this.datasetService.cleanCodeAnalysis(dataset.id, analysisOptions).subscribe(res => {
-                let message = new Map(Object.entries(res)).get('successes')[0]['message'];
-                this.toastr.success(message);
+            if (!analysisOptions) return;
+            this.isExporting = true;
+            this.exportSubscription = this.datasetService.cleanCodeAnalysis(dataset.id, analysisOptions).subscribe({
+                next: (res) => {
+                    let message = new Map(Object.entries(res)).get('successes')[0]['message'];
+                    this.toastr.success(message);
+                    this.isExporting = false;
+                    this.exportSubscription = null;
+                },
+                error: (err) => {
+                    this.toastr.error('Export failed. Please check the logs for details.');
+                    this.isExporting = false;
+                    this.exportSubscription = null;
+                }
             });
         });
+    }
+
+    public cancelExport(): void {
+        if (this.exportSubscription) {
+            this.exportSubscription.unsubscribe();
+            this.exportSubscription = null;
+            this.isExporting = false;
+            this.toastr.info('Export cancelled. Files that were already generated will remain in your Downloads folder.');
+        }
     }
 
     public searchDataSets(event: Event): void {
