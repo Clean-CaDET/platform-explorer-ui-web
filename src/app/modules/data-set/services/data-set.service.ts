@@ -10,7 +10,6 @@ import { SmellFilter } from '../model/smell-filter/smell-filter.model';
 import { DatasetSummaryDTO } from '../model/DTOs/dataset-summary-dto/dataset-summary-dto.model';
 import { DatasetDetailDTO } from '../model/DTOs/dataset-detail-dto/dataset-detail-dto.model';
 import { LocalStorageService } from './shared/local-storage.service';
-import { CompleteDataSetExportDTO } from '../model/DTOs/complete-dataset-export-dto/complete-dataset-export-dto.model';
 import { CleanCodeAnalysisDTO } from '../model/DTOs/clean-code-analysis-export-dto/clean-code-analysis-export-dto.model';
 
 @Injectable({
@@ -37,15 +36,15 @@ export class DataSetService {
     return this.serverCommunicationService.postRequest(this.datasetsPath + name, codeSmells, headers);
   }
 
-  public exportDraftDataSet(id: number, exportPath: string): Observable<object> {
+  public exportDraftDataSet(id: number): Observable<object> {
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    let data = { id: id, annotatorId: this.storageService.getLoggedInAnnotator(), exportPath: exportPath };
+    let data = { id: id, annotatorId: this.storageService.getLoggedInAnnotator() };
     return this.serverCommunicationService.postRequest(this.datasetsPath + 'export-draft', data, headers);
   }
 
-  public exportCompleteDataSet(datasetId: number, exportDTO: CompleteDataSetExportDTO): Observable<object> {
-    let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.serverCommunicationService.postRequest(this.datasetsPath + datasetId + '/export-complete', exportDTO, headers);
+  public exportCompleteDataSet(datasetId: number, formData: FormData): Observable<object> {
+    let headers = new HttpHeaders();
+    return this.serverCommunicationService.postRequest(this.datasetsPath + datasetId + '/export-complete', formData, headers);
   }
 
   public cleanCodeAnalysis(datasetId: number, exportDTO: CleanCodeAnalysisDTO): Observable<object> {
@@ -80,7 +79,8 @@ export class DataSetService {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('smellFilters', JSON.stringify(smellFilters));
-    return this.serverCommunicationService.postRequestWithoutHeaders(this.datasetsPath + dataSetId + '/importProjects', formData)
+    let headers = new HttpHeaders();
+    return this.serverCommunicationService.postRequest(this.datasetsPath + dataSetId + '/importProjects', formData, headers)
   }
   
   public getDataSetCodeSmells(id: number): Observable<CodeSmell[]> {

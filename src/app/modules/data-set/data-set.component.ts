@@ -14,7 +14,6 @@ import { ExportDraftDataSetDialogComponent } from "./dialogs/export-draft-data-s
 import { UpdateDataSetDialogComponent } from "./dialogs/update-data-set-dialog/update-data-set-dialog.component";
 import { DataSet } from "./model/data-set/data-set.model";
 import { CleanCodeAnalysisDTO } from "./model/DTOs/clean-code-analysis-export-dto/clean-code-analysis-export-dto.model";
-import { CompleteDataSetExportDTO } from "./model/DTOs/complete-dataset-export-dto/complete-dataset-export-dto.model";
 import { DataSetService } from "./services/data-set.service";
 import { LocalStorageService } from "./services/shared/local-storage.service";
 
@@ -80,22 +79,26 @@ export class DataSetComponent implements OnInit {
 
     public exportDraftDataSet(dataset: DataSet): void {
         let dialogRef = this.dialog.open(ExportDraftDataSetDialogComponent);
-        dialogRef.afterClosed().subscribe((exportPath: string) => {
-            if (exportPath == '') return;
-            this.datasetService.exportDraftDataSet(dataset.id, exportPath).subscribe(res => {
-                let message = new Map(Object.entries(res)).get('successes')[0]['message'];
-                this.toastr.success(message);
+        dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+            if (!confirmed) return;
+            this.datasetService.exportDraftDataSet(dataset.id).subscribe(res => {
+                this.toastr.success('Successfully exported!');
             });
         });
     }
 
     public exportCompleteDataSet(dataset: DataSet): void {
         let dialogRef = this.dialog.open(ExportCompleteDataSetDialogComponent);
-        dialogRef.afterClosed().subscribe((exportDTO: CompleteDataSetExportDTO) => {
-            if (exportDTO.exportPath == '') return;
-            this.datasetService.exportCompleteDataSet(dataset.id, exportDTO).subscribe(res => {
-                let message = new Map(Object.entries(res)).get('successes')[0]['message'];
-                this.toastr.success(message);
+        dialogRef.afterClosed().subscribe((files: File[]) => {
+            if (!files || files.length === 0) return;
+
+            const formData = new FormData();
+            files.forEach((file, index) => {
+                formData.append('DraftDatasetFiles', file, file.name);
+            });
+
+            this.datasetService.exportCompleteDataSet(dataset.id, formData).subscribe(res => {
+                this.toastr.success('Successfully exported!');
             });
         });
     }

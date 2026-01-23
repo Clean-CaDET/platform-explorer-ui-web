@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material/dialog";
-import { CompleteDataSetExportDTO } from "../../model/DTOs/complete-dataset-export-dto/complete-dataset-export-dto.model";
 
 @Component({
     selector: 'de-export-complete-data-set-dialog',
@@ -8,17 +7,19 @@ import { CompleteDataSetExportDTO } from "../../model/DTOs/complete-dataset-expo
     styleUrls: ['./export-complete-data-set-dialog.component.css']
   })
 export class ExportCompleteDataSetDialogComponent {
-    public exportPath: string = '';
-    public annotationsPath: string = '';
+    public selectedFiles: File[] = [];
 
     constructor(private dialogRef: MatDialogRef<ExportCompleteDataSetDialogComponent>){}
 
-    public exportCompleteDataSet() {
-        if (!this.isValidInput()) return;
-        this.dialogRef.close(new CompleteDataSetExportDTO({'annotationsPath': this.annotationsPath, 'exportPath': this.exportPath}));
+    public onFilesSelected(event: any) {
+        const files = event.target.files;
+        if (files) {
+            this.selectedFiles = Array.from(files);
+        }
     }
 
-    private isValidInput(): boolean {
-        return this.exportPath != '';
+    public exportCompleteDataSet() {
+        if (this.selectedFiles.length === 0) return;
+        this.dialogRef.close(this.selectedFiles);
     }
 }

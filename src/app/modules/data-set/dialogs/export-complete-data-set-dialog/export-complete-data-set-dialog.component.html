@@ -2,19 +2,23 @@
 <mat-dialog-content class="mat-typography">
     <mat-card fxFlex="30%">
         <mat-card-content fxLayout="column">
-            <mat-form-field>
-                <mat-label>Annotations path</mat-label>
-                <input [(ngModel)]="annotationsPath" type="text" matInput>
-            </mat-form-field>
-            <br>
-            <mat-form-field>
-                <mat-label>Export path</mat-label>
-                <input [(ngModel)]="exportPath" type="text" matInput required>
-            </mat-form-field>
+            <p>Select draft dataset files from all annotators:</p>
+            <input type="file"
+                   accept=".xlsx"
+                   multiple
+                   (change)="onFilesSelected($event)"
+                   #fileInput>
+            <div *ngIf="selectedFiles.length > 0" style="margin-top: 10px;">
+                <p><strong>Selected files ({{selectedFiles.length}}):</strong></p>
+                <ul>
+                    <li *ngFor="let file of selectedFiles">{{file.name}}</li>
+                </ul>
+            </div>
+            <p style="margin-top: 10px;">The complete dataset will be exported to your Downloads folder.</p>
         </mat-card-content>
     </mat-card>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-stroked-button mat-dialog-close>Cancel</button>
-    <button mat-stroked-button (click)="exportCompleteDataSet()">Export</button>
+    <button mat-stroked-button (click)="exportCompleteDataSet()" [disabled]="selectedFiles.length === 0">Export</button>
 </mat-dialog-actions>
