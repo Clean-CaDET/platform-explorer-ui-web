@@ -18,4 +18,8 @@ export class InstanceService {
     public async getInstanceWithAnnotations(id: number): Promise<Instance> {
         return await this.serverCommunicationService.getRequestAsync(this.instancesPath + id + '/annotations');
     }
+
+    public async getSourceCode(id: number): Promise<{sourceCode: string, link: string}> {
+        return await this.serverCommunicationService.getRequestAsync(this.instancesPath + id + '/source-code');
+    }
 }

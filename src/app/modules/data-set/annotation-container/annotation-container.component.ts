@@ -43,9 +43,77 @@ export class AnnotationContainerComponent implements OnInit {
       if (storedSmell != null) this.selectedSmell = storedSmell;
       this.countTotalCoupling();
       if (!this.iframe) this.iframe = document.getElementById('snippet') as HTMLIFrameElement;
-      this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
+      await this.loadSourceCode(params['instanceId']);
       this.notificationService.setEvent(new InstanceChosenEvent(this.chosenInstance));
     });
+  }
+
+  private async loadSourceCode(instanceId: number) {
+    // Try emgithub.com first (works for public repos, better formatting)
+    this.iframe.srcdoc = this.createSrcdocFromGithubLink(this.chosenInstance.link);
+
+    // Set up fallback to backend API if emgithub fails (for private repos)
+    setTimeout(async () => {
+      const iframeDoc = this.iframe.contentDocument || this.iframe.contentWindow?.document;
+      if (iframeDoc && (iframeDoc.body.innerText.includes('404') || iframeDoc.body.children.length === 0)) {
+        // emgithub failed, fall back to backend API
+        const sourceCodeData = await this.instanceService.getSourceCode(instanceId);
+        if (sourceCodeData && sourceCodeData.sourceCode) {
+          this.iframe.srcdoc = this.createSrcdocFromSourceCode(sourceCodeData.sourceCode, sourceCodeData.link);
+        }
+      }
+    }, 2000); // Wait 2 seconds for emgithub to load
+  }
+
+  private createSrcdocFromSourceCode(sourceCode: string, githubLink: string): string {
+    // Extract file extension for syntax highlighting
+    const fileExtension = githubLink.split('.').pop()?.split('#')[0] || 'txt';
+    const language = this.getLanguageFromExtension(fileExtension);
+
+    // Create HTML with syntax highlighting using Prism.js
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+        <style>
+          body { margin: 0; padding: 10px; font-family: 'Consolas', 'Monaco', monospace; font-size: 14px; }
+          pre { margin: 0; }
+          .file-meta { background: #f5f5f5; padding: 8px; border-bottom: 1px solid #ddd; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="file-meta">${githubLink}</div>
+        <pre><code class="language-${language}">${this.escapeHtml(sourceCode)}</code></pre>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+      </body>
+      </html>
+    `;
+  }
+
+  private getLanguageFromExtension(ext: string): string {
+    const languageMap: { [key: string]: string } = {
+      'cs': 'csharp',
+      'java': 'java',
+      'py': 'python',
+      'js': 'javascript',
+      'ts': 'typescript',
+      'cpp': 'cpp',
+      'c': 'c',
+      'h': 'c',
+      'hpp': 'cpp'
+    };
+    return languageMap[ext.toLowerCase()] || 'clike';
+  }
+
+  private escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 
   private countTotalCoupling() {
