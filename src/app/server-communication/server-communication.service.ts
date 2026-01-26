@@ -34,6 +34,15 @@ export class ServerCommunicationService {
     return this.sendRequest('DELETE', path);
   }
 
+  public postRequestBlob(path: string, body: any, headers: HttpHeaders): Observable<Blob> {
+    return this.http.request('POST', environment.apiHost + path, {
+      headers: headers,
+      body: body,
+      responseType: 'blob',
+      observe: 'body'
+    });
+  }
+
   private sendRequest(method: string, path: string, body?: any, headers?: HttpHeaders): Observable<any> {
     return this.http.request<any>(method, environment.apiHost + path, {
       headers : headers,

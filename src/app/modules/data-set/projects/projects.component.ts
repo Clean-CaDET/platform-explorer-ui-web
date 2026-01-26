@@ -138,10 +138,12 @@ export class ProjectsComponent implements OnInit {
           dialogRef.afterClosed().subscribe((analysisOptions: CleanCodeAnalysisDTO) => {
             if (!analysisOptions) return;
             this.isExporting = true;
+            const project = this.chosenDataset.projects.find(p => p.id === projectId);
             this.exportSubscription = this.projectService.cleanCodeAnalysis(projectId, analysisOptions).subscribe({
-                next: (res) => {
-                    let message = new Map(Object.entries(res)).get('successes')[0]['message'];
-                    this.toastr.success(message);
+                next: (blob) => {
+                    const projectName = project ? project.name : 'Project';
+                    this.downloadFile(blob, `${projectName}_CleanCodeAnalysis.zip`);
+                    this.toastr.success('Successfully exported!');
                     this.isExporting = false;
                     this.exportSubscription = null;
                 },
@@ -192,7 +194,16 @@ export class ProjectsComponent implements OnInit {
     }
 
     public toggleAnnotationInfo() {
-      if (this.showAnnotationInfo) this.displayedColumns = this.basicInfoColumns;     
+      if (this.showAnnotationInfo) this.displayedColumns = this.basicInfoColumns;
       else this.displayedColumns = this.annotationInfoColumns;
+    }
+
+    private downloadFile(blob: Blob, filename: string): void {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        window.URL.revokeObjectURL(url);
     }
 }

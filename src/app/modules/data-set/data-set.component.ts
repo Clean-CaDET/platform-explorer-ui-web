@@ -81,7 +81,8 @@ export class DataSetComponent implements OnInit {
         let dialogRef = this.dialog.open(ExportDraftDataSetDialogComponent);
         dialogRef.afterClosed().subscribe((confirmed: boolean) => {
             if (!confirmed) return;
-            this.datasetService.exportDraftDataSet(dataset.id).subscribe(res => {
+            this.datasetService.exportDraftDataSet(dataset.id).subscribe(blob => {
+                this.downloadFile(blob, `Draft_${dataset.name}.zip`);
                 this.toastr.success('Successfully exported!');
             });
         });
@@ -97,7 +98,8 @@ export class DataSetComponent implements OnInit {
                 formData.append('DraftDatasetFiles', file, file.name);
             });
 
-            this.datasetService.exportCompleteDataSet(dataset.id, formData).subscribe(res => {
+            this.datasetService.exportCompleteDataSet(dataset.id, formData).subscribe(blob => {
+                this.downloadFile(blob, `Final_${dataset.name}.zip`);
                 this.toastr.success('Successfully exported!');
             });
         });
@@ -109,9 +111,9 @@ export class DataSetComponent implements OnInit {
             if (!analysisOptions) return;
             this.isExporting = true;
             this.exportSubscription = this.datasetService.cleanCodeAnalysis(dataset.id, analysisOptions).subscribe({
-                next: (res) => {
-                    let message = new Map(Object.entries(res)).get('successes')[0]['message'];
-                    this.toastr.success(message);
+                next: (blob) => {
+                    this.downloadFile(blob, `${dataset.name}_CleanCodeAnalysis.zip`);
+                    this.toastr.success('Successfully exported!');
                     this.isExporting = false;
                     this.exportSubscription = null;
                 },
@@ -141,5 +143,14 @@ export class DataSetComponent implements OnInit {
     public chooseDataset(dataset: DataSet): void {
         this.storageService.clearSmellFilter();
         this.router.navigate(['/datasets', dataset.id]);
+    }
+
+    private downloadFile(blob: Blob, filename: string): void {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        window.URL.revokeObjectURL(url);
     }
 }

@@ -36,20 +36,20 @@ export class DataSetService {
     return this.serverCommunicationService.postRequest(this.datasetsPath + name, codeSmells, headers);
   }
 
-  public exportDraftDataSet(id: number): Observable<object> {
+  public exportDraftDataSet(id: number): Observable<Blob> {
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
     let data = { id: id, annotatorId: this.storageService.getLoggedInAnnotator() };
-    return this.serverCommunicationService.postRequest(this.datasetsPath + 'export-draft', data, headers);
+    return this.serverCommunicationService.postRequestBlob(this.datasetsPath + 'export-draft', data, headers);
   }
 
-  public exportCompleteDataSet(datasetId: number, formData: FormData): Observable<object> {
+  public exportCompleteDataSet(datasetId: number, formData: FormData): Observable<Blob> {
     let headers = new HttpHeaders();
-    return this.serverCommunicationService.postRequest(this.datasetsPath + datasetId + '/export-complete', formData, headers);
+    return this.serverCommunicationService.postRequestBlob(this.datasetsPath + datasetId + '/export-complete', formData, headers);
   }
 
-  public cleanCodeAnalysis(datasetId: number, exportDTO: CleanCodeAnalysisDTO): Observable<object> {
+  public cleanCodeAnalysis(datasetId: number, exportDTO: CleanCodeAnalysisDTO): Observable<Blob> {
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.serverCommunicationService.postRequest(this.datasetsPath + datasetId + '/export-clean-code-analysis', exportDTO, headers);
+    return this.serverCommunicationService.postRequestBlob(this.datasetsPath + datasetId + '/export-clean-code-analysis', exportDTO, headers);
   }
 
   public deleteDataSet(id: number): Observable<DataSet> {

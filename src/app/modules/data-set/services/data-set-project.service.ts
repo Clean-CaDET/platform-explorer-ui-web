@@ -19,9 +19,9 @@ export class DataSetProjectService {
     return await this.serverCommunicationService.getRequestAsync(this.projectsPath + id);
   }
 
-  public cleanCodeAnalysis(projectId: number, exportDTO: CleanCodeAnalysisDTO): Observable<object> {
+  public cleanCodeAnalysis(projectId: number, exportDTO: CleanCodeAnalysisDTO): Observable<Blob> {
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.serverCommunicationService.postRequest(this.projectsPath + projectId + '/export-clean-code-analysis', exportDTO, headers);
+    return this.serverCommunicationService.postRequestBlob(this.projectsPath + projectId + '/export-clean-code-analysis', exportDTO, headers);
   }
   
   public updateDataSetProject(project: DataSetProject): Observable<DataSetProject> {
