@@ -113,6 +113,6 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   }
 
   public severities(): Severity[] {
-    return this.availableSeverities.get(this.projectIdAndSmell[1])!;
+    return this.availableSeverities.get(Object(this.projectIdAndSmell)["data"][1])!;
   }
 }
