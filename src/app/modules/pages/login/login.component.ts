@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { LocalStorageService } from '../../data-set/services/shared/local-storag
 })
 export class LoginComponent implements OnInit {
 
-  annotatorFormControl = new FormControl('', [
+  annotatorFormControl = new UntypedFormControl('', [
     Validators.required,
     Validators.min(1),
   ]);

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
+import { UntypedFormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator, MatPaginatorIntl } from "@angular/material/paginator";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
@@ -36,7 +36,7 @@ export class ProjectsComponent implements OnInit {
     public annotationInfoColumns: string[] = ['name', 'url', 'numOfInstances', 'fullyAnnotated', 'consistency', 'status', 'actions'];
     private pollingCycleDurationInSeconds: number = 10;
     public instancesFilters = ["All instances", "Need additional annotations", "With disagreeing annotations"];
-    public filterFormControl: FormControl = new FormControl('All instances', [Validators.required]);
+    public filterFormControl: UntypedFormControl = new UntypedFormControl('All instances', [Validators.required]);
     public projectState = ProjectState;
     public showAnnotationInfo: boolean = false;
     public isExporting: boolean = false;
