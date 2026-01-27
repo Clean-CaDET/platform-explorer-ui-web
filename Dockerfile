@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:16-alpine AS build
+FROM node:20-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies with legacy peer deps flag
-RUN npm ci --legacy-peer-deps
+# Install dependencies
+RUN npm ci
 
 # Copy all source files
 COPY . .
@@ -23,7 +23,7 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy custom nginx configuration
-COPY src/ngnix.config /etc/nginx/conf.d/default.conf
+COPY src/nginx.config /etc/nginx/conf.d/default.conf
 
 # Copy built Angular app from build stage
 COPY --from=build /app/dist/platform-explorer-ui-web /usr/share/nginx/html

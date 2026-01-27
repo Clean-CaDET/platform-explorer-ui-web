@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "platform-explorer-ui-web:build:production"
+              "buildTarget": "platform-explorer-ui-web:build:production"
             },
             "development": {
-              "browserTarget": "platform-explorer-ui-web:build:development"
+              "buildTarget": "platform-explorer-ui-web:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "platform-explorer-ui-web:build"
+            "buildTarget": "platform-explorer-ui-web:build"
           }
         },
         "test": {
@@ -107,6 +107,5 @@
         }
       }
     }
-  },
-  "defaultProject": "platform-explorer-ui-web"
+  }
 }

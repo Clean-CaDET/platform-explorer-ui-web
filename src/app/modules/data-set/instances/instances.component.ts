@@ -1,6 +1,6 @@
 import { Location } from "@angular/common";
 import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
+import { UntypedFormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
 import { ActivatedRoute, Params, Router } from "@angular/router";
@@ -41,7 +41,7 @@ export class InstancesComponent implements OnInit {
     public selectedNoteStatus: string = 'All';
     public severities: Set<string|null> = new Set();
     public codeSmells: string[] = [];
-    public selectedSmellFormControl = new FormControl('', Validators.required);
+    public selectedSmellFormControl = new UntypedFormControl('', Validators.required);
     public filter: string = 'All instances';
     private notificationSubscription: Subscription | undefined;
     

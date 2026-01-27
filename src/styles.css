@@ -44,10 +44,15 @@ body {
 }
 
 
-tr.mat-row:hover {
+tr.mat-row:hover,
+tr.mat-mdc-row:hover {
     background: whitesmoke;
 }
 
-.row-chosen, tr.mat-row.row-chosen:hover {
-    background: #F4F1EA;
+.row-chosen,
+    tr.mat-mdc-row.row-chosen,
+    tr.mat-row.row-chosen,
+    tr.mat-mdc-row.row-chosen:hover,
+    tr.mat-row.row-chosen:hover {
+        background: #F4F1EA !important;
 }

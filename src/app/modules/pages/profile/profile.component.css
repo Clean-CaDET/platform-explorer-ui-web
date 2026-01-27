@@ -10,16 +10,15 @@
     margin-top: 60px;
 }
 
-mat-card {
-    width: 0px;
+.avatar-container {
     margin-left: 15%;
-    padding: 0px;
     margin-top: 50px;
 }
 
-.mat-card-avatar {
+.avatar-circle {
     height: 200px;
     width: 200px;
+    border-radius: 50%;
     background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
     background-size: cover;
 }

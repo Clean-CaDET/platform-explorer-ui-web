@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from "@angular/material/dialog";
+import { MatDialogRef } from '@angular/material/dialog';
 import { DataSet } from '../../model/data-set/data-set.model';
 import { CodeSmell } from '../../model/code-smell/code-smell.model';
 import { DataSetService } from '../../services/data-set.service';

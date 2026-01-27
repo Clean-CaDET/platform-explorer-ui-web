@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Severity } from 'src/app/modules/annotation-schema/model/severity/severity.model';
 import { AnnotationSchemaService } from 'src/app/modules/annotation-schema/services/annotation-schema.service';
@@ -20,7 +20,7 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   public severityNeeded: boolean = false;
   public availableSeverities: Map<string, Severity[]> = new Map();
   public chosenSeverity: string | null = null;
-  public typeFormControl: FormControl = new FormControl('', Validators.required);
+  public typeFormControl: UntypedFormControl = new UntypedFormControl('', Validators.required);
 
   public showResultClicked = false;
   public results: Map<string, any> = new Map();
@@ -113,6 +113,6 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   }
 
   public severities(): Severity[] {
-    return this.availableSeverities.get(this.projectIdAndSmell[1])!;
+    return this.availableSeverities.get(Object(this.projectIdAndSmell)["data"][1])!;
   }
 }
