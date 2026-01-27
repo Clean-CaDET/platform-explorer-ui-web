@@ -1,7 +1,7 @@
 <div class="annotation-container">
     <div class="vertical-container2">
         <p class="github-link">Check the instance on GitHub!
-            <a href="{{chosenInstance?.link}}" target="_blank">
+            <a href="{{chosenInstance.link}}" target="_blank">
                 <mat-icon>open_in_new</mat-icon>
             </a>
         </p>
@@ -11,7 +11,7 @@
         <de-annotation-form [codeSmell]="selectedSmell" [instanceId]="chosenInstance.id">
         </de-annotation-form> 
 
-        <div *ngIf="chosenInstance?.id" class="auto-buttons-div">
+        <div *ngIf="chosenInstance.id" class="auto-buttons-div">
             <button mat-stroked-button (click)="loadPreviousInstance()" matTooltip="ALT + left_arrow">Back</button>
             <button mat-stroked-button (click)="loadNextInstance()" matTooltip="ALT + right_arrow">Next</button>
         </div>

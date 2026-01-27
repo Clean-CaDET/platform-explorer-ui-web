@@ -25,7 +25,7 @@ export class AnnotationSchemaComponent implements OnInit {
   public codeSmellsDataSource = new MatTableDataSource<CodeSmellDefinition>();
   public selectedSnippetType: string = 'All';
   public snippetTypes: string[] = Object.keys(SnippetType);
-  public chosenCodeSmell: CodeSmellDefinition;
+  public chosenCodeSmell: CodeSmellDefinition | undefined;
 
   @ViewChild(MatTable) public table : MatTable<CodeSmellDefinition>;
   constructor(private annotationSchemaService: AnnotationSchemaService,
