@@ -194,8 +194,8 @@ export class ProjectsComponent implements OnInit {
     }
 
     public toggleAnnotationInfo() {
-      if (this.showAnnotationInfo) this.displayedColumns = this.basicInfoColumns;
-      else this.displayedColumns = this.annotationInfoColumns;
+      if (this.showAnnotationInfo) this.displayedColumns = this.annotationInfoColumns;
+      else this.displayedColumns = this.basicInfoColumns;
     }
 
     private downloadFile(blob: Blob, filename: string): void {

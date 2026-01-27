@@ -1,5 +1,5 @@
 import { Component, Inject } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CodeSmellDefinition } from "../../model/code-smell-definition/code-smell-definition.model";
 import { Severity } from "../../model/severity/severity.model";
 import { AnnotationSchemaService } from "../../services/annotation-schema.service";

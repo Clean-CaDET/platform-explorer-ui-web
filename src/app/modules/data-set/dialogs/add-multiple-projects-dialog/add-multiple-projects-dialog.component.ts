@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DataSetProject } from '../../model/data-set-project/data-set-project.model';
 import { DataSetService } from '../../services/data-set.service';
 import { DataSet } from '../../model/data-set/data-set.model';
 import { numberToSnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';

@@ -10,11 +10,7 @@
           Annotation schema
         </button>
         <button id="avatar" [matMenuTriggerFor]="annotatorMenu">
-          <mat-card>
-            <mat-card-header>
-                <div mat-card-avatar></div>
-            </mat-card-header>
-          </mat-card>
+          <div class="avatar-circle"></div>
         </button>
         <mat-menu #annotatorMenu="matMenu">
           <button mat-menu-item (click)="goToAnnotatorProfile()">

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from "@angular/material/dialog";
+import { MatDialogRef } from '@angular/material/dialog';
 import { Severity } from '../../model/severity/severity.model';
 
 
