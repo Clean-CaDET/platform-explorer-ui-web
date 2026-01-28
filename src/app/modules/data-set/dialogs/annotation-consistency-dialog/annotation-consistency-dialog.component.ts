@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Severity } from 'src/app/modules/annotation-schema/model/severity/severity.model';
 import { AnnotationSchemaService } from 'src/app/modules/annotation-schema/services/annotation-schema.service';
@@ -28,7 +28,7 @@ export class AnnotationConsistencyDialogComponent implements OnInit {
   public severityNeeded: boolean = false;
   public availableSeverities: Map<string, Severity[]> = new Map();
   public chosenSeverity: string | null = null;
-  public typeFormControl: UntypedFormControl = new UntypedFormControl('', Validators.required);
+  public typeFormControl = new FormControl<string>('', Validators.required);
 
   public showResultClicked = false;
   public results: Map<string, any> = new Map();

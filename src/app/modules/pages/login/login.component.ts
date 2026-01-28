@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -27,7 +27,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class LoginComponent implements OnInit {
 
-  annotatorFormControl = new UntypedFormControl('', [
+  annotatorFormControl = new FormControl<number | null>(null, [
     Validators.required,
     Validators.min(1),
   ]);
@@ -54,9 +54,9 @@ export class LoginComponent implements OnInit {
 
   public login(){
     if (this.annotatorFormControl.valid) {
-      this.authService.getAnnotatorById(this.annotatorFormControl.value).subscribe(res => {
+      this.authService.getAnnotatorById(this.annotatorFormControl.value!).subscribe(res => {
         if (res) {
-          this.storageService.setLoggedInAnnotator(this.annotatorFormControl.value.toString());
+          this.storageService.setLoggedInAnnotator(this.annotatorFormControl.value!.toString());
           this.router.navigate(['/datasets']);
         } else this._snackBar.open('Annotator does not exist.', 'OK', this.errorSnackBarOptions);
       })
