@@ -1,24 +1,28 @@
 <h2 mat-dialog-title>Export complete data set</h2>
 <mat-dialog-content class="mat-typography">
-    <mat-card fxFlex="30%">
-        <mat-card-content fxLayout="column">
-            <p>Select draft dataset files from all annotators:</p>
-            <input type="file"
-                   accept=".xlsx"
-                   multiple
-                   (change)="onFilesSelected($event)"
-                   #fileInput>
-            <div *ngIf="selectedFiles.length > 0" style="margin-top: 10px;">
-                <p><strong>Selected files ({{selectedFiles.length}}):</strong></p>
-                <ul>
-                    <li *ngFor="let file of selectedFiles">{{file.name}}</li>
-                </ul>
-            </div>
-            <p style="margin-top: 10px;">The complete dataset will be exported to your Downloads folder.</p>
-        </mat-card-content>
+  <mat-card fxFlex="30%">
+    <mat-card-content fxLayout="column">
+      <p>Select draft dataset files from all annotators:</p>
+      <input type="file"
+        accept=".xlsx"
+        multiple
+        (change)="onFilesSelected($event)"
+        #fileInput>
+        @if (selectedFiles.length > 0) {
+          <div style="margin-top: 10px;">
+            <p><strong>Selected files ({{selectedFiles.length}}):</strong></p>
+            <ul>
+              @for (file of selectedFiles; track file) {
+                <li>{{file.name}}</li>
+              }
+            </ul>
+          </div>
+        }
+        <p style="margin-top: 10px;">The complete dataset will be exported to your Downloads folder.</p>
+      </mat-card-content>
     </mat-card>
-</mat-dialog-content>
-<mat-dialog-actions>
+  </mat-dialog-content>
+  <mat-dialog-actions>
     <button mat-stroked-button mat-dialog-close>Cancel</button>
     <button mat-stroked-button (click)="exportCompleteDataSet()" [disabled]="selectedFiles.length === 0">Export</button>
-</mat-dialog-actions>
+  </mat-dialog-actions>

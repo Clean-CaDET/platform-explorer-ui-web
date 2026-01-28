@@ -16,7 +16,7 @@ import { DataSet } from "./model/data-set/data-set.model";
 import { CleanCodeAnalysisDTO } from "./model/DTOs/clean-code-analysis-export-dto/clean-code-analysis-export-dto.model";
 import { DataSetService } from "./services/data-set.service";
 import { LocalStorageService } from "./services/shared/local-storage.service";
-import { CommonModule } from "@angular/common";
+
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -32,16 +32,15 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     styleUrls: ['./data-set.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        MatTableModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatMenuModule,
-        MatTooltipModule,
-        MatProgressSpinnerModule
-    ]
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule
+]
 })
 export class DataSetComponent implements OnInit {
 

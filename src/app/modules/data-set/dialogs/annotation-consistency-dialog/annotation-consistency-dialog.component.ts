@@ -6,7 +6,7 @@ import { AnnotationSchemaService } from 'src/app/modules/annotation-schema/servi
 import { ConsistencyType } from '../../model/enums/enums.model';
 import { AnnotationConsistencyService } from '../../services/annotation-consistency.service';
 import { LocalStorageService } from '../../services/shared/local-storage.service';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,7 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
     templateUrl: './annotation-consistency-dialog.component.html',
     styleUrls: ['./annotation-consistency-dialog.component.css'],
      standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule]
+  imports: [FormsModule, ReactiveFormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule]
 
 })
 export class AnnotationConsistencyDialogComponent implements OnInit {

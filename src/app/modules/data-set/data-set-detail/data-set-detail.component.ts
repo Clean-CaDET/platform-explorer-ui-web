@@ -20,7 +20,7 @@ import { LocalStorageService } from '../services/shared/local-storage.service';
 import { Subscription } from 'rxjs';
 import { GraphService } from '../../community-detection/services/graph.service';
 import { Annotation } from '../model/annotation/annotation.model';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -35,16 +35,15 @@ import { ProjectsComponent } from '../projects/projects.component';
     styleUrls: ['./data-set-detail.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        RouterModule,
-        MatExpansionModule,
-        MatSlideToggleModule,
-        MatIconModule,
-        FormsModule,
-        ClassNamePipe,      
-        ProjectsComponent,   
-        InstancesComponent   
-    ]
+    RouterModule,
+    MatExpansionModule,
+    MatSlideToggleModule,
+    MatIconModule,
+    FormsModule,
+    ClassNamePipe,
+    ProjectsComponent,
+    InstancesComponent
+]
 })
 export class DataSetDetailComponent implements OnInit {
   public chosenDataset: DataSet = new DataSet();

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { ForgotIdDialogComponent } from '../../data-set/dialogs/forgot-id-dialog/forgot-id-dialog.component';
 import { AuthService } from '../../data-set/services/auth.service';
 import { LocalStorageService } from '../../data-set/services/shared/local-storage.service';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,13 +18,12 @@ import { MatButtonModule } from '@angular/material/button';
     styleUrls: ['./login.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule
-    ]
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+]
 })
 export class LoginComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
     templateUrl: './annotation-note-dialog.component.html',
     styleUrls: ['./annotation-note-dialog.component.css'],
     standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule]
+  imports: [FormsModule, MatDialogModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule]
 
 })
 

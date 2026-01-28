@@ -1,4 +1,4 @@
-import { CommonModule, Location } from "@angular/common";
+import { Location } from "@angular/common";
 import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
 import { UntypedFormControl, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
@@ -46,18 +46,17 @@ export class InstanceNamePipe implements PipeTransform {
     styleUrls: ['./instances.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        MatTableModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatButtonModule,
-        MatIconModule,
-        MatTooltipModule,
-        FormsModule,
-        ReactiveFormsModule,
-        InstanceNamePipe   
-    ]
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    FormsModule,
+    ReactiveFormsModule,
+    InstanceNamePipe
+]
 })
   
 export class InstancesComponent implements OnInit {

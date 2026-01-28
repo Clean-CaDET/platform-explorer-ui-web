@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Annotator } from '../../data-set/model/annotator/annotator.model';
 import { AuthService } from '../../data-set/services/auth.service';
 import { LocalStorageService } from '../../data-set/services/shared/local-storage.service';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,13 +18,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     styleUrls: ['./profile.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        FormsModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatTooltipModule
-    ]
+    FormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
+]
 })
 export class ProfileComponent implements OnInit {
 

@@ -1,46 +1,58 @@
 <h1 mat-dialog-title>Annotations consistency</h1>
 <mat-dialog-content class="ann-consistency-dialog">
-    <form>
-        <table cellspacing="2">
-            <tr>
-                <mat-form-field appearance="fill" floatLabel="always" class="consistency-type-select">
-                    <mat-label>Consistency type</mat-label>
-                    <mat-select name="consistencies" [(ngModel)]="selectedConsistencyType" (selectionChange)="consistencyTypeChanged()" required [formControl]="typeFormControl">
-                        <mat-option *ngFor="let type of consistencyTypes" [value]="type">{{type}}</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="typeFormControl.hasError('required')">
-                        Consistency type is <strong>required</strong>
-                    </mat-error>
-                </mat-form-field>
-                <button mat-stroked-button (click)="getConsistencyResults()">Check</button>
-            </tr>
-            <tr>
-                <mat-form-field floatLabel="always" class="form-field" id="severity" appearance="outline" *ngIf="severityNeeded">
-                    <mat-label>Select severity</mat-label>
-                    <mat-select
-                        [(ngModel)]="chosenSeverity" name="chosenSeverity" id="chosenSeverity">
-                        <mat-option *ngFor="let severity of severities()" [value]="severity.value">{{severity.value}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </tr>
-        </table>
-    </form>
-    <div *ngIf="results.size">
-        <h1>Results</h1>
-        <p>Select a result to display:</p>
-        <ng-container *ngFor="let resultDescription of results.keys()">
-            <tr>
-                <div class="show-result">
-                    <button mat-stroked-button (click)="showResult(resultDescription)">{{resultDescription}}</button>
-                </div>
-            </tr>
-        </ng-container>
-        <mat-form-field appearance="fill" class="result" *ngIf="showResultClicked">
-            <mat-label>{{resultDescription}}</mat-label>
-            <textarea matInput [(ngModel)]="selectedResult" class="result" disabled></textarea>
+  <form>
+    <table cellspacing="2">
+      <tr>
+        <mat-form-field appearance="fill" floatLabel="always" class="consistency-type-select">
+          <mat-label>Consistency type</mat-label>
+          <mat-select name="consistencies" [(ngModel)]="selectedConsistencyType" (selectionChange)="consistencyTypeChanged()" required [formControl]="typeFormControl">
+            @for (type of consistencyTypes; track type) {
+              <mat-option [value]="type">{{type}}</mat-option>
+            }
+          </mat-select>
+          @if (typeFormControl.hasError('required')) {
+            <mat-error>
+              Consistency type is <strong>required</strong>
+            </mat-error>
+          }
         </mat-form-field>
+        <button mat-stroked-button (click)="getConsistencyResults()">Check</button>
+      </tr>
+      <tr>
+        @if (severityNeeded) {
+          <mat-form-field floatLabel="always" class="form-field" id="severity" appearance="outline">
+            <mat-label>Select severity</mat-label>
+            <mat-select
+              [(ngModel)]="chosenSeverity" name="chosenSeverity" id="chosenSeverity">
+              @for (severity of severities(); track severity) {
+                <mat-option [value]="severity.value">{{severity.value}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+      </tr>
+    </table>
+  </form>
+  @if (results.size) {
+    <div>
+      <h1>Results</h1>
+      <p>Select a result to display:</p>
+      @for (resultDescription of results.keys(); track resultDescription) {
+        <tr>
+          <div class="show-result">
+            <button mat-stroked-button (click)="showResult(resultDescription)">{{resultDescription}}</button>
+          </div>
+        </tr>
+      }
+      @if (showResultClicked) {
+        <mat-form-field appearance="fill" class="result">
+          <mat-label>{{resultDescription}}</mat-label>
+          <textarea matInput [(ngModel)]="selectedResult" class="result" disabled></textarea>
+        </mat-form-field>
+      }
     </div>
+  }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-dialog-close mat-stroked-button>Cancel</button>
+  <button mat-dialog-close mat-stroked-button>Cancel</button>
 </mat-dialog-actions>

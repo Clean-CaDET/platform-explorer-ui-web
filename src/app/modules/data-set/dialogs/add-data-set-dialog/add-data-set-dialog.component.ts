@@ -5,7 +5,7 @@ import { CodeSmell } from '../../model/code-smell/code-smell.model';
 import { DataSetService } from '../../services/data-set.service';
 import { CodeSmellDefinition } from 'src/app/modules/annotation-schema/model/code-smell-definition/code-smell-definition.model';
 import { AnnotationSchemaService } from 'src/app/modules/annotation-schema/services/annotation-schema.service';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -18,7 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
     templateUrl: './add-data-set-dialog.component.html',
     styleUrls: ['./add-data-set-dialog.component.css'],
       standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule]
+  imports: [FormsModule, MatDialogModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule]
 
 })
 

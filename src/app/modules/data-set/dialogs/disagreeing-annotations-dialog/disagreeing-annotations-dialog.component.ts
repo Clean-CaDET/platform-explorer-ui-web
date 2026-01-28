@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Annotation } from '../../model/annotation/annotation.model';
 import { LocalStorageService } from '../../services/shared/local-storage.service';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { AnnotationFormComponent } from '../../annotation-form/annotation-form.component';
 
@@ -12,7 +12,7 @@ import { AnnotationFormComponent } from '../../annotation-form/annotation-form.c
     templateUrl: './disagreeing-annotations-dialog.component.html',
     styleUrls: ['./disagreeing-annotations-dialog.component.css'],
       standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, AnnotationFormComponent]
+  imports: [MatDialogModule, MatButtonModule, AnnotationFormComponent]
 
 })
 export class DisagreeingAnnotationsDialogComponent implements OnInit {

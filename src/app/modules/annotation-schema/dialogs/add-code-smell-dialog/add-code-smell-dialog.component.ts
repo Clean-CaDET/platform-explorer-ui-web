@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CodeSmellDefinition } from '../../model/code-smell-definition/code-smell-definition.model';
 import { SnippetType } from '../../model/enums/enums.model';
 import { AnnotationSchemaService } from '../../services/annotation-schema.service';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -19,15 +19,14 @@ import { MatSelectModule } from '@angular/material/select';
     styleUrls: ['./add-code-smell-dialog.component.css'],
      standalone: true,
     imports: [
-        CommonModule,
-        FormsModule,
-        MatDialogModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatButtonModule
-    ]
+    FormsModule,
+    MatDialogModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule
+]
 })
 
 export class AddCodeSmellDialogComponent implements OnInit {

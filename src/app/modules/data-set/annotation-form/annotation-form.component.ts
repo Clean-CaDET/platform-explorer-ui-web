@@ -21,7 +21,7 @@ import { Severity } from '../../annotation-schema/model/severity/severity.model'
 import { GraphService } from '../../community-detection/services/graph.service';
 import { GraphDataService } from '../../community-detection/services/graph-data.service';
 import { ClassGraph } from '../../community-detection/model/class-graph';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -37,16 +37,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     styleUrls: ['./annotation-form.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        FormsModule,
-        MatCheckboxModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatButtonModule,
-        MatIconModule,
-        MatTooltipModule
-    ]
+    FormsModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
+]
 })
 export class AnnotationFormComponent implements OnInit {
   @Input() public codeSmell: string = '';

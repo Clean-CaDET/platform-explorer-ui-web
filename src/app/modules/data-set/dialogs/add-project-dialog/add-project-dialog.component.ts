@@ -9,7 +9,7 @@ import { SmellFilter } from '../../model/smell-filter/smell-filter.model';
 import { DataSetService } from '../../services/data-set.service';
 import { AnnotationService } from '../../services/annotation.service';
 import { numberToSnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -24,7 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     templateUrl: './add-project-dialog.component.html',
     styleUrls: ['./add-project-dialog.component.css'],
       standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatButtonModule, MatIconModule, MatTooltipModule]
+  imports: [FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatButtonModule, MatIconModule, MatTooltipModule]
 
 })
 export class AddProjectDialogComponent implements OnInit {

@@ -2,39 +2,43 @@
   (opened)="panelOpenState = true"
   (closed)="panelOpenState = false"
   [expanded]="true"
->
+  >
   <mat-expansion-panel-header #panelH>
     <div class="toolbar">
       <mat-panel-title id="annotations-info">
         <span>{{ chosenDataset.name }}</span>
-        <span *ngIf="chosenProject?.id"
-          >&ensp;/&ensp;{{ chosenProject.name }}</span
-        >
-        <span *ngIf="chosenInstance?.id"
-          >&ensp;/&ensp;{{ chosenInstance | className }}</span
-        >
-      </mat-panel-title>
-      <mat-panel-title id="annotations-info">
-        Annotated:&ensp;<span
-          >{{ annotatedInstancesNum }}/{{ chosenDataset.instancesCount }}</span
-        >
-      </mat-panel-title>
-      <div class="toggle-automatic-mode">
-        <mat-panel-title>
-          Automatic annotation mode
-          <mat-slide-toggle
-            (click)="panelH._toggle()"
-            [(ngModel)]="automaticAnnotationMode"
-            (change)="toggleAutomaticMode()"
-          ></mat-slide-toggle>
-        </mat-panel-title>
+        @if (chosenProject?.id) {
+          <span
+            >&ensp;/&ensp;{{ chosenProject.name }}</span
+            >
+          }
+          @if (chosenInstance?.id) {
+            <span
+              >&ensp;/&ensp;{{ chosenInstance | className }}</span
+              >
+            }
+          </mat-panel-title>
+          <mat-panel-title id="annotations-info">
+            Annotated:&ensp;<span
+            >{{ annotatedInstancesNum }}/{{ chosenDataset.instancesCount }}</span
+            >
+          </mat-panel-title>
+          <div class="toggle-automatic-mode">
+            <mat-panel-title>
+              Automatic annotation mode
+              <mat-slide-toggle
+                (click)="panelH._toggle()"
+                [(ngModel)]="automaticAnnotationMode"
+                (change)="toggleAutomaticMode()"
+              ></mat-slide-toggle>
+            </mat-panel-title>
+          </div>
+        </div>
+      </mat-expansion-panel-header>
+      <div class="horizontal-div">
+        <de-projects></de-projects>
+        <de-instances></de-instances>
       </div>
-    </div>
-  </mat-expansion-panel-header>
-  <div class="horizontal-div">
-    <de-projects></de-projects>
-    <de-instances></de-instances>
-  </div>
-</mat-expansion-panel>
+    </mat-expansion-panel>
 
-<router-outlet></router-outlet>
+    <router-outlet></router-outlet>

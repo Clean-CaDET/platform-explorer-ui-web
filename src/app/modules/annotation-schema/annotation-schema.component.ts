@@ -10,7 +10,7 @@ import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { AnnotationSchemaService } from "./services/annotation-schema.service";
 import { ConfirmDialogComponent } from "./dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogConfigService } from "../data-set/dialogs/dialog-config.service";
-import { CommonModule } from "@angular/common";
+
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -26,17 +26,16 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     styleUrls: ['./annotation-schema.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        RouterModule,
-        MatTableModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatButtonModule,
-        MatIconModule,
-        MatTooltipModule,
-        MatMenuModule
-    ]
+    RouterModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatMenuModule
+]
 })
   
 export class AnnotationSchemaComponent implements OnInit {

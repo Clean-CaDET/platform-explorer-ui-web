@@ -1,29 +1,33 @@
 <h1 class="table-title">Disagreeing annotations</h1>
 <mat-dialog-content class="mat-typography">
-    <form>
-        <table cellspacing="2">
-            <ng-container *ngFor="let annotation of instanceWithDisagreeingAnnotations.annotations">
-                <tr>
-                    <th *ngIf="annotation.annotator.id == loggedAnnotatorId">
-                        Your annotation
-                    </th>
-                    <th *ngIf="annotation.annotator.id != loggedAnnotatorId">
-                        Annotator: {{annotation.annotator.name}}
-                    </th>
-                </tr>
-                <tr>
-                    <td>
-                        <de-annotation-form [instanceId]="instanceWithDisagreeingAnnotations.instanceId" 
-                            [codeSmell]="annotation.instanceSmell.name" 
-                            [disableEdit]="true"
-                            [annotatorId]="annotation.annotator.id">
-                        </de-annotation-form> 
-                    </td>
-                </tr>
-            </ng-container>
-        </table>
-    </form>
+  <form>
+    <table cellspacing="2">
+      @for (annotation of instanceWithDisagreeingAnnotations.annotations; track annotation) {
+        <tr>
+          @if (annotation.annotator.id == loggedAnnotatorId) {
+            <th>
+              Your annotation
+            </th>
+          }
+          @if (annotation.annotator.id != loggedAnnotatorId) {
+            <th>
+              Annotator: {{annotation.annotator.name}}
+            </th>
+          }
+        </tr>
+        <tr>
+          <td>
+            <de-annotation-form [instanceId]="instanceWithDisagreeingAnnotations.instanceId"
+              [codeSmell]="annotation.instanceSmell.name"
+              [disableEdit]="true"
+              [annotatorId]="annotation.annotator.id">
+            </de-annotation-form>
+          </td>
+        </tr>
+      }
+    </table>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-stroked-button mat-dialog-close>Close</button>
+  <button mat-stroked-button mat-dialog-close>Close</button>
 </mat-dialog-actions>

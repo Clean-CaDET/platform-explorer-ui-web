@@ -10,7 +10,7 @@ import { UpdateHeuristicDialogComponent } from "../dialogs/update-heuristic-dial
 import { CodeSmellDefinition } from "../model/code-smell-definition/code-smell-definition.model";
 import { Heuristic } from "../model/heuristic/heuristic.model";
 import { AnnotationSchemaService } from "../services/annotation-schema.service";
-import { CommonModule } from "@angular/common";
+
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -26,16 +26,15 @@ import { SeverityComponent } from "../severity/severity.component";
     styleUrls: ['./code-smell-detail.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        MatTableModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatTooltipModule,
-        MatMenuModule,
-        SeverityComponent
-    ]
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatMenuModule,
+    SeverityComponent
+]
 })
 
 export class CodeSmellDetailComponent implements OnInit {

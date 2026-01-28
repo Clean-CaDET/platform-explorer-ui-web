@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../services/shared/local-storage.service';
-import { CommonModule } from '@angular/common';
+
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -14,13 +14,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     styleUrls: ['./navbar.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatMenuModule,
-        MatIconModule,
-        MatTooltipModule
-    ]
+    MatToolbarModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    MatTooltipModule
+]
 })
 export class NavbarComponent {
   public annotationsCounter: boolean = false;

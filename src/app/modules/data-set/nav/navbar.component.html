@@ -1,28 +1,32 @@
 <div class="mat-toolbar-div">
   <mat-toolbar>
     <div class="options-div">
-      <div *ngIf="!isLoggedIn()">
-        <span>DataSet Explorer</span>
-      </div>
-      <div *ngIf="isLoggedIn()">
-        <button mat-button (click)="goToDatasets()">Datasets</button>
-        <button mat-button (click)="goToAnnotationSchema()">
-          Annotation schema
-        </button>
-        <button id="avatar" [matMenuTriggerFor]="annotatorMenu">
-          <div class="avatar-circle"></div>
-        </button>
-        <mat-menu #annotatorMenu="matMenu">
-          <button mat-menu-item (click)="goToAnnotatorProfile()">
-            <mat-icon matTooltip="Profile">person</mat-icon>
-            <span>Profile</span>
+      @if (!isLoggedIn()) {
+        <div>
+          <span>DataSet Explorer</span>
+        </div>
+      }
+      @if (isLoggedIn()) {
+        <div>
+          <button mat-button (click)="goToDatasets()">Datasets</button>
+          <button mat-button (click)="goToAnnotationSchema()">
+            Annotation schema
           </button>
-          <button mat-menu-item (click)="logout()">
-            <mat-icon matTooltip="Logout">exit_to_app</mat-icon>
-            <span>Logout</span>
+          <button id="avatar" [matMenuTriggerFor]="annotatorMenu">
+            <div class="avatar-circle"></div>
           </button>
-        </mat-menu>
-      </div>
+          <mat-menu #annotatorMenu="matMenu">
+            <button mat-menu-item (click)="goToAnnotatorProfile()">
+              <mat-icon matTooltip="Profile">person</mat-icon>
+              <span>Profile</span>
+            </button>
+            <button mat-menu-item (click)="logout()">
+              <mat-icon matTooltip="Logout">exit_to_app</mat-icon>
+              <span>Logout</span>
+            </button>
+          </mat-menu>
+        </div>
+      }
     </div>
   </mat-toolbar>
 </div>

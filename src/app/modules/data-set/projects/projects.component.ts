@@ -19,7 +19,7 @@ import { DataSetProjectService } from "../services/data-set-project.service";
 import { LocalStorageService } from "../services/shared/local-storage.service";
 import { DatasetChosenEvent, InstanceChosenEvent, NotificationEvent, NotificationService, ProjectChosenEvent } from "../services/shared/notification.service";
 import { AddMultipleProjectsDialogComponent } from "../dialogs/add-multiple-projects-dialog/add-multiple-projects-dialog.component";
-import { CommonModule } from "@angular/common";
+
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -37,21 +37,20 @@ import { MatExpansionPanelTitle } from "@angular/material/expansion";
     styleUrls: ['./projects.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        MatTableModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatButtonModule,
-        MatIconModule,
-        MatMenuModule,
-        MatTooltipModule,
-        MatProgressSpinnerModule,
-        MatSlideToggleModule,
-        MatExpansionPanelTitle,
-        FormsModule,
-        ReactiveFormsModule
-    ]
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatSlideToggleModule,
+    MatExpansionPanelTitle,
+    FormsModule,
+    ReactiveFormsModule
+]
 })
   
 export class ProjectsComponent implements OnInit {
