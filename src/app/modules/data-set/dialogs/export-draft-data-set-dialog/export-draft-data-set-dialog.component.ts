@@ -4,8 +4,9 @@ import { MatDialogRef } from "@angular/material/dialog";
 @Component({
     selector: 'de-export-draft-data-set-dialog',
     templateUrl: './export-draft-data-set-dialog.component.html',
-    styleUrls: ['./export-draft-data-set-dialog.component.css']
-  })
+    styleUrls: ['./export-draft-data-set-dialog.component.css'],
+    standalone: false
+})
 export class ExportDraftDataSetDialogComponent {
     constructor(private dialogRef: MatDialogRef<ExportDraftDataSetDialogComponent>){}
 

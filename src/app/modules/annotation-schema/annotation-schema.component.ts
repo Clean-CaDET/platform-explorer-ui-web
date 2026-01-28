@@ -15,8 +15,9 @@ import { DialogConfigService } from "../data-set/dialogs/dialog-config.service";
 @Component({
     selector: 'de-annotation-schema',
     templateUrl: './annotation-schema.component.html',
-    styleUrls: ['./annotation-schema.component.css']
-  })
+    styleUrls: ['./annotation-schema.component.css'],
+    standalone: false
+})
   
 export class AnnotationSchemaComponent implements OnInit {
 

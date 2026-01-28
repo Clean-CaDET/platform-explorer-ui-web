@@ -22,9 +22,10 @@ import { GraphService } from '../../community-detection/services/graph.service';
 import { Annotation } from '../model/annotation/annotation.model';
 
 @Component({
-  selector: 'de-data-set-detail',
-  templateUrl: './data-set-detail.component.html',
-  styleUrls: ['./data-set-detail.component.css'],
+    selector: 'de-data-set-detail',
+    templateUrl: './data-set-detail.component.html',
+    styleUrls: ['./data-set-detail.component.css'],
+    standalone: false
 })
 export class DataSetDetailComponent implements OnInit {
   public chosenDataset: DataSet = new DataSet();

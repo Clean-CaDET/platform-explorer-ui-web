@@ -13,9 +13,10 @@ import { AnnotationSchemaService } from "../services/annotation-schema.service";
 
 
 @Component({
-  selector: 'de-code-smell-detail',
-  templateUrl: './code-smell-detail.component.html',
-  styleUrls: ['./code-smell-detail.component.css']
+    selector: 'de-code-smell-detail',
+    templateUrl: './code-smell-detail.component.html',
+    styleUrls: ['./code-smell-detail.component.css'],
+    standalone: false
 })
 
 export class CodeSmellDetailComponent implements OnInit {

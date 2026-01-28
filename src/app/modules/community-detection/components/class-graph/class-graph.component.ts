@@ -12,9 +12,10 @@ import { GraphDataService } from '../../services/graph-data.service';
 import { ClassGraph } from '../../model/class-graph';
 
 @Component({
-  selector: 'de-class-graph',
-  templateUrl: './class-graph.component.html',
-  styleUrls: ['./class-graph.component.css'],
+    selector: 'de-class-graph',
+    templateUrl: './class-graph.component.html',
+    styleUrls: ['./class-graph.component.css'],
+    standalone: false
 })
 export class ClassGraphComponent {
   svg: any;

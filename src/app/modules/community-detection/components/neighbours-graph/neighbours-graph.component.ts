@@ -12,9 +12,10 @@ import { GraphInstance } from 'src/app/modules/data-set/model/graph-instance/gra
 import { SnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';
 
 @Component({
-  selector: 'de-neighbours-graph',
-  templateUrl: './neighbours-graph.component.html',
-  styleUrls: ['./neighbours-graph.component.css'],
+    selector: 'de-neighbours-graph',
+    templateUrl: './neighbours-graph.component.html',
+    styleUrls: ['./neighbours-graph.component.css'],
+    standalone: false
 })
 export class NeighboursGraphComponent {
   width: number = 0;

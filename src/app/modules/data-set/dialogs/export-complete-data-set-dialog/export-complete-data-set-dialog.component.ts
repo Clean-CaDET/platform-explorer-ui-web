@@ -4,8 +4,9 @@ import { MatDialogRef } from "@angular/material/dialog";
 @Component({
     selector: 'de-export-complete-data-set-dialog',
     templateUrl: './export-complete-data-set-dialog.component.html',
-    styleUrls: ['./export-complete-data-set-dialog.component.css']
-  })
+    styleUrls: ['./export-complete-data-set-dialog.component.css'],
+    standalone: false
+})
 export class ExportCompleteDataSetDialogComponent {
     public selectedFiles: File[] = [];
 

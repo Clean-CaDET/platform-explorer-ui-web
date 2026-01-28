@@ -6,9 +6,10 @@ import { LocalStorageService } from '../../data-set/services/shared/local-storag
 
 
 @Component({
-  selector: 'de-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+    selector: 'de-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css'],
+    standalone: false
 })
 export class RegisterComponent {
 

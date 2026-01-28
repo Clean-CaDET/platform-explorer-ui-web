@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 
 @Component({
-  selector: 'de-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'],
+    selector: 'de-navbar',
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.css'],
+    standalone: false
 })
 export class NavbarComponent {
   public annotationsCounter: boolean = false;

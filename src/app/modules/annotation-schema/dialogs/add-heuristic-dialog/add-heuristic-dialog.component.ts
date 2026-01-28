@@ -4,9 +4,10 @@ import { Heuristic } from '../../model/heuristic/heuristic.model';
 
 
 @Component({
-  selector: 'de-add-heuristic-dialog',
-  templateUrl: './add-heuristic-dialog.component.html',
-  styleUrls: ['./add-heuristic-dialog.component.css']
+    selector: 'de-add-heuristic-dialog',
+    templateUrl: './add-heuristic-dialog.component.html',
+    styleUrls: ['./add-heuristic-dialog.component.css'],
+    standalone: false
 })
 
 export class AddHeuristicDialogComponent implements OnInit {

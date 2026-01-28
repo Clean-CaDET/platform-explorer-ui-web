@@ -4,9 +4,10 @@ import { Severity } from '../../model/severity/severity.model';
 
 
 @Component({
-  selector: 'de-add-severity-dialog',
-  templateUrl: './add-severity-dialog.component.html',
-  styleUrls: ['./add-severity-dialog.component.css']
+    selector: 'de-add-severity-dialog',
+    templateUrl: './add-severity-dialog.component.html',
+    styleUrls: ['./add-severity-dialog.component.css'],
+    standalone: false
 })
 
 export class AddSeverityDialogComponent implements OnInit {

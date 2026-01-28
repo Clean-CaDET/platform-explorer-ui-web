@@ -8,9 +8,10 @@ import { LocalStorageService } from '../../data-set/services/shared/local-storag
 
 
 @Component({
-  selector: 'de-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+    selector: 'de-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.css'],
+    standalone: false
 })
 export class ProfileComponent implements OnInit {
 

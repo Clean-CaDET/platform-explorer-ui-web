@@ -13,9 +13,10 @@ import { AnnotationSchemaService } from "../services/annotation-schema.service";
 
 
 @Component({
-  selector: 'de-severity',
-  templateUrl: './severity.component.html',
-  styleUrls: ['./severity.component.css']
+    selector: 'de-severity',
+    templateUrl: './severity.component.html',
+    styleUrls: ['./severity.component.css'],
+    standalone: false
 })
 
 export class SeverityComponent implements OnInit {

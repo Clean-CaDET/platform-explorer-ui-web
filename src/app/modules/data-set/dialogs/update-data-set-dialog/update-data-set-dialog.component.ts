@@ -4,9 +4,10 @@ import { DataSet } from '../../model/data-set/data-set.model';
 import { DataSetService } from '../../services/data-set.service';
 
 @Component({
-  selector: 'de-update-data-set-dialog',
-  templateUrl: './update-data-set-dialog.component.html',
-  styleUrls: ['./update-data-set-dialog.component.css']
+    selector: 'de-update-data-set-dialog',
+    templateUrl: './update-data-set-dialog.component.html',
+    styleUrls: ['./update-data-set-dialog.component.css'],
+    standalone: false
 })
 
 export class UpdateDataSetDialogComponent implements OnInit {

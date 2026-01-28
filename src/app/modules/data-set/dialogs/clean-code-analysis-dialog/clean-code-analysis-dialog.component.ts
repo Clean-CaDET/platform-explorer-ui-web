@@ -5,8 +5,9 @@ import { CleanCodeAnalysisDTO } from "../../model/DTOs/clean-code-analysis-expor
 @Component({
     selector: 'de-clean-code-analysis-dialog',
     templateUrl: './clean-code-analysis-dialog.component.html',
-    styleUrls: ['./clean-code-analysis-dialog.component.css']
-  })
+    styleUrls: ['./clean-code-analysis-dialog.component.css'],
+    standalone: false
+})
 export class CleanCodeAnalysisDialogComponent {
     public cleanCodeOptions = [
         { name: 'Clean names', checked: true },

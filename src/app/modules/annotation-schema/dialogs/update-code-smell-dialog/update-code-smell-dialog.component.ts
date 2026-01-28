@@ -5,9 +5,10 @@ import { numberToSnippetType } from "../../model/enums/enums.model";
 import { AnnotationSchemaService } from "../../services/annotation-schema.service";
 
 @Component({
-  selector: 'de-update-code-smell-dialog',
-  templateUrl: './update-code-smell-dialog.component.html',
-  styleUrls: ['./update-code-smell-dialog.component.css']
+    selector: 'de-update-code-smell-dialog',
+    templateUrl: './update-code-smell-dialog.component.html',
+    styleUrls: ['./update-code-smell-dialog.component.css'],
+    standalone: false
 })
 export class UpdateCodeSmellDialogComponent {
   

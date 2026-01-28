@@ -11,9 +11,10 @@ import { AnnotationService } from '../../services/annotation.service';
 import { numberToSnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';
 
 @Component({
-  selector: 'de-add-project-dialog',
-  templateUrl: './add-project-dialog.component.html',
-  styleUrls: ['./add-project-dialog.component.css'],
+    selector: 'de-add-project-dialog',
+    templateUrl: './add-project-dialog.component.html',
+    styleUrls: ['./add-project-dialog.component.css'],
+    standalone: false
 })
 export class AddProjectDialogComponent implements OnInit {
 

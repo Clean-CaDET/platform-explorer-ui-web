@@ -13,9 +13,10 @@ import { NeighboursGraphComponent } from '../neighbours-graph/neighbours-graph.c
 import { ProjectGraphComponent } from '../project-graph/project-graph.component';
 
 @Component({
-  selector: 'de-tab-container',
-  templateUrl: './tab-container.component.html',
-  styleUrls: ['./tab-container.component.css'],
+    selector: 'de-tab-container',
+    templateUrl: './tab-container.component.html',
+    styleUrls: ['./tab-container.component.css'],
+    standalone: false
 })
 export class TabContainerComponent implements OnInit {
   @ViewChild('projectGraph') projectGraph!: ProjectGraphComponent;

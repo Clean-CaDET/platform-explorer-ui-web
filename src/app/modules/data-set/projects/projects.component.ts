@@ -23,7 +23,8 @@ import { AddMultipleProjectsDialogComponent } from "../dialogs/add-multiple-proj
 @Component({
     selector: 'de-projects',
     templateUrl: './projects.component.html',
-    styleUrls: ['./projects.component.css']
+    styleUrls: ['./projects.component.css'],
+    standalone: false
 })
   
 export class ProjectsComponent implements OnInit {

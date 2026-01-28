@@ -5,9 +5,10 @@ import { LocalStorageService } from '../../services/shared/local-storage.service
 
 
 @Component({
-  selector: 'de-disagreeing-annotations-dialog',
-  templateUrl: './disagreeing-annotations-dialog.component.html',
-  styleUrls: ['./disagreeing-annotations-dialog.component.css']
+    selector: 'de-disagreeing-annotations-dialog',
+    templateUrl: './disagreeing-annotations-dialog.component.html',
+    styleUrls: ['./disagreeing-annotations-dialog.component.css'],
+    standalone: false
 })
 export class DisagreeingAnnotationsDialogComponent implements OnInit {
 

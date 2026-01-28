@@ -8,9 +8,10 @@ import { LocalStorageService } from '../services/shared/local-storage.service';
 import { InstanceService } from '../services/instance.service';
 
 @Component({
-  selector: 'de-annotation-container',
-  templateUrl: './annotation-container.component.html',
-  styleUrls: ['./annotation-container.component.css'],
+    selector: 'de-annotation-container',
+    templateUrl: './annotation-container.component.html',
+    styleUrls: ['./annotation-container.component.css'],
+    standalone: false
 })
 export class AnnotationContainerComponent implements OnInit {
   public selectedSmell: string = '';
@@ -166,7 +167,10 @@ export class AnnotationContainerComponent implements OnInit {
   }
 }
 
-@Pipe({ name: 'couplingDetails' })
+@Pipe({
+    name: 'couplingDetails',
+    standalone: false
+})
 export class CouplingDetailsPipe implements PipeTransform {
   transform(value: Map<number, number>): string {
     var result = '';
@@ -177,7 +181,10 @@ export class CouplingDetailsPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'className' })
+@Pipe({
+    name: 'className',
+    standalone: false
+})
 export class ClassNamePipe implements PipeTransform {
   transform(instance: Instance): string {
     if (instance.type.toString() == '0') return instance.codeSnippetId.split('.').pop()!;

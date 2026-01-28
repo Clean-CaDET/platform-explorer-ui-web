@@ -7,9 +7,10 @@ import { AnnotationSchemaService } from '../../services/annotation-schema.servic
 
 
 @Component({
-  selector: 'de-add-code-smell-dialog',
-  templateUrl: './add-code-smell-dialog.component.html',
-  styleUrls: ['./add-code-smell-dialog.component.css']
+    selector: 'de-add-code-smell-dialog',
+    templateUrl: './add-code-smell-dialog.component.html',
+    styleUrls: ['./add-code-smell-dialog.component.css'],
+    standalone: false
 })
 
 export class AddCodeSmellDialogComponent implements OnInit {

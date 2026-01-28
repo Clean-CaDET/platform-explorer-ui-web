@@ -10,9 +10,10 @@ import { NotificationService } from 'src/app/modules/data-set/services/shared/no
 import { D3GraphService } from '../../services/d3-graph.service';
 
 @Component({
-  selector: 'de-project-graph',
-  templateUrl: './project-graph.component.html',
-  styleUrls: ['./project-graph.component.css'],
+    selector: 'de-project-graph',
+    templateUrl: './project-graph.component.html',
+    styleUrls: ['./project-graph.component.css'],
+    standalone: false
 })
 export class ProjectGraphComponent {
   svg: any;

@@ -23,9 +23,10 @@ import { GraphDataService } from '../../community-detection/services/graph-data.
 import { ClassGraph } from '../../community-detection/model/class-graph';
 
 @Component({
-  selector: 'de-annotation-form',
-  templateUrl: './annotation-form.component.html',
-  styleUrls: ['./annotation-form.component.css'],
+    selector: 'de-annotation-form',
+    templateUrl: './annotation-form.component.html',
+    styleUrls: ['./annotation-form.component.css'],
+    standalone: false
 })
 export class AnnotationFormComponent implements OnInit {
   @Input() public codeSmell: string = '';

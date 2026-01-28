@@ -21,7 +21,8 @@ import { LocalStorageService } from "./services/shared/local-storage.service";
 @Component({
     selector: 'de-data-set',
     templateUrl: './data-set.component.html',
-    styleUrls: ['./data-set.component.css']
+    styleUrls: ['./data-set.component.css'],
+    standalone: false
 })
 export class DataSetComponent implements OnInit {
 

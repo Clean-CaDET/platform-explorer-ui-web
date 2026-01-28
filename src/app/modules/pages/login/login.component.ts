@@ -9,9 +9,10 @@ import { LocalStorageService } from '../../data-set/services/shared/local-storag
 
 
 @Component({
-  selector: 'de-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'de-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
 

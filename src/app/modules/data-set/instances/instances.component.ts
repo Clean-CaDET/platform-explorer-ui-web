@@ -21,7 +21,8 @@ import { CodeSmell } from "../model/code-smell/code-smell.model";
 @Component({
     selector: 'de-instances',
     templateUrl: './instances.component.html',
-    styleUrls: ['./instances.component.css']
+    styleUrls: ['./instances.component.css'],
+    standalone: false
 })
   
 export class InstancesComponent implements OnInit {
@@ -314,7 +315,10 @@ export class InstancesComponent implements OnInit {
     }
 }
 
-@Pipe({ name: 'instanceName' })
+@Pipe({
+    name: 'instanceName',
+    standalone: false
+})
 export class InstanceNamePipe implements PipeTransform {
   transform(instance: Instance): string {
     if (instance.type.toString() == '0' || instance.type.toString() == 'Class') return instance.codeSnippetId;

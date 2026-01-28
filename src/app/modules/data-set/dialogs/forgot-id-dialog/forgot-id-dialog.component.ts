@@ -3,9 +3,10 @@ import { MatDialogRef } from "@angular/material/dialog";
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'de-forgot-id-dialog',
-  templateUrl: './forgot-id-dialog.component.html',
-  styleUrls: ['./forgot-id-dialog.component.css']
+    selector: 'de-forgot-id-dialog',
+    templateUrl: './forgot-id-dialog.component.html',
+    styleUrls: ['./forgot-id-dialog.component.css'],
+    standalone: false
 })
 
 export class ForgotIdDialogComponent implements OnInit {

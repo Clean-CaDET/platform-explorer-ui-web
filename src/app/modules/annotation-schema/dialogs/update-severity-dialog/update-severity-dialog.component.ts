@@ -5,9 +5,10 @@ import { Severity } from "../../model/severity/severity.model";
 import { AnnotationSchemaService } from "../../services/annotation-schema.service";
 
 @Component({
-  selector: 'de-update-severity-dialog',
-  templateUrl: './update-severity-dialog.component.html',
-  styleUrls: ['./update-severity-dialog.component.css']
+    selector: 'de-update-severity-dialog',
+    templateUrl: './update-severity-dialog.component.html',
+    styleUrls: ['./update-severity-dialog.component.css'],
+    standalone: false
 })
 export class UpdateSeverityDialogComponent {
   

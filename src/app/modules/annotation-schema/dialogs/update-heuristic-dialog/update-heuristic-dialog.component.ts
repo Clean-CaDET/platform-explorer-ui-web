@@ -5,9 +5,10 @@ import { Heuristic } from "../../model/heuristic/heuristic.model";
 import { AnnotationSchemaService } from "../../services/annotation-schema.service";
 
 @Component({
-  selector: 'de-update-heuristic-dialog',
-  templateUrl: './update-heuristic-dialog.component.html',
-  styleUrls: ['./update-heuristic-dialog.component.css']
+    selector: 'de-update-heuristic-dialog',
+    templateUrl: './update-heuristic-dialog.component.html',
+    styleUrls: ['./update-heuristic-dialog.component.css'],
+    standalone: false
 })
 export class UpdateHeuristicDialogComponent {
   

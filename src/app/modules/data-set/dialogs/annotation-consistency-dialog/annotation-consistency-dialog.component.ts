@@ -9,9 +9,10 @@ import { LocalStorageService } from '../../services/shared/local-storage.service
 
 
 @Component({
-  selector: 'de-annotation-consistency-dialog',
-  templateUrl: './annotation-consistency-dialog.component.html',
-  styleUrls: ['./annotation-consistency-dialog.component.css']
+    selector: 'de-annotation-consistency-dialog',
+    templateUrl: './annotation-consistency-dialog.component.html',
+    styleUrls: ['./annotation-consistency-dialog.component.css'],
+    standalone: false
 })
 export class AnnotationConsistencyDialogComponent implements OnInit {
 

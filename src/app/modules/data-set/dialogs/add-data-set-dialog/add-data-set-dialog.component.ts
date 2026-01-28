@@ -7,9 +7,10 @@ import { CodeSmellDefinition } from 'src/app/modules/annotation-schema/model/cod
 import { AnnotationSchemaService } from 'src/app/modules/annotation-schema/services/annotation-schema.service';
 
 @Component({
-  selector: 'de-add-data-set-dialog',
-  templateUrl: './add-data-set-dialog.component.html',
-  styleUrls: ['./add-data-set-dialog.component.css']
+    selector: 'de-add-data-set-dialog',
+    templateUrl: './add-data-set-dialog.component.html',
+    styleUrls: ['./add-data-set-dialog.component.css'],
+    standalone: false
 })
 
 export class AddDataSetDialogComponent implements OnInit {

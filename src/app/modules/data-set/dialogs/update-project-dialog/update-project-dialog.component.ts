@@ -5,9 +5,10 @@ import { DataSetProjectService } from '../../services/data-set-project.service';
 
 
 @Component({
-  selector: 'de-update-project-dialog',
-  templateUrl: './update-project-dialog.component.html',
-  styleUrls: ['./update-project-dialog.component.css']
+    selector: 'de-update-project-dialog',
+    templateUrl: './update-project-dialog.component.html',
+    styleUrls: ['./update-project-dialog.component.css'],
+    standalone: false
 })
 
 export class UpdateProjectDialogComponent implements OnInit {
