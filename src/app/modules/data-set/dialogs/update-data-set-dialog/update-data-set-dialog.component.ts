@@ -1,13 +1,20 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { DataSet } from '../../model/data-set/data-set.model';
 import { DataSetService } from '../../services/data-set.service';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
     selector: 'de-update-data-set-dialog',
     templateUrl: './update-data-set-dialog.component.html',
     styleUrls: ['./update-data-set-dialog.component.css'],
-    standalone: false
+      standalone: true,
+  imports: [FormsModule, MatDialogModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule]
+
 })
 
 export class UpdateDataSetDialogComponent implements OnInit {

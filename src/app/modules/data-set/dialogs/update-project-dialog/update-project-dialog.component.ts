@@ -1,14 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { DataSetProject } from '../../model/data-set-project/data-set-project.model';
 import { DataSetProjectService } from '../../services/data-set-project.service';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @Component({
     selector: 'de-update-project-dialog',
     templateUrl: './update-project-dialog.component.html',
     styleUrls: ['./update-project-dialog.component.css'],
-    standalone: false
+    standalone: true,
+  imports: [FormsModule, MatDialogModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule]
+
 })
 
 export class UpdateProjectDialogComponent implements OnInit {

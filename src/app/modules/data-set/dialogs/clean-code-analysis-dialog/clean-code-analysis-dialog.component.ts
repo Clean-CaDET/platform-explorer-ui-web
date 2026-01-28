@@ -1,12 +1,19 @@
 import { Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material/dialog";
+import { MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { CleanCodeAnalysisDTO } from "../../model/DTOs/clean-code-analysis-export-dto/clean-code-analysis-export-dto.model";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @Component({
     selector: 'de-clean-code-analysis-dialog',
     templateUrl: './clean-code-analysis-dialog.component.html',
     styleUrls: ['./clean-code-analysis-dialog.component.css'],
-    standalone: false
+      standalone: true,
+  imports: [CommonModule, FormsModule, MatDialogModule, MatCardModule, MatCheckboxModule, MatButtonModule]
+
 })
 export class CleanCodeAnalysisDialogComponent {
     public cleanCodeOptions = [

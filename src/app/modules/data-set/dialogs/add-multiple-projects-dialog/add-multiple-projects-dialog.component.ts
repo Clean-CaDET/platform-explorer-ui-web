@@ -1,16 +1,23 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { DataSetService } from '../../services/data-set.service';
 import { DataSet } from '../../model/data-set/data-set.model';
 import { numberToSnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';
 import { CodeSmell } from '../../model/code-smell/code-smell.model';
 import { SmellFilter } from '../../model/smell-filter/smell-filter.model';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
     selector: 'de-add-multiple-projects-dialog',
     templateUrl: './add-multiple-projects-dialog.component.html',
     styleUrls: ['./add-multiple-projects-dialog.component.css'],
-    standalone: false
+    standalone: true,
+  imports: [FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule]
+
 })
 export class AddMultipleProjectsDialogComponent implements OnInit {
 

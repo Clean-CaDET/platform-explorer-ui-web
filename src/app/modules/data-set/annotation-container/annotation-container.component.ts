@@ -1,17 +1,60 @@
 import { Component, HostListener, OnInit, Pipe, PipeTransform } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Instance } from '../model/instance/instance.model';
 import { RelatedInstance } from '../model/related-instance/related-instance.model';
 import { InstanceChosenEvent, NextInstanceEvent, NotificationService, PreviousInstanceEvent } from '../services/shared/notification.service';
 import { LocalStorageService } from '../services/shared/local-storage.service';
 import { InstanceService } from '../services/instance.service';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AnnotationFormComponent } from '../annotation-form/annotation-form.component';
+
+@Pipe({
+    name: 'couplingDetails',
+    standalone: true
+})
+export class CouplingDetailsPipe implements PipeTransform {
+  transform(value: Map<number, number>): string {
+    var result = '';
+    Object.entries(value).forEach((coupling) => {
+      result += coupling[0] + ': ' + coupling[1] + '\n';
+    });
+    return result;
+  }
+}
+
+@Pipe({
+    name: 'className',
+    standalone: true
+})
+export class ClassNamePipe implements PipeTransform {
+  transform(instance: Instance): string {
+    if (instance.type.toString() == '0') return instance.codeSnippetId.split('.').pop()!;
+    var methodName = instance.codeSnippetId.split('(')[0].split('.').pop()!;
+    if (instance.codeSnippetId.includes('()')) return methodName + '()';
+    return methodName + '(...)';
+  }
+}
+
 
 @Component({
     selector: 'de-annotation-container',
     templateUrl: './annotation-container.component.html',
     styleUrls: ['./annotation-container.component.css'],
-    standalone: false
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        AnnotationFormComponent, 
+        ClassNamePipe,            
+        CouplingDetailsPipe     
+    ]
 })
 export class AnnotationContainerComponent implements OnInit {
   public selectedSmell: string = '';
@@ -164,32 +207,5 @@ export class AnnotationContainerComponent implements OnInit {
       event.stopPropagation();
       this.loadPreviousInstance();
     }
-  }
-}
-
-@Pipe({
-    name: 'couplingDetails',
-    standalone: false
-})
-export class CouplingDetailsPipe implements PipeTransform {
-  transform(value: Map<number, number>): string {
-    var result = '';
-    Object.entries(value).forEach((coupling) => {
-      result += coupling[0] + ': ' + coupling[1] + '\n';
-    });
-    return result;
-  }
-}
-
-@Pipe({
-    name: 'className',
-    standalone: false
-})
-export class ClassNamePipe implements PipeTransform {
-  transform(instance: Instance): string {
-    if (instance.type.toString() == '0') return instance.codeSnippetId.split('.').pop()!;
-    var methodName = instance.codeSnippetId.split('(')[0].split('.').pop()!;
-    if (instance.codeSnippetId.includes('()')) return methodName + '()';
-    return methodName + '(...)';
   }
 }

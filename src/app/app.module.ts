@@ -4,7 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { MaterialModule } from './material/material.module';
-import { DataSetModule } from './modules/data-set/data-set.module';
 import { AppComponent } from './app.component';
 import { ServerCommunicationService } from './server-communication/server-communication.service';
 import { ToastrModule } from 'ngx-toastr';
@@ -17,7 +16,6 @@ import { CommunityDetectionModule } from './modules/community-detection/communit
         AppRoutingModule,
         BrowserAnimationsModule,
         MaterialModule,
-        DataSetModule,
         CommunityDetectionModule,
         ToastrModule.forRoot()
     ],

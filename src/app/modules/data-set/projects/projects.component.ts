@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
-import { UntypedFormControl, Validators } from "@angular/forms";
+import { UntypedFormControl, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator, MatPaginatorIntl } from "@angular/material/paginator";
-import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
 import { AddProjectDialogComponent } from "../dialogs/add-project-dialog/add-project-dialog.component";
@@ -19,12 +19,39 @@ import { DataSetProjectService } from "../services/data-set-project.service";
 import { LocalStorageService } from "../services/shared/local-storage.service";
 import { DatasetChosenEvent, InstanceChosenEvent, NotificationEvent, NotificationService, ProjectChosenEvent } from "../services/shared/notification.service";
 import { AddMultipleProjectsDialogComponent } from "../dialogs/add-multiple-projects-dialog/add-multiple-projects-dialog.component";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatSelectModule } from "@angular/material/select";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatExpansionPanelTitle } from "@angular/material/expansion";
 
 @Component({
     selector: 'de-projects',
     templateUrl: './projects.component.html',
     styleUrls: ['./projects.component.css'],
-    standalone: false
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule,
+        MatSlideToggleModule,
+        MatExpansionPanelTitle,
+        FormsModule,
+        ReactiveFormsModule
+    ]
 })
   
 export class ProjectsComponent implements OnInit {

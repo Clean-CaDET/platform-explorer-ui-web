@@ -1,18 +1,25 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UntypedFormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Severity } from 'src/app/modules/annotation-schema/model/severity/severity.model';
 import { AnnotationSchemaService } from 'src/app/modules/annotation-schema/services/annotation-schema.service';
 import { ConsistencyType } from '../../model/enums/enums.model';
 import { AnnotationConsistencyService } from '../../services/annotation-consistency.service';
 import { LocalStorageService } from '../../services/shared/local-storage.service';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @Component({
     selector: 'de-annotation-consistency-dialog',
     templateUrl: './annotation-consistency-dialog.component.html',
     styleUrls: ['./annotation-consistency-dialog.component.css'],
-    standalone: false
+     standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule]
+
 })
 export class AnnotationConsistencyDialogComponent implements OnInit {
 
