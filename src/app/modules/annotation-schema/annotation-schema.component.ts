@@ -1,22 +1,42 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
 import { AddCodeSmellDialogComponent } from "./dialogs/add-code-smell-dialog/add-code-smell-dialog.component";
 import { UpdateCodeSmellDialogComponent } from "./dialogs/update-code-smell-dialog/update-code-smell-dialog.component";
 import { CodeSmellDefinition } from "./model/code-smell-definition/code-smell-definition.model";
 import { numberToSnippetType, SnippetType } from "./model/enums/enums.model";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { AnnotationSchemaService } from "./services/annotation-schema.service";
 import { ConfirmDialogComponent } from "./dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogConfigService } from "../data-set/dialogs/dialog-config.service";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatSelectModule } from "@angular/material/select";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 
 @Component({
     selector: 'de-annotation-schema',
     templateUrl: './annotation-schema.component.html',
     styleUrls: ['./annotation-schema.component.css'],
-    standalone: false
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatMenuModule
+    ]
 })
   
 export class AnnotationSchemaComponent implements OnInit {

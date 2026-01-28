@@ -8,7 +8,6 @@ import { DataSetModule } from './modules/data-set/data-set.module';
 import { AppComponent } from './app.component';
 import { ServerCommunicationService } from './server-communication/server-communication.service';
 import { ToastrModule } from 'ngx-toastr';
-import { AnnotationSchemaModule } from './modules/annotation-schema/annotation-schema.module';
 import { CommunityDetectionModule } from './modules/community-detection/community-detection.module';
 
 @NgModule({
@@ -19,7 +18,6 @@ import { CommunityDetectionModule } from './modules/community-detection/communit
         BrowserAnimationsModule,
         MaterialModule,
         DataSetModule,
-        AnnotationSchemaModule,
         CommunityDetectionModule,
         ToastrModule.forRoot()
     ],
