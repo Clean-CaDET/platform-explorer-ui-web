@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
     selector: 'de-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
-    standalone: false
+    standalone: true
 })
 
 export class HomeComponent implements OnInit {
