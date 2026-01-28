@@ -22,10 +22,30 @@ import { GraphService } from '../../community-detection/services/graph.service';
 import { GraphDataService } from '../../community-detection/services/graph-data.service';
 import { ClassGraph } from '../../community-detection/model/class-graph';
 
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 @Component({
-  selector: 'de-annotation-form',
-  templateUrl: './annotation-form.component.html',
-  styleUrls: ['./annotation-form.component.css'],
+    selector: 'de-annotation-form',
+    templateUrl: './annotation-form.component.html',
+    styleUrls: ['./annotation-form.component.css'],
+    standalone: true,
+    imports: [
+    FormsModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
+]
 })
 export class AnnotationFormComponent implements OnInit {
   @Input() public codeSmell: string = '';

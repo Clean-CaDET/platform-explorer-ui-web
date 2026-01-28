@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { ToastrService } from "ngx-toastr";
 import { DialogConfigService } from "../../data-set/dialogs/dialog-config.service";
 import { AddSeverityDialogComponent } from "../dialogs/add-severity-dialog/add-severity-dialog.component";
@@ -10,12 +10,28 @@ import { CodeSmellDefinition } from "../model/code-smell-definition/code-smell-d
 import { Heuristic } from "../model/heuristic/heuristic.model";
 import { Severity } from "../model/severity/severity.model";
 import { AnnotationSchemaService } from "../services/annotation-schema.service";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 
 @Component({
-  selector: 'de-severity',
-  templateUrl: './severity.component.html',
-  styleUrls: ['./severity.component.css']
+    selector: 'de-severity',
+    templateUrl: './severity.component.html',
+    styleUrls: ['./severity.component.css'],
+     standalone: true,
+      imports: [
+          MatTableModule,
+          MatFormFieldModule,
+          MatInputModule,
+          MatButtonModule,
+          MatIconModule,
+          MatTooltipModule,
+          MatMenuModule
+      ]
 })
 
 export class SeverityComponent implements OnInit {

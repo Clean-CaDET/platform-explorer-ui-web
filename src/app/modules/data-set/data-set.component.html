@@ -1,67 +1,69 @@
 
-<div *ngIf="isExporting" class="export-overlay">
+@if (isExporting) {
+  <div class="export-overlay">
     <div class="export-spinner-container">
-        <mat-spinner></mat-spinner>
-        <p class="export-message">Exporting clean code analysis... This may take several minutes.</p>
-        <button mat-raised-button color="warn" (click)="cancelExport()" class="cancel-button">
-            Cancel Export
-        </button>
+      <mat-spinner></mat-spinner>
+      <p class="export-message">Exporting clean code analysis... This may take several minutes.</p>
+      <button mat-raised-button color="warn" (click)="cancelExport()" class="cancel-button">
+        Cancel Export
+      </button>
     </div>
-</div>
+  </div>
+}
 
 <div id="datasets-table-div">
-    <p class="table-title">All datasets</p>
-    <div class="table-header">
-        <mat-form-field appearance="fill" class="search">
-            <mat-label>Search by name</mat-label>
-            <input matInput (keyup)="searchDataSets($event)" placeholder="Dataset name">
-        </mat-form-field>
-        <button class="add-button" mat-mini-fab matTooltip="New dataset" matTooltipPosition="right" (click)="addDataSet()">
-            <mat-icon>add</mat-icon>
+  <p class="table-title">All datasets</p>
+  <div class="table-header">
+    <mat-form-field appearance="fill" class="search">
+      <mat-label>Search by name</mat-label>
+      <input matInput (keyup)="searchDataSets($event)" placeholder="Dataset name">
+    </mat-form-field>
+    <button class="add-button" mat-mini-fab matTooltip="New dataset" matTooltipPosition="right" (click)="addDataSet()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef width="60%"> Name </th>
+      <td mat-cell *matCellDef="let dataSet" width="60%">
+        <span class="truncate-text datasetName" (click)="chooseDataset(dataSet)">{{dataSet.name}}</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="numOfProjects">
+      <th mat-header-cell *matHeaderCellDef width="30%"class="cell-center">Projects</th>
+      <td mat-cell *matCellDef="let dataSet" width="30%" class="cell-center">{{dataSet.projectsCount}}</td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef width="5%"></th>
+      <td mat-cell *matCellDef="let dataSet" width="5%">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon matTooltip="actions">more_horiz</mat-icon>
         </button>
-    </div>
-    <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef width="60%"> Name </th>
-            <td mat-cell *matCellDef="let dataSet" width="60%">
-                <span class="truncate-text datasetName" (click)="chooseDataset(dataSet)">{{dataSet.name}}</span>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="numOfProjects">
-            <th mat-header-cell *matHeaderCellDef width="30%"class="cell-center">Projects</th>
-            <td mat-cell *matCellDef="let dataSet" width="30%" class="cell-center">{{dataSet.projectsCount}}</td>
-        </ng-container>
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef width="5%"></th>
-            <td mat-cell *matCellDef="let dataSet" width="5%">
-                <button mat-icon-button [matMenuTriggerFor]="menu">
-                    <mat-icon matTooltip="actions">more_horiz</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="exportDraftDataSet(dataSet)">
-                        <mat-icon>file_copy</mat-icon>
-                        <span>Export draft dataset</span>
-                    </button>
-                    <button mat-menu-item (click)="exportCompleteDataSet(dataSet)">
-                        <mat-icon>file_copy</mat-icon>
-                        <span>Export complete dataset</span>
-                    </button>
-                    <button mat-menu-item (click)="cleanCodeAnalysis(dataSet)">
-                        <mat-icon>search</mat-icon>
-                        <span>Clean code analysis</span>
-                    </button>
-                    <button mat-menu-item (click)="updateDataSet(dataSet)">
-                        <mat-icon matTooltip="edit">edit</mat-icon>
-                        <span>Update</span>
-                    </button>
-                    <button mat-menu-item (click)="deleteDataSet(dataSet)">
-                        <mat-icon matTooltip="delete">delete</mat-icon>
-                        <span>Delete</span>
-                    </button>
-                </mat-menu>
-            </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="exportDraftDataSet(dataSet)">
+            <mat-icon>file_copy</mat-icon>
+            <span>Export draft dataset</span>
+          </button>
+          <button mat-menu-item (click)="exportCompleteDataSet(dataSet)">
+            <mat-icon>file_copy</mat-icon>
+            <span>Export complete dataset</span>
+          </button>
+          <button mat-menu-item (click)="cleanCodeAnalysis(dataSet)">
+            <mat-icon>search</mat-icon>
+            <span>Clean code analysis</span>
+          </button>
+          <button mat-menu-item (click)="updateDataSet(dataSet)">
+            <mat-icon matTooltip="edit">edit</mat-icon>
+            <span>Update</span>
+          </button>
+          <button mat-menu-item (click)="deleteDataSet(dataSet)">
+            <mat-icon matTooltip="delete">delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 </div>

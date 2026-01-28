@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -51,6 +51,6 @@ export class ServerCommunicationService {
   }
 
   private async sendRequestAsync(method: string, path: string, body?: any, headers?: HttpHeaders): Promise<any> {
-    return await this.sendRequest(method, path, body, headers).toPromise();
+    return await firstValueFrom(this.sendRequest(method, path, body, headers));
   }
 }

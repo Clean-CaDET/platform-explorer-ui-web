@@ -10,11 +10,16 @@ import { D3GraphService } from '../../services/d3-graph.service';
 import { GraphDataService } from '../../services/graph-data.service';
 import { GraphInstance } from 'src/app/modules/data-set/model/graph-instance/graph-instance.model';
 import { SnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'de-neighbours-graph',
-  templateUrl: './neighbours-graph.component.html',
-  styleUrls: ['./neighbours-graph.component.css'],
+    selector: 'de-neighbours-graph',
+    templateUrl: './neighbours-graph.component.html',
+    styleUrls: ['./neighbours-graph.component.css'],
+     standalone: true,
+  imports: [
+      MatIconModule
+  ]
 })
 export class NeighboursGraphComponent {
   width: number = 0;

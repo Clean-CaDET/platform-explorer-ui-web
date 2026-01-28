@@ -1,11 +1,17 @@
+
 import { Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material/dialog";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+import { MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
     selector: 'de-export-complete-data-set-dialog',
     templateUrl: './export-complete-data-set-dialog.component.html',
-    styleUrls: ['./export-complete-data-set-dialog.component.css']
-  })
+    styleUrls: ['./export-complete-data-set-dialog.component.css'],
+      standalone: true,
+  imports: [MatDialogModule, MatCardModule, MatButtonModule]
+
+})
 export class ExportCompleteDataSetDialogComponent {
     public selectedFiles: File[] = [];
 

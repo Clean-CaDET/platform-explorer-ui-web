@@ -1,21 +1,25 @@
 <div class="center">
-    <mat-card fxFlex="30%">
-        <mat-card-title>Login</mat-card-title>
-        <mat-card-content fxLayout="column">
-            <mat-form-field>
-                <mat-label>Annotator ID</mat-label>
-                <input type="number" matInput [formControl]="annotatorFormControl" min="1">
-                <mat-error *ngIf="annotatorFormControl.hasError('min')">
-                    Annotator ID must be <strong>greater</strong> than 0
-                </mat-error>
-                <mat-error *ngIf="annotatorFormControl.hasError('required')">
-                    Annotator ID is <strong>required</strong>
-                </mat-error>
-            </mat-form-field>
-            <button mat-stroked-button (click)='login()'>Login</button>
-        </mat-card-content>
-        <div class="link">Or <a href="/register">create an account!</a></div>
-        <br>
-        <div class="link"><a href="" (click)="$event.preventDefault(); forgotId()">Forgot annotation id?</a></div>
+  <mat-card fxFlex="30%">
+    <mat-card-title>Login</mat-card-title>
+    <mat-card-content fxLayout="column">
+      <mat-form-field>
+        <mat-label>Annotator ID</mat-label>
+        <input type="number" matInput [formControl]="annotatorFormControl" min="1">
+        @if (annotatorFormControl.hasError('min')) {
+          <mat-error>
+            Annotator ID must be <strong>greater</strong> than 0
+          </mat-error>
+        }
+        @if (annotatorFormControl.hasError('required')) {
+          <mat-error>
+            Annotator ID is <strong>required</strong>
+          </mat-error>
+        }
+      </mat-form-field>
+      <button mat-stroked-button (click)='login()'>Login</button>
+    </mat-card-content>
+    <div class="link">Or <a href="/register">create an account!</a></div>
+    <br>
+      <div class="link"><a href="" (click)="$event.preventDefault(); forgotId()">Forgot annotation id?</a></div>
     </mat-card>
-</div>
+  </div>

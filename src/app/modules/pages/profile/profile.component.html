@@ -1,43 +1,65 @@
-<div class="horizontal-div" *ngIf="annotator">
+@if (annotator) {
+  <div class="horizontal-div">
     <div class="avatar-container">
-        <div class="avatar-circle"></div>
+      <div class="avatar-circle"></div>
     </div>
     <div class="vertical-div">
-        <table>
-            <tr>
-                <td class="name" *ngIf="!editMode">{{annotator.name}}</td>
-                <td *ngIf="editMode"><input matInput type="text" placeholder="{{annotator.name}}" [(ngModel)]="annotator.name"></td>
-                <td *ngIf="!editMode">
-                    <button mat-icon-button (click)="edit()">
-                        <mat-icon matTooltip="edit">edit</mat-icon>
-                    </button>
-                </td>
-                <td *ngIf="editMode">
-                    <button mat-icon-button (click)="save()">
-                        <mat-icon matTooltip="save">check</mat-icon>
-                    </button>
-                </td>
-            </tr>
-            <tr><td colspan="2" class="firstRow"></td></tr>
-            <tr>
-                <td class="firstColumn">Email</td>
-                <td *ngIf="!editMode">{{annotator.email}}</td>
-                <td *ngIf="editMode"><input matInput type="text" placeholder="{{annotator.email}}" [(ngModel)]="annotator.email"></td>
-            </tr>
-            <tr>
-                <td class="firstColumn">ID</td>
-                <td>{{annotator.id}}</td>
-            </tr>
-            <tr>
-                <td class="firstColumn">Years of experience</td>
-                <td *ngIf="!editMode">{{annotator.yearsOfExperience}}</td>
-                <td *ngIf="editMode"><input matInput type="text" placeholder="{{annotator.yearsOfExperience}}" [(ngModel)]="annotator.yearsOfExperience"></td>
-            </tr>
-            <tr>
-                <td class="firstColumn">Ranking</td>
-                <td *ngIf="!editMode">{{annotator.ranking}}</td>
-                <td *ngIf="editMode"><input matInput type="text" placeholder="{{annotator.ranking}}" [(ngModel)]="annotator.ranking"></td>
-            </tr>
-        </table>
+      <table>
+        <tr>
+          @if (!editMode) {
+            <td class="name">{{annotator.name}}</td>
+          }
+          @if (editMode) {
+            <td><input matInput type="text" placeholder="{{annotator.name}}" [(ngModel)]="annotator.name"></td>
+          }
+          @if (!editMode) {
+            <td>
+              <button mat-icon-button (click)="edit()">
+                <mat-icon matTooltip="edit">edit</mat-icon>
+              </button>
+            </td>
+          }
+          @if (editMode) {
+            <td>
+              <button mat-icon-button (click)="save()">
+                <mat-icon matTooltip="save">check</mat-icon>
+              </button>
+            </td>
+          }
+        </tr>
+        <tr><td colspan="2" class="firstRow"></td></tr>
+        <tr>
+          <td class="firstColumn">Email</td>
+          @if (!editMode) {
+            <td>{{annotator.email}}</td>
+          }
+          @if (editMode) {
+            <td><input matInput type="text" placeholder="{{annotator.email}}" [(ngModel)]="annotator.email"></td>
+          }
+        </tr>
+        <tr>
+          <td class="firstColumn">ID</td>
+          <td>{{annotator.id}}</td>
+        </tr>
+        <tr>
+          <td class="firstColumn">Years of experience</td>
+          @if (!editMode) {
+            <td>{{annotator.yearsOfExperience}}</td>
+          }
+          @if (editMode) {
+            <td><input matInput type="text" placeholder="{{annotator.yearsOfExperience}}" [(ngModel)]="annotator.yearsOfExperience"></td>
+          }
+        </tr>
+        <tr>
+          <td class="firstColumn">Ranking</td>
+          @if (!editMode) {
+            <td>{{annotator.ranking}}</td>
+          }
+          @if (editMode) {
+            <td><input matInput type="text" placeholder="{{annotator.ranking}}" [(ngModel)]="annotator.ranking"></td>
+          }
+        </tr>
+      </table>
     </div>
-</div>
+  </div>
+}

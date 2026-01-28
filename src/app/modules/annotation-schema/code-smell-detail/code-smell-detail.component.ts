@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { ActivatedRoute, Params } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { DialogConfigService } from "../../data-set/dialogs/dialog-config.service";
@@ -11,11 +11,30 @@ import { CodeSmellDefinition } from "../model/code-smell-definition/code-smell-d
 import { Heuristic } from "../model/heuristic/heuristic.model";
 import { AnnotationSchemaService } from "../services/annotation-schema.service";
 
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { SeverityComponent } from "../severity/severity.component";
+
 
 @Component({
-  selector: 'de-code-smell-detail',
-  templateUrl: './code-smell-detail.component.html',
-  styleUrls: ['./code-smell-detail.component.css']
+    selector: 'de-code-smell-detail',
+    templateUrl: './code-smell-detail.component.html',
+    styleUrls: ['./code-smell-detail.component.css'],
+    standalone: true,
+    imports: [
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatMenuModule,
+    SeverityComponent
+]
 })
 
 export class CodeSmellDetailComponent implements OnInit {

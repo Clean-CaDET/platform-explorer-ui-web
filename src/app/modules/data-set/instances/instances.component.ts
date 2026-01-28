@@ -1,8 +1,8 @@
 import { Location } from "@angular/common";
 import { Component, OnInit, Pipe, PipeTransform } from "@angular/core";
-import { UntypedFormControl, Validators } from "@angular/forms";
+import { FormControl, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { DialogConfigService } from "../dialogs/dialog-config.service";
 import { DisagreeingAnnotationsDialogComponent } from "../dialogs/disagreeing-annotations-dialog/disagreeing-annotations-dialog.component";
@@ -17,11 +17,46 @@ import { ChangedAnnotationEvent, DatasetChosenEvent, InstanceChosenEvent, NewAnn
 import { LocalStorageService } from "../services/shared/local-storage.service";
 import { Subscription } from "rxjs";
 import { CodeSmell } from "../model/code-smell/code-smell.model";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatTooltipModule } from "@angular/material/tooltip";
+
+@Pipe({
+    name: 'instanceName',
+    standalone: true
+})
+export class InstanceNamePipe implements PipeTransform {
+  transform(instance: Instance): string {
+    if (instance.type.toString() == '0' || instance.type.toString() == 'Class') return instance.codeSnippetId;
+    var codeSnippetId = instance.codeSnippetId.split('(')[0].split('.');
+    var methodName = codeSnippetId[codeSnippetId.length-1];
+    if (instance.codeSnippetId.includes('()')) methodName += '()';
+    else methodName += '(...)';
+    codeSnippetId[codeSnippetId.length-1] = methodName;
+    return codeSnippetId.join('.');
+  }
+}
 
 @Component({
     selector: 'de-instances',
     templateUrl: './instances.component.html',
-    styleUrls: ['./instances.component.css']
+    styleUrls: ['./instances.component.css'],
+    standalone: true,
+    imports: [
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    FormsModule,
+    ReactiveFormsModule,
+    InstanceNamePipe
+]
 })
   
 export class InstancesComponent implements OnInit {
@@ -41,7 +76,7 @@ export class InstancesComponent implements OnInit {
     public selectedNoteStatus: string = 'All';
     public severities: Set<string|null> = new Set();
     public codeSmells: string[] = [];
-    public selectedSmellFormControl = new UntypedFormControl('', Validators.required);
+    public selectedSmellFormControl = new FormControl<string>('', Validators.required);
     public filter: string = 'All instances';
     private notificationSubscription: Subscription | undefined;
     
@@ -198,7 +233,7 @@ export class InstancesComponent implements OnInit {
           candidate.instances[index] = new Instance(this.storageService, instance);
           if (instance.id == instanceId) {
             this.storageService.setSmellFilter(candidate.codeSmell?.name!);
-            this.selectedSmellFormControl.setValue(candidate.codeSmell?.name);
+            this.selectedSmellFormControl.setValue(candidate.codeSmell!.name);
           }
         });
       });
@@ -247,7 +282,7 @@ export class InstancesComponent implements OnInit {
     }
 
     private chooseLastInstance() {
-      var lastInstance = this.chosenProject.getLastInstanceForSmell(this.selectedSmellFormControl.value);
+      var lastInstance = this.chosenProject.getLastInstanceForSmell(this.selectedSmellFormControl.value!);
       if (!lastInstance) return;
       this.chooseInstance(lastInstance.id);
     }
@@ -300,7 +335,7 @@ export class InstancesComponent implements OnInit {
 
     public smellSelectionChanged() {
       this.searchInput = '';
-      this.storageService.setSmellFilter(this.selectedSmellFormControl.value);
+      this.storageService.setSmellFilter(this.selectedSmellFormControl.value!);
       this.dataSource.data = this.chosenProject.getCandidateInstancesForSmell(this.storageService.getSmellFilter());
       this.initSeverities();
       this.selectedAnnotationStatus = AnnotationStatus.All;
@@ -314,15 +349,3 @@ export class InstancesComponent implements OnInit {
     }
 }
 
-@Pipe({ name: 'instanceName' })
-export class InstanceNamePipe implements PipeTransform {
-  transform(instance: Instance): string {
-    if (instance.type.toString() == '0' || instance.type.toString() == 'Class') return instance.codeSnippetId;
-    var codeSnippetId = instance.codeSnippetId.split('(')[0].split('.');
-    var methodName = codeSnippetId[codeSnippetId.length-1];
-    if (instance.codeSnippetId.includes('()')) methodName += '()';
-    else methodName += '(...)';
-    codeSnippetId[codeSnippetId.length-1] = methodName;
-    return codeSnippetId.join('.');
-  }
-}

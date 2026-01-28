@@ -1,20 +1,22 @@
 <h2 mat-dialog-title>Export clean code analysis</h2>
 <mat-dialog-content class="mat-typography">
-    <mat-card fxFlex="30%">
-        <mat-card-content fxLayout="column">
-            <p class="export-info">Files will be exported to your Downloads folder.</p>
-            <div class="checkbox-group">
-                <label class="checkbox-label">Select clean code options:</label>
-                <mat-checkbox *ngFor="let option of cleanCodeOptions"
-                              [(ngModel)]="option.checked"
-                              class="checkbox-option">
-                    {{option.name}}
-                </mat-checkbox>
-            </div>
-        </mat-card-content>
-    </mat-card>
+  <mat-card fxFlex="30%">
+    <mat-card-content fxLayout="column">
+      <p class="export-info">Files will be exported to your Downloads folder.</p>
+      <div class="checkbox-group">
+        <label class="checkbox-label">Select clean code options:</label>
+        @for (option of cleanCodeOptions; track option) {
+          <mat-checkbox
+            [(ngModel)]="option.checked"
+            class="checkbox-option">
+            {{option.name}}
+          </mat-checkbox>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-stroked-button mat-dialog-close>Cancel</button>
-    <button mat-stroked-button (click)="exportAnalysis()">Export</button>
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-stroked-button (click)="exportAnalysis()">Export</button>
 </mat-dialog-actions>

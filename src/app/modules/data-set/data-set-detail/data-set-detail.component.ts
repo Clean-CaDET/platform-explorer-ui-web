@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataSet } from '../model/data-set/data-set.model';
 import { DataSetProject } from '../model/data-set-project/data-set-project.model';
 import { Instance } from '../model/instance/instance.model';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, RouterModule } from '@angular/router';
 import { DataSetProjectService } from '../services/data-set-project.service';
 import { DataSetService } from '../services/data-set.service';
 import { SmellCandidateInstances } from '../model/smell-candidate-instances/smell-candidate-instances.model';
@@ -21,10 +21,29 @@ import { Subscription } from 'rxjs';
 import { GraphService } from '../../community-detection/services/graph.service';
 import { Annotation } from '../model/annotation/annotation.model';
 
+import { FormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ClassNamePipe } from '../annotation-container/annotation-container.component';
+import { InstancesComponent } from '../instances/instances.component';
+import { ProjectsComponent } from '../projects/projects.component';
+
 @Component({
-  selector: 'de-data-set-detail',
-  templateUrl: './data-set-detail.component.html',
-  styleUrls: ['./data-set-detail.component.css'],
+    selector: 'de-data-set-detail',
+    templateUrl: './data-set-detail.component.html',
+    styleUrls: ['./data-set-detail.component.css'],
+    standalone: true,
+    imports: [
+    RouterModule,
+    MatExpansionModule,
+    MatSlideToggleModule,
+    MatIconModule,
+    FormsModule,
+    ClassNamePipe,
+    ProjectsComponent,
+    InstancesComponent
+]
 })
 export class DataSetDetailComponent implements OnInit {
   public chosenDataset: DataSet = new DataSet();

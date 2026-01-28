@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator, MatPaginatorIntl } from "@angular/material/paginator";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { Subscription } from "rxjs";
@@ -17,11 +17,30 @@ import { CleanCodeAnalysisDTO } from "./model/DTOs/clean-code-analysis-export-dt
 import { DataSetService } from "./services/data-set.service";
 import { LocalStorageService } from "./services/shared/local-storage.service";
 
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatTooltipModule } from "@angular/material/tooltip";
+
 
 @Component({
     selector: 'de-data-set',
     templateUrl: './data-set.component.html',
-    styleUrls: ['./data-set.component.css']
+    styleUrls: ['./data-set.component.css'],
+    standalone: true,
+    imports: [
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule
+]
 })
 export class DataSetComponent implements OnInit {
 

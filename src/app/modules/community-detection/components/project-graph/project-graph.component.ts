@@ -6,13 +6,14 @@ import { Link } from '../../model/link';
 import { ProjectNode } from '../../model/project-node';
 import { GraphService } from '../../services/graph.service';
 import { GraphInstance } from 'src/app/modules/data-set/model/graph-instance/graph-instance.model';
-import { NotificationService } from 'src/app/modules/data-set/services/shared/notification.service';
 import { D3GraphService } from '../../services/d3-graph.service';
 
 @Component({
-  selector: 'de-project-graph',
-  templateUrl: './project-graph.component.html',
-  styleUrls: ['./project-graph.component.css'],
+    selector: 'de-project-graph',
+    templateUrl: './project-graph.component.html',
+    styleUrls: ['./project-graph.component.css'],
+    standalone: true,
+  imports: []
 })
 export class ProjectGraphComponent {
   svg: any;

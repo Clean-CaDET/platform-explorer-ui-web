@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { CodeSmell } from '../../model/code-smell/code-smell.model';
 import { DataSetProject } from '../../model/data-set-project/data-set-project.model';
 import { NumOfInstancesType } from '../../model/enums/enums.model';
@@ -10,10 +10,22 @@ import { DataSetService } from '../../services/data-set.service';
 import { AnnotationService } from '../../services/annotation.service';
 import { numberToSnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';
 
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 @Component({
-  selector: 'de-add-project-dialog',
-  templateUrl: './add-project-dialog.component.html',
-  styleUrls: ['./add-project-dialog.component.css'],
+    selector: 'de-add-project-dialog',
+    templateUrl: './add-project-dialog.component.html',
+    styleUrls: ['./add-project-dialog.component.css'],
+      standalone: true,
+  imports: [FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatButtonModule, MatIconModule, MatTooltipModule]
+
 })
 export class AddProjectDialogComponent implements OnInit {
 

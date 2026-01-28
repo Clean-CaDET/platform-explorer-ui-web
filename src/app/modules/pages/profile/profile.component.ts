@@ -6,11 +6,24 @@ import { Annotator } from '../../data-set/model/annotator/annotator.model';
 import { AuthService } from '../../data-set/services/auth.service';
 import { LocalStorageService } from '../../data-set/services/shared/local-storage.service';
 
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'de-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+    selector: 'de-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.css'],
+    standalone: true,
+    imports: [
+    FormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
+]
 })
 export class ProfileComponent implements OnInit {
 
