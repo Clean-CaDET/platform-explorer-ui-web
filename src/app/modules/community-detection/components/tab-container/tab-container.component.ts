@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Params } from '@angular/router';
 import { SnippetType } from 'src/app/modules/annotation-schema/model/enums/enums.model';
 import { AnnotationSchemaService } from 'src/app/modules/annotation-schema/services/annotation-schema.service';
@@ -11,12 +11,19 @@ import { GraphService } from '../../services/graph.service';
 import { ClassGraphComponent } from '../class-graph/class-graph.component';
 import { NeighboursGraphComponent } from '../neighbours-graph/neighbours-graph.component';
 import { ProjectGraphComponent } from '../project-graph/project-graph.component';
+import { AnnotationContainerComponent } from 'src/app/modules/data-set/annotation-container/annotation-container.component';
 
 @Component({
     selector: 'de-tab-container',
     templateUrl: './tab-container.component.html',
     styleUrls: ['./tab-container.component.css'],
-    standalone: false
+    standalone: true,
+  imports: [
+      MatTabsModule,
+      AnnotationContainerComponent,  
+      ClassGraphComponent,          
+      NeighboursGraphComponent      
+  ]
 })
 export class TabContainerComponent implements OnInit {
   @ViewChild('projectGraph') projectGraph!: ProjectGraphComponent;

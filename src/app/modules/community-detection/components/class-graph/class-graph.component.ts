@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import Graph from 'graphology';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
@@ -9,13 +9,16 @@ import { Subscription } from 'rxjs';
 import { MetricFeature } from '../../model/metric-feature';
 import { D3GraphService } from '../../services/d3-graph.service';
 import { GraphDataService } from '../../services/graph-data.service';
-import { ClassGraph } from '../../model/class-graph';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
     selector: 'de-class-graph',
     templateUrl: './class-graph.component.html',
     styleUrls: ['./class-graph.component.css'],
-    standalone: false
+    standalone: true,
+  imports: [
+      MatTableModule
+  ]
 })
 export class ClassGraphComponent {
   svg: any;
